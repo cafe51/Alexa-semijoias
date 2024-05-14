@@ -1,6 +1,6 @@
 export default function Pulseiras() {
 
-  return (
-    'Pulseiras'
-  );
+    return (
+        'Pulseiras'
+    );
 }

@@ -1,6 +1,6 @@
 export default function Brincos() {
 
-  return (
-    'Brincos'
-  );
+    return (
+        'Brincos'
+    );
 }

@@ -1,6 +1,6 @@
 export default function Aneis() {
 
-  return (
-    'Aneis'
-  );
+    return (
+        'Aneis'
+    );
 }

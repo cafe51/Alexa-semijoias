@@ -11,6 +11,7 @@ const navItemsStyle = 'hover:text-gray-800 hover:bg-gray-200 transition-colors d
 const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
     const node = useRef<HTMLDivElement>(null);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     const goToStart = (e: any) => {
         // e.preventDefault();
         setIsMenuOpen(false);
@@ -18,6 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const handleClickOutside = (e: any) => {
             if (node.current?.contains(e.target)) {
                 return;
