@@ -2,32 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  height: 100%;
+  color: #2d2e32;
+  /* font-family: Mulish, Proxima Nova, sans-serif; */
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+p {
+  /* font-family: Proxima Nova, sans-serif; */
+  color: #555;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 500;
+  /* font-family: Proxima Nova, sans-serif; */
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  /* font-family: Proxima Nova, sans-serif; */
+}
+
+a {
+  /* font-family: Proxima Nova, sans-serif; */
+}
+
+.primColor {
+  background-color: pink;
+}
+
+.secColor {
+  background-color: pink;
+}
+
+.asset-enter {
+  opacity: 0;
+  max-height: 0;
+}
+
+.asset-enter-active {
+  opacity: 1;
+  max-height: 500px;
+  transition: opacity 500ms, max-height 500ms;
+}
+
+.asset-exit {
+  opacity: 1;
+  max-height: 500px;
+}
+
+.asset-exit-active {
+  opacity: 0;
+  max-height: 0;
+  transition: opacity 500ms, max-height 500ms;
+}
+
+
+
+
+.card-container {
+  perspective: 1000px;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.card-face-back {
+  transform: rotateY(180deg);
+}
+
+.flip {
+  transform: rotateY(180deg);
+}
+
+
+@media (max-width: 760px) {
+  .nav-gradient {
+    background: linear-gradient(to bottom, #f8cfe8c9, rgba(255, 255, 255, 0.548));
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
   }
 }
