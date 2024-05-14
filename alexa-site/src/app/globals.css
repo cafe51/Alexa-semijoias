@@ -37,11 +37,11 @@ a {
 }
 
 .primColor {
-  background-color: pink;
+  background-color: #fbcfe8;
 }
 
 .secColor {
-  background-color: pink;
+  background-color: #fdf2f8;
 }
 
 .asset-enter {
@@ -93,7 +93,7 @@ a {
 
 @media (max-width: 760px) {
   .nav-gradient {
-    background: linear-gradient(to bottom, #f8cfe8c9, rgba(255, 255, 255, 0.548));
+    background: linear-gradient(to bottom, #fbcfe8, rgba(255, 255, 255, 0.548));
     content: "";
     display: block;
     position: absolute;

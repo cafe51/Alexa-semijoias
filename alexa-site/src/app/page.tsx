@@ -1,4 +1,4 @@
-import Header from "./Header";
+import Header from "./components/Header";
 import { colors } from '../../public/colors';
 const {color200, color50} = colors;
 
@@ -6,7 +6,7 @@ const {color200, color50} = colors;
 export default function Home() {
 
   return (
-    <div className={`${color50}`}>
+    <div className='secColor'>
       <Header />
       <main className="flex flex-col items-center justify-between p-24 pt-64">
         <h2>Em construção...</h2>

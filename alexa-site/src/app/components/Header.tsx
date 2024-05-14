@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import Navbar from './Navbar'
 import { FiShoppingCart } from "react-icons/fi";
-import { colors } from '../../public/colors';
-const {color200, color50} = colors;
+import { colors } from '../../../public/colors';
+// const {color200, color50} = colors;
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,7 +21,7 @@ const Header = () => {
     const opacity = isScrolled ? 'bg-opacity-80' : '';
     
     return (
-        <header id="japhe" className={ `${color200} fixed w-full transition-all duration-500 z-50  ${opacity}` }>
+        <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity}` }>
             <div className="flex justify-between items-center px-8 md:px-16 py-6 md:py-0">
             {
                     !isMenuOpen
