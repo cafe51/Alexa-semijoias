@@ -17,7 +17,7 @@ const Header = () => {
         window.addEventListener('scroll', handleScroll);
     }, []);
 
-    const opacity = isScrolled ? 'bg-opacity-80' : '';
+    const opacity = isScrolled ? 'primColorTransparent' : '';
     
     return (
         <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity}` }>

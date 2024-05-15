@@ -44,6 +44,10 @@ a {
   background-color: #fdf2f8;
 }
 
+.primColorTransparent {
+  background-color: #fbcfe8ad;
+}
+
 .asset-enter {
   opacity: 0;
   max-height: 0;
