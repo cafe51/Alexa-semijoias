@@ -7,13 +7,13 @@ import { getProductApiById } from '../utils/api';
 
 
 
-export default function Product({ id }: {id: string}) {
+export default function Product({ id, productType }: {id: string, productType: string}) {
     const [product, setProduct] = useState<ProductType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
 
     const updateProductsState = async() => {
-        const productData = await getProductApiById('brincos', id);
+        const productData = await getProductApiById(productType, id);
         setProduct(productData);
     };
 
