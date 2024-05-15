@@ -1,6 +1,8 @@
+import ProductsList from '../components/ProductsList';
+
 export default function Brincos() {
 
     return (
-        'Brincos'
+        <ProductsList productType='brincos' />
     );
 }

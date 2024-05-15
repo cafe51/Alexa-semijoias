@@ -1,6 +1,8 @@
+import ProductsList from '../components/ProductsList';
+
 export default function Aneis() {
 
     return (
-        'Aneis'
+        <ProductsList productType='aneis' />
     );
 }

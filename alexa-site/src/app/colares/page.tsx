@@ -1,6 +1,8 @@
+import ProductsList from '../components/ProductsList';
+
 export default function Colares() {
 
     return (
-        'Colares'
+        <ProductsList productType='colares' />
     );
 }
