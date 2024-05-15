@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { FiShoppingCart } from 'react-icons/fi';
+import SearchBar from './SearchBar';
 
 
 const Header = () => {
@@ -68,6 +69,7 @@ const Header = () => {
                 </div>
                 
             </div>
+            <SearchBar />
             
         </header>
 
