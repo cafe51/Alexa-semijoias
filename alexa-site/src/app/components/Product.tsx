@@ -5,6 +5,7 @@ import Header from './Header';
 import { ProductType } from '../utils/types';
 import { getProductApiById } from '../utils/api';
 import ResponsiveCarousel from './ResponsiveCarousel';
+import Link from 'next/link';
 
 
 
@@ -28,19 +29,39 @@ export default function Product({ id, productType }: {id: string, productType: s
 
 
     return (
-        <div className="bg-pink-50">
+        <div className="secColor">
             <Header />
-            <main className="flex flex-col gap-4 items-center justify-between pt-40 p-6">
+            <main className="flex text-start flex-col gap-4 items-start justify-between pt-40 p-6">
                 { isLoading || !product ? 'carregando' : (
                     <>  
-                        <p>Início/ { productType.charAt(0).toUpperCase() + productType.slice(1) }/ <span className='font-bold'>{ product.nome }</span></p>
+                        <p>
+                            <Link href={ '/' }>Início/</Link> <Link href={ `/${productType}` }>{ productType.charAt(0).toUpperCase() + productType.slice(1) }/ </Link> <span className='font-bold'>{ product.nome }</span>
+                        </p>
                         
                         <ResponsiveCarousel productData={ product }/>
                         
                         <p className='text-sm'>{ product.descricao }</p>
-                        <h2>{ product.nome.toUpperCase() }</h2>
+                        <h2 className='font-normal'>{ product.nome.toUpperCase() }</h2>
+
+                        
+                        <div className='w-full p-2 border-solid border-2 border-x-0 borderColor'>
+                            <h1 className='font-bold '>R$ { product.preco.toFixed(2) } </h1>
+                            <p> em até 6x de { (product.preco/6).toFixed(2) } sem juros </p>
+                            <p> Formas de pagamento </p>
+                        </div>
+                        <button className='rounded-full w-full bg-green-500 p-4 px-6 font-bold border-solid border-2 border-x-0 borderColor text-white'>
+                            COMPRE JÁ
+                        </button>
+                        <div className='py-4 gap-4 border-solid border-2 border-x-0 borderColor'>
+                            <p> Frete e prazo </p>
+                            <div className='flex py-4 gap-4 '>
+                                <input className='px-2 w-full' placeholder='Insira seu CEP'></input>
+                                <button className='bg-black text-white p-4 rounded-full'>Calcular</button>
+                            </div>
+                        </div>
+                            
                     </>
-                // 'olá'
+
                 ) }
             </main>
         </div>

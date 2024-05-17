@@ -37,7 +37,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
 
 
     return (
-        <section className="flex flex-col text-center  w-5/12 items-center justify-between pb-2 gap-2 border-solid border-2 border-pink-100 shadow-pink-200 shadow-lg text-[12px] rounded-lg h-[450px]"
+        <section className="flex flex-col text-center  w-5/12 items-center justify-between pb-2 gap-2 border-solid border-2 borderColor shadowColor shadow-lg text-[12px] rounded-lg h-[450px]"
         >
             <Link href={ `/${productType}/${cardData.id}` }>{ render }</Link>
             <button className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'>COMPRE JÁ</button>

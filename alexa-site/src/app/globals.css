@@ -48,6 +48,18 @@ a {
   background-color: #fbcfe8ad;
 }
 
+.borderColor {
+  --tw-border-opacity: 1;
+  border-color: rgb(252 231 243 / var(--tw-border-opacity));
+}
+
+
+.shadowColor {
+  --tw-shadow-color: #fbcfe8;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+
 .asset-enter {
   opacity: 0;
   max-height: 0;
