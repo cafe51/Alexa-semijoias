@@ -30,13 +30,15 @@ export default function Product({ id, productType }: {id: string, productType: s
     return (
         <div className="bg-pink-50">
             <Header />
-            <main className="flex flex-col text-center gap-4 items-center justify-between pt-40 p-6">
+            <main className="flex flex-col gap-4 items-center justify-between pt-40 p-6">
                 { isLoading || !product ? 'carregando' : (
-                    <>
-                        <h2>{ product.nome.toUpperCase() }</h2>
+                    <>  
+                        <p>Início/ { productType.charAt(0).toUpperCase() + productType.slice(1) }/ <span className='font-bold'>{ product.nome }</span></p>
+                        
                         <ResponsiveCarousel productData={ product }/>
                         
                         <p className='text-sm'>{ product.descricao }</p>
+                        <h2>{ product.nome.toUpperCase() }</h2>
                     </>
                 // 'olá'
                 ) }

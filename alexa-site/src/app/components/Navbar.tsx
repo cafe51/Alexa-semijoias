@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
             w-2/5
             h-screen
             z-40
-            top-20
+            top-12
             right-full
             transform
             ${isMenuOpen ? 'translate-x-full' : 'translate-x-0'}
