@@ -5,7 +5,7 @@ import Header from './Header';
 
 import { ProductType } from '../utils/types';
 import { getProductApi } from '../utils/api';
-import Card from './card';
+import Card from './Card';
 
 
 export default function ProductsList({ productType }: { productType: string }) {

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Header from './Header';
 import { ProductType } from '../utils/types';
 import { getProductApiById } from '../utils/api';
+import ResponsiveCarousel from './ResponsiveCarousel';
 
 
 
@@ -29,9 +30,14 @@ export default function Product({ id, productType }: {id: string, productType: s
     return (
         <div className="bg-pink-50">
             <Header />
-            <main className="flex flex-col items-center justify-between pt-40">
+            <main className="flex flex-col text-center gap-4 items-center justify-between pt-40 p-6">
                 { isLoading || !product ? 'carregando' : (
-                    <h2>{ product.nome }</h2>
+                    <>
+                        <h2>{ product.nome.toUpperCase() }</h2>
+                        <ResponsiveCarousel productData={ product }/>
+                        
+                        <p className='text-sm'>{ product.descricao }</p>
+                    </>
                 // 'olá'
                 ) }
             </main>
