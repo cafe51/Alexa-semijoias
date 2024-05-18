@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { FiShoppingCart } from 'react-icons/fi';
 import SearchBar from './SearchBar';
+import Link from 'next/link';
 
 
 const Header = () => {
@@ -55,18 +56,7 @@ const Header = () => {
                     </a>
                 </div>
                 <div className=''>
-                    <a 
-                        href="#japhe" 
-                        className="text-2xl font-bold" 
-                        onClick={ (e) => {
-                            e.preventDefault();
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        } }
-                    >
-                        <FiShoppingCart size={ 24 }/>
-
-                        
-                    </a>
+                    <Link href={ '/carrinho' }><FiShoppingCart size={ 24 }/></Link>
                 </div>
                 
             </div>
@@ -79,3 +69,8 @@ const Header = () => {
 };
 
 export default Header;
+
+
+
+
+
