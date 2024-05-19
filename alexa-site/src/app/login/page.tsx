@@ -1,7 +1,9 @@
+import BodyWithHeaderAndFooter from '../components/BodyWithHeaderAndFooter';
+
 export default function Login() {
     return (
-        <main>
-            <p>Login</p>
-        </main>
+        <BodyWithHeaderAndFooter>
+            <h2>Em construção...</h2>
+        </BodyWithHeaderAndFooter>
     );
 }
