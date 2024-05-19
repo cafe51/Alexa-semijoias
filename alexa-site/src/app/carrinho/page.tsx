@@ -16,12 +16,12 @@ export default function Carrinho() {
             <Header />
             <main className="flex text-start flex-col gap-4 items-start justify-between pt-40 p-6">
                 <h2 className='text-center self-center'>FINALIZE SUA COMPRA</h2>
-                <section className=' bg-white shadow-md rounded-lg'>
+                <section className='flex flex-col gap-1'>
                     {
                         mockProdutos.map((produto: ProductType) => <CartItem key={ produto.id } produto={ produto }/>)
                     }
                 </section>
-                <section className='flex flex-col gap-4 w-full p-6 rounded-md bg-white'>
+                <section className='flex flex-col gap-4 w-full p-6 bg-white shadow-lg rounded-lg shadowColor'>
                     <h2>Resumo</h2>
                     <div className='flex gap-2 w-full justify-between'>
                         <p>Subtotal</p>
