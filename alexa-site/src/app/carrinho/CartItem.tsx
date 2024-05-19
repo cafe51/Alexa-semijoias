@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ProductType } from '../utils/types';
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 export default function CartItem({ produto }: {produto: ProductType}) {
     return (
