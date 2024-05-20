@@ -9,7 +9,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
     if (cardData) {
         render = (
             <>
-                <div className='w-full rounded-lg relative h-[150px] overflow-hidden'>
+                <div className='w-full rounded-lg relative h-[200px] overflow-hidden'>
                     <Image
                         className='rounded-lg object-cover scale-125'
                         src={ cardData.image[0] }
@@ -37,7 +37,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
 
 
     return (
-        <section className="flex flex-col text-center w-[150px] items-center justify-between pb-2 gap-2 border-solid border-2 borderColor shadowColor shadow-lg text-[12px] rounded-lg h-[450px]"
+        <section className="flex flex-col text-center w-[160px] items-center justify-between pb-2 gap-2 border-solid border-2 borderColor shadowColor shadow-lg text-[12px] rounded-lg h-[450px]"
         >
             <Link href={ `/${productType}/${cardData.id}` }>{ render }</Link>
             <button className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'>COMPRE JÁ</button>
