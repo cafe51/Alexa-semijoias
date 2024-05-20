@@ -9,11 +9,13 @@
         "https://cdn.dooca.store/69773/products/brinco-de-argola-click-com-design-circular-folheado-em-ouro-18k-02-francisca_1600x2000+fill_ffffff.png?v=1714491342",
         "https://cdn.dooca.store/69773/products/brinco-de-argola-click-com-design-circular-folheado-em-ouro-18k-01-francisca-2_1600x2000+fill_ffffff.png?v=1714491344"
       ],
-      "preco": 49.90,
+      "preco": 49.9,
       "estoque": 2,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["brinco"],
+      "categoria": [
+        "brinco"
+      ],
       "medidas": "d3.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -41,11 +43,13 @@
         "https://cdn.dooca.store/69773/products/7-2_1600x2000+fill_ffffff.jpg?v=1712089392",
         "https://cdn.dooca.store/69773/products/brinco-de-argola-click-com-design-de-modulado-folheado-em-ouro-18k-03-francisca_1600x2000+fill_ffffff.jpg?v=1712089392"
       ],
-      "preco": 49.90,
+      "preco": 49.9,
       "estoque": 4,
       "desconto": 0,
       "lancamento": true,
-      "categoria": ["brinco"],
+      "categoria": [
+        "brinco"
+      ],
       "medidas": "d3.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -73,11 +77,13 @@
         "https://cdn.dooca.store/69773/products/brinco-longo-esfera-e-perolas-folheado-em-ouro-18k-01-francisca_1600x2000+fill_ffffff.png?v=1714765202",
         "https://cdn.dooca.store/69773/products/brinco-longo-esfera-e-perolas-folheado-em-ouro-18k-01-francisca-1_1600x2000+fill_ffffff.jpg?v=1714764376"
       ],
-      "preco": 129.90,
+      "preco": 129.9,
       "estoque": 5,
       "desconto": 10,
       "lancamento": false,
-      "categoria": ["brinco"],
+      "categoria": [
+        "brinco"
+      ],
       "medidas": "d3.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -98,7 +104,6 @@
       ]
     }
   ],
-
   "pulseiras": [
     {
       "id": "1612000009917",
@@ -109,11 +114,15 @@
         "https://cdn.dooca.store/69773/products/bracelete-liso-folheado-em-rodio-branco-francisca_1600x2000+fill_ffffff.jpg?v=1715612851",
         "https://cdn.dooca.store/69773/products/bracelete-liso-folheado-em-rodio-branco-02-francisca_600x800+fill_ffffff.jpg?v=1714402454"
       ],
-      "preco": 89.90,
+      "preco": 89.9,
       "estoque": 2,
       "desconto": 5,
       "lancamento": false,
-      "categoria": ["pulseira", "bracelete", "rodio branco"],
+      "categoria": [
+        "pulseira",
+        "bracelete",
+        "rodio branco"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -145,11 +154,13 @@
         "https://cdn.dooca.store/69773/products/pulseira-de-elo-cadeado-liso-e-cravjeado-de-zirconias-folheado-em-ouro-18k-02-francisca-3_600x800+fill_ffffff.png?v=1714490760",
         "https://cdn.dooca.store/69773/products/pulseira-de-elo-cadeado-liso-e-cravjeado-de-zirconias-folheado-em-ouro-18k-02-francisca-2_600x800+fill_ffffff.png?v=1714490761"
       ],
-      "preco": 189.90,
+      "preco": 189.9,
       "estoque": 1,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["pulseira"],
+      "categoria": [
+        "pulseira"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "Branca",
@@ -177,11 +188,13 @@
         "https://cdn.dooca.store/69773/products/bracelete-com-cinco-zirconias-regulavel-grandes-folheado-em-ouro-18k-01-francisca_1600x2000+fill_ffffff.jpg?v=1712868421",
         "https://cdn.dooca.store/69773/products/bracelete-com-cinco-zirconias-regulavel-grandes-folheado-em-ouro-18k_1600x2000+fill_ffffff.jpg?v=1712693486"
       ],
-      "preco": 89.90,
+      "preco": 89.9,
       "estoque": 3,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["pulseira"],
+      "categoria": [
+        "pulseira"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "Branca",
@@ -213,11 +226,13 @@
         "https://cdn.dooca.store/69773/products/pulseira-de-elo-cadeado-liso-e-cravjeado-de-zirconias-folheado-em-ouro-18k-02-francisca-3_600x800+fill_ffffff.png?v=1714490760",
         "https://cdn.dooca.store/69773/products/pulseira-de-elo-cadeado-liso-e-cravjeado-de-zirconias-folheado-em-ouro-18k-02-francisca-2_600x800+fill_ffffff.png?v=1714490761"
       ],
-      "preco": 189.90,
+      "preco": 189.9,
       "estoque": 1,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["pulseira"],
+      "categoria": [
+        "pulseira"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "Branca",
@@ -247,11 +262,13 @@
         "https://cdn.dooca.store/69773/products/bracelete-hand-palm-de-esferas-regulavel-folheado-em-ouro-18k-02-francisca_600x800+fill_ffffff.jpg?v=1712693042",
         "https://cdn.dooca.store/69773/products/bracelete-hand-palm-de-esferas-regulavel-folheado-em-ouro-18k_600x800+fill_ffffff.png?v=1714153604"
       ],
-      "preco": 79.90,
+      "preco": 79.9,
       "estoque": 3,
       "desconto": 0,
       "lancamento": true,
-      "categoria": ["pulseira"],
+      "categoria": [
+        "pulseira"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -283,11 +300,13 @@
         "https://cdn.dooca.store/69773/products/dimensao-3_600x800+fill_ffffff.png?v=1714478131",
         "https://cdn.dooca.store/69773/products/dimensao-3_1600x2000+fill_ffffff.png?v=1714478131"
       ],
-      "preco": 129.90,
+      "preco": 129.9,
       "estoque": 1,
       "desconto": 0,
       "lancamento": true,
-      "categoria": ["colar"],
+      "categoria": [
+        "colar"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -319,11 +338,13 @@
         "https://cdn.dooca.store/69773/products/colar-personalizado-com-nome-em-flor-rosa-folheado-escolha-seu-banho-05-francisca-2_600x800+fill_ffffff.jpg?v=1713273329",
         "https://cdn.dooca.store/69773/products/colar-personalizado-com-nome-em-flor-rosa-folheado-escolha-seu-banho-2_600x800+fill_ffffff.jpg?v=1713273338"
       ],
-      "preco": 129.90,
+      "preco": 129.9,
       "estoque": 2,
       "desconto": 25,
       "lancamento": false,
-      "categoria": ["colar"],
+      "categoria": [
+        "colar"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -354,11 +375,15 @@
         "https://cdn.dooca.store/69773/products/choker-aro-com-pingente-de-chapa-redonda-organico-mix-de-folheado-em-ouro-18k-e-rodio-branco-03-francisca_600x800+fill_ffffff.jpg?v=1713289203",
         "https://cdn.dooca.store/69773/products/choker-aro-com-pingente-de-chapa-redonda-organico-mix-de-folheado-em-ouro-18k-e-rodio-branco-02-francisca-1_600x800+fill_ffffff.jpg?v=1713289667"
       ],
-      "preco": 149.90,
+      "preco": 149.9,
       "estoque": 4,
       "desconto": 0,
       "lancamento": true,
-      "categoria": ["colar", "choker", "Rodio"],
+      "categoria": [
+        "colar",
+        "choker",
+        "Rodio"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k / Folheado em Ródio Branco",
       "stoneColor": "",
@@ -387,11 +412,13 @@
         "https://cdn.dooca.store/69773/products/colar-coracao-efeito-derretido-folheado-em-ouro-18k-01-francisca_600x800+fill_ffffff.jpg?v=1712346090",
         "https://cdn.dooca.store/69773/products/colar-coracao-efeito-derretido-folheado-em-ouro-18k-1_600x800+fill_ffffff.jpg?v=1712346091"
       ],
-      "preco": 129.90,
+      "preco": 129.9,
       "estoque": 3,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["colar"],
+      "categoria": [
+        "colar"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -421,11 +448,14 @@
         "https://cdn.dooca.store/69773/products/choker-de-perolas-com-zirconia-central-folheado-em-ouro-18k-03-francisca_600x800+fill_ffffff.png?v=1714154088",
         "https://cdn.dooca.store/69773/products/choker-de-perolas-com-zirconia-central-folheado-em-ouro-18k-03-francisca_1600x2000+fill_ffffff.png?v=1714154088"
       ],
-      "preco": 69.90,
+      "preco": 69.9,
       "estoque": 2,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["colar", "choker"],
+      "categoria": [
+        "colar",
+        "choker"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -445,7 +475,6 @@
         }
       ]
     }
-    
   ],
   "aneis": [
     {
@@ -457,11 +486,13 @@
         "https://cdn.dooca.store/69773/products/anel-regulavel-com-design-de-pre-1_1600x2000+fill_ffffff.jpg?v=1712690336",
         "https://cdn.dooca.store/69773/products/anel-regulavel-com-design-de-pre-2_600x800+fill_ffffff.jpg?v=1712690337"
       ],
-      "preco": 49.90,
+      "preco": 49.9,
       "estoque": 2,
       "desconto": 5,
       "lancamento": false,
-      "categoria": ["anel"],
+      "categoria": [
+        "anel"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "Branca",
@@ -489,11 +520,13 @@
         "https://cdn.dooca.store/69773/products/anel-regulavel-gota-vazada-lisa-folheado-em-ouro-18k1_600x800+fill_ffffff.jpg?v=1712754470",
         "https://cdn.dooca.store/69773/products/anel-regulavel-gota-vazada-lisa-folheado-em-ouro-18k-1_600x800+fill_ffffff.jpg?v=1712754471"
       ],
-      "preco": 89.90,
+      "preco": 89.9,
       "estoque": 7,
       "desconto": 0,
       "lancamento": true,
-      "categoria": ["anel"],
+      "categoria": [
+        "anel"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -522,11 +555,13 @@
         "https://cdn.dooca.store/69773/products/anel-tres-aros-folheado-em-ouro-18k-01-francisca_600x800+fill_ffffff.jpg?v=1712696013",
         "https://cdn.dooca.store/69773/products/anel-tres-aros-folheado-em-ouro-18k_600x800+fill_ffffff.jpg?v=1712696014"
       ],
-      "preco": 89.90,
+      "preco": 89.9,
       "estoque": 2,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["anel"],
+      "categoria": [
+        "anel"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -555,11 +590,13 @@
         "https://cdn.dooca.store/69773/products/anel-meia-bola-liso-regulavel-folheado-em-ouro-18k-03-francisca_600x800+fill_ffffff.png?v=1714161164",
         "https://cdn.dooca.store/69773/products/anel-meia-bola-liso-regulavel-folheado-em-ouro-18k-01-francisca_600x800+fill_ffffff.png?v=1714161165"
       ],
-      "preco": 59.90,
+      "preco": 59.9,
       "estoque": 2,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["anel"],
+      "categoria": [
+        "anel"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -587,11 +624,13 @@
         "https://cdn.dooca.store/69773/products/cut-0216-img-0008-1600x2000-fill_1600x2000+fill_ffffff.jpg?v=1703678825",
         "https://cdn.dooca.store/69773/products/anel-com-design-minimalista-e-pi_1600x2000+fill_ffffff.jpg?v=1703678830"
       ],
-      "preco": 129.90,
+      "preco": 129.9,
       "estoque": 2,
       "desconto": 0,
       "lancamento": false,
-      "categoria": ["anel"],
+      "categoria": [
+        "anel"
+      ],
       "medidas": "d10.5",
       "banho": "Folheado em Ouro 18k",
       "stoneColor": "",
@@ -610,6 +649,183 @@
           "resposta": "Sim, o design elegante e sofisticado deste bracelete permite que ele seja usado em ocasiões formais, como casamentos e formaturas, adicionando um toque de glamour ao seu visual"
         }
       ]
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "nome": "Alexa",
+      "senha": "123456",
+      "email": "alexa@hotmail.com",
+      "cpf": "555.555.555-55",
+      "tel": "5592955554444",
+      "endereco": [],
+      "carrinho": [],
+      "pedidos": [],
+      "admin": true
+    },
+    {
+      "id": "2",
+      "nome": "Maria Cliente Full",
+      "email": "maria@hotmail.com",
+      "cpf": "555444888-74",
+      "tel": "5592988884444",
+      "endereco": [
+        {
+          "cep": "888888845",
+          "bairro": "São Jorge",
+          "rua": "Santa Helena",
+          "cidade": "Manaus",
+          "estado": "Amazonas",
+          "numero": "755",
+          "complemento": "",
+          "referencia": "Em frente ao açougue dois irmãos"
+        },
+        {
+          "cep": "69055584",
+          "bairro": "Jorge Teixeira",
+          "rua": "Rua Barão do Rio Branco",
+          "cidade": "Manaus",
+          "estado": "Amazonas",
+          "numero": "844",
+          "complemento": "Apto 2",
+          "referencia": "Em frente ao açougue dois irmãos"
+        },
+        {
+          "cep": "63022584",
+          "bairro": "Flamengo",
+          "rua": "Rua João das couves",
+          "cidade": "Rio de Janeiro",
+          "estado": "Rio de Janeiro",
+          "numero": "45",
+          "complemento": "",
+          "referencia": ""
+        }
+      ],
+      "carrinho": [
+        "1140000010472",
+        "1140000010490"
+      ],
+      "pedidos": [
+        {
+          "carrinho": [
+            {
+              "id": "1140000009948",
+              "nome": "Anel Regulável com Design de Prego com Topo Cravejado com Zircônias folheado em ouro 18k",
+              "image": "https://cdn.dooca.store/69773/products/anel-regulavel-com-design-de-prego-com-topo-cravejado-com-zirconias-folheado-em-ouro-18k-francisca_1600x2000+fill_ffffff.png?v=1714056100",
+              "preço": 80
+            }
+          ],
+          "data": "25/11/2023",
+          "status": "Entregue",
+          "valor": {
+            "soma": 80,
+            "frete": 30,
+            "total": 110
+          },
+          "endereço": {
+            "cep": "888888845",
+            "bairro": "São Jorge",
+            "rua": "Santa Helena",
+            "cidade": "Manaus",
+            "estado": "Amazonas",
+            "numero": "755",
+            "complemento": "",
+            "referencia": "Em frente ao açougue dois irmãos"
+          }
+        },
+        {
+          "carrinho": [
+            {
+              "id": "3150000003997",
+              "nome": "Colar Coração Efeito Derretido folheado em ouro 18k",
+              "image": "https://cdn.dooca.store/69773/products/colar-coracao-efeito-derretido-folheado-em-ouro-18k_1600x2000+fill_ffffff.jpg?v=1712346089",
+              "preço": 70
+            },
+            {
+              "id": "1612000009917",
+              "nome": "Bracelete Liso folheado em ródio branco",
+              "image": "https://cdn.dooca.store/69773/products/bracelete-liso-folheado-em-rodio-branco-03-francisca_1600x2000+fill_ffffff.png?v=1714402453",
+              "preço": 90
+            }
+          ],
+          "data": "22/12/2023",
+          "status": "Enviado",
+          "valor": {
+            "soma": 160,
+            "frete": 50,
+            "total": 210
+          },
+          "endereço": {
+            "cep": "69055584",
+            "bairro": "Jorge Teixeira",
+            "rua": "Rua Barão do Rio Branco",
+            "cidade": "Manaus",
+            "estado": "Amazonas",
+            "numero": "844",
+            "complemento": "Apto 2",
+            "referencia": "Em frente ao açougue dois irmãos"
+          }
+        },
+        {
+          "carrinho": [
+            {
+              "id": "3150000004027",
+              "nome": "Mix Três Colares Relicários folheado em ouro 18k",
+              "image": "https://cdn.dooca.store/69773/products/dimensao-1-2_1600x2000+fill_ffffff.png?v=1714478130",
+              "preço": 30
+            },
+            {
+              "id": "1612000009896",
+              "nome": "Bracelete Hand Palm de Esferas Regulável folheado em ouro 18k",
+              "image": "https://cdn.dooca.store/69773/products/bracelete-hand-palm-de-esferas-regulavel-folheado-em-ouro-18k-04-francisca_1600x2000+fill_ffffff.png?v=1714153603",
+              "preço": 70
+            }
+          ],
+          "data": "21/10/2024",
+          "status": "Aguardando Pagamento",
+          "valor": {
+            "soma": 100,
+            "frete": 30,
+            "total": 170
+          },
+          "endereço": {
+            "cep": "63022584",
+            "bairro": "Flamengo",
+            "rua": "Rua João das couves",
+            "cidade": "Rio de Janeiro",
+            "estado": "Rio de Janeiro",
+            "numero": "45",
+            "complemento": "",
+            "referencia": ""
+          }
+        }
+      ],
+      "admin": false,
+      "senha": "123456"
+    }
+  ],
+  "teste": [
+    {
+      "id": 1,
+      "nome": "Pedro"
+    },
+    {
+      "id": 2,
+      "nome": "João"
+    },
+    {
+      "id": "e5aa",
+      "nome": "João"
+    },
+    {
+      "id": "545b",
+      "nome": "Lucas"
+    },
+    {
+      "id": "feb8",
+      "nome": "Lucas",
+      "idadae": 28
     }
   ]
 }
