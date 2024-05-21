@@ -68,6 +68,17 @@ a {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.inputFocus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(244 114 182 / var(--tw-border-opacity));
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(244 114 182 / var(--tw-ring-opacity));
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(244 114 182 / var(--tw-ring-opacity));
+}
+
 
 .asset-enter {
   opacity: 0;
