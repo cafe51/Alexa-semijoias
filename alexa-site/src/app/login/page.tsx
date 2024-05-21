@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import BodyWithHeaderAndFooter from '../components/BodyWithHeaderAndFooter';
 import { useRouter } from 'next/navigation';
 import { ImSpinner9 } from 'react-icons/im';
+import { getUsersApi } from '../utils/api';
+import { UserType } from '../utils/types';
 
 export default function Login() {
     const router = useRouter();
@@ -22,10 +24,16 @@ export default function Login() {
 
     useEffect(() => {
         const userFromLocalStorage = localStorage.getItem('userData');
-        const userData = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
-        if (userData && userData.token) {
-            setLoadingButton(true);
-            router.push('cadastro/');
+        console.log('LOCAL STORAGE', userFromLocalStorage);
+    
+        if (userFromLocalStorage !== null && userFromLocalStorage !== undefined && typeof userFromLocalStorage === 'string' && userFromLocalStorage) {
+            try {
+                JSON.parse(userFromLocalStorage);
+                setLoadingButton(true);
+                router.push('/');
+            } catch (e) {
+                console.error('Invalid JSON in localStorage:', e);
+            }
         }
     }, [router]);
 
@@ -46,14 +54,14 @@ export default function Login() {
         setLoginErrorMessage('');
 
         try {
-            // Simulando a chamada de API
-            // const { token } = await loginRequestApi(registerValues);
-            // const allUsers = await getUsersApi(token);
-            // const user = allUsers.find((myUser: UserType) => myUser.email === registerValues.email);
-            // const userData = { user, token };
-            // localStorage.setItem('userData', JSON.stringify(userData));
-
-            router.push('/blogapi');
+            const allUsers = await getUsersApi();
+            const user = allUsers.find((myUser: UserType) => myUser.email === registerValues.email);
+            if (user.password === registerValues.password) {
+                localStorage.setItem('userData', JSON.stringify(user));
+                router.push('/');
+            } else {
+                throw new Error;
+            }
         } catch (error) {
             console.log('Erro no login: ', error);
             setLoginErrorMessage('Usuário ou senha inválidos');

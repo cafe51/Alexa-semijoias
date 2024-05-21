@@ -20,7 +20,7 @@ const SimpleHeader = () => {
     return (
         <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity} flex justify-center items-center` }>
             <div className={ `flex justify-center items-center px-8 md:px-16 ${height} md:py-0` }>
-                <Link className="text-2xl font-bold"  href={ '/' }>Alexa </Link>
+                <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
             </div>
         </header>
 

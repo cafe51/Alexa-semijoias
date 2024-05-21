@@ -27,6 +27,17 @@ export const getProductApiById = async(product: string, id: string) => {
     } 
 };
 
+export const getUsersApi = async() => {
+    try {
+        const { data } = await axiosInstance.get('users');
+
+        return data;
+    } catch(error) {
+        return error;
+    }
+};
+
+
 export const registerRequestApi = async(body: RegisterFormInputType) => {
     const { data } = await axiosInstance.post('/users', body);
     return data;
