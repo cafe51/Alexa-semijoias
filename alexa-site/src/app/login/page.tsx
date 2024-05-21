@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import BodyWithHeaderAndFooter from '../components/BodyWithHeaderAndFooter';
 import { useRouter } from 'next/navigation';
 import { ImSpinner9 } from 'react-icons/im';
-import { getUsersApi } from '../utils/api';
-import { UserType } from '../utils/types';
+import { getProductApi, getUsersApi } from '../utils/api';
+import { ProductType, UserType } from '../utils/types';
 
 export default function Login() {
     const router = useRouter();
@@ -28,7 +28,7 @@ export default function Login() {
             try {
                 JSON.parse(userFromLocalStorage);
                 setLoadingButton(true);
-                router.push('/');
+                router.push('/minha-conta');
             } catch (e) {
                 console.error('Invalid JSON in localStorage:', e);
             }
@@ -56,6 +56,23 @@ export default function Login() {
             const user = allUsers.find((myUser: UserType) => myUser.email === registerValues.email);
             if (user.password === registerValues.password) {
                 localStorage.setItem('userData', JSON.stringify(user));
+
+                const carrinhoIds = user.carrinho && user.carrinho.length > 0 ? user.carrinho : [];
+
+                const allBrincos = await getProductApi('brincos');
+                const allPulseiras = await getProductApi('pulseiras');
+                const allColares = await getProductApi('colares');
+                const allAneis = await getProductApi('aneis');
+                const allProducts = [...allBrincos, ...allPulseiras, ...allColares , ...allAneis];
+
+                const carrinhoProducts: ProductType[] = carrinhoIds.map((carrinhoId: string) => {
+                    return allProducts.filter((product: ProductType) => product.id === carrinhoId)[0];
+                });
+
+                console.log(carrinhoProducts);
+
+                localStorage.setItem('carrinho', JSON.stringify(carrinhoProducts));
+
                 router.push('/');
             } else {
                 throw new Error;

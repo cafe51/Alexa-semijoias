@@ -1,22 +1,43 @@
-import db from '../../../public/db/db.json';
+'use client';
+
+// import db from '../../../public/db/db.json';
 import { ProductType } from '../utils/types';
 import CartItem from './CartItem';
 import BodyWithHeaderAndFooter from '../components/BodyWithHeaderAndFooter';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-const produtoMock1 = db.aneis[1];
-const produtoMock2 = db.brincos[0];
-const produtoMock3 = db.colares[2];
+// const produtoMock1 = db.aneis[1];
+// const produtoMock2 = db.brincos[0];
+// const produtoMock3 = db.colares[2];
 
-const mockProdutos = [produtoMock1, produtoMock2, produtoMock3];
+// const mockProdutos = [produtoMock1, produtoMock2, produtoMock3];
 
 
 export default function Carrinho() {
+    const [cartItems, setCartItems] = useState([]);
+    const router = useRouter();
+
+    useEffect(() => {
+        const cartFromLocalStorageString = localStorage.getItem('carrinho');
+        if (cartFromLocalStorageString !== '' && cartFromLocalStorageString) {
+            try {
+                const cartFromLocalStorageJson = JSON.parse(cartFromLocalStorageString);
+                cartFromLocalStorageJson ? setCartItems(cartFromLocalStorageJson) : setCartItems([]);
+            } catch (e) {
+                console.error('Invalid JSON in localStorage:', e);
+            }
+        } else {
+            setCartItems([]);
+        }
+    }, [router]);
+    
     return (
         <BodyWithHeaderAndFooter>
             <h2 className='text-center self-center'>FINALIZE SUA COMPRA</h2>
             <section className='flex flex-col gap-1'>
                 {
-                    mockProdutos.map((produto: ProductType) => <CartItem key={ produto.id } produto={ produto }/>)
+                    cartItems.map((produto: ProductType) => <CartItem key={ produto.id } produto={ produto }/>)
                 }
             </section>
             <section className='flex flex-col gap-4 w-full p-6 bg-white shadow-lg rounded-lg shadowColor'>

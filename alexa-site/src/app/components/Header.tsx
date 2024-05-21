@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Navbar from './Navbar';
-import { FiShoppingCart } from 'react-icons/fi';
 import { FaRegUser } from 'react-icons/fa';
 import SearchBar from './SearchBar';
 import Link from 'next/link';
+import CartIcon from './CartIcon';
 
 
 const Header = () => {
@@ -47,13 +47,8 @@ const Header = () => {
                 <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
                 <div className='flex gap-4'>
                     <Link className=""  href={ '/login' }><FaRegUser className='' size={ 24 } /></Link>
-                    <Link className='relative' href={ '/carrinho' }><FiShoppingCart size={ 24 }/>
-                        <span className="absolute bottom-3 right-0 left-6 flex items-center justify-center w-5 h-5 text-xs text-white bg-green-500 rounded-full">
-                                3
-                        </span>
-                    </Link>
+                    <CartIcon />
                 </div>
-                
             </div>
             <SearchBar />
             
