@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { RegisterFormInputType } from './types';
 
 const url = 'http://localhost:3000/';
 
@@ -24,4 +25,9 @@ export const getProductApiById = async(product: string, id: string) => {
     } catch(error) {
         return error;
     } 
+};
+
+export const registerRequestApi = async(body: RegisterFormInputType) => {
+    const { data } = await axiosInstance.post('/users', body);
+    return data;
 };

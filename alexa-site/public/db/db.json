@@ -655,7 +655,7 @@
     {
       "id": "1",
       "nome": "Alexa",
-      "senha": "123456",
+      "password": "123456",
       "email": "alexa@hotmail.com",
       "cpf": "555.555.555-55",
       "tel": "5592955554444",
@@ -802,7 +802,14 @@
         }
       ],
       "admin": false,
-      "senha": "123456"
+      "password": "123456"
+    },
+    {
+      "id": "2f99",
+      "password": "batata51",
+      "email": "zebirita@email.com",
+      "nome": "Zé das couves",
+      "tel": "92988065301"
     }
   ],
   "teste": [

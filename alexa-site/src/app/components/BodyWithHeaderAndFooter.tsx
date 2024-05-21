@@ -17,7 +17,7 @@ export default function BodyWithHeaderAndFooter({
 
     return (
         <div className="flex flex-col justify-between min-h-screen secColor">
-            { pathSegment === 'login' ? <SimpleHeader /> : <Header /> } 
+            { pathSegment === 'login' || pathSegment === 'cadastro' ? <SimpleHeader /> : <Header /> } 
             <main className="flex items-center flex-col gap-4 justify-between pt-40 p-4">
                 { children }
             </main>

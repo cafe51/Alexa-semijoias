@@ -54,7 +54,7 @@ type OrderType = {
 
 export type UserType = {
     id: string,
-    senha: string,
+    password: string,
     nome: string,
     email: string,
     cpf: string,
@@ -63,4 +63,11 @@ export type UserType = {
     carrinho: string[],
     pedidos: OrderType[],
     admin: boolean 
+}
+
+export type RegisterFormInputType = {
+    password: string,
+    nome: string,
+    email: string,
+    tel: string
 }
