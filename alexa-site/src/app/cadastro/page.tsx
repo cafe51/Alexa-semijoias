@@ -143,7 +143,7 @@ export default function Register() {
                     </button>
                 </form>
                 <div>
-                    <p>Já possui uma conta? <a className='text-blue-500' href="/blogapi/login">Iniciar sessão</a></p>
+                    <p>Já possui uma conta? <a className='text-blue-500' href="/login">Iniciar sessão</a></p>
                 </div>
             </section>
         </BodyWithHeaderAndFooter>
