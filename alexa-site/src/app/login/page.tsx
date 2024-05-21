@@ -24,9 +24,7 @@ export default function Login() {
 
     useEffect(() => {
         const userFromLocalStorage = localStorage.getItem('userData');
-        console.log('LOCAL STORAGE', userFromLocalStorage);
-    
-        if (userFromLocalStorage !== null && userFromLocalStorage !== undefined && typeof userFromLocalStorage === 'string' && userFromLocalStorage) {
+        if (userFromLocalStorage !== '' && userFromLocalStorage) {
             try {
                 JSON.parse(userFromLocalStorage);
                 setLoadingButton(true);

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import NavBarUserSection from './NavBarUserSection';
 
 interface NavbarProps {
   isMenuOpen: boolean;
@@ -41,11 +42,10 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
     return (
         <nav ref={ node } className={
             `
-            sm:w-1/3
             transition-all
             duration-500
             fixed
-            w-2/5
+            w-4/6
             h-screen
             z-40
             top-12
@@ -62,13 +62,15 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
             py-4`
         }>
             <div className="nav-gradient font-bold text-center">
-                <div className="flex flex-col space-y-8 py-4 px-4 md:flex-row md:space-y-0  md:py-0 md:px-0 md:justify-end lg:gap-6">
+                <div className="flex flex-col space-y-8 py-4  md:flex-row md:space-y-0  md:py-0 md:px-0 md:justify-end lg:gap-6 ">
                     <a href="/" onClick={ goToStart } className={ navItemsStyle } >Início</a>
                     <a href="/brincos" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Brincos</a>
                     <a href="/pulseiras" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Pulseiras</a>
                     <a href="/colares" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Colares</a>
                     <a href="/aneis" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Anéis</a>
                     <a href="/contact" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Fale Comigo</a>
+                    <NavBarUserSection />
+
                 </div>
             </div>
         </nav>
