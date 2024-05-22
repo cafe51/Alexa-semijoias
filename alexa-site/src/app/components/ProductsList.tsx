@@ -31,7 +31,7 @@ export default function ProductsList({ productType }: { productType: string }) {
             { isLoading || !products ? (
                 <h2>Loading...</h2>
             ) : (
-                <div className=" flex flex-wrap justify-between gap-2 ">
+                <div className=" flex flex-wrap justify-center gap-2 ">
                     { products.map((productsData) => {
                         return <Card key={ productsData.id } productType={ productType } cardData={ productsData }  />;
                     }) }
