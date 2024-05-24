@@ -37,7 +37,7 @@ a {
 }
 
 .primColor {
-  background-color: #fbcfe8;
+  background-color: #f89fd2;
 }
 
 .secColor {
@@ -55,7 +55,7 @@ a {
 
 .textColored {
   --tw-text-opacity: 1;
-  color: rgb(249 168 212 / var(--tw-text-opacity));
+  color:  #f561b5;
 }
 
 .strongTextColored {
@@ -134,7 +134,7 @@ a {
 
 @media (max-width: 760px) {
   .nav-gradient {
-    background: linear-gradient(to bottom, #fbcfe8, rgba(255, 255, 255, 0.74));
+    background: linear-gradient(to bottom, #f89fd2, rgba(255, 255, 255, 0.74));
     content: "";
     display: block;
     position: absolute;

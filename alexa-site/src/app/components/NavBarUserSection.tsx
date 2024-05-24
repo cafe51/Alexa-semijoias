@@ -2,30 +2,31 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
 
 export default function NavBarUserSection() {
     const router = useRouter();
-
+    const { user, logout } = useUser();
     const [userIsLogged, setUserIsLogged] = useState(false);
     const [userName, setUserName] = useState('');
 
     useEffect(() => {
-        const userFromLocalStorage = localStorage.getItem('userData');
-        if (userFromLocalStorage !== '' && userFromLocalStorage) {
+
+        if (user) {
             try {
                 setUserIsLogged(true);
-                const userData = JSON.parse(userFromLocalStorage);
-                setUserName(userData.nome.split(' ')[0]);
+                setUserName(user.nome.split(' ')[0]);
             } catch (e) {
                 console.error('Invalid JSON in localStorage:', e);
-            }
+            }  
         } else {
             setUserIsLogged(false);
         }
-    }, [router]);
+    }, [router, user]);
 
     const handleLogOut = () => {
-        localStorage.removeItem('userData');
+        // localStorage.removeItem('userData');
+        logout();
         router.push('/');
     };
 

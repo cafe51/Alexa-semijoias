@@ -6,9 +6,12 @@ import { useRouter } from 'next/navigation';
 import { ImSpinner9 } from 'react-icons/im';
 import { getProductApi, getUsersApi } from '../utils/api';
 import { ProductType, UserType } from '../utils/types';
+import { useUser } from '@/context/UserContext';
+
 
 export default function Login() {
     const router = useRouter();
+    const { user, setUser } = useUser();
     const [loadingButton, setLoadingButton] = useState(true);
     const [loadingComponent, setLoadingComponent] = useState(true);
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
@@ -23,10 +26,8 @@ export default function Login() {
     }, []);
 
     useEffect(() => {
-        const userFromLocalStorage = localStorage.getItem('userData');
-        if (userFromLocalStorage !== '' && userFromLocalStorage) {
+        if (user) {
             try {
-                JSON.parse(userFromLocalStorage);
                 setLoadingButton(true);
                 router.push('/minha-conta');
             } catch (e) {
@@ -46,6 +47,24 @@ export default function Login() {
         setRegisterValues({ ...registerValues, [name]: value });
     };
 
+    const setCartLocalStorage = async(user: UserType) => {
+        const carrinhoIds = user.carrinho && user.carrinho.length > 0 ? user.carrinho : [];
+
+        const allBrincos = await getProductApi('brincos');
+        const allPulseiras = await getProductApi('pulseiras');
+        const allColares = await getProductApi('colares');
+        const allAneis = await getProductApi('aneis');
+        const allProducts = [...allBrincos, ...allPulseiras, ...allColares , ...allAneis];
+
+        const carrinhoProducts: ProductType[] = carrinhoIds.map((carrinhoId: string) => {
+            return allProducts.filter((product: ProductType) => product.id === carrinhoId)[0];
+        });
+
+        // console.log(carrinhoProducts);
+
+        localStorage.setItem('carrinho', JSON.stringify(carrinhoProducts));
+    };
+
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoadingButton(true);
@@ -55,23 +74,11 @@ export default function Login() {
             const allUsers = await getUsersApi();
             const user = allUsers.find((myUser: UserType) => myUser.email === registerValues.email);
             if (user.password === registerValues.password) {
-                localStorage.setItem('userData', JSON.stringify(user));
+                // localStorage.setItem('userData', JSON.stringify(user));
 
-                const carrinhoIds = user.carrinho && user.carrinho.length > 0 ? user.carrinho : [];
+                setCartLocalStorage(user);
 
-                const allBrincos = await getProductApi('brincos');
-                const allPulseiras = await getProductApi('pulseiras');
-                const allColares = await getProductApi('colares');
-                const allAneis = await getProductApi('aneis');
-                const allProducts = [...allBrincos, ...allPulseiras, ...allColares , ...allAneis];
-
-                const carrinhoProducts: ProductType[] = carrinhoIds.map((carrinhoId: string) => {
-                    return allProducts.filter((product: ProductType) => product.id === carrinhoId)[0];
-                });
-
-                console.log(carrinhoProducts);
-
-                localStorage.setItem('carrinho', JSON.stringify(carrinhoProducts));
+                setUser(user);
 
                 router.push('/');
             } else {
