@@ -1,10 +1,6 @@
 import Image from 'next/image';
 import { CartHistoryType, OrderType } from '../utils/types';
 
-// interface CardOrderProps {
-//     pedido: OrderType;
-//   }
-
 export default function CardOrder({ pedido } : { pedido: OrderType }) {
     return (
         <div className='flex flex-col items-center justify-center w-full gap-2  p-4  shadow-lg shadowColor rounded-lg '>
