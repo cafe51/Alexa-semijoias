@@ -26,7 +26,7 @@ export default function Login() {
     }, []);
 
     useEffect(() => {
-        if (user) {
+        if (user || localStorage.getItem('user')) {
             try {
                 setLoadingButton(true);
                 router.push('/minha-conta');

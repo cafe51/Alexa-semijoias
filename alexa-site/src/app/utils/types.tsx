@@ -31,7 +31,7 @@ type AddressType = {
     referencia: string
 }
 
-type CartHistoryType = {
+export type CartHistoryType = {
     id: string,
     nome: string,
     image: string,
@@ -44,7 +44,7 @@ type ValueType = {
     total: number
 }
 
-type OrderType = {
+export type OrderType = {
     carrinho: CartHistoryType[],
     data: string,
     status: string,

@@ -5,16 +5,33 @@ import { FaRegUser } from 'react-icons/fa';
 import SearchBar from './SearchBar';
 import Link from 'next/link';
 import CartIcon from './CartIcon';
+import { useUser } from '@/context/UserContext';
 
 
 const Header = () => {
+    const { user } = useUser();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [ pathLoginAccount, setPathLoginAccount] = useState('minha-conta');
   
     const handleScroll = () => {
         const offset = window.scrollY;
         offset > 100 ? setIsScrolled(true) : setIsScrolled(false);
     };
+
+    useEffect(() => {
+        if (!user || !localStorage.getItem('user')) {
+            try {
+                setPathLoginAccount('login');
+            } catch (e) {
+                console.error('Invalid JSON in localStorage:', e);
+            }
+        } else {
+            setPathLoginAccount('minha-conta');
+        }
+    }, [user]);
+
+    
   
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
@@ -46,7 +63,7 @@ const Header = () => {
                 <Navbar isMenuOpen={ isMenuOpen } setIsMenuOpen={ setIsMenuOpen } />
                 <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
                 <div className='flex gap-4'>
-                    <Link className=""  href={ '/login' }><FaRegUser className='' size={ 24 } /></Link>
+                    <Link className=""  href={ `/${pathLoginAccount}` }><FaRegUser className='' size={ 24 } /></Link>
                     <CartIcon />
                 </div>
             </div>
