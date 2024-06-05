@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { ProductType } from '../utils/types';
 import { getProductApi } from '../utils/api';
 import Card from './Card';
-import BodyWithHeaderAndFooter from './BodyWithHeaderAndFooter';
-
 
 export default function ProductsList({ productType }: { productType: string }) {
     const [products, setProducts] = useState<ProductType[] | null>(null);
@@ -26,7 +24,7 @@ export default function ProductsList({ productType }: { productType: string }) {
     }, []);
 
     return (
-        <BodyWithHeaderAndFooter>
+        <main>
             <h2>{ productType.charAt(0).toUpperCase() + productType.slice(1) }</h2>
             { isLoading || !products ? (
                 <h2>Loading...</h2>
@@ -37,6 +35,6 @@ export default function ProductsList({ productType }: { productType: string }) {
                     }) }
                 </div>
             ) }
-        </BodyWithHeaderAndFooter>
+        </main>
     );
 }

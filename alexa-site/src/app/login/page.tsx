@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import BodyWithHeaderAndFooter from '../components/BodyWithHeaderAndFooter';
 import { useRouter } from 'next/navigation';
 import { ImSpinner9 } from 'react-icons/im';
 import { getProductApi, getUsersApi } from '../utils/api';
@@ -93,80 +92,78 @@ export default function Login() {
     };
 
     return (
-        <BodyWithHeaderAndFooter>
-            <section className='flex flex-col gap-10 items-center self-center justify-center w-full h-full secColor md:w-2/5'>
-                <h1>Entre na sua conta</h1>
-                <form 
-                    className='flex flex-col gap-8' 
-                    method="post" 
-                    onSubmit={ handleSubmit }
-                >
-                    <label className={ `flex flex-col gap-1 ${loadingComponent ? 'animate-pulse' : ''}` } htmlFor="email">
-                        <span>EMAIL/CPF</span>
-                        <input
-                            type="email"
-                            name="email"
-                            className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
-                            placeholder={ loadingComponent ? '' : 'ex: seuemail@email.com' }
-                            disabled={ loadingComponent }
-                            minLength={ 12 }
-                            maxLength={ 28 }
-                            onInvalid={ (event) => {
-                                const target = event.target as HTMLInputElement;
-                                target.setCustomValidity('Por favor, insira um email válido.');
-                            } }
-                            onInput={ (event) => {
-                                const target = event.target as HTMLInputElement;
-                                target.setCustomValidity('');
-                            } }
-                            value={ registerValues.email }
-                            onChange={ handleChange }
-                        />
-                    </label>
-                    <label className={ `flex flex-col gap-1 ${loadingComponent ? 'animate-pulse' : ''}` } htmlFor="password">
-                        <span>SENHA</span>
-                        <input
-                            className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
-                            type="password"
-                            name="password"
-                            placeholder={ loadingComponent ? '' : '*******' }
-                            disabled={ loadingComponent }
-                            minLength={ 6 }
-                            maxLength={ 16 }
-                            onInvalid={ (event) => {
-                                const target = event.target as HTMLInputElement;
-                                target.setCustomValidity('Por favor, insira uma senha válida.');
-                            } }
-                            onInput={ (event) => {
-                                const target = event.target as HTMLInputElement;
-                                target.setCustomValidity('');
-                            } }
-                            value={ registerValues.password }
-                            onChange={ handleChange }
-                        />
-                    </label>
+        <section className='flex flex-col gap-10 items-center self-center justify-center w-full h-full secColor md:w-2/5'>
+            <h1>Entre na sua conta</h1>
+            <form 
+                className='flex flex-col gap-8' 
+                method="post" 
+                onSubmit={ handleSubmit }
+            >
+                <label className={ `flex flex-col gap-1 ${loadingComponent ? 'animate-pulse' : ''}` } htmlFor="email">
+                    <span>EMAIL/CPF</span>
+                    <input
+                        type="email"
+                        name="email"
+                        className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
+                        placeholder={ loadingComponent ? '' : 'ex: seuemail@email.com' }
+                        disabled={ loadingComponent }
+                        minLength={ 12 }
+                        maxLength={ 28 }
+                        onInvalid={ (event) => {
+                            const target = event.target as HTMLInputElement;
+                            target.setCustomValidity('Por favor, insira um email válido.');
+                        } }
+                        onInput={ (event) => {
+                            const target = event.target as HTMLInputElement;
+                            target.setCustomValidity('');
+                        } }
+                        value={ registerValues.email }
+                        onChange={ handleChange }
+                    />
+                </label>
+                <label className={ `flex flex-col gap-1 ${loadingComponent ? 'animate-pulse' : ''}` } htmlFor="password">
+                    <span>SENHA</span>
+                    <input
+                        className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
+                        type="password"
+                        name="password"
+                        placeholder={ loadingComponent ? '' : '*******' }
+                        disabled={ loadingComponent }
+                        minLength={ 6 }
+                        maxLength={ 16 }
+                        onInvalid={ (event) => {
+                            const target = event.target as HTMLInputElement;
+                            target.setCustomValidity('Por favor, insira uma senha válida.');
+                        } }
+                        onInput={ (event) => {
+                            const target = event.target as HTMLInputElement;
+                            target.setCustomValidity('');
+                        } }
+                        value={ registerValues.password }
+                        onChange={ handleChange }
+                    />
+                </label>
 
-                    { loginErrorMessage && (
-                        <p className="text-red-600" aria-live="assertive">
-                            { loginErrorMessage }
-                        </p>
+                { loginErrorMessage && (
+                    <p className="text-red-600" aria-live="assertive">
+                        { loginErrorMessage }
+                    </p>
+                ) }
+                <button
+                    className={ `${isDisable() || loadingButton ? 'bg-gray-300' : 'bg-green-700'} p-3 text-white flex justify-center text-center rounded w-full shadow-sm` }
+                    type="submit"
+                    disabled={ isDisable() || loadingButton }
+                >
+                    { loadingButton ? (
+                        <ImSpinner9 className="text-gray-500 animate-spin" />
+                    ) : (
+                        'Continuar'
                     ) }
-                    <button
-                        className={ `${isDisable() || loadingButton ? 'bg-gray-300' : 'bg-green-700'} p-3 text-white flex justify-center text-center rounded w-full shadow-sm` }
-                        type="submit"
-                        disabled={ isDisable() || loadingButton }
-                    >
-                        { loadingButton ? (
-                            <ImSpinner9 className="text-gray-500 animate-spin" />
-                        ) : (
-                            'Continuar'
-                        ) }
-                    </button>
-                </form>
-                <div>
-                    <p>Não tem uma conta? <a className='text-blue-500' href="/cadastro">Cadastre-se</a></p>
-                </div>
-            </section>
-        </BodyWithHeaderAndFooter>
+                </button>
+            </form>
+            <div>
+                <p>Não tem uma conta? <a className='text-blue-500' href="/cadastro">Cadastre-se</a></p>
+            </div>
+        </section>
     );
 }

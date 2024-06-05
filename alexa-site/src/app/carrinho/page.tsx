@@ -3,7 +3,6 @@
 // import db from '../../../public/db/db.json';
 import { ProductType } from '../utils/types';
 import CartItem from './CartItem';
-import BodyWithHeaderAndFooter from '../components/BodyWithHeaderAndFooter';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -33,7 +32,7 @@ export default function Carrinho() {
     }, [router]);
     
     return (
-        <BodyWithHeaderAndFooter>
+        <section>
             <h2 className='text-center self-center'>FINALIZE SUA COMPRA</h2>
             <section className='flex flex-col gap-1'>
                 {
@@ -65,6 +64,6 @@ export default function Carrinho() {
                         Continuar comprando
                 </button>
             </section>
-        </BodyWithHeaderAndFooter>
+        </section>
     );
 }

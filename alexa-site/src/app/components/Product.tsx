@@ -5,8 +5,6 @@ import { ProductType } from '../utils/types';
 import { getProductApiById } from '../utils/api';
 import ResponsiveCarousel from './ResponsiveCarousel';
 import Link from 'next/link';
-import BodyWithHeaderAndFooter from './BodyWithHeaderAndFooter';
-
 
 
 export default function Product({ id, productType }: {id: string, productType: string}) {
@@ -29,7 +27,7 @@ export default function Product({ id, productType }: {id: string, productType: s
 
 
     return (
-        <BodyWithHeaderAndFooter>
+        <main>
             { isLoading || !product ? 'carregando' : (
                 <>  
                     <p>
@@ -61,6 +59,6 @@ export default function Product({ id, productType }: {id: string, productType: s
                 </>
 
             ) }
-        </BodyWithHeaderAndFooter>
+        </main>
     );
 }

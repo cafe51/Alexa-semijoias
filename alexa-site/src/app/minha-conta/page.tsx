@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import BodyWithHeaderAndFooter from '../components/BodyWithHeaderAndFooter';
 import { useUser } from '@/context/UserContext';
 import CardOrder from './CardOrder';
 import { OrderType } from '../utils/types';
@@ -53,7 +52,7 @@ export default function ClientProfile() {
     );
 
     return (
-        <BodyWithHeaderAndFooter>
+        <main>
             <div className='flex gap-2'>
                 <Link href={ '/' } className='font-normal'>Início</Link>
                 <span className='font-normal'>{ '>' }</span>
@@ -94,6 +93,6 @@ export default function ClientProfile() {
                 </section>
             </div>
             
-        </BodyWithHeaderAndFooter>
+        </main>
     );
 }
