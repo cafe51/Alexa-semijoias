@@ -20,6 +20,7 @@ const Header = () => {
     };
 
     useEffect(() => {
+        console.log('bem vindo', user);
         if (!user || !localStorage.getItem('user')) {
             try {
                 setPathLoginAccount('login');
