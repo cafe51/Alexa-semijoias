@@ -1,14 +1,26 @@
 // app/hooks/useCollections.ts
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
-import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot  } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, query, where  } from 'firebase/firestore';
 
-export const useCollection = (collectionName: string) => {
+type FilterOption = { field: string, operator: '==', value: string | number } ;
+
+
+
+export const useCollection = (collectionName: string, _filterOptions:  FilterOption[] | null) => {
     const [ documents, setDocuments ] = useState<null | any[]>(null);
 
+    const filterOptions = useRef(_filterOptions).current;
+
+
+
     useEffect(() => {
-        const ref = collection(projectFirestoreDataBase, collectionName);
+        let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
+
+        if(filterOptions) {
+            ref = query(ref, ...filterOptions.map(option => where(option.field, option.operator, option.value)));
+        }
     
         const unsub = onSnapshot(ref, (snapshot) => {
 
@@ -21,10 +33,12 @@ export const useCollection = (collectionName: string) => {
             });
 
             results ? setDocuments(results) : '';
+
+            console.log('useCollection linha 37', results);
         });
         return () => unsub();
 
-    }, [collectionName]);
+    }, [collectionName, filterOptions]);
 
     const addDocument = async(dataObj: any) => await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
 

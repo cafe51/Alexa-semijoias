@@ -2,28 +2,46 @@
 
 import { useEffect, useState } from 'react';
 import { ProductType } from '../utils/types';
-import { getProductApiById } from '../utils/api';
 import ResponsiveCarousel from './ResponsiveCarousel';
 import Link from 'next/link';
+import { useCollection } from '../hooks/useCollection';
 
 
 export default function Product({ id, productType }: {id: string, productType: string}) {
+    const { getDocumentById } = useCollection('produtos', null);
     const [product, setProduct] = useState<ProductType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
 
     const updateProductsState = async() => {
-        const productData = await getProductApiById(productType, id);
-        setProduct(productData);
+        const productData = await getDocumentById(id) as ProductType;
+        if (productData.exist) {
+            setProduct(productData);
+            setIsLoading(false);
+
+        } else {
+            console.log('Produto Não encontrado', productData);
+        }
     };
 
 
+
+    useEffect(() => {
+        updateProductsState();
+    }, []);
+
     useEffect(() => {
         setIsLoading(true);
-        updateProductsState();
+        try {
+            product && setIsLoading(false);
+
+        } catch (err) {
+            if (err instanceof Error) {
+                console.error(err.message);  
+            } else { console.log('erro desconhecido'); }
+        }
     
-        setIsLoading(false);
-    }, []);
+    }, [product]);
 
 
     return (

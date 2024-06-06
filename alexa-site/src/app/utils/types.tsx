@@ -4,6 +4,7 @@ type FaqType = {
 }
 
 export type ProductType = {
+    exist: boolean,
     id: string,
     nome: string,
     descricao: string,
