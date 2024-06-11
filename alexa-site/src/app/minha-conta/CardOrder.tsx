@@ -7,12 +7,12 @@ export default function CardOrder({ pedido } : { pedido: OrderType }) {
             <div className='w-full border-2 border-solid border-pink-100'></div>
             <p>{ pedido.data }</p>
             <div className='relative h-24 flex self-start'>
-                { pedido.carrinho.map((item: CartHistoryType, index) => {
+                { pedido.cartSnapShot.map((item: CartHistoryType, index) => {
                     return (
                         <div
                             key={ index }
                             className={ 'absolute rounded-lg w-24 h-24 overflow-hidden' }
-                            style={ { left: index * (80 - (index ** 2.2 <= 80 ? index ** 2.2 : 80)), zIndex: pedido.carrinho.length - index } }
+                            style={ { left: index * (80 - (index ** 2.2 <= 80 ? index ** 2.2 : 80)), zIndex: pedido.cartSnapShot.length - index } }
                         >
                             <Image
                                 src={ item.image }

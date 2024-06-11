@@ -3,14 +3,20 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImSpinner9 } from 'react-icons/im';
-import { getProductApi, getUsersApi } from '../utils/api';
-import { ProductType, UserType } from '../utils/types';
-import { useUser } from '@/context/UserContext';
+// import { getProductApi, getUsersApi } from '../utils/api';
+// import { ProductType, UserType } from '../utils/types';
+import { useLogin } from '../hooks/useLogin';
+import { useAuthContext } from '../hooks/useAuthContext';
+// import { useCollection } from '../hooks/useCollection';
+// import { useUser } from '@/context/UserContext';
 
 
 export default function Login() {
     const router = useRouter();
-    const { user, setUser } = useUser();
+    const { error, login } = useLogin();
+    const{ user } = useAuthContext();
+    // const { documents } = useCollection('usuarios', null);
+    // const { user, setUser } = useUser();
     const [loadingButton, setLoadingButton] = useState(true);
     const [loadingComponent, setLoadingComponent] = useState(true);
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
@@ -24,16 +30,32 @@ export default function Login() {
         setLoadingComponent(false);
     }, []);
 
+    // useEffect(() => {
+    //     if (user || localStorage.getItem('user')) {
+    //         try {
+    //             setLoadingButton(true);
+    //             router.push('/minha-conta');
+    //         } catch (e) {
+    //             console.error('Invalid JSON in localStorage:', e);
+    //         }
+    //     }
+    // }, [router]);
+
     useEffect(() => {
-        if (user || localStorage.getItem('user')) {
-            try {
+    
+        try {
+            if(user) {
                 setLoadingButton(true);
-                router.push('/minha-conta');
-            } catch (e) {
-                console.error('Invalid JSON in localStorage:', e);
+                router.push('/');
+            }
+        } catch(err) {
+            if (err instanceof Error) {
+                console.log(err.message);
+            } else {
+                console.log('erro desconhecido');
             }
         }
-    }, [router]);
+    }, [user, router]);
 
     const isDisable = () => {
         const email = registerValues.email.length > 0;
@@ -46,23 +68,23 @@ export default function Login() {
         setRegisterValues({ ...registerValues, [name]: value });
     };
 
-    const setCartLocalStorage = async(user: UserType) => {
-        const carrinhoIds = user.carrinho && user.carrinho.length > 0 ? user.carrinho : [];
+    // const setCartLocalStorage = async(user: UserType) => {
+    //     const carrinhoIds = user.carrinho && user.carrinho.length > 0 ? user.carrinho : [];
 
-        const allBrincos = await getProductApi('brincos');
-        const allPulseiras = await getProductApi('pulseiras');
-        const allColares = await getProductApi('colares');
-        const allAneis = await getProductApi('aneis');
-        const allProducts = [...allBrincos, ...allPulseiras, ...allColares , ...allAneis];
+    //     const allBrincos = await getProductApi('brincos');
+    //     const allPulseiras = await getProductApi('pulseiras');
+    //     const allColares = await getProductApi('colares');
+    //     const allAneis = await getProductApi('aneis');
+    //     const allProducts = [...allBrincos, ...allPulseiras, ...allColares , ...allAneis];
 
-        const carrinhoProducts: ProductType[] = carrinhoIds.map((carrinhoId: string) => {
-            return allProducts.filter((product: ProductType) => product.id === carrinhoId)[0];
-        });
+    //     const carrinhoProducts: ProductType[] = carrinhoIds.map((carrinhoId: string) => {
+    //         return allProducts.filter((product: ProductType) => product.id === carrinhoId)[0];
+    //     });
 
-        // console.log(carrinhoProducts);
+    //     // console.log(carrinhoProducts);
 
-        localStorage.setItem('carrinho', JSON.stringify(carrinhoProducts));
-    };
+    //     localStorage.setItem('carrinho', JSON.stringify(carrinhoProducts));
+    // };
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -70,21 +92,29 @@ export default function Login() {
         setLoginErrorMessage('');
 
         try {
-            const allUsers = await getUsersApi();
-            const user = allUsers.find((myUser: UserType) => myUser.email === registerValues.email);
-            if (user.password === registerValues.password) {
-                // localStorage.setItem('userData', JSON.stringify(user));
+            // const allUsers = await getUsersApi();
+            // const user = allUsers.find((myUser: UserType) => myUser.email === registerValues.email);
+            // if (user.password === registerValues.password) {
+            //     // localStorage.setItem('userData', JSON.stringify(user));
 
-                setCartLocalStorage(user);
+            //     setCartLocalStorage(user);
 
-                setUser(user);
-
-                router.push('/');
-            } else {
-                throw new Error;
-            }
+            //     setUser(user);
+            login(registerValues.email, registerValues.password);
+            console.log('EERO DO LOGIN', error);
+            // error ? '' : router.push('/');
+            // if (user) {
+            //     router.push('/');
+            // }
+            // } else {
+            // throw new Error;
+            // }
         } catch (error) {
-            console.log('Erro no login: ', error);
+            if (error instanceof Error) {
+                console.log(error.message);
+            } else {
+                console.log('erro desconhecido');
+            }
             setLoginErrorMessage('Usuário ou senha inválidos');
         } finally {
             setLoadingButton(false);
@@ -161,6 +191,7 @@ export default function Login() {
                     ) }
                 </button>
             </form>
+            { error && <p className='text-red-500'>{ error }</p> }
             <div>
                 <p>Não tem uma conta? <a className='text-blue-500' href="/cadastro">Cadastre-se</a></p>
             </div>

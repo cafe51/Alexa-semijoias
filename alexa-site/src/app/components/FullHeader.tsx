@@ -5,11 +5,12 @@ import { FaRegUser } from 'react-icons/fa';
 import SearchBar from './SearchBar';
 import Link from 'next/link';
 import CartIcon from './CartIcon';
-import { useUser } from '@/context/UserContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 
 const FullHeader = () => {
-    const { user } = useUser();
+    const{ user } = useAuthContext();
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [ pathLoginAccount, setPathLoginAccount] = useState('minha-conta');
@@ -21,7 +22,7 @@ const FullHeader = () => {
 
     useEffect(() => {
         console.log('bem vindo', user);
-        if (!user || !localStorage.getItem('user')) {
+        if (!user) {
             try {
                 setPathLoginAccount('login');
             } catch (e) {

@@ -1,42 +1,42 @@
+// app/minha-conta/page.tsx
 'use client';
 
-import Link from 'next/link';
-import { useUser } from '@/context/UserContext';
-import CardOrder from './CardOrder';
-import { OrderType } from '../utils/types';
 import { useEffect, useState } from 'react';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useCollection } from '../hooks/useCollection';
+import { OrderType, UserType } from '../utils/types';
+import Link from 'next/link';
+import CardOrder from './CardOrder';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 
-
-
-
 export default function ClientProfile() {
-    const { user } = useUser();
+    const{ user } = useAuthContext();
     const router = useRouter();
-    const [orderList, setOrderList] = useState<OrderType[] | []>([]);
 
-    const [temPedidoState, setTemPedidoState] = useState(false);
+    
+    const { documents: pedidos } = useCollection(
+        'pedidos', 
+        user ? [{ field: 'userId', operator: '==', value: user.uid }] : null, 
+    );
+    const { documents: usuario } = useCollection(
+        'usuarios',
+        user ? [{ field: 'userId', operator: '==', value: user.uid }] : null,
+    );
+
+    const [ pedidosState, setPedidosState ] = useState<OrderType[] | null>([]);
+    const [ usuarioState, setUsuarioState ] = useState<UserType | null>(null);
+
+
 
     useEffect(() => {
-        if (!user || !localStorage.getItem('user')) {
-            try {
-                router.push('/login');
-            } catch (e) {
-                console.error('Invalid JSON in localStorage:', e);
-            }
+        if (!user) {
+            router.push('/login');
         }
-    }, [router]);
+        if (pedidos) { setPedidosState(pedidos); }
+        if (usuario && usuario[0]) { setUsuarioState(usuario[0]); }
 
-    useEffect(() => {
-        if (user && user.pedidos && user.pedidos.length && user.pedidos.length > 0) {
-            setTemPedidoState(true);
-            setOrderList(user.pedidos);
-        } else {
-            setTemPedidoState(false);
-        }
-    }, [user]);
-
+    }, [ usuario, pedidos, router, user]);
 
     const realizeSuaCompra = (
         <div className='flex flex-col items-center gap-2 w-full'>
@@ -46,10 +46,11 @@ export default function ClientProfile() {
     );
 
     const listaDeCompras = (
-        orderList.reverse().map((pedido: OrderType, index: number) => {
+        pedidosState?.map((pedido: OrderType, index: number) => {
             return (<CardOrder pedido={ pedido } key={ index } />);
         })
     );
+
 
     return (
         <main>
@@ -69,9 +70,9 @@ export default function ClientProfile() {
                     <div className='w-full border-2 border-solid border-pink-100'></div>
                     <div className='flex p-4 w-full shadow-lg rounded-lg shadowColor'>
                         <div className='flex flex-col gap-1'>
-                            <h3>{ user?.nome }</h3>
-                            <h3>{ user?.email }</h3>
-                            <h3>{ user?.tel }</h3>
+                            <h3>{ usuarioState?.nome }</h3>
+                            <h3>{ usuarioState?.email }</h3>
+                            <h3>{ usuarioState?.tel }</h3>
                         </div>
                     </div>
                 </section>
@@ -82,7 +83,7 @@ export default function ClientProfile() {
                     <div className='flex flex-col gap-4 w-full'>
                         <div className='flex flex-col gap-4 justify-between w-full '>
 
-                            { temPedidoState ? listaDeCompras : realizeSuaCompra }
+                            { pedidosState ? listaDeCompras : realizeSuaCompra }
                             
                             
 

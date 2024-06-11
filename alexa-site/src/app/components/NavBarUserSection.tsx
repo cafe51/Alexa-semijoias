@@ -2,27 +2,51 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/context/UserContext';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useCollection } from '../hooks/useCollection';
+import { useLogout } from '../hooks/useLogout';
 
 export default function NavBarUserSection() {
     const router = useRouter();
-    const { user, logout } = useUser();
+    const{ user } = useAuthContext();
+    const { documents } = useCollection('usuarios', null);
+    const { logout } = useLogout();
+
     const [userIsLogged, setUserIsLogged] = useState(false);
     const [userName, setUserName] = useState('');
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (user) {
-            try {
+    //     if (user) {
+    //         try {
+    //             setUserIsLogged(true);
+    //             setUserName(user.nome.split(' ')[0]);
+    //         } catch (e) {
+    //             console.error('Invalid JSON in localStorage:', e);
+    //         }  
+    //     } else {
+    //         setUserIsLogged(false);
+    //     }
+    // }, [router, user]);
+
+    useEffect(() => {
+        try {
+            if(user) {
                 setUserIsLogged(true);
-                setUserName(user.nome.split(' ')[0]);
-            } catch (e) {
-                console.error('Invalid JSON in localStorage:', e);
-            }  
-        } else {
-            setUserIsLogged(false);
+                
+                const userDocument = documents?.find(document => document.id === user.uid);
+                userDocument ? setUserName(userDocument.nome) : '';
+            } else {
+                setUserIsLogged(false);
+            }
+        } catch(err) {
+            if (err instanceof Error) {
+                console.log(err.message);
+            } else {
+                console.log('erro desconhecido');
+            }
         }
-    }, [router, user]);
+    }, [documents, user]);
 
     const handleLogOut = () => {
         // localStorage.removeItem('userData');

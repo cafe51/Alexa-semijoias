@@ -21,6 +21,16 @@ export type ProductType = {
     faq: FaqType[],
 }
 
+export type ProductCartType = {
+    id: string,
+    exist: boolean,
+    productId: string,
+    nome: string,
+    image: string,
+    preco: number,
+    quantidade: number,
+}
+
 type AddressType = {
     cep: string,
     bairro: string,
@@ -36,7 +46,7 @@ export type CartHistoryType = {
     id: string,
     nome: string,
     image: string,
-    preço: number
+    preco: number
 }
 
 type ValueType = {
@@ -46,7 +56,7 @@ type ValueType = {
 }
 
 export type OrderType = {
-    carrinho: CartHistoryType[],
+    cartSnapShot: CartHistoryType[],
     data: string,
     status: string,
     valor: ValueType,
