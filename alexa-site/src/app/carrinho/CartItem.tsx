@@ -2,8 +2,13 @@
 import Image from 'next/image';
 import { ProductCartType } from '../utils/types';
 import { FaRegTrashAlt } from 'react-icons/fa';
+import { useCollection } from '../hooks/useCollection';
 
-export default function CartItem({ produto, changeQuantity }: {produto: ProductCartType, changeQuantity: any;}) {
+export default function CartItem({ produto }: { produto: ProductCartType }) {
+    const { updateDocumentField, deleteDocument } = useCollection(
+        'carrinhos', null,
+    );
+
     return (
         <div className='flex flex-col gap-4 w-full h-full p-4 bg-white shadow-lg rounded-lg shadowColor' >
             <div className='flex gap-4 w-full h-[90px] '>
@@ -18,14 +23,16 @@ export default function CartItem({ produto, changeQuantity }: {produto: ProductC
                 <div className='rounded-lg relative w-3/4 overflow-hidden text-sm' >
                     <p >{ produto.nome }</p>
                 </div>
-                <FaRegTrashAlt />
+                <FaRegTrashAlt onClick={
+                    () => deleteDocument(produto.id)
+                } />
             </div>
             <div className="flex justify-between items-center w-full">
                 
                 <div className="flex items-center secColor rounded">
                     <button
                         className="px-4 py-1 textColored text-lg secColor rounded hover:bg-gray-300 border-solid border-2 borderColor"
-                        onClick={ () => changeQuantity(produto.id, 'quantidade', produto.quantidade -=1) }
+                        onClick={ () => updateDocumentField(produto.id, 'quantidade', produto.quantidade -=1) }
                     >
                         -
                     </button>
@@ -34,7 +41,7 @@ export default function CartItem({ produto, changeQuantity }: {produto: ProductC
                     </span>
                     <button
                         className="px-4 py-1 textColored text-lg secColor rounded hover:bg-gray-300 border-solid border-2 borderColor"
-                        onClick={ () => changeQuantity(produto.id, 'quantidade', produto.quantidade +=1) }
+                        onClick={ () => updateDocumentField(produto.id, 'quantidade', produto.quantidade +=1) }
                     >
                         +
                     </button>

@@ -2,15 +2,10 @@
 // import { useEffect } from 'react';
 import { ProductCartType } from '../utils/types';
 import CartItem from './CartItem';
-import { useCollection } from '../hooks/useCollection';
 import { useCart } from '../hooks/useCart';
 
 export default function CartItemsSection({ productIds, carrinho }: any) {
     const { mappedProducts } = useCart(productIds, carrinho);
-
-    const { updateDocumentField } = useCollection(
-        'carrinhos', null,
-    );
 
     return (
         <section className='flex flex-col gap-1'>
@@ -18,7 +13,7 @@ export default function CartItemsSection({ productIds, carrinho }: any) {
 
             <section className='flex flex-col gap-1'>
                 {
-                    mappedProducts ? mappedProducts.map((produto: ProductCartType) => <CartItem key={ produto.id } produto={ produto } changeQuantity={ updateDocumentField } />) : <span>Loading...</span>
+                    mappedProducts ? mappedProducts.map((produto: ProductCartType) => <CartItem key={ produto.id } produto={ produto } />) : <span>Loading...</span>
                 }
             </section>
             <section className='flex flex-col gap-4 w-full p-6 bg-white shadow-lg rounded-lg shadowColor'>
