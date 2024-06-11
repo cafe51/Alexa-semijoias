@@ -1,8 +1,33 @@
 import Image from 'next/image';
 import { ProductType } from '../utils/types';
 import Link from 'next/link';
+import { useCollection } from '../hooks/useCollection';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 export default function Card({ cardData, productType }: {cardData: ProductType, productType: string}) {
+    const { addDocument, updateDocumentField } = useCollection('carrinhos', null);
+
+    const { user } = useAuthContext();
+
+    const handleBuyClick = () => {
+        if (!user) {
+            console.warn('User not logged in. Cannot add to cart.');
+            return;
+        }
+
+        const cartItem = user.carrinho?.find((item: any) => item.productId === cardData.id);
+
+        if (!cartItem) {
+            addDocument({
+                productId: cardData.id,
+                quantidade: 1,
+                userId: user.uid,
+            });
+        } else {
+            updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade + 1);
+        }
+    };
+
 
     let render = (<h3>render</h3>);
 
@@ -40,7 +65,11 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
         <section className="flex flex-col text-center w-[160px] items-center justify-between pb-2 gap-2 shadowColor shadow-lg text-[12px] rounded-lg h-[450px] bg-white"
         >
             <Link href={ `/${productType}/${cardData.id}` }>{ render }</Link>
-            <button className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'>COMPRE JÁ</button>
+            <button
+                onClick= { handleBuyClick }
+                className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'>
+                    COMPRAR
+            </button>
         </section>
     );
 }
