@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import CartItemsSection from './CartItemsSection';
 
 export default function Carrinho() {
+    // const [isLoading, setIsLoading] = useState<any>(true);
     const [productIds, setProductIds] = useState<string[] | null>(null);
 
     const { user } = useAuthContext();

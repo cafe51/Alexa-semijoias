@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, onSnapshot, query, where, deleteDoc, updateDoc  } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, onSnapshot, query, where, deleteDoc, updateDoc, getDocs  } from 'firebase/firestore';
 
 type FilterOption = { field: string, operator: '==' | 'in', value: any } ;
 
@@ -59,9 +59,27 @@ export const useCollection = (collectionName: string, _filterOptions:  FilterOpt
             ...docSnap.data(),
         };
     };
+
+    const getAllDocuments = async(filterOptions:  FilterOption[] | null) => {
+        let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
+
+        if(filterOptions) {
+            ref = query(ref, ...filterOptions.map(option => where(option.field, option.operator, option.value)));
+        }
+        const collectionSnapshot = await getDocs(ref);
+        const collectionSnapshotDocs = collectionSnapshot.docs.map((doc: any) => ({
+            id: doc.id,
+            exist: doc.exists(),
+            ...doc.data(),
+        }));
+        console.log('COLLECTIONSNAPSHOT', collectionSnapshotDocs);
+
+        return collectionSnapshotDocs;
+
+    }; 
     
     
-    return { documents, addDocument, deleteDocument, getDocumentById, updateDocumentField };
+    return { documents, addDocument, deleteDocument, getDocumentById, updateDocumentField, getAllDocuments };
 
 
 };

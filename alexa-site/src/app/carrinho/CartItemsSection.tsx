@@ -1,5 +1,4 @@
 // app/carrinho/CartItemsSection.tsx
-// import { useEffect } from 'react';
 import { ProductCartType } from '../utils/types';
 import CartItem from './CartItem';
 import { useCart } from '../hooks/useCart';
@@ -7,20 +6,26 @@ import { useCart } from '../hooks/useCart';
 export default function CartItemsSection({ productIds, carrinho }: any) {
     const { mappedProducts } = useCart(productIds, carrinho);
 
+
     return (
         <section className='flex flex-col gap-1'>
             <h2 className='text-center self-center'>FINALIZE SUA COMPRA</h2>
 
             <section className='flex flex-col gap-1'>
                 {
-                    mappedProducts ? mappedProducts.map((produto: ProductCartType) => <CartItem key={ produto.id } produto={ produto } />) : <span>Loading...</span>
+                    mappedProducts ? mappedProducts.map((produto: ProductCartType) => {
+                        console.log('AAAAAAAAAAAAAA', mappedProducts);
+                        if(produto && produto.quantidade && produto.quantidade > 0) {
+                            return <CartItem key={ produto.id } produto={ produto } />;
+                        } else return false;
+                    }) : <span>Loading...</span>
                 }
             </section>
             <section className='flex flex-col gap-4 w-full p-6 bg-white shadow-lg rounded-lg shadowColor'>
                 <h2>Resumo</h2>
                 <div className='flex gap-2 w-full justify-between'>
                     <p>Subtotal</p>
-                    <p>R$ { mappedProducts?.map((items: any) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0).toFixed(2) }</p>
+                    <p>R$ { mappedProducts?.map((items: any) => (Number(items.quantidade) * (items.preco))).reduce((a: any, b: any) => a + b, 0).toFixed(2) }</p>
                 </div>
                 <div className='flex gap-2 w-full justify-between'>
                     <p>Frete</p>

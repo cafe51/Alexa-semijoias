@@ -33,8 +33,8 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
 
     if (cardData) {
         render = (
-            <>
-                <div className='w-full rounded-lg relative h-[200px] overflow-hidden'>
+            <section className='w-full'>
+                <div className='w-full rounded-lg relative h-[200px] overflow-hidden bg-yellow-300'>
                     <Image
                         className='rounded-lg object-cover scale-125'
                         src={ cardData.image[0] }
@@ -45,7 +45,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
          
           
                 </div>
-                <h3 className='p-2'>{ cardData.nome }</h3>
+                <h3 className='p-2 w-full'>{ cardData.id }</h3>
                 <div className=''>
                     <p className='font-bold text-xl'>R$ { cardData.preco } </p>
                     <p>em até 6x de</p>
@@ -54,7 +54,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
                 </div>
 
 
-            </>
+            </section>
         );
     } else {
         render = (<h3>Carregando...</h3>);
@@ -64,7 +64,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
     return (
         <section className="flex flex-col text-center w-[160px] items-center justify-between pb-2 gap-2 shadowColor shadow-lg text-[12px] rounded-lg h-[450px] bg-white"
         >
-            <Link href={ `/${productType}/${cardData.id}` }>{ render }</Link>
+            <Link href={ `/${productType}/${cardData.id}` } className='w-full'>{ render }</Link>
             <button
                 onClick= { handleBuyClick }
                 className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'>
