@@ -15,28 +15,30 @@ export default function ClientProfile() {
     const router = useRouter();
 
     
-    const { documents: pedidos } = useCollection(
+    const { documents: pedidos } = useCollection<OrderType>(
         'pedidos', 
         user ? [{ field: 'userId', operator: '==', value: user.uid }] : null, 
     );
-    const { documents: usuario } = useCollection(
-        'usuarios',
-        user ? [{ field: 'userId', operator: '==', value: user.uid }] : null,
-    );
+
+    // const { documents: usuario } = useCollection<UserType>(
+    //     'usuarios',
+    //     user ? [{ field: 'userId', operator: '==', value: user.uid }] : null,
+    // );
 
     const [ pedidosState, setPedidosState ] = useState<OrderType[] | null>([]);
-    const [ usuarioState, setUsuarioState ] = useState<UserType | null>(null);
+    // const [ usuarioState, setUsuarioState ] = useState<UserType | null>(null);
 
 
 
     useEffect(() => {
         if (!user) {
-            router.push('/login');
+            console.log('MINHA CONTA NÂO TEM USUÁRIO', user);
+            // router.push('/login');
         }
         if (pedidos) { setPedidosState(pedidos); }
-        if (usuario && usuario[0]) { setUsuarioState(usuario[0]); }
+        // if (user) { setUsuarioState(user); }
 
-    }, [ usuario, pedidos, router, user]);
+    }, [ pedidos, router, user]);
 
     const realizeSuaCompra = (
         <div className='flex flex-col items-center gap-2 w-full'>
@@ -70,9 +72,9 @@ export default function ClientProfile() {
                     <div className='w-full border-2 border-solid border-pink-100'></div>
                     <div className='flex p-4 w-full shadow-lg rounded-lg shadowColor'>
                         <div className='flex flex-col gap-1'>
-                            <h3>{ usuarioState?.nome }</h3>
-                            <h3>{ usuarioState?.email }</h3>
-                            <h3>{ usuarioState?.tel }</h3>
+                            <h3>{ user?.nome }</h3>
+                            <h3>{ user?.email }</h3>
+                            <h3>{ user?.tel }</h3>
                         </div>
                     </div>
                 </section>

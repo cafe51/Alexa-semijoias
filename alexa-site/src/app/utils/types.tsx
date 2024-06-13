@@ -68,15 +68,14 @@ export type OrderType = {
 
 export type UserType = {
     id: string,
-    password: string,
     nome: string,
     email: string,
+
     cpf: string,
     tel: string,
-    endereco: AddressType[],
-    carrinho: string[],
-    pedidos: OrderType[],
-    admin: boolean 
+    admin: boolean,
+    
+    userId: string,
 }
 
 export type RegisterFormInputType = {

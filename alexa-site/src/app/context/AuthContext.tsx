@@ -4,7 +4,7 @@
 import { createContext, useReducer, useEffect, ReactNode } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from '../hooks/useCollection';
-import { CartInfoType } from '../utils/types';
+import { CartInfoType, UserType } from '../utils/types';
 import { User } from 'firebase/auth';
 import { DocumentData } from 'firebase/firestore';
 
@@ -43,11 +43,18 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         'carrinhos',
         state.user ? [{ field: 'userId', operator: '==', value: state.user.uid }] : null,
     );
+
+    const { documents: usuarios } = useCollection<UserType>(
+        'usuarios',
+        state.user ? [{ field: 'userId', operator: '==', value: state.user.uid }] : null,
+    );
     
 
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(user => {
-            dispatch({ type: 'AUTH_IS_READY', payload: user ? { ...user, carrinho: carrinho } : null });
+            const userInfo = usuarios ? usuarios[0] : null;
+            console.log('userInfo', usuarios ? usuarios : null);
+            dispatch({ type: 'AUTH_IS_READY', payload: user ? { ...user, carrinho: carrinho, ...userInfo } : null });
             unsub();
         });
     }, [carrinho]);

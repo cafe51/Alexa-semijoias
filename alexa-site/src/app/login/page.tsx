@@ -3,20 +3,17 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImSpinner9 } from 'react-icons/im';
-// import { getProductApi, getUsersApi } from '../utils/api';
-// import { ProductType, UserType } from '../utils/types';
+
 import { useLogin } from '../hooks/useLogin';
 import { useAuthContext } from '../hooks/useAuthContext';
-// import { useCollection } from '../hooks/useCollection';
-// import { useUser } from '@/context/UserContext';
+
 
 
 export default function Login() {
     const router = useRouter();
     const { error, login } = useLogin();
     const{ user } = useAuthContext();
-    // const { documents } = useCollection('usuarios', null);
-    // const { user, setUser } = useUser();
+
     const [loadingButton, setLoadingButton] = useState(true);
     const [loadingComponent, setLoadingComponent] = useState(true);
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
@@ -29,17 +26,6 @@ export default function Login() {
         setLoadingButton(false);
         setLoadingComponent(false);
     }, []);
-
-    // useEffect(() => {
-    //     if (user || localStorage.getItem('user')) {
-    //         try {
-    //             setLoadingButton(true);
-    //             router.push('/minha-conta');
-    //         } catch (e) {
-    //             console.error('Invalid JSON in localStorage:', e);
-    //         }
-    //     }
-    // }, [router]);
 
     useEffect(() => {
     
@@ -69,47 +55,14 @@ export default function Login() {
         setRegisterValues({ ...registerValues, [name]: value });
     };
 
-    // const setCartLocalStorage = async(user: UserType) => {
-    //     const carrinhoIds = user.carrinho && user.carrinho.length > 0 ? user.carrinho : [];
-
-    //     const allBrincos = await getProductApi('brincos');
-    //     const allPulseiras = await getProductApi('pulseiras');
-    //     const allColares = await getProductApi('colares');
-    //     const allAneis = await getProductApi('aneis');
-    //     const allProducts = [...allBrincos, ...allPulseiras, ...allColares , ...allAneis];
-
-    //     const carrinhoProducts: ProductType[] = carrinhoIds.map((carrinhoId: string) => {
-    //         return allProducts.filter((product: ProductType) => product.id === carrinhoId)[0];
-    //     });
-
-    //     // console.log(carrinhoProducts);
-
-    //     localStorage.setItem('carrinho', JSON.stringify(carrinhoProducts));
-    // };
-
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoadingButton(true);
         setLoginErrorMessage('');
 
         try {
-            // const allUsers = await getUsersApi();
-            // const user = allUsers.find((myUser: UserType) => myUser.email === registerValues.email);
-            // if (user.password === registerValues.password) {
-            //     // localStorage.setItem('userData', JSON.stringify(user));
-
-            //     setCartLocalStorage(user);
-
-            //     setUser(user);
             login(registerValues.email, registerValues.password);
-            // console.log('EERO DO LOGIN', error);
-            // error ? '' : router.push('/');
-            // if (user) {
-            //     router.push('/');
-            // }
-            // } else {
-            // throw new Error;
-            // }
+
         } catch (error) {
             if (error instanceof Error) {
                 console.log(error.message);
