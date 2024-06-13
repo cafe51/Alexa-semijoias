@@ -14,12 +14,12 @@ export default function Carrinho() {
 
     useEffect(() => {
         if (user && user.carrinho) {
-            const ids = user.carrinho.map((info: any) => info.productId);
+            const ids = user.carrinho.map((info) => info.productId);
             setProductIds(ids);
         }
     }, [user]);
 
     return (
-        productIds ? <CartItemsSection productIds={ productIds } carrinho={ user.carrinho } /> : <p>Loading...</p>
+        productIds && user && user.carrinho ? <CartItemsSection productIds={ productIds } carrinho={ user.carrinho } /> : <p>Loading...</p>
     );
 }

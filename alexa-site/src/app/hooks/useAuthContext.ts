@@ -9,5 +9,5 @@ export const useAuthContext = () => {
         throw Error('useAuthContext must be inside an AuthContextProvider');
     }
 
-    return context as { user: any; authIsReady: boolean; dispatch: React.Dispatch<any> };
+    return context;
 };

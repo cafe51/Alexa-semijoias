@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, onSnapshot, query, where, deleteDoc, updateDoc, getDocs, WithFieldValue  } from 'firebase/firestore';
 
-type FilterOption = { field: string, operator: '==' | 'in', value: any } ;
+type FilterOption = { field: string, operator: '==' | 'in', value: string | number | string[] | number[] } ;
 
 
 
@@ -37,12 +37,12 @@ export const useCollection = <T>(collectionName: string, _filterOptions:  Filter
 
     }, [collectionName, filterOptions]);
 
-    const addDocument = async(dataObj: any) => await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
+    const addDocument = async(dataObj: T & WithFieldValue<DocumentData>) => await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
 
   
     const deleteDocument = async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
 
-    const updateDocumentField = async(id: string, field: string, value: any) => {
+    const updateDocumentField = async(id: string, field: string, value: string | number | string[] | number[]) => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id);
         console.log('chamou', id, field, value, docRef);
         await updateDoc(docRef, { [field]: value });

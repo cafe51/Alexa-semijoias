@@ -5,15 +5,17 @@ import { createContext, useReducer, useEffect, ReactNode } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from '../hooks/useCollection';
 import { CartInfoType } from '../utils/types';
+import { User } from 'firebase/auth';
+import { DocumentData } from 'firebase/firestore';
 
 interface AuthState {
-    user: any;
+    user: (User & { carrinho: (CartInfoType & DocumentData)[] | null }) | null;
     authIsReady: boolean;
 }
 
 interface AuthAction {
     type: 'LOGIN' | 'LOGOUT' | 'AUTH_IS_READY';
-    payload?: any;
+    payload: (User & { carrinho: (CartInfoType & DocumentData)[] | null }) | null;
 }
 
 export const AuthContext = createContext<AuthState & { dispatch: React.Dispatch<AuthAction> }| undefined>(undefined);
