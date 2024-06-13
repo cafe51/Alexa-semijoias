@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 // import { ProductType } from '../utils/types';
 import Card from './Card';
 import { useCollection } from '../hooks/useCollection';
+import { ProductType } from '../utils/types';
 
 export default function ProductsList({ productType }: { productType: string }) {
-    const { documents } = useCollection('produtos', [{ field: 'categoria', operator: '==', value: productType }]);
+    const { documents } = useCollection<ProductType>('produtos', [{ field: 'categoria', operator: '==', value: productType }]);
     const [isLoading, setIsLoading] = useState(true);
 
 

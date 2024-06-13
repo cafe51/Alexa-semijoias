@@ -1,8 +1,3 @@
-type FaqType = {
-    pergunta: string,
-    resposta: string
-}
-
 export type ProductType = {
     exist: boolean,
     id: string,
@@ -13,12 +8,12 @@ export type ProductType = {
     estoque: number,
     desconto: number,
     lancamento: boolean,
-    categoria: string[],
-    medidas: string,
-    banho: string,
-    stoneColor: string,
-    stoneType: string,
-    faq: FaqType[],
+    categoria: string,
+    // medidas: string,
+    // banho: string,
+    // stoneColor: string,
+    // stoneType: string,
+    // faq: FaqType[],
 }
 
 export type ProductCartType = {

@@ -4,6 +4,7 @@
 import { createContext, useReducer, useEffect, ReactNode } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from '../hooks/useCollection';
+import { CartInfoType } from '../utils/types';
 
 interface AuthState {
     user: any;
@@ -36,7 +37,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         authIsReady: false,
     });
 
-    const { documents: carrinho } = useCollection(
+    const { documents: carrinho } = useCollection<CartInfoType>(
         'carrinhos',
         state.user ? [{ field: 'userId', operator: '==', value: state.user.uid }] : null,
     );

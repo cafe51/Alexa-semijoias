@@ -23,7 +23,7 @@
       "space-in-parens": ["error", "never"],
       "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
       "comma-dangle": ["error", "always-multiline"],
-      "no-console": "warn",
+      "no-console": "off",
       "curly": "off",
       "object-curly-spacing": ["error", "always"],
       "react/jsx-curly-spacing": ["error", {"when": "always", "attributes": true, "children": true}],

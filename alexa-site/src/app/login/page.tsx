@@ -46,7 +46,7 @@ export default function Login() {
         try {
             if(user) {
                 setLoadingButton(true);
-                console.log('user existe no login e é: ', user)
+                console.log('user existe no login e é: ', user);
                 router.push('/');
             }
         } catch(err) {

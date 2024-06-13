@@ -1,9 +1,9 @@
 // app/carrinho/CartItemsSection.tsx
-import { ProductCartType } from '../utils/types';
+import { CartInfoType, ProductCartType } from '../utils/types';
 import CartItem from './CartItem';
 import { useCart } from '../hooks/useCart';
 
-export default function CartItemsSection({ productIds, carrinho }: any) {
+export default function CartItemsSection({ productIds, carrinho }: { productIds: string[], carrinho: CartInfoType[] }) {
     const { mappedProducts } = useCart(productIds, carrinho);
 
 
@@ -25,7 +25,7 @@ export default function CartItemsSection({ productIds, carrinho }: any) {
                 <h2>Resumo</h2>
                 <div className='flex gap-2 w-full justify-between'>
                     <p>Subtotal</p>
-                    <p>R$ { mappedProducts?.map((items: any) => (Number(items.quantidade) * (items.preco))).reduce((a: any, b: any) => a + b, 0).toFixed(2) }</p>
+                    <p>R$ { mappedProducts?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0).toFixed(2) }</p>
                 </div>
                 <div className='flex gap-2 w-full justify-between'>
                     <p>Frete</p>

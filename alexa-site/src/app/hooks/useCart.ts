@@ -3,7 +3,7 @@ import { useCollection } from './useCollection';
 import { ProductCartType, CartInfoType } from '../utils/types';
 
 export const useCart = (productIds : string[], carrinho: CartInfoType[] | null) => {
-    const { getAllDocuments } = useCollection('produtos', null);
+    const { getAllDocuments } = useCollection<ProductCartType>('produtos', null);
 
     const [mappedProducts, setProdutos] = useState<ProductCartType[] | null>(null);
 
