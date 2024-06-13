@@ -44,7 +44,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(user => {
-            dispatch({ type: 'AUTH_IS_READY', payload: { ...user, carrinho: carrinho } });
+            dispatch({ type: 'AUTH_IS_READY', payload: user ? { ...user, carrinho: carrinho } : null });
             unsub();
         });
     }, [carrinho]);

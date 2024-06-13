@@ -42,6 +42,14 @@ type AddressType = {
     referencia: string
 }
 
+export type CartInfoType = {
+    exist: boolean,
+    id: string,
+    productId: string,
+    quantidade: number,
+    userId: string
+}
+
 export type CartHistoryType = {
     id: string,
     nome: string,

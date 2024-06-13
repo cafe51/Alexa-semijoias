@@ -46,6 +46,7 @@ export default function Login() {
         try {
             if(user) {
                 setLoadingButton(true);
+                console.log('user existe no login e é: ', user)
                 router.push('/');
             }
         } catch(err) {
@@ -101,7 +102,7 @@ export default function Login() {
 
             //     setUser(user);
             login(registerValues.email, registerValues.password);
-            console.log('EERO DO LOGIN', error);
+            // console.log('EERO DO LOGIN', error);
             // error ? '' : router.push('/');
             // if (user) {
             //     router.push('/');
