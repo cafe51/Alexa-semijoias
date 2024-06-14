@@ -1,3 +1,4 @@
+// app/hooks/useCart.ts
 import { useEffect, useState } from 'react';
 import { useCollection } from './useCollection';
 import { ProductCartType, CartInfoType } from '../utils/types';

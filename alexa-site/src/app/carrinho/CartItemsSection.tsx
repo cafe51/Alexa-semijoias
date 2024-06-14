@@ -14,7 +14,6 @@ export default function CartItemsSection({ productIds, carrinho }: { productIds:
             <section className='flex flex-col gap-1'>
                 {
                     mappedProducts ? mappedProducts.map((produto: ProductCartType) => {
-                        console.log('AAAAAAAAAAAAAA', mappedProducts);
                         if(produto && produto.quantidade && produto.quantidade > 0) {
                             return <CartItem key={ produto.id } produto={ produto } />;
                         } else return false;

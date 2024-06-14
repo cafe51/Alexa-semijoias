@@ -1,4 +1,4 @@
-// app/hooks/useCollections.ts
+// app/hooks/useCollection.ts
 
 import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';

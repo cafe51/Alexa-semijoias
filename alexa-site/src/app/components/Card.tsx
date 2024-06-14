@@ -3,11 +3,13 @@ import { CartInfoType, ProductType } from '../utils/types';
 import Link from 'next/link';
 import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { useUserInfo } from '../hooks/useUserInfo';
 
 export default function Card({ cardData, productType }: {cardData: ProductType, productType: string}) {
     const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos', null);
 
     const { user } = useAuthContext();
+    const { carrinho } = useUserInfo();
 
     const handleBuyClick = () => {
         if (!user) {
@@ -15,7 +17,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
             return;
         }
 
-        const cartItem = user.carrinho?.find((item) => item.productId === cardData.id);
+        const cartItem = carrinho?.find((item: any) => item.productId === cardData.id);
 
         if (!cartItem) {
             addDocument({
