@@ -20,12 +20,12 @@ export default function Carrinho() {
     //     }
     // }, [user]);
 
-    const { carrinho } = useUserInfo();
+    const  carrinho = useUserInfo()?.carrinho;
 
 
     useEffect(() => {
         if (carrinho && carrinho) {
-            const ids = carrinho.map((info: any) => info.productId);
+            const ids = carrinho.map((info) => info.productId);
             setProductIds(ids);
         }
     }, [carrinho]);

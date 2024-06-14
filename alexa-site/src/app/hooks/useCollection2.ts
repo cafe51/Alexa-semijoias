@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, collection,query, where, onSnapshot } from 'firebase/firestore';
+import { FilterOption } from '../utils/types';
 
-type FilterOption = { field: string, operator: '==' | 'in', value: string | number | string[] | number[] } ;
+
 
 
 export const useCollection2 = <T>(collectionName: string, filterOptions:  FilterOption[] | null) => {

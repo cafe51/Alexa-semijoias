@@ -1,41 +1,29 @@
 // app/minha-conta/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { useCollection } from '../hooks/useCollection';
-import { OrderType, UserType } from '../utils/types';
 import Link from 'next/link';
 import CardOrder from './CardOrder';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
+import { useUserInfo } from '../hooks/useUserInfo';
+import { OrderType } from '../utils/types';
 
 export default function ClientProfile() {
     const{ user } = useAuthContext();
+    // const  { userInfo, pedidos } = useUserInfo();
+    const  userInfo = useUserInfo()?.userInfo;
+    const  pedidos = useUserInfo()?.pedidos;
     const router = useRouter();
-
-    
-    const { documents: pedidos } = useCollection<OrderType>(
-        'pedidos', 
-        user ? [{ field: 'userId', operator: '==', value: user.uid }] : null, 
-    );
-
-    // const { documents: usuario } = useCollection<UserType>(
-    //     'usuarios',
-    //     user ? [{ field: 'userId', operator: '==', value: user.uid }] : null,
-    // );
-
-    const [ pedidosState, setPedidosState ] = useState<OrderType[] | null>([]);
-    // const [ usuarioState, setUsuarioState ] = useState<UserType | null>(null);
-
-
 
     useEffect(() => {
         if (!user) {
             console.log('MINHA CONTA NÂO TEM USUÁRIO', user);
             // router.push('/login');
         }
-        if (pedidos) { setPedidosState(pedidos); }
+        // if (pedidos) { setPedidosState(pedidos); }
+        console.log('MINHA CONTA USERINFO', userInfo);
         // if (user) { setUsuarioState(user); }
 
     }, [ pedidos, router, user]);
@@ -48,7 +36,7 @@ export default function ClientProfile() {
     );
 
     const listaDeCompras = (
-        pedidosState?.map((pedido: OrderType, index: number) => {
+        pedidos?.map((pedido: OrderType, index: number) => {
             return (<CardOrder pedido={ pedido } key={ index } />);
         })
     );
@@ -72,9 +60,9 @@ export default function ClientProfile() {
                     <div className='w-full border-2 border-solid border-pink-100'></div>
                     <div className='flex p-4 w-full shadow-lg rounded-lg shadowColor'>
                         <div className='flex flex-col gap-1'>
-                            <h3>{ user?.nome }</h3>
-                            <h3>{ user?.email }</h3>
-                            <h3>{ user?.tel }</h3>
+                            <h3>{ userInfo?.nome }</h3>
+                            <h3>{ userInfo?.email }</h3>
+                            <h3>{ userInfo?.tel }</h3>
                         </div>
                     </div>
                 </section>
@@ -85,7 +73,7 @@ export default function ClientProfile() {
                     <div className='flex flex-col gap-4 w-full'>
                         <div className='flex flex-col gap-4 justify-between w-full '>
 
-                            { pedidosState ? listaDeCompras : realizeSuaCompra }
+                            { pedidos ? listaDeCompras : realizeSuaCompra }
                             
                             
 

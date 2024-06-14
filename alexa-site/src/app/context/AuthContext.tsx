@@ -7,7 +7,6 @@ import { useCollection } from '../hooks/useCollection';
 import { CartInfoType, UserType } from '../utils/types';
 import { User } from 'firebase/auth';
 import { DocumentData } from 'firebase/firestore';
-// import { useCollection2 } from '../hooks/useCollection2';
 
 interface AuthState {
     user: (User & { carrinho: (CartInfoType & DocumentData)[] | null }) | null;
@@ -36,60 +35,15 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
 };
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-    // const [cartInfoState, setCarInfoState] = useState<CartInfoType[] | null>(null);
     const [state, dispatch] = useReducer(authReducer, { 
         user: null,
         authIsReady: false,
     });
 
-    // const produtoFilterOptions = useMemo(() => {
-    //     return [{ field: 'userId', operator: '==', value: state.user ? state.user.uid : '' }];
-    // }, [state.user]);
-
-    // const produtoFilterOptions = useMemo(() => {
-    //     return state.user ? state.user.uid : '';
-    // }, [state.user]);
-
-    // const { documents: carrinho } = useCollection2<CartInfoType>(
-    //     'carrinhos',
-    //     [{ field: 'userId', operator: '==', value: state.user ? state.user.uid : '' }],
-    // );
-
-    // const memoCart = useMemo(() => {
-    //     if (state.user && carrinho) {
-    //         return carrinho;
-    //     }
-    //     return null;
-    // }, [state.user, carrinho]);
-
-
-
-    // const { getAllDocuments: getAllCarts } = useCollection<CartInfoType>(
-    //     'carrinhos',
-    //     // state.user ? [{ field: 'userId', operator: '==', value: state.user.uid }] : null,
-    //     null,
-    // );
-
-
     const { documents: usuarios } = useCollection<UserType>(
         'usuarios',
         state.user ? [{ field: 'userId', operator: '==', value: state.user.uid }] : null,
     );
-
-    // const { documents: carrinho } = useCollection2<CartInfoType>(
-    //     'carrinhos',
-    //     state.user,
-    // );
-
-    // useEffect(() => {
-    //     const fetchCartInfos = async() => {
-    //         const cartInfos = await getAllCarts([{ field: 'userId', operator: '==', value: state.user ? state.user.uid : '' }]);
-    //         setCarInfoState(cartInfos);
-    //     };
-
-    //     fetchCartInfos();
-    // }, [dispatch]);
-    
 
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(user => {

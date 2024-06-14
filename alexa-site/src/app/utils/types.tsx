@@ -1,3 +1,5 @@
+import { WhereFilterOp } from 'firebase/firestore';
+
 export type ProductType = {
     exist: boolean,
     id: string,
@@ -15,6 +17,8 @@ export type ProductType = {
     // stoneType: string,
     // faq: FaqType[],
 }
+
+export type FilterOption = { field: string, operator: WhereFilterOp, value: string | number | string[] | number[] } ;
 
 export type ProductCartType = {
     id: string,

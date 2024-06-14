@@ -9,7 +9,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
     const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos', null);
 
     const { user } = useAuthContext();
-    const { carrinho } = useUserInfo();
+    const  carrinho = useUserInfo()?.carrinho;
 
     const handleBuyClick = () => {
         if (!user) {
@@ -17,7 +17,7 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
             return;
         }
 
-        const cartItem = carrinho?.find((item: any) => item.productId === cardData.id);
+        const cartItem = carrinho?.find((item) => item.productId === cardData.id);
 
         if (!cartItem) {
             addDocument({

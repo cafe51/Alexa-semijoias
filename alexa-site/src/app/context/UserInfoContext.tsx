@@ -4,19 +4,40 @@
 import { ReactNode, createContext, useMemo } from 'react';
 // import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { CartInfoType } from '../utils/types';
+import { CartInfoType, FilterOption, OrderType, UserType } from '../utils/types';
 import { useCollection2 } from '../hooks/useCollection2';
+import { DocumentData } from 'firebase/firestore';
 
-export const UserInfoContext = createContext<any>(null);
+interface IUserInfoContext {
+    carrinho: (CartInfoType & DocumentData)[] | null;
+    userInfo: (UserType & DocumentData) | null;
+    pedidos: (OrderType & DocumentData)[] | null;
+}
+
+// interface IUserInfoContext {
+//     user: (UserType & { carrinho: (CartInfoType & DocumentData)[] | null }) | null;
+//     authIsReady: boolean;
+// }
+
+// interface IUserInfoContext {
+//     user: (UserType & { carrinho: (CartInfoType & DocumentData)[] | null }) | null;
+// }
+
+export const UserInfoContext = createContext<IUserInfoContext | null>(null);
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
-    // const [ userInfoState, setUserInfoState ] = useState<any>(null);
+    // const [ userInfoState, setUserInfoState ] = useState<IUserInfoContext | null>(null);
 
     const { user } = useAuthContext();
 
-    const userQuery = useMemo(() => 
+    const userQuery = useMemo<FilterOption[]>(() => 
         [{ field: 'userId', operator: '==', value: user ? user.uid : 'invalidId' }],
     [user], // Só recriar a query quando 'user' mudar
+    );
+
+    const { documents: userInfo } = useCollection2<UserType>(
+        'usuarios',
+        userQuery,
     );
     
     const { documents: carrinho } = useCollection2<CartInfoType>(
@@ -24,38 +45,18 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         userQuery, 
     );
 
+    const { documents: pedidos } = useCollection2<OrderType>(
+        'pedidos', 
+        userQuery, 
+    );
 
-    // const { documents: carrinho } = useCollection2<CartInfoType>(
-    //     'carrinhos',
-    //     null,
-    //     // [{ field: 'userId', operator: '==', value: user ? user.uid : 'invalidId' }],
-    // );
+    // useEffect(() => {
+    //     setUserInfoState()
+    // }, [])
 
     return (
-        <UserInfoContext.Provider value={ { carrinho: carrinho }  }>
+        <UserInfoContext.Provider value={ { carrinho: carrinho, userInfo: userInfo ? userInfo[0] : null, pedidos: pedidos }  }>
             { children }
         </UserInfoContext.Provider>
     );
-
-    // const { getAllDocuments: getCarts } = useCollection<CartInfoType>(
-    //     'carrinhos',
-    //     null,
-    // );
-
-    // useEffect(() => {
-    //     const fetchDocuments = async() => {
-    //         const cartItems = await getCarts([{ field: 'userId', operator: '==', value: user ? user.uid : 'invalidId' }]);
-    //         setUserInfoState(cartItems);
-    //     };
-    //     if (user) {
-    //         fetchDocuments();
-    //     }
-
-    // }, [user]);
-
-    // return (
-    //     <UserInfoContext.Provider value={ { carrinho: userInfoState }  }>
-    //         { children }
-    //     </UserInfoContext.Provider>
-    // );
 }
