@@ -6,13 +6,13 @@ import { auth } from '../firebase/config';
 import { User } from 'firebase/auth';
 
 interface AuthState {
-    user: User | null;
+    user: User | undefined;
     authIsReady: boolean;
 }
 
 interface AuthAction {
     type: 'LOGIN' | 'LOGOUT' | 'AUTH_IS_READY';
-    payload: User | null;
+    payload?: User | undefined;
 }
 
 export const AuthContext = createContext<AuthState & { dispatch: React.Dispatch<AuthAction> }| undefined>(undefined);
@@ -23,7 +23,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
     case 'LOGIN':
         return { ...state, user: action.payload };
     case 'LOGOUT':
-        return { ...state, user: null };
+        return { ...state, user: undefined };
     case 'AUTH_IS_READY':
         return { user: action.payload, authIsReady: true };
     default:
@@ -33,7 +33,7 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(authReducer, { 
-        user: null,
+        user: undefined,
         authIsReady: false,
     });
 
@@ -41,7 +41,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(user => {
-            dispatch({ type: 'AUTH_IS_READY', payload: user ? { ...user } : null });
+            dispatch({ type: 'AUTH_IS_READY', payload: user ? { ...user } : undefined });
             unsub();
         });
     }, []);
