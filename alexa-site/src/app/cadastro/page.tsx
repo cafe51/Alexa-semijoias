@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ImSpinner9 } from 'react-icons/im';
+import { useSignUp } from '../hooks/useSignUp';
 // import { RegisterFormInputType } from '../utils/types';
-import { registerRequestApi } from '../utils/api';
+// import { registerRequestApi } from '../utils/api';
 
 
 // Esquema de validação usando Yup
@@ -25,10 +26,11 @@ export default function Register() {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
     });
-    const router = useRouter(); // Certifique-se de criar uma instância do useRouter
+    // const router = useRouter(); // Certifique-se de criar uma instância do useRouter
 
     const [loading, setLoading] = useState(false);
     const [registerErrorMessage, setRegisterErrorMessage] = useState('');
+    const { signup, error } = useSignUp();
 
     const onSubmit = async(data: any) => {
         setLoading(true);
@@ -42,12 +44,13 @@ export default function Register() {
                 tel: data.tel,
             };
 
-            await registerRequestApi(dataObj);
+            signup(dataObj);
+            
             // Simulação da chamada à API de registro
             // await registerRequestApi(data);
 
             // Redirecionamento após sucesso
-            router.push('/');
+            // router.push('/');
         } catch (error) {
             console.log('Erro no registro: ', error);
             setRegisterErrorMessage('Erro ao registrar. Tente novamente mais tarde.');
@@ -143,6 +146,7 @@ export default function Register() {
             <div>
                 <p>Já possui uma conta? <a className='text-blue-500' href="/login">Iniciar sessão</a></p>
             </div>
+            <p className='text-red-500'>{ error }</p>
         </section>
     );
 }

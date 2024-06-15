@@ -6,6 +6,7 @@ import { ImSpinner9 } from 'react-icons/im';
 
 import { useLogin } from '../hooks/useLogin';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { useUserInfo } from '../hooks/useUserInfo';
 
 
 
@@ -13,6 +14,8 @@ export default function Login() {
     const router = useRouter();
     const { error, login } = useLogin();
     const{ user } = useAuthContext();
+    const  userInfo = useUserInfo()?.userInfo;
+
 
     const [loadingButton, setLoadingButton] = useState(true);
     const [loadingComponent, setLoadingComponent] = useState(true);
@@ -30,7 +33,7 @@ export default function Login() {
     useEffect(() => {
     
         try {
-            if(user) {
+            if(userInfo) {
                 setLoadingButton(true);
                 console.log('user existe no login e é: ', user);
                 router.push('/');

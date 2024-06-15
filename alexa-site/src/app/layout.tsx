@@ -21,12 +21,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={ inter.className }>
+            <body className={ `${inter.className} min-h-screen secColor`  }>
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Header>
+                        <Header />
+                        <div className="flex flex-col pt-40 p-4">
                             { children }
-                        </Header>
+                        </div>
                         <Footer />
                     </UserInfoProvider>
                 </AuthContextProvider>

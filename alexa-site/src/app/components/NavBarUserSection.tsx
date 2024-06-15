@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useCollection } from '../hooks/useCollection';
 import { useLogout } from '../hooks/useLogout';
+import { useUserInfo } from '../hooks/useUserInfo';
 
 export default function NavBarUserSection() {
     const router = useRouter();
@@ -13,7 +14,7 @@ export default function NavBarUserSection() {
     const { logout } = useLogout();
 
     const [userIsLogged, setUserIsLogged] = useState(false);
-    const [userName, setUserName] = useState('');
+    const userInfo = useUserInfo()?.userInfo;
 
     // useEffect(() => {
 
@@ -33,9 +34,6 @@ export default function NavBarUserSection() {
         try {
             if(user) {
                 setUserIsLogged(true);
-                
-                const userDocument = documents?.find(document => document.id === user.uid);
-                userDocument ? setUserName(userDocument.nome) : '';
             } else {
                 setUserIsLogged(false);
             }
@@ -56,7 +54,7 @@ export default function NavBarUserSection() {
 
     const helloFulana = (
         <div className={ 'flex flex-col bottom-0 fixed font-normal text-sm w-full px-4 py-8  pb-20 secColor' }>
-            <span className='text-lg mb-2 font-bold strongTextColored'>Olá, { userName }!</span>
+            <span className='text-lg mb-2 font-bold strongTextColored'>Olá, { userInfo?.nome }!</span>
             <div className='flex items-center w-full content-center justify-between '>
                 <a href="/minha-conta" className={ 'self-end place-self-end ' }>Minha Conta</a>
                 <span className='text-gray-400'>|</span>
