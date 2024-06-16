@@ -1,17 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-// import { useRouter } from 'next/navigation';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ImSpinner9 } from 'react-icons/im';
 import { useSignUp } from '../hooks/useSignUp';
-// import { RegisterFormInputType } from '../utils/types';
-// import { registerRequestApi } from '../utils/api';
 
+interface IFormInput {
+    nome: string;
+    email: string;
+    tel?: string | undefined;
+    password: string;
+    confirmPassword: string;
+    recaptcha: string;
+}
 
-// Esquema de validação usando Yup
 const schema = yup.object().shape({
     nome: yup.string().required('Nome completo é obrigatório'),
     email: yup.string().email('Email inválido').required('Email é obrigatório'),
@@ -23,34 +27,23 @@ const schema = yup.object().shape({
 });
 
 export default function Register() {
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({
         resolver: yupResolver(schema),
     });
-    // const router = useRouter(); // Certifique-se de criar uma instância do useRouter
 
     const [loading, setLoading] = useState(false);
     const [registerErrorMessage, setRegisterErrorMessage] = useState('');
     const { signup, error } = useSignUp();
 
-    const onSubmit = async(data: any) => {
+    const onSubmit: SubmitHandler<IFormInput> = async(data) => {
         setLoading(true);
         setRegisterErrorMessage('');
 
         try {
-            const dataObj = {
-                password: data.password,
-                email: data.email,
-                nome: data.nome,
-                tel: data.tel,
-            };
-
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { confirmPassword, recaptcha, ...dataObj } = data;
             signup(dataObj);
-            
-            // Simulação da chamada à API de registro
-            // await registerRequestApi(data);
 
-            // Redirecionamento após sucesso
-            // router.push('/');
         } catch (error) {
             console.log('Erro no registro: ', error);
             setRegisterErrorMessage('Erro ao registrar. Tente novamente mais tarde.');

@@ -11,7 +11,7 @@ export const useSignUp = () => {
     const { login } = useLogin();
 
 
-    const signup = (singInData : { email: string, password: string, nome: string, tel: string }) => {
+    const signup = (singInData : { email: string, password: string, nome: string, tel?: string | undefined }) => {
     // setError(null);
     // createUserWithEmailAndPassword(auth, email, password)
     // .then((res) => console.log('user singup', res.user)) 

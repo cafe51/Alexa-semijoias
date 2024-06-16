@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import { ImSpinner9 } from 'react-icons/im';
 import { useLogout } from '../hooks/useLogout';
 
 
-export default function DeleteMySelfForm({ showForm }: { showForm: any }) {
+export default function DeleteMySelfForm({ showForm }: { showForm: Dispatch<SetStateAction<boolean>> }) {
     const [loadingButton, setLoadingButton] = useState(true);
     const [loadingComponent, setLoadingComponent] = useState(true);
     const { deleteUserAccount, error: deleteUserError } = useDeleteUser();
