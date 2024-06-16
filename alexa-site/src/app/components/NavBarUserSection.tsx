@@ -1,3 +1,5 @@
+//app/components/NavBarUserSection.tsx
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -16,20 +18,6 @@ export default function NavBarUserSection() {
     const [userIsLogged, setUserIsLogged] = useState(false);
     const userInfo = useUserInfo()?.userInfo;
 
-    // useEffect(() => {
-
-    //     if (user) {
-    //         try {
-    //             setUserIsLogged(true);
-    //             setUserName(user.nome.split(' ')[0]);
-    //         } catch (e) {
-    //             console.error('Invalid JSON in localStorage:', e);
-    //         }  
-    //     } else {
-    //         setUserIsLogged(false);
-    //     }
-    // }, [router, user]);
-
     useEffect(() => {
         try {
             if(user) {
@@ -47,7 +35,6 @@ export default function NavBarUserSection() {
     }, [documents, user]);
 
     const handleLogOut = () => {
-        // localStorage.removeItem('userData');
         logout();
         router.push('/');
     };

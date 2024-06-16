@@ -1,8 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
+//app/components/ResponsiveCarousel.tsx
 
-//carousels/Responsive.js
 import { Carousel } from 'react-responsive-carousel';
-// import { items }  from '../../../public/cauroselProduct.json';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { ProductType } from '../utils/types';
 import Image from 'next/image';
@@ -14,7 +12,6 @@ export default function ResponsiveCarousel({ productData }: { productData: Produ
                 showArrows={ true }
                 showIndicators={ true }
                 infiniteLoop={ true }
-                // dynamicHeight={ false }
                 emulateTouch
                 className='w-[300px] '
                 swipeable={ true }
@@ -28,8 +25,6 @@ export default function ResponsiveCarousel({ productData }: { productData: Produ
                             src={ image }
                             alt="slides"
                             fill
-                            // width={ 200 }
-                            // height={ 200 }
                         />
                     </div>
                 )) }

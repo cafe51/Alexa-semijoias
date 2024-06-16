@@ -1,8 +1,9 @@
+//app/components/SearchBar.tsx
+
 'use client';
 import { IoSearchSharp } from 'react-icons/io5';
 
 export default function SearchBar() {
-
 
     return (
         <div className=" bg-white flex justify-between py-0">

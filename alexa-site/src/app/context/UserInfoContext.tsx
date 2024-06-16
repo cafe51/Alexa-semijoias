@@ -2,7 +2,6 @@
 'use client';
 
 import { ReactNode, createContext, useMemo } from 'react';
-// import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { CartInfoType, FilterOption, OrderType, UserType } from '../utils/types';
 import { useCollection2 } from '../hooks/useCollection2';
@@ -13,20 +12,9 @@ interface IUserInfoContext {
     userInfo: (UserType & DocumentData) | null;
     pedidos: (OrderType & DocumentData)[] | null;
 }
-
-// interface IUserInfoContext {
-//     user: (UserType & { carrinho: (CartInfoType & DocumentData)[] | null }) | null;
-//     authIsReady: boolean;
-// }
-
-// interface IUserInfoContext {
-//     user: (UserType & { carrinho: (CartInfoType & DocumentData)[] | null }) | null;
-// }
-
 export const UserInfoContext = createContext<IUserInfoContext | null>(null);
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
-    // const [ userInfoState, setUserInfoState ] = useState<IUserInfoContext | null>(null);
 
     const { user } = useAuthContext();
 
@@ -49,10 +37,6 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         'pedidos', 
         userQuery, 
     );
-
-    // useEffect(() => {
-    //     setUserInfoState()
-    // }, [])
 
     return (
         <UserInfoContext.Provider value={ { carrinho: carrinho, userInfo: userInfo ? userInfo[0] : null, pedidos: pedidos }  }>

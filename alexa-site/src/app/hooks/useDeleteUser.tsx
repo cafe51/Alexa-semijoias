@@ -1,3 +1,5 @@
+// app/hooks/useDeleteUser.tsx
+
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { deleteUser, signInWithEmailAndPassword } from 'firebase/auth';

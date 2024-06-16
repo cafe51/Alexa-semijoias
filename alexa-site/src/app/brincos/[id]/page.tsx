@@ -1,3 +1,5 @@
+//app/brincos/[id]/page.tsx
+
 'use client';
 import Product from '@/app/components/Product';
 

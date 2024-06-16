@@ -1,3 +1,5 @@
+//app/utils/types.tsx
+
 import { WhereFilterOp } from 'firebase/firestore';
 
 export type ProductType = {
@@ -11,11 +13,6 @@ export type ProductType = {
     desconto: number,
     lancamento: boolean,
     categoria: string,
-    // medidas: string,
-    // banho: string,
-    // stoneColor: string,
-    // stoneType: string,
-    // faq: FaqType[],
 }
 
 export type FilterOption = { field: string, operator: WhereFilterOp, value: string | number | string[] | number[] } ;

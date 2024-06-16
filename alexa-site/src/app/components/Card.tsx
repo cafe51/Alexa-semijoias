@@ -1,3 +1,5 @@
+//app/components/Card.tsx
+
 import Image from 'next/image';
 import { CartInfoType, ProductType } from '../utils/types';
 import Link from 'next/link';
@@ -5,7 +7,7 @@ import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
 
-export default function Card({ cardData, productType }: {cardData: ProductType, productType: string}) {
+export default function Card({ cardData, productType }: { cardData: ProductType, productType: string }) {
     const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos', null);
 
     const { user } = useAuthContext();
@@ -54,14 +56,11 @@ export default function Card({ cardData, productType }: {cardData: ProductType, 
                     <p className='font-bold text-xl'>R$ { (cardData.preco/6).toFixed(2) } </p>
                     <p> sem juros</p>
                 </div>
-
-
             </section>
         );
     } else {
         render = (<h3>Carregando...</h3>);
     }
-
 
     return (
         <section className="flex flex-col text-center w-[160px] items-center justify-between pb-2 gap-2 shadowColor shadow-lg text-[12px] rounded-lg h-[450px] bg-white"

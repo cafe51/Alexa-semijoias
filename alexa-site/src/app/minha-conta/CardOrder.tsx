@@ -1,3 +1,5 @@
+//app/minha-conta/CardOrder.tsx
+
 import Image from 'next/image';
 import { CartHistoryType, OrderType } from '../utils/types';
 

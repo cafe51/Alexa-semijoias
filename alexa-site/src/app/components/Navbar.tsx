@@ -1,3 +1,5 @@
+//app/components/Navbar.tsx
+
 import { useEffect, useRef } from 'react';
 import NavBarUserSection from './NavBarUserSection';
 

@@ -1,3 +1,5 @@
+//app/components/Header.tsx
+
 'use client';
 
 import FullHeader from './FullHeader';

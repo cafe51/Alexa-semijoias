@@ -1,3 +1,5 @@
+//app/components/Footer.tsx
+
 export default function Footer() {
     return (
         <footer className='self-end place-self-end justify-self-end w-full primColor flex justify-center items-center p-4 pt-10' >

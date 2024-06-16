@@ -6,7 +6,6 @@ import { useCart } from '../hooks/useCart';
 export default function CartItemsSection({ productIds, carrinho }: { productIds: string[], carrinho: CartInfoType[] }) {
     const { mappedProducts } = useCart(productIds, carrinho);
 
-
     return (
         <section className='flex flex-col gap-1'>
             <h2 className='text-center self-center'>FINALIZE SUA COMPRA</h2>

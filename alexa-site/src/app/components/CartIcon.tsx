@@ -1,10 +1,10 @@
+//app/components/CartIcon.tsx
+
 import Link from 'next/link';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useUserInfo } from '../hooks/useUserInfo';
 
 export default function CartIcon() {
-    // const { user } = useAuthContext();
-    // const { carrinho } = useUserInfo();
     const  carrinho = useUserInfo()?.carrinho;
 
     return (

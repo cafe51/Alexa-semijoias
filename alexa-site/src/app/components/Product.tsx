@@ -1,3 +1,5 @@
+//app/components/Product.tsx
+
 'use client';
 
 import { useEffect, useState } from 'react';

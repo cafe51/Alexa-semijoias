@@ -1,7 +1,8 @@
+//app/components/ProductsList.tsx
+
 'use client';
 
 import { useEffect, useState } from 'react';
-// import { ProductType } from '../utils/types';
 import Card from './Card';
 import { useCollection } from '../hooks/useCollection';
 import { ProductType } from '../utils/types';

@@ -1,9 +1,10 @@
+// app/hooks/useSignUp.ts
+
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from './useCollection';
 import { useLogin } from './useLogin';
-
 
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
@@ -12,10 +13,6 @@ export const useSignUp = () => {
 
 
     const signup = (singInData : { email: string, password: string, nome: string, tel?: string | undefined }) => {
-    // setError(null);
-    // createUserWithEmailAndPassword(auth, email, password)
-    // .then((res) => console.log('user singup', res.user)) 
-    // .catch((err) => setError(err.message));
 
         try {
 
