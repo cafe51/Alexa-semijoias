@@ -45,11 +45,8 @@ export default function Card({ cardData, productType }: { cardData: ProductType,
                         alt="Foto da peça"
                         fill
                     />
-
-         
-          
                 </div>
-                <h3 className='p-2 w-full'>{ cardData.id }</h3>
+                <h3 className='p-2 w-full'>{ cardData.nome }</h3>
                 <div className=''>
                     <p className='font-bold text-xl'>R$ { cardData.preco } </p>
                     <p>em até 6x de</p>

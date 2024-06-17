@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "types": [
+      "jest",
+      "node",
+      "@types/jest",
+      "@types/react",
+      "@types/react-dom"
+    ],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
