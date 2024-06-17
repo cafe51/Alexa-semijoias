@@ -7,7 +7,6 @@ import { useCollection } from '../../hooks/useCollection';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
 
-// Mock do hook useCollection
 jest.mock('../../hooks/useCollection', () => ({
     useCollection: jest.fn(),
 }));
@@ -42,7 +41,6 @@ describe('ProductsList Component', () => {
     ];
 
     beforeEach(() => {
-        // Limpa os mocks antes de cada teste
         jest.clearAllMocks();
     });
 
@@ -90,7 +88,6 @@ describe('ProductsList Component', () => {
                 </AuthContextProvider>,
             );
         });
-        // Verifica se os nomes dos produtos são renderizados
         expect(screen.getByText('Anel de Ouro')).toBeInTheDocument();
         expect(screen.getByText('Anel de Prata')).toBeInTheDocument();
     });
