@@ -41,7 +41,7 @@ export default function NavBarUserSection() {
 
     const helloFulana = (
         <div className={ 'flex flex-col bottom-0 fixed font-normal text-sm w-full px-4 py-8  pb-20 secColor' }>
-            <span className='text-lg mb-2 font-bold strongTextColored'>Olá, { userInfo?.nome }!</span>
+            <span className='text-lg mb-2 font-bold strongTextColored'>Olá, { userInfo?.nome.split(' ')[0] }!</span>
             <div className='flex items-center w-full content-center justify-between '>
                 <a href="/minha-conta" className={ 'self-end place-self-end ' }>Minha Conta</a>
                 <span className='text-gray-400'>|</span>
