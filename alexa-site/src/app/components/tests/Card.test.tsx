@@ -32,16 +32,6 @@ jest.mock('../../hooks/useCollection', () => ({
     useCollection: jest.fn(),
 }));
 
-jest.mock('next/router', () => ({
-    useRouter: jest.fn(),
-}));
-
-jest.mock('next/link', () => {
-    return ({ children }: { children: React.ReactNode }) => {
-        return children;
-    };
-});
-
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useUserInfo } from '../../hooks/useUserInfo';
 import { useCollection } from '../../hooks/useCollection';
