@@ -26,8 +26,6 @@ export default function Product({ id, productType }: {id: string, productType: s
         }
     };
 
-
-
     useEffect(() => {
         updateProductsState();
     }, []);
@@ -45,7 +43,6 @@ export default function Product({ id, productType }: {id: string, productType: s
     
     }, [product]);
 
-
     return (
         <main>
             { isLoading || !product ? 'carregando' : (
@@ -61,8 +58,8 @@ export default function Product({ id, productType }: {id: string, productType: s
 
                         
                     <div className='w-full p-2 border-solid border-2 border-x-0 borderColor'>
-                        <h1 className='font-bold '>R$ { product.preco.toFixed(2) } </h1>
-                        <p> em até 6x de { (product.preco/6).toFixed(2) } sem juros </p>
+                        <h1 className='font-bold '>R$ { product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) } </h1>
+                        <p> em até 6x de R$ { (product.preco/6).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) } sem juros </p>
                         <p> Formas de pagamento </p>
                     </div>
                     <button className='rounded-full w-full bg-green-500 p-4 px-6 font-bold border-solid border-2 border-x-0 borderColor text-white'>
