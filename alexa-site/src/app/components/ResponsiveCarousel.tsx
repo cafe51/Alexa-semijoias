@@ -15,12 +15,11 @@ export default function ResponsiveCarousel({ productData }: { productData: Produ
                 emulateTouch
                 className='w-[300px] '
                 swipeable={ true }
-                showThumbs
+                showThumbs={ true }
             >
-                { productData.image.map((image: string) => (
-                    <div key={ productData.id } className='w-full rounded-lg relative h-[350px] '>
+                { productData.image.map((image: string, index) => (
+                    <div key={ productData.id + '(' + index + ')' } className='w-full rounded-lg relative h-[350px] '>
                         <Image
-                            key={ productData.id }
                             className='rounded-lg object-cover scale-110'
                             src={ image }
                             alt="slides"
@@ -32,17 +31,3 @@ export default function ResponsiveCarousel({ productData }: { productData: Produ
         </div>
     );
 }
-
-{/* <Image
-                                className='rounded-lg object-cover scale-125'
-                                src={ item.imageUrl }
-                                alt="slides"
-                                // fill
-                                width={ 200 }
-                                height={ 200 }
-                            />  */}
-
-{/* <img
-    className=''
-    src={ image } alt='slides'
-/>; */}
