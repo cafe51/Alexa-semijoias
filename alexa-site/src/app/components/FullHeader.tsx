@@ -45,7 +45,7 @@ const FullHeader = () => {
     const height = isScrolled ? 'py-2' : 'py-6';
     
     return (
-        <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity}` }>
+        <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity}` } data-testid='full-header'>
             <div className={ `flex justify-between items-center px-8 md:px-16 ${height} md:py-0` }>
                 {
                     !isMenuOpen

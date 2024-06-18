@@ -11,6 +11,7 @@ export default function Header() {
 
     const pathname = usePathname(); // Obter o caminho atual
     const pathSegment = pathname.split('/')[1]; // Extrair a parte 'login'
+    console.log('CAMINHOOO', pathname);
 
     return pathSegment === 'login' || pathSegment === 'cadastro' ? <SimpleHeader /> : <FullHeader />;
 

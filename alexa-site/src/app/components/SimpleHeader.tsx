@@ -20,7 +20,7 @@ const SimpleHeader = () => {
     const height = isScrolled ? 'py-2' : 'py-6';
     
     return (
-        <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity} flex justify-center items-center` }>
+        <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity} flex justify-center items-center` } data-testid='simple-header'>
             <div className={ `flex justify-center items-center px-8 md:px-16 ${height} md:py-0` }>
                 <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
             </div>
