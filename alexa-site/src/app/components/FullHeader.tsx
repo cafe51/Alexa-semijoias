@@ -67,7 +67,7 @@ const FullHeader = () => {
                 <Navbar isMenuOpen={ isMenuOpen } setIsMenuOpen={ setIsMenuOpen } />
                 <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
                 <div className='flex gap-4'>
-                    <Link className=""  href={ `/${pathLoginAccount}` }><FaRegUser className='' size={ 24 } /></Link>
+                    <Link className=""  href={ `/${pathLoginAccount}` }><FaRegUser className='' size={ 24 } data-testid='useIcon' /></Link>
                     <CartIcon />
                 </div>
             </div>
@@ -80,8 +80,3 @@ const FullHeader = () => {
 };
 
 export default FullHeader;
-
-
-
-
-

@@ -31,8 +31,3 @@ const SimpleHeader = () => {
 };
 
 export default SimpleHeader;
-
-
-
-
-
