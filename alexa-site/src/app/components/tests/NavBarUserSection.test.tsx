@@ -1,4 +1,5 @@
 // NavBarUserSection.test.tsx
+
 import { act, render, screen } from '@testing-library/react';
 import NavBarUserSection from '../NavBarUserSection';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';

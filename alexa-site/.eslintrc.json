@@ -3,10 +3,16 @@
       "browser": true,
       "es2021": true
   },
+  "settings": {
+    "react": {
+      "version": "18"
+    }
+  },
   "extends": [
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended",
       "plugin:react/recommended",
+      "plugin:react/jsx-runtime",
       "next"
   ],
   "parser": "@typescript-eslint/parser",
@@ -47,7 +53,6 @@
       ],
       "@typescript-eslint/no-explicit-any": ["warn"],
       "@typescript-eslint/no-unused-vars": ["error"],
-      "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "jsx-a11y/anchor-is-valid": "off"
   }
