@@ -4,7 +4,7 @@
 import { ReactNode, createContext, useMemo } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { CartInfoType, FilterOption, OrderType, UserType } from '../utils/types';
-import { useCollection2 } from '../hooks/useCollection2';
+import { useSnapshot2 } from '../hooks/useSnapshot2';
 import { DocumentData } from 'firebase/firestore';
 
 interface IUserInfoContext {
@@ -23,17 +23,17 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     [user], // Só recriar a query quando 'user' mudar
     );
 
-    const { documents: userInfo } = useCollection2<UserType>(
+    const { documents: userInfo } = useSnapshot2<UserType>(
         'usuarios',
         userQuery,
     );
     
-    const { documents: carrinho } = useCollection2<CartInfoType>(
+    const { documents: carrinho } = useSnapshot2<CartInfoType>(
         'carrinhos',
         userQuery, 
     );
 
-    const { documents: pedidos } = useCollection2<OrderType>(
+    const { documents: pedidos } = useSnapshot2<OrderType>(
         'pedidos', 
         userQuery, 
     );

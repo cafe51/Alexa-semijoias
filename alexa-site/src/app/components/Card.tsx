@@ -8,7 +8,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
 
 export default function Card({ cardData, productType }: { cardData: ProductType | null, productType: string }) {
-    const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos', null);
+    const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos');
 
     const { user } = useAuthContext();
     const  carrinho = useUserInfo()?.carrinho;

@@ -1,10 +1,10 @@
-// app/hooks/useCollections2.ts
+// app/hooks/useSnapshot2.ts
 import { useEffect, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, collection,query, where, onSnapshot } from 'firebase/firestore';
 import { FilterOption } from '../utils/types';
 
-export const useCollection2 = <T>(collectionName: string, filterOptions:  FilterOption[] | null) => {
+export const useSnapshot2 = <T>(collectionName: string, filterOptions:  FilterOption[] | null) => {
     const [ documents, setDocuments ] = useState<(T & DocumentData)[] | null>(null);
 
 

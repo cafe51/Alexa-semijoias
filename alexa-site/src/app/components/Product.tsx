@@ -10,7 +10,7 @@ import { useCollection } from '../hooks/useCollection';
 
 
 export default function Product({ id, productType }: {id: string, productType: string}) {
-    const { getDocumentById } = useCollection<ProductType>('produtos', null);
+    const { getDocumentById } = useCollection<ProductType>('produtos');
     const [product, setProduct] = useState<ProductType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 

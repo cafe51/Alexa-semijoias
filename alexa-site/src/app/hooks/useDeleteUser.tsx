@@ -10,7 +10,7 @@ import { useUserInfo } from './useUserInfo';
 
 export const useDeleteUser = () => {
     const router = useRouter();
-    const { deleteDocument } = useCollection('usuarios', null);
+    const { deleteDocument } = useCollection('usuarios');
     const userInfo = useUserInfo()?.userInfo;
 
     const [error, setError] = useState<null | string>(null);

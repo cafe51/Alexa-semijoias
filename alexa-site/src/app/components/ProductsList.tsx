@@ -4,11 +4,11 @@
 
 import { useEffect, useState } from 'react';
 import Card from './Card';
-import { useCollection } from '../hooks/useCollection';
+import { useSnapshot } from '../hooks/useSnapshot';
 import { ProductType } from '../utils/types';
 
 export default function ProductsList({ productType }: { productType: string }) {
-    const { documents } = useCollection<ProductType>('produtos', [{ field: 'categoria', operator: '==', value: productType }]);
+    const { documents } = useSnapshot<ProductType>('produtos', [{ field: 'categoria', operator: '==', value: productType }]);
     const [isLoading, setIsLoading] = useState(true);
 
 

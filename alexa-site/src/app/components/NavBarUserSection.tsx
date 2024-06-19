@@ -5,14 +5,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { useCollection } from '../hooks/useCollection';
+import { useSnapshot } from '../hooks/useSnapshot';
 import { useLogout } from '../hooks/useLogout';
 import { useUserInfo } from '../hooks/useUserInfo';
 
 export default function NavBarUserSection() {
     const router = useRouter();
     const{ user } = useAuthContext();
-    const { documents } = useCollection('usuarios', null);
+    const { documents } = useSnapshot('usuarios', null);
     const { logout } = useLogout();
 
     const [userIsLogged, setUserIsLogged] = useState(false);

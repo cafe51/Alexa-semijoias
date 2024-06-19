@@ -6,7 +6,7 @@ import { useCollection } from '../hooks/useCollection';
 
 export default function CartItem({ produto }: { produto: ProductCartType }) {
     const { updateDocumentField, deleteDocument } = useCollection(
-        'carrinhos', null,
+        'carrinhos',
     );
 
     return (

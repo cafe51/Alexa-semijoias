@@ -8,7 +8,7 @@ import { useLogin } from './useLogin';
 
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
-    const { addDocument } = useCollection('usuarios', null);
+    const { addDocument } = useCollection('usuarios');
     const { login } = useLogin();
 
 

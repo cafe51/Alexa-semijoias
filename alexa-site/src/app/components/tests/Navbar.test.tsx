@@ -11,10 +11,6 @@ jest.mock('next/navigation', () => ({
     }),
 }));
 
-jest.mock('../../hooks/useCollection', () => ({
-    useCollection: jest.fn(),
-}));
-
 jest.mock('../../hooks/useAuthContext', () => ({
     useAuthContext: jest.fn(),
 }));
@@ -25,13 +21,11 @@ jest.mock('../../hooks/useUserInfo', () => ({
 
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useUserInfo } from '../../hooks/useUserInfo';
-import { useCollection } from '../../hooks/useCollection';
 
 
 describe('Navbar Component', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        (useCollection as jest.Mock).mockReturnValue({ documents: [] });
         (useAuthContext as jest.Mock).mockReturnValue({ user: null, authIsReady: false });
         (useUserInfo as jest.Mock).mockReturnValue({ userInfo: null, carrinho: [] });
 

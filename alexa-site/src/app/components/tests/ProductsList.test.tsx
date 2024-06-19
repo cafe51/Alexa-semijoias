@@ -3,12 +3,12 @@
 import { act, render, screen } from '@testing-library/react';
 import ProductsList from '../ProductsList';
 import { ProductType } from '@/app/utils/types';
-import { useCollection } from '../../hooks/useCollection';
+import { useSnapshot } from '../../hooks/useSnapshot';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
 
-jest.mock('../../hooks/useCollection', () => ({
-    useCollection: jest.fn(),
+jest.mock('../../hooks/useSnapshot', () => ({
+    useSnapshot: jest.fn(),
 }));
 
 describe('ProductsList Component', () => {
@@ -45,7 +45,7 @@ describe('ProductsList Component', () => {
     });
 
     it('Renderiza o título da categoria corretamente', async() => {
-        (useCollection as jest.Mock).mockReturnValue({ documents: [] }); // Simula lista vazia
+        (useSnapshot as jest.Mock).mockReturnValue({ documents: [] }); // Simula lista vazia
 
 
         await act(async() => {
@@ -62,7 +62,7 @@ describe('ProductsList Component', () => {
     });
 
     it('Mostra mensagem de carregamento enquanto os dados são buscados', async() => {
-        (useCollection as jest.Mock).mockReturnValue({ documents: null }); // Simula estado inicial
+        (useSnapshot as jest.Mock).mockReturnValue({ documents: null }); // Simula estado inicial
 
         await act(async() => {
             render(
@@ -77,7 +77,7 @@ describe('ProductsList Component', () => {
     });
 
     it('Renderiza os produtos da categoria', async() => {
-        (useCollection as jest.Mock).mockReturnValue({ documents: mockProducts });
+        (useSnapshot as jest.Mock).mockReturnValue({ documents: mockProducts });
 
         await act(async() => {
             render(
