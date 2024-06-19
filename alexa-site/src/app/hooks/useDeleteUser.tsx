@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useCollection } from './useCollection';
 import { useUserInfo } from './useUserInfo';
 
-
 export const useDeleteUser = () => {
     const router = useRouter();
     const { deleteDocument } = useCollection('usuarios');

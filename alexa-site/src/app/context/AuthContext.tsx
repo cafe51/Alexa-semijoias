@@ -5,7 +5,7 @@ import { createContext, useReducer, useEffect, ReactNode } from 'react';
 import { auth } from '../firebase/config';
 import { User } from 'firebase/auth';
 
-interface AuthState {
+export interface AuthState {
     user: User | undefined;
     authIsReady: boolean;
 }
