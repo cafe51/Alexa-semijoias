@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // app/hooks/useSnapshot.test.ts
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { renderHook, waitFor } from '@testing-library/react';
 import { useSnapshot } from '../useSnapshot';
-import { onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { projectFirestoreDataBase } from '@/app/firebase/config';
 
 jest.mock('../../firebase/config', () => ({
     projectFirestoreDataBase: jest.fn(),
@@ -37,7 +38,7 @@ describe('useSnapshot', () => {
         jest.clearAllMocks();
     });
 
-    it('should initialize with no documents', () => {
+    it('inicialmente não deve retornar nenhum documento e o estado inicial deve ser null', () => {
         const unsubscribe = jest.fn();
         (onSnapshot as jest.Mock).mockImplementationOnce((query, callback) => {
             // Não chama o callback imediatamente para testar o estado inicial
@@ -48,7 +49,7 @@ describe('useSnapshot', () => {
         expect(result.current.documents).toBe(null);
     });
 
-    it('should get all documents with filters', async() => {
+    it('retorna todos os documentos com o filtro', async() => {
         const unsubscribe = jest.fn();
         (onSnapshot as jest.Mock).mockImplementationOnce((query, callback) => {
             callback({
@@ -69,5 +70,10 @@ describe('useSnapshot', () => {
         await waitFor(() => {
             expect(result.current.documents).toEqual([{ id: '1', exist: true, test: 'value' }]);
         });
+
+        expect(collection).toHaveBeenCalledWith(projectFirestoreDataBase, 'testCollection');
+        expect(where).toHaveBeenCalledWith('test', '==', 'value');
+        expect(query).toHaveBeenCalledWith(undefined, undefined);
+        expect(onSnapshot).toHaveBeenCalledWith(undefined, expect.any(Function));
     });
 });
