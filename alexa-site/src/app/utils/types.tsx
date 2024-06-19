@@ -3,28 +3,33 @@
 import { WhereFilterOp } from 'firebase/firestore';
 
 export type ProductType = {
-    exist: boolean,
-    id: string,
-    nome: string,
+    categoria: string,
     descricao: string,
+    desconto: number,
+    id: string,
+    exist: boolean,
+    nome: string,
     image: string[],
     preco: number,
     estoque: number,
-    desconto: number,
     lancamento: boolean,
-    categoria: string,
 }
 
 export type FilterOption = { field: string, operator: WhereFilterOp, value: string | number | string[] | number[] } ;
 
 export type ProductCartType = {
+    //o que vem de ProductType exceto categoria, desconto, lancamento e descrição
     id: string,
     exist: boolean,
-    productId: string,
     nome: string,
     image: string,
     preco: number,
+    estoque: number,
+
+    //o que vem de CartInfoType
+    productId: string,
     quantidade: number,
+    userId: string,
 }
 
 type AddressType = {

@@ -1,30 +1,39 @@
 // app/hooks/useCart.ts
 import { useEffect, useState } from 'react';
 import { useCollection } from './useCollection';
-import { ProductCartType, CartInfoType } from '../utils/types';
+import { ProductCartType, CartInfoType, ProductType } from '../utils/types';
 
 export const useCart = (productIds : string[], carrinho: CartInfoType[] | null) => {
-    const { getAllDocuments } = useCollection<ProductCartType>('produtos');
+    const { getAllDocuments } = useCollection<ProductType>('produtos');
 
     const [mappedProducts, setProdutos] = useState<ProductCartType[] | null>(null);
 
     useEffect(() => {
         const fetchProducts = async() => {
-            const products = await getAllDocuments([{ field: 'id', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }]);
-            console.log('PRODUTOS', products);
-            if (products && products.length > 0 && carrinho) {
-                const productsCart = products
-                    .map((productCart) => {
-                        const cartInfo = carrinho.find((cart) => productCart.id === cart.productId); 
-                        return cartInfo ? { ...productCart, ...cartInfo } : undefined;
-                    
-                    }).filter(Boolean) as ProductCartType[];
-                    
-                setProdutos(productsCart);
+            if (productIds && carrinho) { // Verifica se productIds e carrinho são truthy
+                const products = await getAllDocuments([{ field: 'id', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }]);
+
+                if (products && products.length > 0) {
+                    const productsCart = products
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        .map(({ categoria, desconto, descricao, image, lancamento, ...restProduct }) => {
+                            console.log('AAAAA productCart', restProduct);
+                            console.log('AAAAA carrinho', carrinho);
+
+                            const cartInfo = carrinho.find((cart) => restProduct.id === cart.productId); 
+                            return cartInfo ? { ...restProduct, image: image[0], ...cartInfo } : undefined;
+                        
+                        }).filter(Boolean) as ProductCartType[];
+                        
+                    setProdutos(productsCart);
+                }
             }
         };
+
         fetchProducts();
-    }, [carrinho, productIds]);
+    }, [carrinho, productIds]); // Mantém as dependências para garantir que o efeito seja executado quando necessário
+
+    console.log('AAAAA mappedProducts', mappedProducts);
 
     return { mappedProducts };
 };

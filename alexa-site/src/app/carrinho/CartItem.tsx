@@ -15,7 +15,7 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
                 <div className='rounded-lg relative h-[75px] w-[75px] overflow-hidden'>
                     <Image
                         className='rounded-lg object-cover scale-125'
-                        src={ produto.image[0] }
+                        src={ produto.image }
                         alt="Foto da peça"
                         fill
                     />
