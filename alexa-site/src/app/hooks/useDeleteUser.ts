@@ -1,4 +1,4 @@
-// app/hooks/useDeleteUser.tsx
+// app/hooks/useDeleteUser.ts
 
 import { useState } from 'react';
 import { auth } from '../firebase/config';
@@ -42,7 +42,7 @@ export const useDeleteUser = () => {
                     if (err instanceof Error) { setError(err.message); }
                 });
         } else {
-            console.log('Nenhum usuário está autenticado.');
+            throw new Error('Nenhum usuário está autenticado.');
         }
     };
 
