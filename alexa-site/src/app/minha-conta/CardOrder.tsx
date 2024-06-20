@@ -33,8 +33,6 @@ export default function CardOrder({ pedido } : { pedido: OrderType }) {
                 <p>R$ { pedido.valor.total.toFixed(2) }</p>
                 <p>{ pedido.status }</p>
             </div>
-           
-
         </div>
     );
 
