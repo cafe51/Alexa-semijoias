@@ -23,9 +23,11 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
                 <div className='rounded-lg relative w-3/4 overflow-hidden text-sm' >
                     <p >{ produto.nome }</p>
                 </div>
-                <FaRegTrashAlt onClick={
-                    () => deleteDocument(produto.id)
-                } />
+                <FaRegTrashAlt
+                    onClick={
+                        () => deleteDocument(produto.id)
+                    }
+                    data-testid={ 'trashButton' }/>
             </div>
             <div className="flex justify-between items-center w-full">
                 
