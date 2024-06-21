@@ -91,6 +91,7 @@ export default function Login() {
                 <label className={ `flex flex-col gap-1 ${loadingComponent ? 'animate-pulse' : ''}` } htmlFor="email">
                     <span>EMAIL/CPF</span>
                     <input
+                        id='email'
                         type="email"
                         name="email"
                         className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
@@ -113,6 +114,7 @@ export default function Login() {
                 <label className={ `flex flex-col gap-1 ${loadingComponent ? 'animate-pulse' : ''}` } htmlFor="password">
                     <span>SENHA</span>
                     <input
+                        id='password'
                         className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
                         type="password"
                         name="password"
