@@ -1,4 +1,3 @@
-
 //app/firebase/config.ts
 import { getApps, initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';

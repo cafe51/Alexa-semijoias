@@ -21,10 +21,8 @@ export const useDeleteUser = () => {
             await signInUser(email, password);
 
             if (!userInfo) throw new Error('Usuário não encontrado');
-            // console.log('USUARIO USERINFO USEDELETEUSER', userInfo, userInfo.id);
             
             await deleteDocument(userInfo.id);
-            // console.log('DELETOOOU', userInfo, userInfo.id);
 
             const user = auth.currentUser;
             if (user) {

@@ -1,3 +1,5 @@
+//app/hooks/tests/useDeleteUser.test.tsx
+
 import { renderHook, act } from '@testing-library/react';
 import { useDeleteUser } from '../useDeleteUser';
 import { signInWithEmailAndPassword, deleteUser } from 'firebase/auth';

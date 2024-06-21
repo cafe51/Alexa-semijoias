@@ -22,7 +22,7 @@ const schema = yup.object().shape({
     nome: yup.string().required('Nome completo é obrigatório'),
     email: yup.string().email('Email inválido').required('Email é obrigatório'),
     tel: yup.string().matches(/^\d+$/, 'Telefone deve conter apenas números').optional(),
-    password: yup.string().min(6, 'A senha deve ter no mínimo 6 caracteres').required('Senha é obrigatória'),
+    password: yup.string().required('Senha é obrigatória').min(6, 'A senha deve ter no mínimo 6 caracteres'),
     confirmPassword: yup.string()
         .oneOf([yup.ref('password'), undefined], 'As senhas devem ser iguais').required('Confirmação de senha é obrigatória'),
     recaptcha: yup.string().required('Por favor, verifique que você não é um robô'),
@@ -65,6 +65,7 @@ export default function Register() {
                     <span>NOME COMPLETO</span>
                     <input
                         type="text"
+                        id="nome"
                         className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
                         placeholder="ex: Maria Perez"
                         { ...register('nome') }
@@ -75,6 +76,7 @@ export default function Register() {
                     <span>E-MAIL</span>
                     <input
                         type="email"
+                        id="email"
                         className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
                         placeholder="ex: seuemail@email.com.br"
                         { ...register('email') }
@@ -85,6 +87,7 @@ export default function Register() {
                     <span>TELEFONE (OPCIONAL)</span>
                     <input
                         type="text"
+                        id="tel"
                         className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
                         placeholder="ex: 11971923030"
                         { ...register('tel') }
@@ -95,6 +98,7 @@ export default function Register() {
                     <span>SENHA</span>
                     <input
                         type="password"
+                        id="password"
                         className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
                         placeholder="*******"
                         { ...register('password') }
@@ -105,6 +109,7 @@ export default function Register() {
                     <span>CONFIRMAR SENHA</span>
                     <input
                         type="password"
+                        id="confirmPassword"
                         className='w-full p-2 text-xl text-center bg-white rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1'
                         placeholder="*******"
                         { ...register('confirmPassword') }
@@ -115,6 +120,7 @@ export default function Register() {
                 <div>
                     <input
                         type="checkbox"
+                        id="recaptcha"
                         { ...register('recaptcha', { required: true }) }
                     />
                     <label htmlFor="recaptcha">Não sou um robô</label>
