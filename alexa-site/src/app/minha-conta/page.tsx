@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { OrderType } from '../utils/types';
 import { useDeleteUser } from '../hooks/useDeleteUser';
-import DeleteMySelfForm from './DeleteMyselfForm';
+import DeleteMySelfForm from './DeleteMySelfForm';
 
 export default function ClientProfile() {
     const{ user } = useAuthContext();
@@ -30,7 +30,7 @@ export default function ClientProfile() {
         console.log('MINHA CONTA USERINFO', userInfo);
         // if (user) { setUsuarioState(user); }
 
-    }, [ userInfo ]);
+    }, []);
 
     const handleDeleteMyselfClick = () => {
         if (!user) {

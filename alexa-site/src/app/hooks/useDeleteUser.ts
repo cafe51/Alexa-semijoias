@@ -3,62 +3,43 @@
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { deleteUser, signInWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
 import { useCollection } from './useCollection';
 import { useUserInfo } from './useUserInfo';
 
 export const useDeleteUser = () => {
-    const router = useRouter();
     const { deleteDocument } = useCollection('usuarios');
     const userInfo = useUserInfo()?.userInfo;
 
-    const [error, setError] = useState<null | string>(null);
+    const [error, setError] = useState<null | string>('ERADO');
 
     const signInUser = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
 
-    const deleteUserAccountFunction = () => {
+    const deleteUserAccount = async(email: string, password: string) => {
+        try {
+            await signInUser(email, password);
 
-        if(!userInfo) throw new Error('usuário não encontrado');
-        console.log('USUARIO USERINFO USEDELETEUSER', userInfo, userInfo.id);
-        deleteDocument(userInfo.id)
-            .then(() => {
-                console.log('DELETOOOU', userInfo, userInfo.id);
-            }).catch((err) => {
-                if (err instanceof Error) {
-                    setError(err.message);
-                    return;
-                }
-            });
-        const user = auth.currentUser;
-        if (user) {
+            if (!userInfo) throw new Error('Usuário não encontrado');
+            // console.log('USUARIO USERINFO USEDELETEUSER', userInfo, userInfo.id);
             
-            deleteUser(user)
-                .then(() => {
-                    console.log('Usuário excluído com sucesso.');
-                })
-                .catch((err) => {
-                    if (err instanceof Error) { setError(err.message); }
-                });
-        } else {
-            throw new Error('Nenhum usuário está autenticado.');
+            await deleteDocument(userInfo.id);
+            // console.log('DELETOOOU', userInfo, userInfo.id);
+
+            const user = auth.currentUser;
+            if (user) {
+                await deleteUser(user);
+                console.log('Usuário excluído com sucesso.');
+                setError(null);
+            } else {
+                throw new Error('Nenhum usuário está autenticado.');
+            }
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            }
         }
     };
 
-    const deleteUserAccount = (email: string, password: string) => {
-        signInUser(email, password)
-            .then(() => {
-                deleteUserAccountFunction();
-            }).then(() => {
-                // logout();
-                router.push('/');
-            })
-            .catch((err) => {
-                if (err instanceof Error) { setError(err.message); }
-            });
-    };
-
-
-    return { error, deleteUserAccount  };
+    return { error, deleteUserAccount };
 };
