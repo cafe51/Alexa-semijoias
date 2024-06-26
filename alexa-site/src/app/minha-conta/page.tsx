@@ -87,7 +87,7 @@ export default function ClientProfile() {
                     <div className='flex flex-col gap-4 w-full'>
                         <div className='flex flex-col gap-4 justify-between w-full '>
 
-                            { pedidos ? listaDeCompras : realizeSuaCompra }
+                            { pedidos && pedidos?.length > 0 ? listaDeCompras : realizeSuaCompra }
                             
                             
 
