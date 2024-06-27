@@ -1,3 +1,4 @@
+// Product.test.test.tsx
 
 import { act, render, screen } from '@testing-library/react';
 import Product from '../Product';
