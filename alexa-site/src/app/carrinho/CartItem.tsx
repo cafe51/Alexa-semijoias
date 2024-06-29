@@ -33,8 +33,11 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
                 
                 <div className="flex items-center secColor rounded">
                     <button
-                        className="px-4 py-1 textColored text-lg secColor rounded hover:bg-gray-300 border-solid border-2 borderColor"
-                        onClick={ () => updateDocumentField(produto.id, 'quantidade', produto.quantidade -=1) }
+                        className="px-4 py-1 text-white text-lg primColor rounded hover:bg-pink-400 border-solid border-2 borderColor disabled:bg-pink-200"
+                        onClick={ (produto.quantidade <= 1) ? (() => null) : (() => {
+                            return updateDocumentField(produto.id, 'quantidade', produto.quantidade -=1);
+                        }) }
+                        disabled={ produto.quantidade <= 1 }
                     >
                         -
                     </button>
@@ -42,8 +45,11 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
                         { produto.quantidade }
                     </span>
                     <button
-                        className="px-4 py-1 textColored text-lg secColor rounded hover:bg-gray-300 border-solid border-2 borderColor"
-                        onClick={ () => updateDocumentField(produto.id, 'quantidade', produto.quantidade +=1) }
+                        className="px-4 py-1  text-white text-lg primColor rounded hover:bg-pink-400 border-solid border-2 borderColor disabled:bg-pink-200"
+                        onClick={ (produto.quantidade >= produto.estoque) ? (() => null) : (() => {
+                            return updateDocumentField(produto.id, 'quantidade', produto.quantidade +=1);
+                        }) }
+                        disabled={ produto.quantidade >= produto.estoque }
                     >
                         +
                     </button>

@@ -2,8 +2,12 @@
 import { useEffect, useState } from 'react';
 import { useCollection } from './useCollection';
 import { ProductCartType, CartInfoType, ProductType } from '../utils/types';
+import { DocumentData } from 'firebase/firestore';
 
-export const useCart = (productIds : string[], carrinho: CartInfoType[] | null) => {
+export const useCart = (productIds : string[], carrinho: (CartInfoType & DocumentData)[] | null) => {
+    const { updateDocumentField } = useCollection(
+        'carrinhos',
+    );
     const { getAllDocuments } = useCollection<ProductType>('produtos');
 
     const [mappedProducts, setProdutos] = useState<ProductCartType[] | null>(null);
@@ -17,11 +21,19 @@ export const useCart = (productIds : string[], carrinho: CartInfoType[] | null) 
                     const productsCart = products
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         .map(({ categoria, desconto, descricao, image, lancamento, ...restProduct }) => {
-                            console.log('AAAAA productCart', restProduct);
-                            console.log('AAAAA carrinho', carrinho);
-
                             const cartInfo = carrinho.find((cart) => restProduct.id === cart.productId); 
-                            return cartInfo ? { ...restProduct, image: image[0], ...cartInfo } : undefined;
+
+                            if(!cartInfo) return undefined;
+                            if(cartInfo) {
+                                if (cartInfo.quantidade > restProduct.estoque) {
+                                    updateDocumentField(cartInfo.id, 'quantidade', cartInfo.quantidade = restProduct.estoque);
+                                }
+                                return {
+                                    ...restProduct,
+                                    image: image[0],
+                                    ...cartInfo,
+                                };}
+                            // return cartInfo ? { ...restProduct, image: image[0], ...cartInfo } : undefined;
                         
                         }).filter(Boolean) as ProductCartType[];
                         
