@@ -3,16 +3,11 @@ import Carrinho from '../page';
 import { CartInfoType, ProductType } from '@/app/utils/types';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
-import { useCollection } from '@/app/hooks/useCollection';
 import { useSnapshot2 } from '@/app/hooks/useSnapshot2';
 
 
 jest.mock('../../hooks/useSnapshot2', () => ({
     useSnapshot2: jest.fn(),
-}));
-
-jest.mock('../../hooks/useCollection', () => ({
-    useCollection: jest.fn(),
 }));
 
 // Simula itens no carrinho do usuário
@@ -63,9 +58,14 @@ const mockProducts: ({ id: string; exist: boolean; } & ProductType)[] = [
 
 describe('Carrinho Component', () => {
     beforeEach(() => {
-        (useSnapshot2 as jest.Mock).mockReturnValue({ documents: mockCartItems });
-        (useCollection as jest.Mock).mockReturnValue({ 
-            getAllDocuments: jest.fn().mockResolvedValue(mockProducts),
+        (useSnapshot2 as jest.Mock).mockImplementation((collectionName: string) => {
+            if (collectionName === 'carrinhos') {
+                return { documents: mockCartItems };
+            }
+            if (collectionName === 'produtos') {
+                return { documents: mockProducts };
+            }
+            return { documents: [] };
         });
         
     });

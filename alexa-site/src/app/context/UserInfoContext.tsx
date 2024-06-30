@@ -3,7 +3,7 @@
 
 import { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { CartInfoType, FilterOption, OrderType, ProductCartType, UserType } from '../utils/types';
+import { CartInfoType, FilterOption, OrderType, ProductCartType, ProductType, UserType } from '../utils/types';
 import { useSnapshot2 } from '../hooks/useSnapshot2';
 import { DocumentData } from 'firebase/firestore';
 import { useCart } from '../hooks/useCart';
@@ -41,7 +41,18 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         userQuery, 
     );
 
-    const { mappedProducts } = useCart(productIds, carrinho);
+
+    const pedidosDoCarrinhoQuery = useMemo<FilterOption[]>(() => 
+        [{ field: 'id', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }],
+    [productIds], // Só recriar a query quando 'productIds' mudar
+    );
+
+    const { documents: pedidosDoCarrinho } = useSnapshot2<ProductType>(
+        'produtos', 
+        pedidosDoCarrinhoQuery, 
+    );
+
+    const { mappedProducts } = useCart(carrinho, pedidosDoCarrinho);
 
     useEffect(() => {
         if (carrinho && carrinho) {

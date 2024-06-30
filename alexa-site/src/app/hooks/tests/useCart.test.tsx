@@ -8,6 +8,7 @@ import { CartInfoType, ProductType } from '../../utils/types';
 jest.mock('../useCollection');
 
 describe('useCart Hook', () => {
+    
     const mockProducts: ProductType[] = [
         {
             id: 'prod1',
@@ -45,7 +46,7 @@ describe('useCart Hook', () => {
             getAllDocuments: jest.fn().mockResolvedValue(mockProducts),
         });
 
-        const { result } = renderHook(() => useCart(['prod1', 'prod3'], mockCartItems));
+        const { result } = renderHook(() => useCart(mockCartItems, mockProducts));
 
         await waitFor(() => expect(result.current.mappedProducts).toEqual([
             {
@@ -62,5 +63,5 @@ describe('useCart Hook', () => {
             },
         ]));
 
-    }); // Aumenta o tempo limite para 10 segundos
+    });
 });
