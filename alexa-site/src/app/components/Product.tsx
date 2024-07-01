@@ -3,17 +3,47 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ProductType } from '../utils/types';
+import { CartInfoType, ProductType } from '../utils/types';
 import ResponsiveCarousel from './ResponsiveCarousel';
 import Link from 'next/link';
 import { useCollection } from '../hooks/useCollection';
+import { useUserInfo } from '../hooks/useUserInfo';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 
 export default function Product({ id, productType }: {id: string, productType: string}) {
+    const { user } = useAuthContext();
     const { getDocumentById } = useCollection<ProductType>('produtos');
     const [product, setProduct] = useState<ProductType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos');
+    const carrinho = useUserInfo()?.carrinho;
+
+    const isDisabled = () => {
+        const cartItem = carrinho?.find((item) => item.productId === product?.id);
+        return cartItem ? cartItem.quantidade >= cartItem.estoque : false;
+        // return false;
+    };
+
+    const handleAddToCart = () => {
+        if (!user) {
+            console.warn('User not logged in. Cannot add to cart.');
+            return;
+        }
+        if (product) {
+            const cartItem = carrinho?.find((item) => item.productId === product.id);
+            if (!cartItem) {
+                addDocument({
+                    productId: product.id,
+                    quantidade: 1,
+                    userId: user.uid,
+                });
+            } else if (cartItem.quantidade < product.estoque) {
+                updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade + 1);
+            }
+        }
+    };
 
     const updateProductsState = async() => {
         const productData = await getDocumentById(id);
@@ -62,7 +92,11 @@ export default function Product({ id, productType }: {id: string, productType: s
                         <p> em até 6x de R$ { (product.preco/6).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) } sem juros </p>
                         <p> Formas de pagamento </p>
                     </div>
-                    <button className='rounded-full w-full bg-green-500 p-4 px-6 font-bold border-solid border-2 border-x-0 borderColor text-white'>
+                    <button
+                        className='rounded-full w-full bg-green-500 p-4 px-6 font-bold border-solid border-2 border-x-0 borderColor text-white disabled:bg-green-200'
+                        onClick={ handleAddToCart }
+                        disabled={ isDisabled() }
+                    >
                             COMPRE JÁ
                     </button>
                     <div className='py-4 gap-4 border-solid border-2 border-x-0 borderColor'>
