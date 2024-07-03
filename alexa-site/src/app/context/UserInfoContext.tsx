@@ -31,7 +31,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         userQuery,
     );
     
-    const { documents: carrinho } = useSnapshot2<CartInfoType>(
+    const { documents: cartInfos } = useSnapshot2<CartInfoType>(
         'carrinhos',
         userQuery, 
     );
@@ -52,15 +52,17 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         pedidosDoCarrinhoQuery, 
     );
 
-    const { mappedProducts } = useCart(carrinho, pedidosDoCarrinho);
+    const { mappedProducts } = useCart(cartInfos, pedidosDoCarrinho);
+
+    console.log('AAAAA mappedProducts', cartInfos?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0));
 
     useEffect(() => {
-        if (carrinho && carrinho) {
-            const ids = carrinho.map((info) => info.productId);
+        if (cartInfos && cartInfos) {
+            const ids = cartInfos.map((info) => info.productId);
             console.log('useEffect userInforContext.tsx');
             setProductIds(ids);
         }
-    }, [carrinho]);
+    }, [cartInfos]);
 
     return (
         <UserInfoContext.Provider value={ { carrinho: mappedProducts, userInfo: userInfo ? userInfo[0] : null, pedidos: pedidos }  }>

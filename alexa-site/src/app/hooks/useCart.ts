@@ -4,7 +4,7 @@ import { useCollection } from './useCollection';
 import { ProductCartType, CartInfoType, ProductType } from '../utils/types';
 import { DocumentData } from 'firebase/firestore';
 
-export const useCart = (carrinho: (CartInfoType & DocumentData)[] | null, products: (ProductType & DocumentData)[] | null) => {
+export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, products: (ProductType & DocumentData)[] | null) => {
     const { updateDocumentField } = useCollection(
         'carrinhos',
     );
@@ -13,11 +13,11 @@ export const useCart = (carrinho: (CartInfoType & DocumentData)[] | null, produc
     useEffect(() => {
         const fetchProducts = async() => {
 
-            if (products && products.length > 0 && carrinho) {
+            if (products && products.length > 0 && cartInfos) {
                 const productsCart = products
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .map(({ categoria, desconto, descricao, image, lancamento, ...restProduct }) => {
-                        const cartInfo = carrinho.find((cart) => restProduct.id === cart.productId); 
+                        const cartInfo = cartInfos.find((cart) => restProduct.id === cart.productId); 
 
                         if(!cartInfo) return undefined;
                         if(cartInfo) {
@@ -38,9 +38,9 @@ export const useCart = (carrinho: (CartInfoType & DocumentData)[] | null, produc
         };
 
         fetchProducts();
-    }, [carrinho, products]); // Mantém as dependências para garantir que o efeito seja executado quando necessário
+    }, [cartInfos, products]); // Mantém as dependências para garantir que o efeito seja executado quando necessário
 
-    console.log('AAAAA mappedProducts', mappedProducts);
+    // console.log('AAAAA mappedProducts', mappedProducts);
 
     return { mappedProducts };
 };
