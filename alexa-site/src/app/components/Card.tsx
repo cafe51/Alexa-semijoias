@@ -1,14 +1,14 @@
 //app/components/Card.tsx
 
 import Image from 'next/image';
-import { CartInfoType, ProductType } from '../utils/types';
+import { ProductType } from '../utils/types';
 import Link from 'next/link';
-import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
+import { useLocalStorage } from '../hooks/useChangeCart';
 
 export default function Card({ cardData, productType }: { cardData: ProductType | null, productType: string }) {
-    const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos');
+    const { addItemToLocalStorageCart, addItemToCart } = useLocalStorage();
     const { user } = useAuthContext();
     const carrinho = useUserInfo()?.carrinho;
 
@@ -21,20 +21,14 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
 
     const handleAddToCart = () => {
         if (!user) {
-            console.warn('User not logged in. Cannot add to cart.');
-            return;
+            // Usuário não está logado, salva no localStorage
+            addItemToLocalStorageCart(cardData);
+            console.warn('user está deslogado!');
+        } else {
+            // Usuário está logado, salva no firebase
+            addItemToCart(user, carrinho, cardData);
         }
         
-        const cartItem = carrinho?.find((item) => item.productId === cardData.id);
-        if (!cartItem) {
-            addDocument({
-                productId: cardData.id,
-                quantidade: 1,
-                userId: user.uid,
-            });
-        } else if (cartItem.quantidade < cardData.estoque) {
-            updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade + 1);
-        }
     };
     
     return (
@@ -50,6 +44,7 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
                     />
                 </Link>
                 <h3 className='p-2 w-full'>{ cardData.nome }</h3>
+                <h3 className='p-2 w-full'>{ cardData.id }</h3>
                 <div>
                     <p className='font-bold text-xl'>R$ { cardData.preco }</p>
                     <p>em até 6x de</p>
