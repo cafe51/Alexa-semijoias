@@ -5,14 +5,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { useSnapshot } from '../hooks/useSnapshot';
 import { useLogout } from '../hooks/useLogout';
 import { useUserInfo } from '../hooks/useUserInfo';
 
 export default function NavBarUserSection() {
     const router = useRouter();
     const{ user } = useAuthContext();
-    const { documents } = useSnapshot('usuarios', null);
     const { logout } = useLogout();
 
     const [userIsLogged, setUserIsLogged] = useState(false);
@@ -32,7 +30,7 @@ export default function NavBarUserSection() {
                 console.log('erro desconhecido');
             }
         }
-    }, [documents, user]);
+    }, [user]);
 
     const handleLogOut = () => {
         logout();

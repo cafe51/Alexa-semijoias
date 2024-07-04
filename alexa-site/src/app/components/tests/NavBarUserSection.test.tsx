@@ -11,10 +11,6 @@ jest.mock('next/navigation', () => ({
     }),
 }));
 
-jest.mock('../../hooks/useSnapshot', () => ({
-    useSnapshot: jest.fn(),
-}));
-
 jest.mock('../../hooks/useAuthContext', () => ({
     useAuthContext: jest.fn(),
 }));
@@ -25,7 +21,6 @@ jest.mock('../../hooks/useUserInfo', () => ({
 
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useUserInfo } from '../../hooks/useUserInfo';
-import { useSnapshot } from '../../hooks/useSnapshot';
 
 describe('NavBarUserSection Component', () => {
     beforeEach(() => {
@@ -34,7 +29,6 @@ describe('NavBarUserSection Component', () => {
 
     it('Exibe opções de login/cadastro para usuários não logados', async() => {
         // Simula um usuário não logado
-        (useSnapshot as jest.Mock).mockReturnValue({ documents: [] });
         (useAuthContext as jest.Mock).mockReturnValue({ user: null, authIsReady: false });
         (useUserInfo as jest.Mock).mockReturnValue({ userInfo: null, carrinho: [] });
 
@@ -53,9 +47,6 @@ describe('NavBarUserSection Component', () => {
     });
 
     it('Exibe saudação e opções de conta para usuários logados', async() => {
-        (useSnapshot as jest.Mock).mockReturnValue({ 
-            documents: [{ id: 'user123', nome: 'Fulana Teste' }], 
-        });
         (useAuthContext as jest.Mock).mockReturnValue({ user: { uid: 'user123' }, authIsReady: true });
         (useUserInfo as jest.Mock).mockReturnValue({ userInfo: { uid: 'user123',  nome: 'Fulana Teste' }, carrinho: [] });
 

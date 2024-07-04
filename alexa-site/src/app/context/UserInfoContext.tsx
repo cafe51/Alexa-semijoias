@@ -4,7 +4,7 @@
 import { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { CartInfoType, FilterOption, OrderType, ProductCartType, ProductType, UserType } from '../utils/types';
-import { useSnapshot2 } from '../hooks/useSnapshot2';
+import { useSnapshot } from '../hooks/useSnapshot';
 import { DocumentData } from 'firebase/firestore';
 import { useCart } from '../hooks/useCart';
 
@@ -26,17 +26,17 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     [user], // Só recriar a query quando 'user' mudar
     );
 
-    const { documents: userInfo } = useSnapshot2<UserType>(
+    const { documents: userInfo } = useSnapshot<UserType>(
         'usuarios',
         userQuery,
     );
     
-    const { documents: cartInfos } = useSnapshot2<CartInfoType>(
+    const { documents: cartInfos } = useSnapshot<CartInfoType>(
         'carrinhos',
         userQuery, 
     );
 
-    const { documents: pedidos } = useSnapshot2<OrderType>(
+    const { documents: pedidos } = useSnapshot<OrderType>(
         'pedidos', 
         userQuery, 
     );
@@ -47,7 +47,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     [productIds], // Só recriar a query quando 'productIds' mudar
     );
 
-    const { documents: pedidosDoCarrinho } = useSnapshot2<ProductType>(
+    const { documents: pedidosDoCarrinho } = useSnapshot<ProductType>(
         'produtos', 
         pedidosDoCarrinhoQuery, 
     );

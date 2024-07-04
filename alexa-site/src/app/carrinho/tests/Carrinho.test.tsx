@@ -1,13 +1,14 @@
+//src/app/carrinho/tests/Carrinho.test.tsx
 import { act, render, screen } from '@testing-library/react';
 import Carrinho from '../page';
 import { CartInfoType, ProductType } from '@/app/utils/types';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
-import { useSnapshot2 } from '@/app/hooks/useSnapshot2';
+import { useSnapshot } from '@/app/hooks/useSnapshot';
 
 
-jest.mock('../../hooks/useSnapshot2', () => ({
-    useSnapshot2: jest.fn(),
+jest.mock('../../hooks/useSnapshot', () => ({
+    useSnapshot: jest.fn(),
 }));
 
 // Simula itens no carrinho do usuário
@@ -58,7 +59,7 @@ const mockProducts: ({ id: string; exist: boolean; } & ProductType)[] = [
 
 describe('Carrinho Component', () => {
     beforeEach(() => {
-        (useSnapshot2 as jest.Mock).mockImplementation((collectionName: string) => {
+        (useSnapshot as jest.Mock).mockImplementation((collectionName: string) => {
             if (collectionName === 'carrinhos') {
                 return { documents: mockCartItems };
             }
@@ -71,7 +72,7 @@ describe('Carrinho Component', () => {
     });
 
     it('renderiza "Loading..." quando mappedProducts é null', async() => {
-        (useSnapshot2 as jest.Mock).mockReturnValue({ documents: null });
+        (useSnapshot as jest.Mock).mockReturnValue({ documents: null });
 
         await act(async() => {
             render(

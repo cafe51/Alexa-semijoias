@@ -1,17 +1,13 @@
 // app/hooks/useSnapshot.ts
-
 import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, collection, onSnapshot, query, where  } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, collection,query, where, onSnapshot } from 'firebase/firestore';
+import { FilterOption } from '../utils/types';
 
-type FilterOption = { field: string, operator: '==' | 'in', value: string | number | string[] | number[] } ;
-
-
-
-export const useSnapshot = <T>(collectionName: string, _filterOptions:  FilterOption[] | null) => {
+export const useSnapshot = <T>(collectionName: string, filterOptions:  FilterOption[] | null) => {
     const [ documents, setDocuments ] = useState<(T & DocumentData)[] | null>(null);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const filterOptions = useRef(_filterOptions).current;
 
     useEffect(() => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
@@ -30,10 +26,23 @@ export const useSnapshot = <T>(collectionName: string, _filterOptions:  FilterOp
                 };
             });
 
-            results ? setDocuments(results) : '';
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+
+            timerRef.current = setTimeout(() => {
+                results ? setDocuments(results) : '';
+            }, 150); // Ajuste o tempo conforme necessário
+
+            
 
         });
-        return () => unsub();
+        return () => {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+            unsub();
+        };
 
     }, [collectionName, filterOptions]);
 
