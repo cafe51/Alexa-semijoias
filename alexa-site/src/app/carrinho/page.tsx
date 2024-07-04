@@ -5,9 +5,11 @@ import { ProductCartType } from '../utils/types';
 import CartItem from './CartItem';
 
 export default function Carrinho() {
-    const  carrinho = useUserInfo()?.carrinho;
+    const carrinho = useUserInfo()?.carrinho;
 
-    if (!carrinho) return <p>Loading...</p>;
+    console.log('CARRINHO', carrinho);
+
+    if (!carrinho || carrinho.length < 0) return <p>Loading...</p>;
 
     return (
         <section className='flex flex-col gap-1'>

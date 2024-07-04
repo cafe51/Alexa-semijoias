@@ -5,55 +5,59 @@ import { useUserInfo } from './useUserInfo';
 export const useLocalStorage = () => {
     const { setCartLocalStorageState } = useUserInfo();
 
-    const removeOneToLocalStorage = (product: ProductCartType) => {
-        // eslint-disable-next-line prefer-const
-        let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
-        const cartItem = localCart.find((item) => item.productId === product.id);
+    const getLocalCart = (): CartInfoType[] => {
+        return JSON.parse(localStorage.getItem('cart') || '[]');
+    };
+
+    const setLocalCart = (cart: CartInfoType[]) => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        setCartLocalStorageState(cart);
+    };
+
+    const removeOneFromLocalStorage = (product: ProductCartType) => {
+        const localCart = getLocalCart();
+        const cartItem = localCart.find(item => item.productId === product.id);
         
-        if (cartItem && cartItem.quantidade >= 2) {
-            cartItem.quantidade -= 1;
+        if (cartItem) {
+            if (cartItem.quantidade > 1) {
+                cartItem.quantidade -= 1;
+            } else {
+                const index = localCart.indexOf(cartItem);
+                localCart.splice(index, 1);
+            }
         }
-        
-        localStorage.setItem('cart', JSON.stringify(localCart));
-        console.warn('Produto subtraído ao carrinho localStorage.');
-        setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
-        return;
+
+        setLocalCart(localCart);
+        console.warn('Produto removido ou quantidade subtraída do carrinho localStorage.');
     };
 
     const fixQuantityByStockInLocalStorage = (product: ProductType) => {
-        // eslint-disable-next-line prefer-const
-        let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
-        const cartItem = localCart.find((item) => item.productId === product.id);
+        const localCart = getLocalCart();
+        const cartItem = localCart.find(item => item.productId === product.id);
         
         if (cartItem && cartItem.quantidade > product.estoque) {
             cartItem.quantidade = product.estoque;
         }
-        
-        localStorage.setItem('cart', JSON.stringify(localCart));
-        console.warn('Quantidade do produto do produto', product.id ,' do carrinho corrigida.');
-        setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
-        return;
+
+        setLocalCart(localCart);
+        console.warn(`Quantidade do produto ${product.id} no carrinho corrigida.`);
     };
 
     const addOneToLocalStorage = (product: ProductCartType) => {
-        // eslint-disable-next-line prefer-const
-        let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
-        const cartItem = localCart.find((item) => item.productId === product.id);
+        const localCart = getLocalCart();
+        const cartItem = localCart.find(item => item.productId === product.id);
         
         if (cartItem && cartItem.quantidade < product.estoque) {
             cartItem.quantidade += 1;
         }
-        
-        localStorage.setItem('cart', JSON.stringify(localCart));
+
+        setLocalCart(localCart);
         console.warn('Produto somado ao carrinho localStorage.');
-        setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
-        return;
     };
 
     const addItemToLocalStorageCart = (product: ProductType) => {
-        // eslint-disable-next-line prefer-const
-        let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
-        const cartItem = localCart.find((item) => item.productId === product.id);
+        const localCart = getLocalCart();
+        const cartItem = localCart.find(item => item.productId === product.id);
         
         if (!cartItem) {
             localCart.push({
@@ -64,25 +68,24 @@ export const useLocalStorage = () => {
         } else if (cartItem.quantidade < product.estoque) {
             cartItem.quantidade += 1;
         }
-        
-        localStorage.setItem('cart', JSON.stringify(localCart));
+
+        setLocalCart(localCart);
         console.warn('Produto adicionado ao carrinho localStorage.');
-        setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
-        return;
     };
 
     const removeItemFromLocalStorageCart = (productId: string) => {
-        return productId;
+        const localCart = getLocalCart();
+        const updatedCart = localCart.filter(item => item.productId !== productId);
+
+        setLocalCart(updatedCart);
+        console.warn('Produto removido do carrinho localStorage.');
     };
-
-
-
 
     return {
         addItemToLocalStorageCart,
         removeItemFromLocalStorageCart,
         addOneToLocalStorage,
-        removeOneToLocalStorage,
+        removeOneFromLocalStorage,
         fixQuantityByStockInLocalStorage,
     };
 };

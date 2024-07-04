@@ -8,7 +8,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function CartItem({ produto }: { produto: ProductCartType }) {
     const { user } = useAuthContext();
-    const { addOneToLocalStorage, removeOneToLocalStorage } = useLocalStorage();
+    const { addOneToLocalStorage, removeOneFromLocalStorage, removeItemFromLocalStorageCart } = useLocalStorage();
 
     const { updateDocumentField, deleteDocument } = useCollection(
         'carrinhos',
@@ -19,11 +19,11 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
     };
 
     const removeOne = () => {
-        return user ? updateDocumentField(produto.id, 'quantidade', produto.quantidade -=1) : removeOneToLocalStorage(produto);
+        return user ? updateDocumentField(produto.id, 'quantidade', produto.quantidade -=1) : removeOneFromLocalStorage(produto);
     };
 
     const removeAll = () => {
-        return deleteDocument(produto.id);
+        return user ? deleteDocument(produto.id) : removeItemFromLocalStorageCart(produto.id);
     };
 
     
