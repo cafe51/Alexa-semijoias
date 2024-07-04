@@ -1,7 +1,7 @@
 // app/context/UserInfoContext
 'use client';
 
-import { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
+import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { CartInfoType, FilterOption, OrderType, ProductCartType, ProductType, UserType } from '../utils/types';
 import { useSnapshot } from '../hooks/useSnapshot';
@@ -12,10 +12,34 @@ interface IUserInfoContext {
     carrinho: (ProductCartType)[] | null;
     userInfo: (UserType & DocumentData) | null;
     pedidos: (OrderType & DocumentData)[] | null;
+    setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>;
 }
 export const UserInfoContext = createContext<IUserInfoContext | null>(null);
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
+    const [cartLocalStorageState, setCartLocalStorageState] = useState<CartInfoType[]>(
+        JSON.parse(localStorage.getItem('cart') || '[]'), // Inicializa com o valor atual
+    );
+
+    // const newRender = () => {
+    //     setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
+    //     console.log('a new render was required');
+    // };
+
+    // useEffect(() => {
+    // const storageListener = (event: StorageEvent) => {
+    //     if (event.key === 'cart') {
+    //         setCartLocalStorageState(JSON.parse(event.newValue || '[]'));
+    //     }
+    // };
+    
+    // window.addEventListener('storage', storageListener);
+    
+    //     return () => {
+    //         window.removeEventListener('storage', storageListener);
+    //     };
+    // }, [newRender]);
+    
     const [productIds, setProductIds] = useState<string[]>(['']);
     
     
@@ -52,20 +76,29 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         pedidosDoCarrinhoQuery, 
     );
 
-    const { mappedProducts } = useCart(cartInfos, pedidosDoCarrinho);
+    const { mappedProducts } = useCart(user ? cartInfos : cartLocalStorageState, pedidosDoCarrinho, setCartLocalStorageState);
 
-    console.log('AAAAA mappedProducts', cartInfos?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0));
-
+    //montagem do carrinho
     useEffect(() => {
-        if (cartInfos && cartInfos) {
-            const ids = cartInfos.map((info) => info.productId);
-            console.log('useEffect userInforContext.tsx');
-            setProductIds(ids);
+        // se o usuário estiver logado o carrinho é montado a partir do firebase
+        if(user) {
+            if (cartInfos && cartInfos) {
+                const ids = cartInfos.map((info) => info.productId);
+                console.log('useEffect userInforContext.tsx');
+                setProductIds(ids);
+            }
+        } else {
+        // se o usuário estiver deslogado o carrinho é montado a partir do localstorage
+            if (cartLocalStorageState.length > 0) {
+                const ids = cartLocalStorageState.map((item) => item.productId);
+                console.log('USER NÂO EXISTE!', ids);
+                setProductIds(ids);
+            }
         }
-    }, [cartInfos]);
+    }, [cartInfos, user, cartLocalStorageState]);
 
     return (
-        <UserInfoContext.Provider value={ { carrinho: mappedProducts, userInfo: userInfo ? userInfo[0] : null, pedidos: pedidos }  }>
+        <UserInfoContext.Provider value={ { carrinho: mappedProducts, userInfo: userInfo ? userInfo[0] : null, pedidos: pedidos, setCartLocalStorageState }  }>
             { children }
         </UserInfoContext.Provider>
     );

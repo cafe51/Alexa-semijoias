@@ -1,14 +1,18 @@
 //app/components/Card.tsx
 
 import Image from 'next/image';
-import { ProductType } from '../utils/types';
+import { CartInfoType, ProductType } from '../utils/types';
 import Link from 'next/link';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
-import { useLocalStorage } from '../hooks/useChangeCart';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useCollection } from '../hooks/useCollection';
+import { User } from 'firebase/auth';
+import { DocumentData } from 'firebase/firestore';
 
 export default function Card({ cardData, productType }: { cardData: ProductType | null, productType: string }) {
-    const { addItemToLocalStorageCart, addItemToCart } = useLocalStorage();
+    const { addItemToLocalStorageCart } = useLocalStorage();
+    const { addDocument, updateDocumentField } = useCollection('carrinho');
     const { user } = useAuthContext();
     const carrinho = useUserInfo()?.carrinho;
 
@@ -19,6 +23,19 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
         return cartItem ? cartItem.quantidade >= cardData.estoque : false;
     };
 
+    const addItemToFirebaseCart = (user: User, carrinho: (CartInfoType & DocumentData)[] | null, product: ProductType) => {
+        const cartItem = carrinho?.find((item) => item.productId === product.id);
+        if (!cartItem) {
+            addDocument({
+                productId: product.id,
+                quantidade: 1,
+                userId: user.uid,
+            });
+        } else if (cartItem.quantidade < product.estoque) {
+            updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade += 1);
+        }
+    };
+
     const handleAddToCart = () => {
         if (!user) {
             // Usuário não está logado, salva no localStorage
@@ -26,7 +43,7 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
             console.warn('user está deslogado!');
         } else {
             // Usuário está logado, salva no firebase
-            addItemToCart(user, carrinho, cardData);
+            addItemToFirebaseCart(user, carrinho, cardData);
         }
         
     };
