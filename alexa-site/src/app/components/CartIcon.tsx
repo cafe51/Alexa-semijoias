@@ -17,6 +17,7 @@ export default function CartIcon() {
             setCartQuantity(quantity);
             setLoadingIcon(false);
         }
+        setLoadingIcon(false);
     }, [carrinho]);
 
     return (

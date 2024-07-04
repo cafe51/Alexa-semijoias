@@ -43,7 +43,6 @@ describe('useCart Hook', () => {
 
     it('mapeia corretamente os produtos do carrinho com seus detalhes', async() => {
         (useCollection as jest.Mock).mockReturnValue({
-            getAllDocuments: jest.fn().mockResolvedValue(mockProducts),
         });
 
         const { result } = renderHook(() => useCart(mockCartItems, mockProducts));
