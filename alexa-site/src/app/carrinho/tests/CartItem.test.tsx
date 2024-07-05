@@ -4,6 +4,7 @@ import { ProductCartType } from '@/app/utils/types';
 import { useCollection } from '../../hooks/useCollection';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
+import { useAuthContext } from '@/app/hooks/useAuthContext';
 
 // Mock para o componente Image do Next.js
 jest.mock('next/image', () => ({
@@ -18,6 +19,10 @@ jest.mock('../../hooks/useCollection', () => ({
     useCollection: jest.fn(),
 }));
 
+jest.mock('../../hooks/useAuthContext', () => ({
+    useAuthContext: jest.fn(),
+}));
+
 const mockProduto: ProductCartType = {
     id: 'cartItem123',
     productId: 'product123',
@@ -28,6 +33,10 @@ const mockProduto: ProductCartType = {
     preco: 50,
     estoque: 10,
     exist: true,
+};
+
+const mockUser = {
+    uid: 'user1',
 };
 
 describe('CartItem Component', () => {
@@ -43,6 +52,8 @@ describe('CartItem Component', () => {
             updateDocumentField: mockUpdateDocumentField,
             deleteDocument: mockDeleteDocument,
         });
+
+        (useAuthContext as jest.Mock).mockReturnValue({ user: mockUser, authIsReady: true });
     });
 
     it('renderiza os detalhes do item do carrinho', async() => {

@@ -4,11 +4,9 @@ import { ProductCartType } from '@/app/utils/types';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
-// import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useSnapshot } from '@/app/hooks/useSnapshot';
 import { useCart } from '@/app/hooks/useCart';
 
-// Mocks
 jest.mock('../../hooks/useSnapshot', () => ({
     useSnapshot: jest.fn(),
 }));
@@ -20,10 +18,6 @@ jest.mock('../../hooks/useCart', () => ({
 jest.mock('../../hooks/useAuthContext', () => ({
     useAuthContext: jest.fn(),
 }));
-
-// jest.mock('../../hooks/useUserInfo', () => ({
-//     useUserInfo: jest.fn(),
-// }));
 
 const mockCartItems: ProductCartType[] = [
     {
