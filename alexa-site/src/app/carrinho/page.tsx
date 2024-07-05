@@ -5,7 +5,7 @@ import { ProductCartType } from '../utils/types';
 import CartItem from './CartItem';
 
 export default function Carrinho() {
-    const carrinho = useUserInfo()?.carrinho;
+    const { carrinho } = useUserInfo();
 
     console.log('CARRINHO', carrinho);
 

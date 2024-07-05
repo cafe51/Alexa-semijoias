@@ -1,78 +1,112 @@
-//src/app/carrinho/tests/Carrinho.test.tsx
 import { act, render, screen } from '@testing-library/react';
 import Carrinho from '../page';
-import { CartInfoType, ProductType } from '@/app/utils/types';
+import { ProductCartType } from '@/app/utils/types';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
+import { useAuthContext } from '@/app/hooks/useAuthContext';
+// import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useSnapshot } from '@/app/hooks/useSnapshot';
+import { useCart } from '@/app/hooks/useCart';
 
-
+// Mocks
 jest.mock('../../hooks/useSnapshot', () => ({
     useSnapshot: jest.fn(),
 }));
 
-// Simula itens no carrinho do usuário
-const mockCartItems: CartInfoType[] = [
-    { productId: 'prod1', quantidade: 2, userId: 'user1' },
-    { productId: 'prod2', quantidade: 1, userId: 'user1' },
-    { productId: 'prod3', quantidade: 0, userId: 'user1' },
+jest.mock('../../hooks/useCart', () => ({
+    useCart: jest.fn(),
+}));
+
+jest.mock('../../hooks/useAuthContext', () => ({
+    useAuthContext: jest.fn(),
+}));
+
+// jest.mock('../../hooks/useUserInfo', () => ({
+//     useUserInfo: jest.fn(),
+// }));
+
+const mockCartItems: ProductCartType[] = [
+    {
+        id: 'cartItem123',
+        productId: 'prod1',
+        quantidade: 2,
+        userId: 'user1',
+        nome: 'Produto 1',
+        image: '/imagem1.jpg',
+        preco: 50,
+        estoque: 8,
+        exist: true,
+    },
+    {
+        id: 'cartItem124',
+        productId: 'prod2',
+        quantidade: 1,
+        userId: 'user1',
+        nome: 'Produto 2',
+        image: '/imagem2.jpg',
+        preco: 30,
+        estoque: 5,
+        exist: true,
+    },
+    {
+        id: 'cartItem125',
+        productId: 'prod3',
+        quantidade: 0,
+        userId: 'user1',
+        nome: 'Produto 3',
+        image: '/imagem3.jpg',
+        preco: 60,
+        estoque: 2,
+        exist: true,
+    },
 ];
 
-const mockProducts: ({ id: string; exist: boolean; } & ProductType)[] = [
+const mockUser = {
+    uid: 'user1',
+};
+
+const mockUserInfo = [
     {
-        id: 'prod1',
-        exist: true,
-        nome: 'Produto 1',
-        image: ['/imagem1.jpg'],
-        preco: 10,
-        estoque: 8,
-        categoria: '',
-        descricao: '',
-        desconto: 0,
-        lancamento: false,
+        uid: 'user1',
+        name: 'Test User',
+    },
+];
+
+const mockCartInfos = [
+    {
+        productId: 'prod1',
+        quantidade: 2,
     },
     {
-        id: 'prod2',
-        exist: true,
-        nome: 'Produto 2',
-        image: ['/imagem2.jpg'],
-        preco: 20,
-        estoque: 5,
-        categoria: '',
-        descricao: '',
-        desconto: 0,
-        lancamento: false,
-    },
-    {
-        id: 'prod3',
-        exist: true,
-        nome: 'Produto 3',
-        image: ['/imagem3.jpg'],
-        preco: 30,
-        estoque: 2,
-        categoria: '',
-        descricao: '',
-        desconto: 0,
-        lancamento: false,
+        productId: 'prod2',
+        quantidade: 1,
     },
 ];
 
 describe('Carrinho Component', () => {
     beforeEach(() => {
-        (useSnapshot as jest.Mock).mockImplementation((collectionName: string) => {
-            if (collectionName === 'carrinhos') {
+        (useSnapshot as jest.Mock).mockImplementation((collectionName) => {
+            switch (collectionName) {
+            case 'usuarios':
+                return { documents: mockUserInfo };
+            case 'carrinhos':
+                return { documents: mockCartInfos };
+            case 'produtos':
                 return { documents: mockCartItems };
+            default:
+                return { documents: [] };
             }
-            if (collectionName === 'produtos') {
-                return { documents: mockProducts };
-            }
-            return { documents: [] };
         });
-        
+
+        // (useUserInfo as jest.Mock).mockReturnValue({ carrinho: mockCartItems, userInfo: { uid: 'user1' } });
+        (useCart as jest.Mock).mockReturnValue({ mappedProducts: mockCartItems });
+
+
+        (useAuthContext as jest.Mock).mockReturnValue({ user: mockUser, authIsReady: true });
     });
 
     it('renderiza "Loading..." quando mappedProducts é null', async() => {
-        (useSnapshot as jest.Mock).mockReturnValue({ documents: null });
+        (useCart as jest.Mock).mockReturnValue({ mappedProducts: null });
 
         await act(async() => {
             render(
@@ -88,7 +122,6 @@ describe('Carrinho Component', () => {
     });
 
     it('renderiza apenas produtos com quantidade > 0', async() => {
-
         await act(async() => {
             render(
                 <AuthContextProvider>
@@ -115,7 +148,7 @@ describe('Carrinho Component', () => {
             );
         });
 
-        expect(screen.getByText('R$ 40.00')).toBeInTheDocument(); // Subtotal = (2 * 10) + (1 * 20)
+        expect(screen.getByText('R$ 130.00')).toBeInTheDocument(); // Subtotal = (2 * 10) + (1 * 20)
     });
 
     it('exibe o resumo da compra', async() => {

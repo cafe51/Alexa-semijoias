@@ -20,25 +20,6 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     const [cartLocalStorageState, setCartLocalStorageState] = useState<CartInfoType[]>(
         JSON.parse(localStorage.getItem('cart') || '[]'), // Inicializa com o valor atual
     );
-
-    // const newRender = () => {
-    //     setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
-    //     console.log('a new render was required');
-    // };
-
-    // useEffect(() => {
-    // const storageListener = (event: StorageEvent) => {
-    //     if (event.key === 'cart') {
-    //         setCartLocalStorageState(JSON.parse(event.newValue || '[]'));
-    //     }
-    // };
-    
-    // window.addEventListener('storage', storageListener);
-    
-    //     return () => {
-    //         window.removeEventListener('storage', storageListener);
-    //     };
-    // }, [newRender]);
     
     const [productIds, setProductIds] = useState<string[]>(['']);
     
