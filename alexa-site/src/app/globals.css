@@ -13,6 +13,14 @@ html {
   height: 100%;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #000 !important;
+}
+
 p {
   /* font-family: Proxima Nova, sans-serif; */
   color: #555;
@@ -61,11 +69,6 @@ a {
 .strongTextColored {
   --tw-text-opacity: 1;
   color: rgb(219 39 119 / var(--tw-text-opacity));
-}
-
-.borderColor {
-  --tw-border-opacity: 1;
-  border-color: rgb(251 207 232 / var(--tw-border-opacity));
 }
 
 .shadowColor {
