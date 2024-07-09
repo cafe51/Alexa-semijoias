@@ -32,15 +32,20 @@ export type ProductCartType = {
     userId: string,
 }
 
-type AddressType = {
-    cep: string,
+export type AddressType = {
     bairro: string,
-    rua: string,
-    cidade: string,
-    estado: string,
-    numero: string,
+    cep: string,
     complemento: string,
-    referencia: string
+    ddd: string,
+    gia: string,
+    ibge: string,
+    localidade: string,
+    logradouro: string,
+    numero: string,
+    siafi: string,
+    uf: string,
+    unidade: string,
+    referencia: string,
 }
 
 export type CartInfoType = {

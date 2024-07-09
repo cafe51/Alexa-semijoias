@@ -1,6 +1,29 @@
-import AddressForm from './AddressForm';
+// app/checkout/page.tsx
+
+'use client';
+import { useState } from 'react';
+import AddressForm from './Address';
+import { AddressType } from '../utils/types';
 
 export default function Checkout(){
+    const [address, setAddress] = useState<AddressType>(
+        {
+            bairro: '',
+            cep: '',
+            complemento: '',
+            ddd: '',
+            gia: '',
+            ibge: '',
+            localidade: '',
+            logradouro: '',
+            numero: '',
+            siafi: '',
+            uf: '',
+            unidade: '',
+            referencia: '',
+        },
+    );
+
     return (
         <main className='flex flex-col w-full gap-2  br'>
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
@@ -19,7 +42,7 @@ export default function Checkout(){
                 </div>
             </section>
 
-            <AddressForm />
+            <AddressForm address={ address } setAddress={ setAddress }/>
 
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
                 <p>Forma de Entrega</p>
