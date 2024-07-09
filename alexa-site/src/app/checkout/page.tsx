@@ -2,7 +2,7 @@
 
 'use client';
 import { useState } from 'react';
-import AddressForm from './Address';
+import AddressSection from './AddressSection';
 import { AddressType } from '../utils/types';
 
 export default function Checkout(){
@@ -42,7 +42,7 @@ export default function Checkout(){
                 </div>
             </section>
 
-            <AddressForm address={ address } setAddress={ setAddress }/>
+            <AddressSection address={ address } setAddress={ setAddress }/>
 
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
                 <p>Forma de Entrega</p>

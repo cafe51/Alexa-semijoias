@@ -6,7 +6,7 @@ import { formatCep } from '../utils/formatCep';
 import AddressForm from './AddressForm';
 import CepInput from './CepInput';
 
-export default function Address({ address, setAddress }: { address: AddressType, setAddress: Dispatch<SetStateAction<AddressType>> }) {
+export default function AddressSection({ address, setAddress }: { address: AddressType, setAddress: Dispatch<SetStateAction<AddressType>> }) {
     const [cep, setCep] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
