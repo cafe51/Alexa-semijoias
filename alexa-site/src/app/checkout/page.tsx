@@ -1,11 +1,16 @@
 // app/checkout/page.tsx
 
 'use client';
-import { useState } from 'react';
-import AddressSection from './AddressSection';
+import { useEffect, useState } from 'react';
+import AddressSection from './AddressSection/AddressSection';
 import { AddressType } from '../utils/types';
+import { useUserInfo } from '../hooks/useUserInfo';
+import AddressSectionFilled from './AddressSection/AddressSectionFilled';
 
 export default function Checkout(){
+    const [editingMode, setEditingMode] = useState(false);
+
+    const { userInfo } = useUserInfo();
     const [address, setAddress] = useState<AddressType>(
         {
             bairro: '',
@@ -24,6 +29,12 @@ export default function Checkout(){
         },
     );
 
+    useEffect(() => {
+        if(userInfo && userInfo.address) {
+            setAddress(userInfo.address);
+        }
+    }, [userInfo]);
+
     return (
         <main className='flex flex-col w-full gap-2  br'>
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
@@ -41,8 +52,14 @@ export default function Checkout(){
                     <p>(92) 95555-5555</p>
                 </div>
             </section>
-
-            <AddressSection address={ address } setAddress={ setAddress }/>
+            
+            { 
+                userInfo && userInfo.address
+                    ?
+                    <AddressSectionFilled address={ address } setAddress={ setAddress } editingMode={ editingMode } setEditingMode={ setEditingMode }/>
+                    : 
+                    <AddressSection address={ address } setAddress={ setAddress } setEditingMode={ setEditingMode }/>
+            } 
 
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
                 <p>Forma de Entrega</p>
@@ -56,3 +73,4 @@ export default function Checkout(){
         </main>
     );
 }
+

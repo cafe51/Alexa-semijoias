@@ -1,3 +1,5 @@
+//app/utils/formatCep.tsx
+
 export const formatCep = (cep: string) => {
     const digits = cep.replace(/\D/g, '');
     if (digits.length <= 5) {

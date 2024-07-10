@@ -1,4 +1,16 @@
-export default function InputField({ id, value, onChange, maxLength, label, readOnly = false }: any) {
+// app/checkout/AddressSection/InputField.tsx
+
+interface InputFieldProps {
+    id: string;
+    name?: string;
+    value: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void | undefined; 
+    maxLength?: number;
+    label: string;
+    readOnly?: boolean;
+}
+
+export default function InputField({ id, value, onChange, maxLength, label, readOnly = false }: InputFieldProps) {
     return (
         <div className="relative mb-4 w-full">
             <input

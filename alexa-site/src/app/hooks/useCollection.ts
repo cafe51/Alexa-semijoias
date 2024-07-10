@@ -13,7 +13,7 @@ export const useCollection = <T>(collectionName: string) => {
   
     const deleteDocument = async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
 
-    const updateDocumentField = async(id: string, field: string, value: string | number | string[] | number[]) => {
+    const updateDocumentField = async(id: string, field: string, value: string | number | string[] | number[] | object) => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id);
         console.log('chamou', id, field, value, docRef);
         await updateDoc(docRef, { [field]: value });

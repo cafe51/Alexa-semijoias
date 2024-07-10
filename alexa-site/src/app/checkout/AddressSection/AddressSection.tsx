@@ -1,12 +1,24 @@
-// app/checkout/AddressForm.tsx
+// app/checkout/AddressSection/AddressSection.tsx
+
 import { useState, Dispatch, SetStateAction } from 'react';
-import fetchAddressFromCEP from '../utils/fetchAddressFromCEP';
-import { AddressType } from '../utils/types';
-import { formatCep } from '../utils/formatCep';
+import fetchAddressFromCEP from '../../utils/fetchAddressFromCEP';
+import { AddressType } from '../../utils/types';
+import { formatCep } from '../../utils/formatCep';
 import AddressForm from './AddressForm';
 import CepInput from './CepInput';
+import { useCollection } from '@/app/hooks/useCollection';
+import { useUserInfo } from '@/app/hooks/useUserInfo';
 
-export default function AddressSection({ address, setAddress }: { address: AddressType, setAddress: Dispatch<SetStateAction<AddressType>> }) {
+interface AddressSectionProps {
+    address: AddressType;
+    setAddress: Dispatch<SetStateAction<AddressType>>;
+    setEditingMode: Dispatch<SetStateAction<boolean>>; 
+}
+
+
+export default function AddressSection({ address, setAddress, setEditingMode }: AddressSectionProps) {
+    const { updateDocumentField } = useCollection('usuarios');
+    const { userInfo } = useUserInfo();
     const [cep, setCep] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -48,11 +60,14 @@ export default function AddressSection({ address, setAddress }: { address: Addre
     };
 
     const handleFormSubmit = () => {
-        if (isFormValid()) {
+        if (isFormValid() && userInfo) {
             console.log(address);
+            updateDocumentField(userInfo?.id, 'address', address);
+            setEditingMode(false);
             setFormError('');
         } else {
-            setFormError('Por favor, preencha todos os campos obrigatórios.');
+            if (!isFormValid()) setFormError('Por favor, preencha todos os campos obrigatórios.');
+            if (!userInfo) setFormError('Usuário deslogado!');
         }
     };
 

@@ -87,6 +87,8 @@ export type UserType = {
     admin: boolean,
     
     userId: string,
+
+    address?: AddressType | null
 }
 
 export type RegisterFormInputType = {

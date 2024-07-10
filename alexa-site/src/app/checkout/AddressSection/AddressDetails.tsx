@@ -1,7 +1,10 @@
+// app/checkout/AddressSection/AddressDetails.tsx
+
+import { AddressType } from '@/app/utils/types';
 import InputField from './InputField';
 import ReadOnlyInputField from './ReadOnlyInputField';
 
-export default function AddressDetails({ address, handleAddressChange }: any) {
+export default function AddressDetails({ address, handleAddressChange }: { address: AddressType; handleAddressChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
     return (
         <>
             <InputField id="numero" name="numero" value={ address.numero || '' } onChange={ handleAddressChange } label="Número" />
