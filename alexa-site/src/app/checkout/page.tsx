@@ -11,6 +11,7 @@ import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 import PaymentSection from './PaymentSection/PaymentSection';
 import ChoosePaymentOptionSection from './PaymentSection/ChoosePaymentOptionSection';
 import DeliveryPriceSectionFilled from './DeliveryPriceSection/DeliveryPriceSectionFilled';
+import DeliveryPriceSectionPending from './DeliveryPriceSection/DeliveryPriceSectionPending';
 
 export default function Checkout(){
     const [editingMode, setEditingMode] = useState(false);
@@ -58,8 +59,10 @@ export default function Checkout(){
                     <AddressSection address={ address } setAddress={ setAddress } setEditingMode={ setEditingMode }/>
             } 
 
+            <DeliveryPriceSectionPending/>
 
             <DeliveryPriceSection />
+
 
             <DeliveryPriceSectionFilled />
             {
