@@ -12,7 +12,7 @@ interface InputFieldProps {
 
 export default function InputField({ id, value, onChange, maxLength, label, readOnly = false }: InputFieldProps) {
     return (
-        <div className="relative mb-4 w-full">
+        <div className="relative mb-4 w-full ">
             <input
                 type="text"
                 id={ id }
@@ -21,7 +21,7 @@ export default function InputField({ id, value, onChange, maxLength, label, read
                 onChange={ onChange }
                 maxLength={ maxLength }
                 readOnly={ readOnly }
-                className="border-4 p-2 w-full peer"
+                className="border-4 p-2 w-full peer rounded-lg"
             />
             <label
                 htmlFor={ id }

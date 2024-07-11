@@ -8,6 +8,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import AddressSectionFilled from './AddressSection/AddressSectionFilled';
 import AccountSection from './AccountSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
+import PaymentSection from './PaymentSection/PaymentSection';
 
 export default function Checkout(){
     const [editingMode, setEditingMode] = useState(false);
@@ -57,9 +58,7 @@ export default function Checkout(){
 
             <DeliveryPriceSection />
 
-            <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
-                <p>Pagamento</p>
-            </section>
+            <PaymentSection />
         </main>
     );
 }
