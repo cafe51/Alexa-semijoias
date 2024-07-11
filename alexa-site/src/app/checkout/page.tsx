@@ -6,6 +6,8 @@ import AddressSection from './AddressSection/AddressSection';
 import { AddressType } from '../utils/types';
 import { useUserInfo } from '../hooks/useUserInfo';
 import AddressSectionFilled from './AddressSection/AddressSectionFilled';
+import AccountSection from './AccountSection';
+import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 
 export default function Checkout(){
     const [editingMode, setEditingMode] = useState(false);
@@ -43,15 +45,7 @@ export default function Checkout(){
                     <p>R$ 156,00</p>
                 </div>
             </section>
-
-            <section className='flex flex-col w-full bg-white p-2 border-2 rounded px-6'>
-                <p className="font-bold">CONTA</p>
-                <div className='flex flex-col p-2'>
-                    <p>cafecafe51@hotmail.com</p>
-                    <p>021.555.000.00</p>
-                    <p>(92) 95555-5555</p>
-                </div>
-            </section>
+            { userInfo ? <AccountSection  cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> : '' }
             
             { 
                 userInfo && userInfo.address
@@ -61,15 +55,11 @@ export default function Checkout(){
                     <AddressSection address={ address } setAddress={ setAddress } setEditingMode={ setEditingMode }/>
             } 
 
-            <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
-                <p>Forma de Entrega</p>
-            </section>
+            <DeliveryPriceSection />
 
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
                 <p>Pagamento</p>
             </section>
-
-
         </main>
     );
 }

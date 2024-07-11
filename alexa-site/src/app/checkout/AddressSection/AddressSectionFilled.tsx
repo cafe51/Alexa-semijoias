@@ -22,26 +22,35 @@ export default function AddressSectionFilled({ address, setAddress, editingMode,
             )
             :
             (
-                <section className='flex flex-col w-full bg-white p-2 border-2 rounded px-6'>
-                    <div className='flex justify-between'>
-                        <p className="font-bold">ENDEREÇO DE ENTREGA</p>
+                <section className='flex flex-col w-full bg-green-50 border-green-200 p-2 border-2 rounded-lg px-6'>
+                    <div className='flex justify-between w-full'>
+                        <p className="font-bold">ENDEREÇO</p>
                         <p
-                            className='text-blue-400'
+                            className='text-blue-400 text-sm w-full text-end'
                             onClick={ () => setEditingMode(true) }
                         >
-                            editar
+                            Trocar endereço
                         </p>
                     </div>
                     <div className='flex flex-col p-2'>
-                        <span>{ address.cep }</span>
-                        <span>{ address.bairro }</span>
-                        <div className='flex justify-between'>
+                        <div className='flex gap-2'>
+                            <span>{ address.bairro }</span>
+                            <span> - </span>
                             <span>{ address.numero }</span>
                             <span>{ address.complemento }</span>
                         </div>
-                        <span>{ address.localidade }</span>
+
                         <span>{ address.logradouro }</span>
                         <span>{ address.referencia }</span>
+
+                        <div className='flex gap-1'>
+                            <span>{ address.cep }</span>
+                            <span> - </span>
+                            <span>{ address.localidade }</span>
+
+                            <span> - </span>
+                            <span>{ address.uf }</span>
+                        </div>
                     </div>
 
                 </section>

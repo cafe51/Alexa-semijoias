@@ -44,7 +44,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/app/checkout/DeliveryPriceSection"  ],
   "exclude": [
     "node_modules"
   ]
