@@ -10,6 +10,7 @@ import AccountSection from './AccountSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 import PaymentSection from './PaymentSection/PaymentSection';
 import ChoosePaymentOptionSection from './PaymentSection/ChoosePaymentOptionSection';
+import DeliveryPriceSectionFilled from './DeliveryPriceSection/DeliveryPriceSectionFilled';
 
 export default function Checkout(){
     const [editingMode, setEditingMode] = useState(false);
@@ -57,10 +58,14 @@ export default function Checkout(){
                     <AddressSection address={ address } setAddress={ setAddress } setEditingMode={ setEditingMode }/>
             } 
 
+
             <DeliveryPriceSection />
 
-            <ChoosePaymentOptionSection /> 
-            <PaymentSection />
+            <DeliveryPriceSectionFilled />
+            {
+            /* <ChoosePaymentOptionSection /> 
+            <PaymentSection /> */
+            }
         </main>
     );
 }
