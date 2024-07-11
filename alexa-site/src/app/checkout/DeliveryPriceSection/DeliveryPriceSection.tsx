@@ -1,6 +1,6 @@
 // app/checkout/DeliveryPriceSection/DeliveryPriceSection.tsx
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FreeShippingSection from './FreeShippingSection';
 
 interface DeliveryOption {
@@ -19,11 +19,11 @@ const deliveryOptions: DeliveryOption[] = [
 ];
 
 export default function DeliveryPriceSection() {
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [selectedDeliveryOption, setSelectedDeliveryOption] = useState<string | null>(null);
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedOption(event.target.value);
-        console.log(selectedOption);
+        setSelectedDeliveryOption(event.target.value);
+        console.log(selectedDeliveryOption);
     };
 
     return (
@@ -40,7 +40,7 @@ export default function DeliveryPriceSection() {
                         type="radio"
                         name="delivery"
                         value={ option.name }
-                        checked={ selectedOption === option.name }
+                        checked={ selectedDeliveryOption === option.name }
                         onChange={ handleOptionChange }
                         className="form-radio h-6 w-6 text-green-500 border-gray-300 focus:ring-green-500"
                     />
