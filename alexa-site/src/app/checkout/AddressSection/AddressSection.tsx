@@ -12,11 +12,11 @@ import { useUserInfo } from '@/app/hooks/useUserInfo';
 interface AddressSectionProps {
     address: AddressType;
     setAddress: Dispatch<SetStateAction<AddressType>>;
-    setEditingMode: Dispatch<SetStateAction<boolean>>; 
+    setEditingAddressMode: Dispatch<SetStateAction<boolean>>; 
 }
 
 
-export default function AddressSection({ address, setAddress, setEditingMode }: AddressSectionProps) {
+export default function AddressSection({ address, setAddress, setEditingAddressMode }: AddressSectionProps) {
     const { updateDocumentField } = useCollection('usuarios');
     const { userInfo } = useUserInfo();
     const [cep, setCep] = useState('');
@@ -63,7 +63,7 @@ export default function AddressSection({ address, setAddress, setEditingMode }: 
         if (isFormValid() && userInfo) {
             console.log(address);
             updateDocumentField(userInfo?.id, 'address', address);
-            setEditingMode(false);
+            setEditingAddressMode(false);
             setFormError('');
         } else {
             if (!isFormValid()) setFormError('Por favor, preencha todos os campos obrigatórios.');

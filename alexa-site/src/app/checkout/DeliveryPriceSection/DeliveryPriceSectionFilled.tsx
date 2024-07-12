@@ -1,3 +1,5 @@
+// app/checkout/DeliveryPriceSection/DeliveryPriceSectionFilled.tsx
+
 const type = 'PAC';
 const price = 29.45;
 const term = 22;

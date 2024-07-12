@@ -1,3 +1,5 @@
+// app/checkout/DeliveryPriceSection/DeliveryPriceSectionPending.tsx
+
 export default function DeliveryPriceSectionPending() {
     return(
 

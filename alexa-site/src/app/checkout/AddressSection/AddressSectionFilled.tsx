@@ -6,19 +6,19 @@ import { Dispatch, SetStateAction } from 'react';
 
 interface AddressSectionFilledProps {
     address: AddressType;
-    editingMode: boolean;
+    editingAddressMode: boolean;
     setAddress: Dispatch<SetStateAction<AddressType>>;
-    setEditingMode: Dispatch<SetStateAction<boolean>>; 
+    setEditingAddressMode: Dispatch<SetStateAction<boolean>>; 
 }
 
-export default function AddressSectionFilled({ address, setAddress, editingMode, setEditingMode  }: AddressSectionFilledProps) {
+export default function AddressSectionFilled({ address, setAddress, editingAddressMode, setEditingAddressMode  }: AddressSectionFilledProps) {
 
 
     console.log('AAAA', address);
     return(
-        editingMode
+        editingAddressMode
             ?   (
-                <AddressSection address={ address } setAddress={ setAddress } setEditingMode={ setEditingMode }/>
+                <AddressSection address={ address } setAddress={ setAddress } setEditingAddressMode={ setEditingAddressMode }/>
             )
             :
             (
@@ -27,7 +27,7 @@ export default function AddressSectionFilled({ address, setAddress, editingMode,
                         <p className="font-bold">ENDEREÇO</p>
                         <p
                             className='text-blue-400 text-sm w-full text-end'
-                            onClick={ () => setEditingMode(true) }
+                            onClick={ () => setEditingAddressMode(true) }
                         >
                             Trocar endereço
                         </p>
