@@ -1,73 +1,89 @@
 // app/checkout/page.tsx
 
 'use client';
-import { useEffect, useState } from 'react';
+
+import { useCheckoutState } from '../hooks/useCheckoutState';
 import AddressSection from './AddressSection/AddressSection';
-import { AddressType } from '../utils/types';
-import { useUserInfo } from '../hooks/useUserInfo';
 import AddressSectionFilled from './AddressSection/AddressSectionFilled';
 import AccountSection from './AccountSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
-import PaymentSection from './PaymentSection/PaymentSection';
-import ChoosePaymentOptionSection from './PaymentSection/ChoosePaymentOptionSection';
 import DeliveryPriceSectionFilled from './DeliveryPriceSection/DeliveryPriceSectionFilled';
 import DeliveryPriceSectionPending from './DeliveryPriceSection/DeliveryPriceSectionPending';
+import { useUserInfo } from '../hooks/useUserInfo';
+import { useEffect } from 'react';
 
-export default function Checkout(){
-    const [editingAddressMode, setEditingAddressMode] = useState(false);
-
+export default function Checkout() {
     const { userInfo } = useUserInfo();
-    const [address, setAddress] = useState<AddressType>(
-        {
-            bairro: '',
-            cep: '',
-            complemento: '',
-            ddd: '',
-            gia: '',
-            ibge: '',
-            localidade: '',
-            logradouro: '',
-            numero: '',
-            siafi: '',
-            uf: '',
-            unidade: '',
-            referencia: '',
-        },
-    );
+    const {
+        state,
+        handleAddressChange,
+        handleEditingAddressMode,
+        handleSelectedDeliveryOption,
+        deliveryOptions,
+    } = useCheckoutState();
+
+    useEffect(() => {console.log(state);},[state]);
 
     useEffect(() => {
-        if(userInfo && userInfo.address) {
-            setAddress(userInfo.address);
+        if (!userInfo?.address) {
+            handleEditingAddressMode(true);
+        } else {
+            handleEditingAddressMode(false);
         }
-    }, [userInfo]);
+    }, [userInfo?.address]);
+
+    const renderAddressSection = () => {
+        if (state.editingAddressMode) {
+            return (
+                <AddressSection 
+                    address={ state.address } 
+                    setAddress={ handleAddressChange } 
+                    setEditingAddressMode={ handleEditingAddressMode } 
+                />
+            );
+        } 
+        return (
+            <AddressSectionFilled 
+                address={ state.address } 
+                setEditingAddressMode={ handleEditingAddressMode } 
+            />
+        );
+    };
+
+    const renderDeliverySection = () => {
+        if (state.editingAddressMode) {
+            return <DeliveryPriceSectionPending />;
+        } 
+        if (state.selectedDeliveryOption && state.deliveryOption) {
+            return (
+                <DeliveryPriceSectionFilled
+                    setSelectedDeliveryOption={ handleSelectedDeliveryOption }
+                    price={ state.deliveryOption.price }
+                    term={ state.deliveryOption.deliveryTime }
+                    type={ state.deliveryOption.name }
+                />
+            );
+        } 
+        return (
+            <DeliveryPriceSection
+                deliveryOptions={ deliveryOptions }
+                selectedDeliveryOption={ state.selectedDeliveryOption }
+                setSelectedDeliveryOption={ handleSelectedDeliveryOption }
+            />
+        );
+    };
 
     return (
-        <main className='flex flex-col w-full gap-2  br'>
+        <main className='flex flex-col w-full gap-2'>
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
-                <div className='flex justify-between w-full '>
+                <div className='flex justify-between w-full'>
                     <p>Ver resumo</p>
                     <p>R$ 156,00</p>
                 </div>
             </section>
-            { userInfo ? <AccountSection  cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> : '' }
-            
-            { 
-                userInfo && userInfo.address
-                    ?
-                    <AddressSectionFilled address={ address } setAddress={ setAddress } editingAddressMode={ editingAddressMode } setEditingAddressMode={ setEditingAddressMode }/>
-                    : 
-                    <AddressSection address={ address } setAddress={ setAddress } setEditingAddressMode={ setEditingAddressMode }/>
-            } 
-
-            <DeliveryPriceSection editingAddressMode={ editingAddressMode }/>
-
-
-            { /* <DeliveryPriceSectionFilled /> */ }
-            {
-            /* <ChoosePaymentOptionSection /> 
-            <PaymentSection /> */
-            }
+            { userInfo && <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> }
+            { renderAddressSection() }
+            { renderDeliverySection() }
         </main>
     );
 }
-

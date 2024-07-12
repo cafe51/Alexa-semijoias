@@ -15,6 +15,12 @@ export type ProductType = {
     lancamento: boolean,
 }
 
+export type DeliveryOptionType = {
+    name: string;
+    deliveryTime: number;
+    price: number;
+  }
+
 export type FilterOption = { field: string, operator: WhereFilterOp, value: string | number | string[] | number[] } ;
 
 export type ProductCartType = {

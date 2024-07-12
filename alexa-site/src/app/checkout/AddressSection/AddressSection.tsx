@@ -1,6 +1,6 @@
 // app/checkout/AddressSection/AddressSection.tsx
 
-import { useState, Dispatch, SetStateAction } from 'react';
+import { useState } from 'react';
 import fetchAddressFromCEP from '../../utils/fetchAddressFromCEP';
 import { AddressType } from '../../utils/types';
 import { formatCep } from '../../utils/formatCep';
@@ -11,8 +11,8 @@ import { useUserInfo } from '@/app/hooks/useUserInfo';
 
 interface AddressSectionProps {
     address: AddressType;
-    setAddress: Dispatch<SetStateAction<AddressType>>;
-    setEditingAddressMode: Dispatch<SetStateAction<boolean>>; 
+    setAddress: (newAddress: AddressType) => void;
+    setEditingAddressMode: (mode: boolean) => void;
 }
 
 
@@ -23,6 +23,9 @@ export default function AddressSection({ address, setAddress, setEditingAddressM
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [formError, setFormError] = useState('');
+    
+
+
 
     const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newCep = formatCep(e.target.value);
@@ -51,7 +54,8 @@ export default function AddressSection({ address, setAddress, setEditingAddressM
     };
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAddress(prevAddress => ({ ...prevAddress, [e.target.name]: e.target.value }));
+        const { name, value } = e.target;
+        setAddress({ ...address, [name]: value });
     };
 
     const isFormValid = () => {

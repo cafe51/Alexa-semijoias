@@ -1,17 +1,31 @@
 // app/checkout/DeliveryPriceSection/DeliveryPriceSectionFilled.tsx
 
-const type = 'PAC';
-const price = 29.45;
-const term = 22;
+interface DeliveryPriceSectionFilledProps {
+    setSelectedDeliveryOption:  (option: string | null) => void
+    type: string,
+    price: number,
+    term: number,
+}
 
-export default function DeliveryPriceSectionFilled() {
+
+export default function DeliveryPriceSectionFilled({
+    setSelectedDeliveryOption,
+    price,
+    term,
+    type,
+} : DeliveryPriceSectionFilledProps) {
+    const handleOptionChange = () => {
+        console.log('clicous');
+        setSelectedDeliveryOption(null);
+    };
+
     return(
-
         <section className='flex flex-col w-full bg-green-50 text-green-700 border-green-200 p-2 border-2 rounded-lg px-6'>
             <div className='flex justify-between w-full'>
                 <p className="font-bold text-green-700">FRETE</p>
                 <p
                     className='text-blue-400 text-sm w-full text-end'
+                    onClick={ handleOptionChange }
                 >
                             Alterar frete
                 </p>
