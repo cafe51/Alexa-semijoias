@@ -1,11 +1,13 @@
 // app/checkout/PaymentSection/ChoosePaymentOptionSection.tsx
 
-import { useState } from 'react';
-
 const finalPrice = 89.39;
 
-export default function ChoosePaymentOptionSection() {
-    const [selectedPaymentOption, setSelectedPaymentOption] = useState<string | null>(null);
+interface ChoosePaymentOptionSectionProps {
+    selectedPaymentOption: string | null;
+    setSelectedPaymentOption: (paymentOption: string | null) => void;
+}
+
+export default function ChoosePaymentOptionSection({ selectedPaymentOption, setSelectedPaymentOption }: ChoosePaymentOptionSectionProps) {
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentOption(event.target.value);
@@ -13,9 +15,9 @@ export default function ChoosePaymentOptionSection() {
     };
 
     return (
-        <div className="border p-4 rounded-md shadow-md max-w-sm mx-auto bg-white w-full">
+        <>
             <h3 className="text-lg font-semibold mb-4">
-                <span className="mr-2">3</span>PAGAMENTO
+                <span className="mr-2">4</span>PAGAMENTO
             </h3>
             <label className="flex justify-between items-center border-b py-2 last:border-b-0">
                 <input
@@ -51,6 +53,6 @@ export default function ChoosePaymentOptionSection() {
                     <p className="text-sm font-medium">{ 'R$ ' + finalPrice.toFixed(2) }</p>
                 </div>
             </label>
-        </div>
+        </>
     );
 }

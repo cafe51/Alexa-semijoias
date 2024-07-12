@@ -11,6 +11,8 @@ import DeliveryPriceSectionFilled from './DeliveryPriceSection/DeliveryPriceSect
 import DeliveryPriceSectionPending from './DeliveryPriceSection/DeliveryPriceSectionPending';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { useEffect } from 'react';
+import PaymentSection from './PaymentSection/PaymentSection';
+import PaymentSectionPending from './PaymentSection/PaymentSectionPending';
 
 export default function Checkout() {
     const { userInfo } = useUserInfo();
@@ -19,6 +21,7 @@ export default function Checkout() {
         handleAddressChange,
         handleEditingAddressMode,
         handleSelectedDeliveryOption,
+        handleSelectedPaymentOption,
         deliveryOptions,
     } = useCheckoutState();
 
@@ -73,6 +76,18 @@ export default function Checkout() {
         );
     };
 
+    const renderPaymentSection = () => {
+        if (state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) {
+            return (
+                <PaymentSectionPending />
+            );
+        }
+
+        return (
+            <PaymentSection selectedPaymentOption={ state.selectedPaymentOption } setSelectedPaymentOption={ handleSelectedPaymentOption }/>
+        );
+    };
+
     return (
         <main className='flex flex-col w-full gap-2'>
             <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
@@ -84,6 +99,9 @@ export default function Checkout() {
             { userInfo && <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> }
             { renderAddressSection() }
             { renderDeliverySection() }
+
+            { renderPaymentSection() }
+
         </main>
     );
 }

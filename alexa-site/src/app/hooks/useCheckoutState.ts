@@ -8,6 +8,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 type ActionType = 
   | { type: 'SET_EDITING_ADDRESS_MODE', payload: boolean }
   | { type: 'SET_SELECTED_DELIVERY_OPTION', payload: string | null }
+  | { type: 'SET_SELECTED_PAYMENT_OPTION', payload: string | null }
   | { type: 'SET_DELIVERY_OPTION', payload: DeliveryOptionType | null }
   | { type: 'SET_ADDRESS', payload: AddressType };
 
@@ -15,6 +16,7 @@ type ActionType =
 type StateType = {
   editingAddressMode: boolean;
   selectedDeliveryOption: string | null;
+  selectedPaymentOption: string | null;
   deliveryOption: DeliveryOptionType | null;
   address: AddressType;
 };
@@ -23,6 +25,7 @@ type StateType = {
 const initialState: StateType = {
     editingAddressMode: false,
     selectedDeliveryOption: null,
+    selectedPaymentOption: null,
     deliveryOption: null,
     address: {
         bairro: '',
@@ -48,6 +51,8 @@ function reducer(state: StateType, action: ActionType): StateType {
         return { ...state, editingAddressMode: action.payload };
     case 'SET_SELECTED_DELIVERY_OPTION':
         return { ...state, selectedDeliveryOption: action.payload };
+    case 'SET_SELECTED_PAYMENT_OPTION':
+        return { ...state, selectedPaymentOption: action.payload };
     case 'SET_DELIVERY_OPTION':
         return { ...state, deliveryOption: action.payload };
     case 'SET_ADDRESS':
@@ -91,11 +96,16 @@ export function useCheckoutState() {
         dispatch({ type: 'SET_SELECTED_DELIVERY_OPTION', payload: option });
     }, []);
 
+    const handleSelectedPaymentOption = useCallback((option: string | null) => {
+        dispatch({ type: 'SET_SELECTED_PAYMENT_OPTION', payload: option });
+    }, []);
+
     return {
         state,
         handleAddressChange,
         handleEditingAddressMode,
         handleSelectedDeliveryOption,
+        handleSelectedPaymentOption,
         deliveryOptions,
     };
 }
