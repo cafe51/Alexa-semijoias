@@ -13,6 +13,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import { useEffect } from 'react';
 import PaymentSection from './PaymentSection/PaymentSection';
 import PaymentSectionPending from './PaymentSection/PaymentSectionPending';
+import OrderSummary from './OrderSummarySection/OrderSummary';
 
 export default function Checkout() {
     const { userInfo } = useUserInfo();
@@ -23,9 +24,10 @@ export default function Checkout() {
         handleSelectedDeliveryOption,
         handleSelectedPaymentOption,
         deliveryOptions,
+        handleShowFullOrderSummary,
     } = useCheckoutState();
 
-    useEffect(() => {console.log(state);},[state]);
+    useEffect(() => { console.log(state); }, [state]);
 
     useEffect(() => {
         if (!userInfo?.address) {
@@ -88,20 +90,33 @@ export default function Checkout() {
         );
     };
 
-    return (
-        <main className='flex flex-col w-full gap-2'>
-            <section className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'>
+    const renderOrderSummarySection = () => {
+        if (state.showFullOrderSummary) {
+            return (
+                <OrderSummary setShowFullOrderSummary={ handleShowFullOrderSummary }/>
+            );
+        }
+
+        return (
+            <section
+                className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'
+                onClick={ () => { handleShowFullOrderSummary(true); } }
+            >
                 <div className='flex justify-between w-full'>
                     <p>Ver resumo</p>
                     <p>R$ 156,00</p>
                 </div>
             </section>
+        );
+    };
+
+    return (
+        <main className='flex flex-col w-full gap-2 relative'>
+            { renderOrderSummarySection() }
             { userInfo && <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> }
             { renderAddressSection() }
             { renderDeliverySection() }
-
             { renderPaymentSection() }
-
         </main>
     );
 }

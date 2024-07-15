@@ -6,23 +6,26 @@ import { useUserInfo } from '../hooks/useUserInfo';
 
 // Define action types
 type ActionType = 
-  | { type: 'SET_EDITING_ADDRESS_MODE', payload: boolean }
-  | { type: 'SET_SELECTED_DELIVERY_OPTION', payload: string | null }
-  | { type: 'SET_SELECTED_PAYMENT_OPTION', payload: string | null }
-  | { type: 'SET_DELIVERY_OPTION', payload: DeliveryOptionType | null }
-  | { type: 'SET_ADDRESS', payload: AddressType };
+    | { type: 'SET_SHOW_FULL_ORDER_SUMMARY', payload: boolean }
+    | { type: 'SET_EDITING_ADDRESS_MODE', payload: boolean }
+    | { type: 'SET_SELECTED_DELIVERY_OPTION', payload: string | null }
+    | { type: 'SET_SELECTED_PAYMENT_OPTION', payload: string | null }
+    | { type: 'SET_DELIVERY_OPTION', payload: DeliveryOptionType | null }
+    | { type: 'SET_ADDRESS', payload: AddressType };
 
 // Define state type
 type StateType = {
-  editingAddressMode: boolean;
-  selectedDeliveryOption: string | null;
-  selectedPaymentOption: string | null;
-  deliveryOption: DeliveryOptionType | null;
-  address: AddressType;
+    showFullOrderSummary: boolean;
+    editingAddressMode: boolean;
+    selectedDeliveryOption: string | null;
+    selectedPaymentOption: string | null;
+    deliveryOption: DeliveryOptionType | null;
+    address: AddressType;
 };
 
 // Initial state
 const initialState: StateType = {
+    showFullOrderSummary: false,
     editingAddressMode: false,
     selectedDeliveryOption: null,
     selectedPaymentOption: null,
@@ -49,6 +52,8 @@ function reducer(state: StateType, action: ActionType): StateType {
     switch (action.type) {
     case 'SET_EDITING_ADDRESS_MODE':
         return { ...state, editingAddressMode: action.payload };
+    case 'SET_SHOW_FULL_ORDER_SUMMARY':
+        return { ...state, showFullOrderSummary: action.payload };
     case 'SET_SELECTED_DELIVERY_OPTION':
         return { ...state, selectedDeliveryOption: action.payload };
     case 'SET_SELECTED_PAYMENT_OPTION':
@@ -100,12 +105,17 @@ export function useCheckoutState() {
         dispatch({ type: 'SET_SELECTED_PAYMENT_OPTION', payload: option });
     }, []);
 
+    const handleShowFullOrderSummary = useCallback((option: boolean) => {
+        dispatch({ type: 'SET_SHOW_FULL_ORDER_SUMMARY', payload: option });
+    }, []);
+
     return {
         state,
         handleAddressChange,
         handleEditingAddressMode,
         handleSelectedDeliveryOption,
         handleSelectedPaymentOption,
+        handleShowFullOrderSummary,
         deliveryOptions,
     };
 }
