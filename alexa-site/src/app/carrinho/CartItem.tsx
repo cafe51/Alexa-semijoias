@@ -5,6 +5,7 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import formatPrice from '../utils/formatPrice';
 
 export default function CartItem({ produto }: { produto: ProductCartType }) {
     const { user } = useAuthContext();
@@ -68,7 +69,7 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
                     </button>
                 </div>
                 <div className="ml-4">
-                    <span className="font-semibold">R$ { (produto.preco * produto.quantidade).toFixed(2) }</span>
+                    <span className="font-semibold">{ formatPrice(produto.preco * produto.quantidade) }</span>
                 </div>
             </div>
         </div>

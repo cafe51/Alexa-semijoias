@@ -24,7 +24,9 @@ export default function ProductsList({ productType }: { productType: string }) {
             } else { console.log('erro desconhecido'); }
         }
     
-    }, []);
+    }, [documents]);
+
+    if(isLoading) return  <h1>Laoding...</h1>;
 
     return (
         <main>
@@ -36,7 +38,6 @@ export default function ProductsList({ productType }: { productType: string }) {
                     }) }
                 </div>
             ) }
-            { isLoading && <h1>Laoding...</h1> }
         </main>
     );
 }

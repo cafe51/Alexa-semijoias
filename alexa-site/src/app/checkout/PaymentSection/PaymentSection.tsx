@@ -7,21 +7,22 @@ import PixPaymentSection from './PixPaymentSection';
 interface PaymentSectionProps {
     selectedPaymentOption: string | null;
     setSelectedPaymentOption: (paymentOption: string | null) => void;
+    totalPrice: number;
 }
 
-export default function PaymentSection({ selectedPaymentOption, setSelectedPaymentOption }: PaymentSectionProps) {
+export default function PaymentSection({ selectedPaymentOption, setSelectedPaymentOption, totalPrice }: PaymentSectionProps) {
 
     const renderPaymentSection = () => {
         if (!selectedPaymentOption) {
             return (
-                <ChoosePaymentOptionSection selectedPaymentOption={ selectedPaymentOption } setSelectedPaymentOption={ setSelectedPaymentOption }/>
+                <ChoosePaymentOptionSection selectedPaymentOption={ selectedPaymentOption } setSelectedPaymentOption={ setSelectedPaymentOption } totalPrice={ totalPrice }/>
 
             );
         }
 
         if (selectedPaymentOption === 'Cartão de Crédito') {
             return (
-                <CreditPaymentSection setSelectedPaymentOption={ setSelectedPaymentOption }/>
+                <CreditPaymentSection setSelectedPaymentOption={ setSelectedPaymentOption } totalPrice={ totalPrice }/>
 
             );
         } 

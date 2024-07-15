@@ -1,5 +1,4 @@
 //app/components/Product.tsx
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -9,6 +8,7 @@ import Link from 'next/link';
 import { useCollection } from '../hooks/useCollection';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { useAuthContext } from '../hooks/useAuthContext';
+import formatPrice from '../utils/formatPrice';
 
 
 export default function Product({ id, productType }: {id: string, productType: string}) {
@@ -88,8 +88,9 @@ export default function Product({ id, productType }: {id: string, productType: s
 
                         
                     <div className='w-full p-2 border-solid border-2 border-x-0 borderColor'>
-                        <h1 className='font-bold '>R$ { product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) } </h1>
-                        <p> em até 6x de R$ { (product.preco/6).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) } sem juros </p>
+                        <h1 className='font-bold '>{ formatPrice(product.preco) } </h1>
+                        <p> em até 6x de { formatPrice(product.preco/6) } sem juros </p>
+
                         <p> Formas de pagamento </p>
                     </div>
                     <button

@@ -1,7 +1,6 @@
 // app/checkout/OrderSummarySection/OrderSummary.tsx
 
 import { PiXBold } from 'react-icons/pi';
-import { useUserInfo } from '../../hooks/useUserInfo';
 import { ProductCartType } from '../../utils/types';
 import PriceSummarySection from './PriceSummarySection';
 import SummaryCard from './SummaryCard';
@@ -9,10 +8,12 @@ import Link from 'next/link';
 
 interface OrderSummaryProps {
     setShowFullOrderSummary: (option: boolean) => void;
+    carrinho: ProductCartType[] | null;
+    subtotalPrice: number | undefined
+    frete: number | undefined
 }
 
-export default function OrderSummary({ setShowFullOrderSummary }: OrderSummaryProps) {
-    const { carrinho } = useUserInfo();
+export default function OrderSummary({ setShowFullOrderSummary, carrinho, subtotalPrice, frete }: OrderSummaryProps) {
 
     console.log('CARRINHO', carrinho);
 
@@ -31,7 +32,10 @@ export default function OrderSummary({ setShowFullOrderSummary }: OrderSummaryPr
                     </button>
                 </div>
                 <div className="overflow-auto max-h-[calc(100vh-200px)]">
-                    <PriceSummarySection />
+                    <PriceSummarySection
+                        frete={ frete }
+                        subtotalPrice={ subtotalPrice }
+                    />
                     <section className="flex flex-col gap-1 w-full border border-gray-100 shadow-lg mt-4">
                         <div className="flex justify-between w-full p-4">
                             <h3 className="text-center self-center">Produtos</h3>

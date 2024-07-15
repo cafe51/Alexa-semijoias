@@ -1,5 +1,7 @@
 // app/checkout/DeliveryPriceSection/DeliveryPriceSectionFilled.tsx
 
+import formatPrice from '@/app/utils/formatPrice';
+
 interface DeliveryPriceSectionFilledProps {
     setSelectedDeliveryOption:  (option: string | null) => void
     type: string,
@@ -15,7 +17,6 @@ export default function DeliveryPriceSectionFilled({
     type,
 } : DeliveryPriceSectionFilledProps) {
     const handleOptionChange = () => {
-        console.log('clicous');
         setSelectedDeliveryOption(null);
     };
 
@@ -34,7 +35,7 @@ export default function DeliveryPriceSectionFilled({
                 <div className='flex gap-2 font-extrabold'>
                     <span>{ type }</span>
                     <span> - </span>
-                    <span>{ 'R$' + price.toFixed(2) }</span>
+                    <span>{ formatPrice(price) }</span>
                 </div>
                 <div className='flex gap-1'>
 

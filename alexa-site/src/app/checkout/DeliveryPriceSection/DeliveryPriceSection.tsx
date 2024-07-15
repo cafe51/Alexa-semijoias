@@ -1,5 +1,6 @@
 // app/checkout/DeliveryPriceSection/DeliveryPriceSection.tsx
 
+import formatPrice from '@/app/utils/formatPrice';
 import FreeShippingSection from './FreeShippingSection';
 import { DeliveryOptionType } from '@/app/utils/types';
 
@@ -47,7 +48,7 @@ export default function DeliveryPriceSection({  deliveryOptions, selectedDeliver
                         <p className="text-xs text-gray-500">{ 'Até ' + option.deliveryTime + (option.deliveryTime === 1 ? ' dia útil' : ' dias úteis') }</p>
                     </div>
                     <div className="ml-auto">
-                        <p className="text-sm font-medium">{ 'R$ ' + option.price.toFixed(2) }</p>
+                        <p className="text-sm font-medium">{ formatPrice(option.price) }</p>
                     </div>
                 </label>
             )) }

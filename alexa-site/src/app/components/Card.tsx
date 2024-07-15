@@ -9,6 +9,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useCollection } from '../hooks/useCollection';
 import { User } from 'firebase/auth';
 import { DocumentData } from 'firebase/firestore';
+import formatPrice from '../utils/formatPrice';
 
 export default function Card({ cardData, productType }: { cardData: ProductType | null, productType: string }) {
     const { addItemToLocalStorageCart } = useLocalStorage();
@@ -49,9 +50,10 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
     };
     
     return (
-        <div className='flex flex-col text-center w-[160px] items-center justify-between pb-2 gap-2 shadowColor shadow-lg text-[12px] rounded-lg h-[450px] bg-white'>
+        <div className='flex flex-col text-center w-[160px] justify-between content-between place-content-between gap-2 shadowColor shadow-lg text-[12px] rounded-lg bg-white'>
+
             <section className='flex flex-col w-full'>
-                <Link href={ `/${productType}/${cardData.id}` } className='w-full rounded-lg relative h-[200px] overflow-hidden bg-yellow-300'>
+                <Link href={ `/${productType}/${cardData.id}` } className='w-full rounded-lg relative h-[200px] overflow-hidden'>
                     <Image
                         data-testid="product-link"
                         className='rounded-lg object-cover scale-125'
@@ -60,16 +62,24 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
                         fill
                     />
                 </Link>
-                <h3 className='p-2 w-full'>{ cardData.nome }</h3>
-                <h3 className='p-2 w-full'>{ cardData.id }</h3>
+
                 <div>
-                    <p className='font-bold text-xl'>R$ { cardData.preco }</p>
+                    <h3 className='p-2 w-full'>{ cardData.nome }</h3>
+                </div>
+
+            </section>
+
+            <section className="flex flex-col w-full p-4 ">
+                <div className='p-2 w-full bg-yellow-200'>
+                    <h3 >{ cardData.id }</h3>
+                </div>
+
+                <div>
+                    <p className='font-bold text-xl'>{ formatPrice(cardData.preco) }</p>
                     <p>em até 6x de</p>
-                    <p className='font-bold text-xl'>R$ { (cardData.preco / 6).toFixed(2) }</p>
+                    <p className='font-bold text-xl'>{ formatPrice(cardData.preco / 6) }</p>
                     <p> sem juros</p>
                 </div>
-            </section>
-            <section className="flex flex-col">
                 <button
                     onClick={ handleAddToCart }
                     disabled={ isDisabled() }
@@ -77,6 +87,7 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
           COMPRAR
                 </button>
             </section>
+
         </div>
     );
 }

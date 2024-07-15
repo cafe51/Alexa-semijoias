@@ -8,14 +8,16 @@ import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 import DeliveryPriceSectionFilled from './DeliveryPriceSection/DeliveryPriceSectionFilled';
 import DeliveryPriceSectionPending from './DeliveryPriceSection/DeliveryPriceSectionPending';
 import { useUserInfo } from '../hooks/useUserInfo';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PaymentSection from './PaymentSection/PaymentSection';
 import PaymentSectionPending from './PaymentSection/PaymentSectionPending';
 import OrderSummary from './OrderSummarySection/OrderSummary';
 import OrderSummaryShort from './OrderSummarySection/OrderSummaryShort';
 
 export default function Checkout() {
-    const { userInfo } = useUserInfo();
+    const { userInfo, carrinho } = useUserInfo();
+    const [cartPrice, setCartPrice] = useState(0);
+
     const {
         state,
         handleAddressChange,
@@ -33,6 +35,37 @@ export default function Checkout() {
             handleEditingAddressMode(false);
         }
     }, [userInfo?.address]);
+
+    useEffect(() => {
+        if (carrinho) {
+            setCartPrice(Number(carrinho?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0)));
+        }
+    }, [carrinho]);
+
+
+    useEffect(() => {console.log(state);}, [state]);
+
+    const renderOrderSummarySection = () => {
+        if (state.showFullOrderSummary) return (
+            <OrderSummary
+                setShowFullOrderSummary={ handleShowFullOrderSummary }
+                carrinho={ carrinho }
+                frete={ ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) }
+                subtotalPrice={ cartPrice }
+            />
+        );
+
+        return (
+            <OrderSummaryShort 
+                setShowFullOrderSummary={ handleShowFullOrderSummary }
+                totalPrice={
+                    cartPrice
+                    +
+                    ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) //frete
+                }
+            />
+        );
+    };
 
     const renderAddressSection = () => {
         if (state.editingAddressMode) {
@@ -77,14 +110,19 @@ export default function Checkout() {
     const renderPaymentSection = () => {
         if (state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) return <PaymentSectionPending />;
 
-        return <PaymentSection selectedPaymentOption={ state.selectedPaymentOption } setSelectedPaymentOption={ handleSelectedPaymentOption }/>;
+        return (
+            <PaymentSection
+                selectedPaymentOption={ state.selectedPaymentOption }
+                setSelectedPaymentOption={ handleSelectedPaymentOption }
+                totalPrice={
+                    cartPrice
+            +
+            ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) //frete
+                }
+            />
+        );
     };
 
-    const renderOrderSummarySection = () => {
-        if (state.showFullOrderSummary) return <OrderSummary setShowFullOrderSummary={ handleShowFullOrderSummary }/>;
-
-        return <OrderSummaryShort setShowFullOrderSummary={ handleShowFullOrderSummary }/>;
-    };
 
     return (
         <main className='flex flex-col w-full gap-2 relative'>

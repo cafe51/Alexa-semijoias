@@ -1,13 +1,14 @@
 // app/checkout/PaymentSection/ChoosePaymentOptionSection.tsx
 
-const finalPrice = 89.39;
+import formatPrice from '@/app/utils/formatPrice';
 
 interface ChoosePaymentOptionSectionProps {
     selectedPaymentOption: string | null;
     setSelectedPaymentOption: (paymentOption: string | null) => void;
+    totalPrice: number;
 }
 
-export default function ChoosePaymentOptionSection({ selectedPaymentOption, setSelectedPaymentOption }: ChoosePaymentOptionSectionProps) {
+export default function ChoosePaymentOptionSection({ selectedPaymentOption, setSelectedPaymentOption, totalPrice }: ChoosePaymentOptionSectionProps) {
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentOption(event.target.value);
@@ -32,8 +33,8 @@ export default function ChoosePaymentOptionSection({ selectedPaymentOption, setS
                     <p className="text-sm font-medium">Cartão de Crédito</p>
                 </div>
                 <div className="ml-auto text-end">
-                    <p className="text-sm font-medium">{ 'R$ ' + finalPrice.toFixed(2) }</p>
-                    <p className="text-xs text-green-500">{ 'até 6x R$ ' + (finalPrice/6).toFixed(2) }</p>
+                    <p className="text-sm font-medium">{ formatPrice(totalPrice) }</p>
+                    <p className="text-xs text-green-500">{ 'até 6x ' + formatPrice(totalPrice/6) }</p>
 
                 </div>
             </label>
@@ -50,7 +51,7 @@ export default function ChoosePaymentOptionSection({ selectedPaymentOption, setS
                     <p className="text-sm font-medium">Pix</p>
                 </div>
                 <div className="ml-auto">
-                    <p className="text-sm font-medium">{ 'R$ ' + finalPrice.toFixed(2) }</p>
+                    <p className="text-sm font-medium">{ formatPrice(totalPrice) }</p>
                 </div>
             </label>
         </>

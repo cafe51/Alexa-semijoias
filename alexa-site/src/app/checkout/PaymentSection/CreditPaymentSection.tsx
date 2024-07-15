@@ -6,9 +6,8 @@ import InputField from '../AddressSection/InputField';
 
 interface CreditPaymentSectionProps {
     setSelectedPaymentOption: (paymentOption: string | null) => void;
+    totalPrice: number
 }
-
-const totalPrice = 89.39; // exemplo de preço total
 
 const months = [
     { value: '', label: 'Mês' },
@@ -28,7 +27,7 @@ const months = [
 
 const years = Array.from({ length: 57 }, (_, i) => ({ value: (24 + i).toString(), label: (24 + i).toString() }));
 
-export default function CreditPaymentSection({ setSelectedPaymentOption }: CreditPaymentSectionProps) {
+export default function CreditPaymentSection({ setSelectedPaymentOption, totalPrice }: CreditPaymentSectionProps) {
     const [selectedInstallment, setSelectedInstallment] = useState(1);
     const [cardNumber, setCardNumber] = useState('');
     const [cardName, setCardName] = useState('');

@@ -1,8 +1,13 @@
+// app/checkout/OrderSummarySection/OrderSummaryShort.tsx
+
+import formatPrice from '@/app/utils/formatPrice';
+
 interface OrderSummaryShortProps {
     setShowFullOrderSummary: (option: boolean) => void;
+    totalPrice: number | undefined,
 }
 
-export default function OrderSummaryShort({ setShowFullOrderSummary }: OrderSummaryShortProps) {
+export default function OrderSummaryShort({ setShowFullOrderSummary, totalPrice }: OrderSummaryShortProps) {
     return (
         <section
             className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'
@@ -10,7 +15,7 @@ export default function OrderSummaryShort({ setShowFullOrderSummary }: OrderSumm
         >
             <div className='flex justify-between w-full'>
                 <p>Ver resumo</p>
-                <p>R$ 156,00</p>
+                <p>{ totalPrice ? formatPrice(totalPrice) : '--' }</p>
             </div>
         </section>
     );

@@ -1,5 +1,7 @@
 // app/checkout/PaymentSection/InstallmentOptions.tsx
 
+import formatPrice from '@/app/utils/formatPrice';
+
 interface InstallmentOptionsProps {
   totalPrice: number;
   selectedInstallment: number;
@@ -17,7 +19,7 @@ export default function InstallmentOptions({ totalPrice, selectedInstallment, on
         >
             { options.map((num) => (
                 <option key={ num } value={ num }>
-                    { `${num}x de R$ ${(totalPrice / num).toFixed(2)} - sem juros` }
+                    { `${num}x de ${formatPrice(totalPrice / num)} - sem juros` }
                 </option>
             )) }
         </select>
