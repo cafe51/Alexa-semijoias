@@ -1,7 +1,5 @@
 // app/checkout/page.tsx
-
 'use client';
-
 import { useCheckoutState } from '../hooks/useCheckoutState';
 import AddressSection from './AddressSection/AddressSection';
 import AddressSectionFilled from './AddressSection/AddressSectionFilled';
@@ -14,6 +12,7 @@ import { useEffect } from 'react';
 import PaymentSection from './PaymentSection/PaymentSection';
 import PaymentSectionPending from './PaymentSection/PaymentSectionPending';
 import OrderSummary from './OrderSummarySection/OrderSummary';
+import OrderSummaryShort from './OrderSummarySection/OrderSummaryShort';
 
 export default function Checkout() {
     const { userInfo } = useUserInfo();
@@ -26,8 +25,6 @@ export default function Checkout() {
         deliveryOptions,
         handleShowFullOrderSummary,
     } = useCheckoutState();
-
-    useEffect(() => { console.log(state); }, [state]);
 
     useEffect(() => {
         if (!userInfo?.address) {
@@ -56,9 +53,8 @@ export default function Checkout() {
     };
 
     const renderDeliverySection = () => {
-        if (state.editingAddressMode) {
-            return <DeliveryPriceSectionPending />;
-        } 
+        if (state.editingAddressMode) return <DeliveryPriceSectionPending />;
+        
         if (state.selectedDeliveryOption && state.deliveryOption) {
             return (
                 <DeliveryPriceSectionFilled
@@ -79,35 +75,15 @@ export default function Checkout() {
     };
 
     const renderPaymentSection = () => {
-        if (state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) {
-            return (
-                <PaymentSectionPending />
-            );
-        }
+        if (state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) return <PaymentSectionPending />;
 
-        return (
-            <PaymentSection selectedPaymentOption={ state.selectedPaymentOption } setSelectedPaymentOption={ handleSelectedPaymentOption }/>
-        );
+        return <PaymentSection selectedPaymentOption={ state.selectedPaymentOption } setSelectedPaymentOption={ handleSelectedPaymentOption }/>;
     };
 
     const renderOrderSummarySection = () => {
-        if (state.showFullOrderSummary) {
-            return (
-                <OrderSummary setShowFullOrderSummary={ handleShowFullOrderSummary }/>
-            );
-        }
+        if (state.showFullOrderSummary) return <OrderSummary setShowFullOrderSummary={ handleShowFullOrderSummary }/>;
 
-        return (
-            <section
-                className='flex flex-col w-full bg-white p-2 px-4 border-2 rounded'
-                onClick={ () => { handleShowFullOrderSummary(true); } }
-            >
-                <div className='flex justify-between w-full'>
-                    <p>Ver resumo</p>
-                    <p>R$ 156,00</p>
-                </div>
-            </section>
-        );
+        return <OrderSummaryShort setShowFullOrderSummary={ handleShowFullOrderSummary }/>;
     };
 
     return (

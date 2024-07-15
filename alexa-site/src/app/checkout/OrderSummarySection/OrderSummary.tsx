@@ -5,6 +5,7 @@ import { useUserInfo } from '../../hooks/useUserInfo';
 import { ProductCartType } from '../../utils/types';
 import PriceSummarySection from './PriceSummarySection';
 import SummaryCard from './SummaryCard';
+import Link from 'next/link';
 
 interface OrderSummaryProps {
     setShowFullOrderSummary: (option: boolean) => void;
@@ -34,7 +35,7 @@ export default function OrderSummary({ setShowFullOrderSummary }: OrderSummaryPr
                     <section className="flex flex-col gap-1 w-full border border-gray-100 shadow-lg mt-4">
                         <div className="flex justify-between w-full p-4">
                             <h3 className="text-center self-center">Produtos</h3>
-                            <h3 className="text-center text-sm self-center text-blue-400">Editar produtos</h3>
+                            <Link href={ '/carrinho' }><h3 className="text-center text-sm self-center text-blue-400">Editar produtos</h3></Link>
                         </div>
                         { carrinho ? carrinho.map((produto: ProductCartType) => {
                             if (produto && produto.quantidade && produto.quantidade > 0) {
