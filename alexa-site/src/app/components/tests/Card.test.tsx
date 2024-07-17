@@ -58,8 +58,8 @@ describe('Card Component', () => {
         });
 
         expect(screen.getByText('Anel Dourado')).toBeInTheDocument();
-        expect(screen.getByText('R$ 100')).toBeInTheDocument();
-        expect(screen.getByText('R$ 16.67')).toBeInTheDocument();
+        expect(screen.getByText('R$ 100,00')).toBeInTheDocument();
+        expect(screen.getByText('R$ 16,67')).toBeInTheDocument();
     });
 
     it('Mostra uma mensagem de carregamento quando o produto não foi carregado', async() => {

@@ -1,10 +1,12 @@
-// app/hooks/tests/useSignUp.test
+// app/hooks/tests/useSignUp.test.tsx
 
 import { renderHook, act } from '@testing-library/react';
 import { useSignUp } from '../useSignUp';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useCollection } from '../useCollection';
 import { useLogin } from '../useLogin';
+import { UserInfoProvider } from '../../context/UserInfoContext';
+import { AuthContextProvider } from '../../context/AuthContext'; // Importe o AuthContextProvider
 
 jest.mock('../useCollection');
 jest.mock('../useLogin');
@@ -55,7 +57,12 @@ describe('useSignUp Hook', () => {
 
     it('realiza cadastro com sucesso', async() => {
         (createUserWithEmailAndPassword as jest.Mock).mockResolvedValue(mockUserCredential);
-        const { result } = renderHook(() => useSignUp());
+        const wrapper = ({ children }: { children: React.ReactNode }) => (
+            <AuthContextProvider>
+                <UserInfoProvider>{ children }</UserInfoProvider>
+            </AuthContextProvider>
+        );
+        const { result } = renderHook(() => useSignUp(), { wrapper });
 
         const singInData = {
             email: 'test@example.com',
@@ -85,5 +92,4 @@ describe('useSignUp Hook', () => {
 
         expect(result.current.error).toBeNull();
     });
-
 });

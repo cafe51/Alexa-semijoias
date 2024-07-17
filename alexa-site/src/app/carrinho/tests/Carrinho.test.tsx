@@ -1,3 +1,5 @@
+// app/carrinho/tests/Carrinho.test.tsx
+
 import { act, render, screen } from '@testing-library/react';
 import Carrinho from '../page';
 import { ProductCartType } from '@/app/utils/types';
@@ -142,7 +144,7 @@ describe('Carrinho Component', () => {
             );
         });
 
-        expect(screen.getByText('R$ 130.00')).toBeInTheDocument(); // Subtotal = (2 * 10) + (1 * 20)
+        expect(screen.getByText('R$ 130,00')).toBeInTheDocument(); // Subtotal = (2 * 10) + (1 * 20)
     });
 
     it('exibe o resumo da compra', async() => {

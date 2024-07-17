@@ -5,38 +5,47 @@ import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from './useCollection';
 import { useLogin } from './useLogin';
+import { CartInfoType } from '../utils/types';
+import { useLocalStorage } from './useLocalStorage';
 
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
-    const { addDocument } = useCollection('usuarios');
+    const { addDocument: createNewUser } = useCollection('usuarios');
+    const { addDocument: createNewCart } = useCollection('carrinhos');
+    const { getLocalCart, setLocalCart } = useLocalStorage();
+
+
     const { login } = useLogin();
 
+    const syncLocalCartToFirebase = async(userId: string) => {
+        const localCart: CartInfoType[] = getLocalCart();
+        await Promise.all(localCart.map((item) => {
+            item.userId = userId;
+            return createNewCart(item);
+        }));
+    
+        setLocalCart([]);
+    };
 
-    const signup = (singInData : { email: string, password: string, nome: string, tel?: string | undefined }) => {
-
+    const signup = async(singInData : { email: string, password: string, nome: string, tel?: string | undefined }) => {
         try {
+            const res = await createUserWithEmailAndPassword(auth, singInData.email, singInData.password);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password, ...sigInDataWithoutPassword } = singInData;
 
-            createUserWithEmailAndPassword(auth, singInData.email, singInData.password)
-                .then((res) => {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const { password, ...sigInDataWithoutPassword } = singInData;
-                    addDocument({ ...sigInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' });
-                    console.log('user singup', res.user);
-                    login(singInData.email, singInData.password);
+            await createNewUser({ ...sigInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' });
 
-                }).catch((err) => {
-                    if (err instanceof Error) { setError(err.message); }
-                });
+            await syncLocalCartToFirebase(res.user.uid);
 
+            await login(singInData.email, singInData.password);
 
-        } catch(err) {
+        } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
             } else {
                 setError('Ocorreu um erro desconhecido.');
             }
         }
-
     };
 
     return { error, signup };

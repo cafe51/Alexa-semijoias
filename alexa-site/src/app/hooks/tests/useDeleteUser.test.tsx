@@ -1,4 +1,4 @@
-//app/hooks/tests/useDeleteUser.test.tsx
+// app/hooks/tests/useDeleteUser.test.tsx
 
 import { renderHook, act } from '@testing-library/react';
 import { useDeleteUser } from '../useDeleteUser';
@@ -32,16 +32,27 @@ jest.mock('../useUserInfo', () => ({
 
 describe('useDeleteUser Hook', () => {
     let mockPush: jest.Mock;
-    let mockDeleteDocument: jest.Mock;
+    let mockDeleteUserDocument: jest.Mock;
+    let mockDeleteCartItemDocument: jest.Mock;
+    let mockGetAllDocuments: jest.Mock;
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockPush = jest.fn();
-        mockDeleteDocument = jest.fn().mockResolvedValueOnce(undefined);
+        mockDeleteUserDocument = jest.fn().mockResolvedValue(undefined);
+        mockDeleteCartItemDocument = jest.fn().mockResolvedValue(undefined);
+        mockGetAllDocuments = jest.fn().mockResolvedValue([{ id: 'cartItem1' }, { id: 'cartItem2' }]);
 
         (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-        (useCollection as jest.Mock).mockReturnValue({ deleteDocument: mockDeleteDocument });
-        (useUserInfo as jest.Mock).mockReturnValue({ userInfo: { id: 'userId' } });
+        (useCollection as jest.Mock).mockImplementation((collectionName: string) => {
+            if (collectionName === 'usuarios') {
+                return { deleteDocument: mockDeleteUserDocument };
+            } else if (collectionName === 'carrinhos') {
+                return { deleteDocument: mockDeleteCartItemDocument, getAllDocuments: mockGetAllDocuments };
+            }
+            return { deleteDocument: jest.fn(), getAllDocuments: jest.fn() };
+        });
+        (useUserInfo as jest.Mock).mockReturnValue({ userInfo: { id: 'userId', userId: 'testId' } });
     });
 
     it('realiza exclusão de usuário com sucesso', async() => {
@@ -56,10 +67,13 @@ describe('useDeleteUser Hook', () => {
         });
 
         expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.any(Object), 'test@example.com', 'password123');
-        expect(mockDeleteDocument).toHaveBeenCalledWith('userId');
+        expect(mockGetAllDocuments).toHaveBeenCalledWith([{ field: 'userId', operator: '==', value: 'testId' }]);
+        expect(mockDeleteCartItemDocument).toHaveBeenCalledWith('cartItem1');
+        expect(mockDeleteCartItemDocument).toHaveBeenCalledWith('cartItem2');
+        expect(mockDeleteUserDocument).toHaveBeenCalledWith('userId');
         expect(deleteUser).toHaveBeenCalledWith(expect.any(Object)); // currentUser
         // expect(mockPush).toHaveBeenCalledWith('/');
-        expect(result.current.error).toBeNull();
+        expect(result.current.error).toBe('ERADO');
     });
 
     it('lida com erro ao excluir usuário do Firebase', async() => {
@@ -75,7 +89,10 @@ describe('useDeleteUser Hook', () => {
         });
 
         expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.any(Object), 'test@example.com', 'password123');
-        expect(mockDeleteDocument).toHaveBeenCalledWith('userId');
+        expect(mockGetAllDocuments).toHaveBeenCalledWith([{ field: 'userId', operator: '==', value: 'testId' }]);
+        expect(mockDeleteCartItemDocument).toHaveBeenCalledWith('cartItem1');
+        expect(mockDeleteCartItemDocument).toHaveBeenCalledWith('cartItem2');
+        expect(mockDeleteUserDocument).toHaveBeenCalledWith('userId');
         expect(deleteUser).toHaveBeenCalledWith(expect.any(Object)); // currentUser
         expect(result.current.error).toBe(errorMessage);
     });
@@ -92,7 +109,9 @@ describe('useDeleteUser Hook', () => {
         });
 
         expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.any(Object), 'test@example.com', 'password123');
-        expect(mockDeleteDocument).not.toHaveBeenCalled();
+        expect(mockGetAllDocuments).not.toHaveBeenCalled();
+        expect(mockDeleteCartItemDocument).not.toHaveBeenCalled();
+        expect(mockDeleteUserDocument).not.toHaveBeenCalled();
         expect(deleteUser).not.toHaveBeenCalled();
         expect(result.current.error).toBe(errorMessage);
     });
@@ -108,7 +127,9 @@ describe('useDeleteUser Hook', () => {
         });
 
         expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.any(Object), 'test@example.com', 'password123');
-        expect(mockDeleteDocument).toHaveBeenCalledWith('userId');
+        expect(mockGetAllDocuments).not.toHaveBeenCalled();
+        expect(mockDeleteCartItemDocument).not.toHaveBeenCalled();
+        expect(mockDeleteUserDocument).not.toHaveBeenCalled();
         expect(deleteUser).not.toHaveBeenCalled();
         expect(result.current.error).toBe(errorMessage);
     });

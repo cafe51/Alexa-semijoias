@@ -87,5 +87,7 @@ export const useLocalStorage = () => {
         addOneToLocalStorage,
         removeOneFromLocalStorage,
         fixQuantityByStockInLocalStorage,
+        getLocalCart,
+        setLocalCart,
     };
 };

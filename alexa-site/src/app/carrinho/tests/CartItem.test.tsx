@@ -1,3 +1,5 @@
+// app/carrinho/tests/CartItem.test.tsx
+
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import CartItem from '../CartItem';
 import { ProductCartType } from '@/app/utils/types';
@@ -69,7 +71,7 @@ describe('CartItem Component', () => {
 
         expect(screen.getByText('Produto Teste')).toBeInTheDocument();
         expect(screen.getByText('2')).toBeInTheDocument(); 
-        expect(screen.getByText('R$ 100.00')).toBeInTheDocument(); 
+        expect(screen.getByText('R$ 100,00')).toBeInTheDocument(); 
         expect(screen.getByTestId('product-image')).toHaveAttribute('src', '/imagem-produto.jpg'); 
     });
 
