@@ -58,7 +58,8 @@ describe('ProductsList Component', () => {
             );
         });
 
-        expect(screen.getByText('Aneis')).toBeInTheDocument();
+        expect(screen.getByText('Ainda não há produtos nessa categoria')).toBeInTheDocument();
+
     });
 
     it('Mostra mensagem de carregamento enquanto os dados são buscados', async() => {

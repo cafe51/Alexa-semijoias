@@ -16,7 +16,7 @@ export default function ProductsList({ productType }: { productType: string }) {
     useEffect(() => {
         setIsLoading(true);
         try {
-            documents && documents[0] && setIsLoading(false);
+            documents && setIsLoading(false);
 
         } catch (err) {
             if (err instanceof Error) {
@@ -27,6 +27,9 @@ export default function ProductsList({ productType }: { productType: string }) {
     }, [documents]);
 
     if(isLoading) return  <h1>Laoding...</h1>;
+
+    if(documents && documents.length <= 0) return  <h1>Ainda não há produtos nessa categoria</h1>;
+
 
     return (
         <main>
