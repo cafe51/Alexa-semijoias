@@ -37,6 +37,10 @@ export const useSnapshot = <T>(collectionName: string, filterOptions:  FilterOpt
             
 
         });
+
+        console.log('chamou o userSnapshot. documents: ', documents);
+
+
         return () => {
             if (timerRef.current) {
                 clearTimeout(timerRef.current);

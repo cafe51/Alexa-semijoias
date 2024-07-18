@@ -2,16 +2,23 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Card from './Card';
 import { useSnapshot } from '../hooks/useSnapshot';
-import { ProductType } from '../utils/types';
+import { FilterOption, ProductType } from '../utils/types';
 
 export default function ProductsList({ productType }: { productType: string }) {
-    const { documents } = useSnapshot<ProductType>('produtos', [{ field: 'categoria', operator: '==', value: productType }]);
+
+    const pedidosFiltrados = useMemo<FilterOption[]>(() => 
+        [{ field: 'categoria', operator: '==', value: productType }],
+    [productType], // Só recriar a query quando 'productType' mudar
+    );
+
+    const { documents } = useSnapshot<ProductType>(
+        'produtos', 
+        pedidosFiltrados, 
+    );
     const [isLoading, setIsLoading] = useState(true);
-
-
 
     useEffect(() => {
         setIsLoading(true);
