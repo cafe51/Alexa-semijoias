@@ -1,9 +1,13 @@
+// app/hooks/tests/useLogin.test.tsx
+
 import { renderHook, act } from '@testing-library/react';
 import { useLogin } from '../useLogin';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { AuthContext } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { UserInfoProvider } from '@/app/context/UserInfoContext';
+import { useCollection } from '../useCollection';
 
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
@@ -14,6 +18,10 @@ jest.mock('firebase/auth', () => ({
     getAuth: () => ({
         onAuthStateChanged: jest.fn(),
     }),
+}));
+
+jest.mock('../useCollection', () => ({
+    useCollection: jest.fn(),
 }));
 
 const mockUser = {
@@ -45,18 +53,32 @@ const mockUserCredential = {
 
 describe('useLogin Hook', () => {
     let mockPush: jest.Mock;
+    let mockGetAllDocuments: jest.Mock;
+    let mockDeleteCartItemDocument: jest.Mock;
+    let mockAddDocument: jest.Mock;
+
+
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockPush = jest.fn();
+        mockGetAllDocuments = jest.fn().mockResolvedValue([]); // Simule um carrinho vazio no Firebase
+        mockDeleteCartItemDocument = jest.fn().mockResolvedValue(null);
+        mockAddDocument = jest.fn().mockResolvedValue(null);
         (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+        (useCollection as jest.Mock).mockReturnValue({
+            deleteDocument: mockDeleteCartItemDocument,
+            getAllDocuments: mockGetAllDocuments,
+            addDocument: mockAddDocument,
+        });
+
     });
 
     it('realiza login com sucesso', async() => {
         (signInWithEmailAndPassword as jest.Mock).mockResolvedValue(mockUserCredential);
         const wrapper = ({ children }: { children: React.ReactNode }) => (
             <AuthContext.Provider value={ { user: undefined, authIsReady: false, dispatch: jest.fn() } }>
-                { children }
+                <UserInfoProvider>{ children }</UserInfoProvider>
             </AuthContext.Provider>
         );
         const { result } = renderHook(() => useLogin(), { wrapper });
@@ -81,7 +103,7 @@ describe('useLogin Hook', () => {
 
         const wrapper = ({ children }: { children: React.ReactNode }) => (
             <AuthContext.Provider value={ { user: undefined, authIsReady: false, dispatch: jest.fn() } }>
-                { children }
+                <UserInfoProvider>{ children }</UserInfoProvider>
             </AuthContext.Provider>
         );
         const { result } = renderHook(() => useLogin(), { wrapper });
@@ -99,7 +121,7 @@ describe('useLogin Hook', () => {
 
         const wrapper = ({ children }: { children: React.ReactNode }) => (
             <AuthContext.Provider value={ { user: undefined, authIsReady: false, dispatch: mockDispatch } }>
-                { children }
+                <UserInfoProvider>{ children }</UserInfoProvider>
             </AuthContext.Provider>
         );
 
@@ -121,7 +143,7 @@ describe('useLogin Hook', () => {
 
         const wrapper = ({ children }: { children: React.ReactNode }) => (
             <AuthContext.Provider value={ { user: undefined, authIsReady: false, dispatch: jest.fn() } }>
-                { children }
+                <UserInfoProvider>{ children }</UserInfoProvider>
             </AuthContext.Provider>
         );
         const { result } = renderHook(() => useLogin(), { wrapper });
