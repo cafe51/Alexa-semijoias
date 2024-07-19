@@ -1,5 +1,4 @@
 //app/components/LoginForm.tsx
-
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import InputField from '../checkout/AddressSection/InputField';
 import { useLogin } from '../hooks/useLogin';
@@ -12,7 +11,6 @@ interface LoginFormProps {
 
 export default function LoginForm({ loadingButton, setLoadingButton } : LoginFormProps) {
     const { error, login } = useLogin();
-
     const [loadingComponent, setLoadingComponent] = useState(true);
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
     const [registerValues, setRegisterValues] = useState({
@@ -25,7 +23,7 @@ export default function LoginForm({ loadingButton, setLoadingButton } : LoginFor
         setLoadingComponent(false);
     }, []);
 
-    const isButtonDisable = () => {
+    const isButtonDisabled = () => {
         const email = registerValues.email.length > 0;
         const password = registerValues.password.length > 0;
         return !(email && password);
@@ -104,7 +102,9 @@ export default function LoginForm({ loadingButton, setLoadingButton } : LoginFor
                     { loginErrorMessage }
                 </p>
             ) }
-            <LargeButton color='green' disabled={ isButtonDisable() } loadingButton={ loadingButton } />
+            <LargeButton color='green' disabled={ isButtonDisabled() } loadingButton={ loadingButton }>
+                Continuar
+            </LargeButton>
             { error && <p className='text-red-500'>{ error }</p> }
 
         </form>

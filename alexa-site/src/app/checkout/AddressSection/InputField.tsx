@@ -1,5 +1,4 @@
 // app/checkout/AddressSection/InputField.tsx
-
 import { FormEventHandler } from 'react';
 
 interface InputFieldProps {
@@ -12,11 +11,10 @@ interface InputFieldProps {
     label: string;
     readOnly?: boolean;
     type?: string;
-
     disabled?: boolean;
     onInvalid?: FormEventHandler<HTMLInputElement>
     onInput?: FormEventHandler<HTMLInputElement>;
-
+    required?: boolean;
 }
 
 export default function InputField({
@@ -31,8 +29,7 @@ export default function InputField({
     disabled = false,
     onInvalid,
     onInput,
-
-
+    required=false,
 }: InputFieldProps) {
     return (
         <div className="relative w-full ">
@@ -50,6 +47,7 @@ export default function InputField({
                 onInput={ onInput }
                 disabled={ disabled }
                 className="border-2 py-2 pl-9 pr-3 w-full peer rounded-lg shadow-sm focus:outline-none focus:border-pink-400 focus:ring-pink-400 focus:ring-1"
+                required={ required }
             />
             <label
                 htmlFor={ id }
