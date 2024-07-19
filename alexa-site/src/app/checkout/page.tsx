@@ -3,7 +3,7 @@
 import { useCheckoutState } from '../hooks/useCheckoutState';
 import AddressSection from './AddressSection/AddressSection';
 import AddressSectionFilled from './AddressSection/AddressSectionFilled';
-import AccountSection from './AccountSection';
+import AccountSection from './AccountSection/AccountSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 import DeliveryPriceSectionFilled from './DeliveryPriceSection/DeliveryPriceSectionFilled';
 import DeliveryPriceSectionPending from './DeliveryPriceSection/DeliveryPriceSectionPending';
@@ -13,6 +13,8 @@ import PaymentSection from './PaymentSection/PaymentSection';
 import PaymentSectionPending from './PaymentSection/PaymentSectionPending';
 import OrderSummary from './OrderSummarySection/OrderSummary';
 import OrderSummaryShort from './OrderSummarySection/OrderSummaryShort';
+import LoginSection from './AccountSection/LoginSection';
+import RegisterSection from './AccountSection/RegisterSection';
 
 export default function Checkout() {
     const { userInfo, carrinho } = useUserInfo();
@@ -20,6 +22,7 @@ export default function Checkout() {
 
     const {
         state,
+        handleShowRegisterSection,
         handleAddressChange,
         handleEditingAddressMode,
         handleSelectedDeliveryOption,
@@ -123,11 +126,33 @@ export default function Checkout() {
         );
     };
 
+    const renderAccountSection = () => {
+        if (userInfo) {
+            return <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } />;
+        }
+        if (state.showRegisterSection && !userInfo){
+            return (
+                <RegisterSection
+                    setShowRegister={ handleShowRegisterSection }
+                    // setIsLoggedIn={setIsLoggedIn}
+                />
+            );
+        }
+        if(!state.showRegisterSection && !userInfo)
+            return (
+                <LoginSection setShowRegister={ handleShowRegisterSection } />
+            );
+    };
+    
+
+
+
 
     return (
         <main className='flex flex-col w-full gap-2 relative'>
             { renderOrderSummarySection() }
-            { userInfo && <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> }
+            { /* { userInfo && <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> } */ }
+            { renderAccountSection() }
             { renderAddressSection() }
             { renderDeliverySection() }
             { renderPaymentSection() }

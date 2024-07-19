@@ -4,18 +4,30 @@ import { useEffect, useReducer, useCallback } from 'react';
 import { AddressType, DeliveryOptionType } from '../utils/types';
 import { useUserInfo } from '../hooks/useUserInfo';
 
+
+// const SET_SHOW_FULL_ORDER_SUMMARY = 'SET_SHOW_FULL_ORDER_SUMMARY'
+// const SET_SHOW_REGISTER_SECTION = 'SET_SHOW_REGISTER_SECTION'
+// const SET_EDITING_ADDRESS_MODE = 'SET_EDITING_ADDRESS_MODE'
+// const SET_SELECTED_DELIVERY_OPTION = 'SET_SELECTED_DELIVERY_OPTION'
+// const SET_SELECTED_PAYMENT_OPTION = 'SET_SELECTED_PAYMENT_OPTION'
+// const SET_DELIVERY_OPTION = 'SET_DELIVERY_OPTION'
+// const SET_ADDRESS = 'SET_ADDRESS'
+
 // Define action types
 type ActionType = 
     | { type: 'SET_SHOW_FULL_ORDER_SUMMARY', payload: boolean }
+    | { type: 'SET_SHOW_REGISTER_SECTION', payload: boolean }
     | { type: 'SET_EDITING_ADDRESS_MODE', payload: boolean }
     | { type: 'SET_SELECTED_DELIVERY_OPTION', payload: string | null }
     | { type: 'SET_SELECTED_PAYMENT_OPTION', payload: string | null }
     | { type: 'SET_DELIVERY_OPTION', payload: DeliveryOptionType | null }
-    | { type: 'SET_ADDRESS', payload: AddressType };
+    | { type: 'SET_ADDRESS', payload: AddressType }
+
 
 // Define state type
 type StateType = {
     showFullOrderSummary: boolean;
+    showRegisterSection: boolean;
     editingAddressMode: boolean;
     selectedDeliveryOption: string | null;
     selectedPaymentOption: string | null;
@@ -26,6 +38,7 @@ type StateType = {
 // Initial state
 const initialState: StateType = {
     showFullOrderSummary: false,
+    showRegisterSection: false,
     editingAddressMode: false,
     selectedDeliveryOption: null,
     selectedPaymentOption: null,
@@ -50,6 +63,8 @@ const initialState: StateType = {
 // Reducer function
 function reducer(state: StateType, action: ActionType): StateType {
     switch (action.type) {
+    case 'SET_SHOW_REGISTER_SECTION':
+        return { ...state, showRegisterSection: action.payload };
     case 'SET_EDITING_ADDRESS_MODE':
         return { ...state, editingAddressMode: action.payload };
     case 'SET_SHOW_FULL_ORDER_SUMMARY':
@@ -70,6 +85,7 @@ function reducer(state: StateType, action: ActionType): StateType {
 // Custom hook
 export function useCheckoutState() {
     const [state, dispatch] = useReducer(reducer, initialState);
+    
     const { userInfo } = useUserInfo();
   
     const deliveryOptions = [
@@ -89,6 +105,10 @@ export function useCheckoutState() {
         }
     }, [userInfo]);
 
+    const handleShowRegisterSection = useCallback((option: boolean) => {
+        dispatch({ type: 'SET_SHOW_REGISTER_SECTION', payload: option });
+    }, []);
+    
     const handleAddressChange = useCallback((newAddress: AddressType) => {
         dispatch({ type: 'SET_ADDRESS', payload: newAddress });
     }, []);
@@ -109,6 +129,7 @@ export function useCheckoutState() {
         dispatch({ type: 'SET_SHOW_FULL_ORDER_SUMMARY', payload: option });
     }, []);
 
+
     return {
         state,
         handleAddressChange,
@@ -117,5 +138,7 @@ export function useCheckoutState() {
         handleSelectedPaymentOption,
         handleShowFullOrderSummary,
         deliveryOptions,
+
+        handleShowRegisterSection,
     };
 }

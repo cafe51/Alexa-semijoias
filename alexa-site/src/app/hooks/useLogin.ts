@@ -4,13 +4,11 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { useAuthContext } from './useAuthContext';
-import { useRouter } from 'next/navigation';
 import { useLocalStorage } from './useLocalStorage';
 import { CartInfoType } from '../utils/types';
 import { useCollection } from './useCollection';
 
 export const useLogin = () => {
-    const router = useRouter();
     const { dispatch } = useAuthContext();
     const [error, setError] = useState<string | null>(null);
     const { getLocalCart, setLocalCart } = useLocalStorage();
@@ -45,7 +43,6 @@ export const useLogin = () => {
 
             await syncLocalCartToFirebase(res.user.uid); 
 
-            router.push('/');
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);  

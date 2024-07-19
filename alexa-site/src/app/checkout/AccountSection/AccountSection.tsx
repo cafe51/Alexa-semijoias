@@ -1,4 +1,4 @@
-// app/checkout/AccountSection.tsx
+// app/checkout/AccountSection/AccountSection.tsx
 
 export default function AccountSection({ email, cpf, telefone }: {email: string, cpf: string, telefone: string}) {
     return (

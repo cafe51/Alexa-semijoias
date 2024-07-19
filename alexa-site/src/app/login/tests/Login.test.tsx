@@ -46,16 +46,16 @@ describe('Login Component', () => {
         await renderComponent();
 
         expect(screen.getByText('Entre na sua conta')).toBeInTheDocument();
-        expect(screen.getByLabelText('EMAIL/CPF')).toBeInTheDocument();
-        expect(screen.getByLabelText('SENHA')).toBeInTheDocument();
+        expect(screen.getByLabelText('Email')).toBeInTheDocument();
+        expect(screen.getByLabelText('Senha')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Continuar/i })).toBeInTheDocument();
     });
 
     it('chama a função de login ao submeter o formulário', async() => {
         await renderComponent();
 
-        const emailInput = screen.getByLabelText('EMAIL/CPF');
-        const passwordInput = screen.getByLabelText('SENHA');
+        const emailInput = screen.getByLabelText('Email');
+        const passwordInput = screen.getByLabelText('Senha');
         const submitButton = screen.getByRole('button', { name: /Continuar/i });
 
         await act(async() => {
@@ -75,8 +75,8 @@ describe('Login Component', () => {
 
         await renderComponent();
 
-        const emailInput = screen.getByLabelText('EMAIL/CPF');
-        const passwordInput = screen.getByLabelText('SENHA');
+        const emailInput = screen.getByLabelText('Email');
+        const passwordInput = screen.getByLabelText('Senha');
         const submitButton = screen.getByRole('button', { name: /Continuar/i });
 
         await act(async() => {
@@ -115,8 +115,8 @@ describe('Login Component', () => {
 
         await renderComponent();
 
-        const emailInput = screen.getByLabelText('EMAIL/CPF');
-        const passwordInput = screen.getByLabelText('SENHA');
+        const emailInput = screen.getByLabelText('Email');
+        const passwordInput = screen.getByLabelText('Senha');
         const submitButton = screen.getByRole('button', { name: /Continuar/i });
 
         await act(async() => {
