@@ -1,6 +1,5 @@
 //app/components/Product.tsx
 'use client';
-
 import { useEffect, useState } from 'react';
 import { CartInfoType, ProductType } from '../utils/types';
 import ResponsiveCarousel from './ResponsiveCarousel';
@@ -27,21 +26,25 @@ export default function Product({ id, productType }: {id: string, productType: s
     };
 
     const handleAddToCart = () => {
-        if (!user) {
-            console.warn('User not logged in. Cannot add to cart.');
-            return;
-        }
-        if (product) {
-            const cartItem = carrinho?.find((item) => item.productId === product.id);
-            if (!cartItem) {
-                addDocument({
-                    productId: product.id,
-                    quantidade: 1,
-                    userId: user.uid,
-                });
-            } else if (cartItem.quantidade < product.estoque) {
-                updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade + 1);
+        try{
+            if (!user) {
+                console.warn('User not logged in. Cannot add to cart.');
+                return;
             }
+            if (product) {
+                const cartItem = carrinho?.find((item) => item.productId === product.id);
+                if (!cartItem) {
+                    addDocument({
+                        productId: product.id,
+                        quantidade: 1,
+                        userId: user.uid,
+                    });
+                } else if (cartItem.quantidade < product.estoque) {
+                    updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade + 1);
+                }
+            }
+        } catch(error){
+            console.log('erro ao tentar adicionar ao carrinho', error);
         }
     };
 

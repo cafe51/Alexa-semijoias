@@ -15,10 +15,15 @@ import OrderSummary from './OrderSummarySection/OrderSummary';
 import OrderSummaryShort from './OrderSummarySection/OrderSummaryShort';
 import LoginSection from './AccountSection/LoginSection';
 import RegisterSection from './AccountSection/RegisterSection';
+import { useRouter } from 'next/navigation';
 
 export default function Checkout() {
+    const router = useRouter();
     const { userInfo, carrinho } = useUserInfo();
+
+    const [ loadingScreen, setLoadingScreen ] = useState(true);
     const [cartPrice, setCartPrice] = useState(0);
+    const [isCartLoading, setIsCartLoading] = useState(true);
 
     const {
         state,
@@ -30,6 +35,27 @@ export default function Checkout() {
         deliveryOptions,
         handleShowFullOrderSummary,
     } = useCheckoutState();
+
+    useEffect(() => {
+        if (carrinho === null) {
+            // Simulate fetching cart data or some async operation
+            setTimeout(() => {
+                setIsCartLoading(false);
+            }, 2000); 
+        } else {
+            setIsCartLoading(false);
+        }
+    }, [carrinho]);
+
+    useEffect(() => {
+        if (!isCartLoading) {
+            if (carrinho && carrinho.length > 0) {
+                setLoadingScreen(false);
+            } else {
+                router.push('/carrinho');
+            }
+        }
+    }, [carrinho, isCartLoading, router]);
 
     useEffect(() => {
         if (!userInfo?.address) {
@@ -143,15 +169,12 @@ export default function Checkout() {
                 <LoginSection setShowRegister={ handleShowRegisterSection } />
             );
     };
-    
 
-
-
+    if(loadingScreen) return <p>Loading...</p>;
 
     return (
         <main className='flex flex-col w-full gap-2 relative'>
             { renderOrderSummarySection() }
-            { /* { userInfo && <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } /> } */ }
             { renderAccountSection() }
             { renderAddressSection() }
             { renderDeliverySection() }

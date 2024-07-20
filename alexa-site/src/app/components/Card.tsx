@@ -13,9 +13,9 @@ import formatPrice from '../utils/formatPrice';
 
 export default function Card({ cardData, productType }: { cardData: ProductType | null, productType: string }) {
     const { addItemToLocalStorageCart } = useLocalStorage();
-    const { addDocument, updateDocumentField } = useCollection('carrinho');
+    const { addDocument, updateDocumentField } = useCollection('carrinhos');
     const { user } = useAuthContext();
-    const carrinho = useUserInfo()?.carrinho;
+    const { carrinho } = useUserInfo();
 
     if (!cardData) return <h3>Carregando...</h3>;
     
@@ -38,13 +38,17 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
     };
 
     const handleAddToCart = () => {
-        if (!user) {
-            // Usuário não está logado, salva no localStorage
-            addItemToLocalStorageCart(cardData);
-            console.warn('user está deslogado!');
-        } else {
-            // Usuário está logado, salva no firebase
-            addItemToFirebaseCart(user, carrinho, cardData);
+        try{
+            if (!user) {
+                // Usuário não está logado, salva no localStorage
+                addItemToLocalStorageCart(cardData);
+                console.warn('user está deslogado!');
+            } else {
+                // Usuário está logado, salva no firebase
+                addItemToFirebaseCart(user, carrinho, cardData);
+            }
+        } catch(error){
+            console.log('erro ao tentar adicionar ao carrinho', error);
         }
         
     };
