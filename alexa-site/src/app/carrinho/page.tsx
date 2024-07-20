@@ -1,5 +1,6 @@
 // app/carrinho/page.tsx
 'use client';
+import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import formatPrice from '../utils/formatPrice';
 import { ProductCartType } from '../utils/types';
@@ -7,6 +8,7 @@ import CartItem from './CartItem';
 
 export default function Carrinho() {
     const { carrinho } = useUserInfo();
+    const router = useRouter();
 
     console.log('CARRINHO', carrinho);
 
@@ -43,10 +45,15 @@ export default function Carrinho() {
                     <p>à vista com 10% OFF</p>
                     <p>ou até 6x { formatPrice(50) } sem juros</p>
                 </div>
-                <button className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'>
+                <button
+                    className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'
+                    onClick={ () => router.push('/checkout') }
+                >
             Finalizar compra
                 </button>
-                <button className='rounded-full bg-blue-500 p-4 px-6 font-bold text-white'>
+                <button
+                    className='rounded-full bg-blue-500 p-4 px-6 font-bold text-white'
+                >
             Continuar comprando
                 </button>
             </section>
