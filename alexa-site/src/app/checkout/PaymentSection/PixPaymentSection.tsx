@@ -1,13 +1,12 @@
 // app/checkout/PaymentSection/PixPaymentSection.tsx
-
 import { useState } from 'react';
 import InputField from '../AddressSection/InputField';
 
 interface PixPaymentSectionProps {
-    setSelectedPaymentOption: (paymentOption: string | null) => void;
+    handleSelectedPaymentOption: (paymentOption: string | null) => void;
 }
 
-export default function PixPaymentSection({ setSelectedPaymentOption }: PixPaymentSectionProps) {
+export default function PixPaymentSection({ handleSelectedPaymentOption }: PixPaymentSectionProps) {
     const [cpf, setCpf] = useState('');
 
     return (
@@ -15,7 +14,7 @@ export default function PixPaymentSection({ setSelectedPaymentOption }: PixPayme
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">PAGAMENTO</h3>
                 <button
-                    onClick={ () => setSelectedPaymentOption(null) }
+                    onClick={ () => handleSelectedPaymentOption(null) }
                     className="text-sm text-green-500">
                     Alterar
                 </button>

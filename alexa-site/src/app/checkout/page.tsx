@@ -1,21 +1,14 @@
 // app/checkout/page.tsx
 'use client';
 import { useCheckoutState } from '../hooks/useCheckoutState';
-import AddressSection from './AddressSection/AddressSection';
-import AddressSectionFilled from './AddressSection/AddressSectionFilled';
-import AccountSection from './AccountSection/AccountSection';
-import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
-import DeliveryPriceSectionFilled from './DeliveryPriceSection/DeliveryPriceSectionFilled';
-import DeliveryPriceSectionPending from './DeliveryPriceSection/DeliveryPriceSectionPending';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { useEffect, useState } from 'react';
-import PaymentSection from './PaymentSection/PaymentSection';
-import PaymentSectionPending from './PaymentSection/PaymentSectionPending';
-import OrderSummary from './OrderSummarySection/OrderSummary';
-import OrderSummaryShort from './OrderSummarySection/OrderSummaryShort';
-import LoginSection from './AccountSection/LoginSection';
-import RegisterSection from './AccountSection/RegisterSection';
 import { useRouter } from 'next/navigation';
+import AccountSection from './AccountSection/AccountSection';
+import AddressSection from './AddressSection/AddressSection';
+import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
+import PaymentSection from './PaymentSection/PaymentSection';
+import OrderSummarySection from './OrderSummarySection/OrderSummarySection';
 
 export default function Checkout() {
     const router = useRouter();
@@ -74,111 +67,15 @@ export default function Checkout() {
 
     useEffect(() => {console.log(state);}, [state]);
 
-    const renderOrderSummarySection = () => {
-        if (state.showFullOrderSummary) return (
-            <OrderSummary
-                setShowFullOrderSummary={ handleShowFullOrderSummary }
-                carrinho={ carrinho }
-                frete={ ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) }
-                subtotalPrice={ cartPrice }
-            />
-        );
-
-        return (
-            <OrderSummaryShort 
-                setShowFullOrderSummary={ handleShowFullOrderSummary }
-                totalPrice={
-                    cartPrice
-                    +
-                    ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) //frete
-                }
-            />
-        );
-    };
-
-    const renderAddressSection = () => {
-        if (state.editingAddressMode) {
-            return (
-                <AddressSection 
-                    address={ state.address } 
-                    setAddress={ handleAddressChange } 
-                    setEditingAddressMode={ handleEditingAddressMode } 
-                />
-            );
-        } 
-        return (
-            <AddressSectionFilled 
-                address={ state.address } 
-                setEditingAddressMode={ handleEditingAddressMode } 
-            />
-        );
-    };
-
-    const renderDeliverySection = () => {
-        if (state.editingAddressMode) return <DeliveryPriceSectionPending />;
-        
-        if (state.selectedDeliveryOption && state.deliveryOption) {
-            return (
-                <DeliveryPriceSectionFilled
-                    setSelectedDeliveryOption={ handleSelectedDeliveryOption }
-                    price={ state.deliveryOption.price }
-                    term={ state.deliveryOption.deliveryTime }
-                    type={ state.deliveryOption.name }
-                />
-            );
-        } 
-        return (
-            <DeliveryPriceSection
-                deliveryOptions={ deliveryOptions }
-                selectedDeliveryOption={ state.selectedDeliveryOption }
-                setSelectedDeliveryOption={ handleSelectedDeliveryOption }
-            />
-        );
-    };
-
-    const renderPaymentSection = () => {
-        if (state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) return <PaymentSectionPending />;
-
-        return (
-            <PaymentSection
-                selectedPaymentOption={ state.selectedPaymentOption }
-                setSelectedPaymentOption={ handleSelectedPaymentOption }
-                totalPrice={
-                    cartPrice
-            +
-            ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) //frete
-                }
-            />
-        );
-    };
-
-    const renderAccountSection = () => {
-        if (userInfo) {
-            return <AccountSection cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } />;
-        }
-        if (state.showRegisterSection && !userInfo){
-            return (
-                <RegisterSection
-                    setShowRegister={ handleShowRegisterSection }
-                    // setIsLoggedIn={setIsLoggedIn}
-                />
-            );
-        }
-        if(!state.showRegisterSection && !userInfo)
-            return (
-                <LoginSection setShowRegister={ handleShowRegisterSection } />
-            );
-    };
-
     if(loadingScreen) return <p>Loading...</p>;
 
     return (
         <main className='flex flex-col w-full gap-2 relative'>
-            { renderOrderSummarySection() }
-            { renderAccountSection() }
-            { renderAddressSection() }
-            { renderDeliverySection() }
-            { renderPaymentSection() }
+            <OrderSummarySection carrinho={ carrinho } cartPrice={ cartPrice } handleShowFullOrderSummary={ handleShowFullOrderSummary } handleShowRegisterSection={ handleShowRegisterSection } state={ state }/>
+            <AccountSection handleShowRegisterSection={ handleShowRegisterSection } state={ state } />
+            <AddressSection handleAddressChange={ handleAddressChange } handleEditingAddressMode={ handleEditingAddressMode } state={ state } />
+            <DeliveryPriceSection deliveryOptions={ deliveryOptions } handleSelectedDeliveryOption={ handleSelectedDeliveryOption } state={ state } />
+            <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
         </main>
     );
 }

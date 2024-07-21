@@ -1,23 +1,21 @@
 // app/checkout/AccountSection/AccountSection.tsx
+import AccountSectionFilled from './AccountSectionFilled';
+import LoginSection from './LoginSection';
+import RegisterSection from './RegisterSection';
+import { useUserInfo } from '@/app/hooks/useUserInfo';
+import { UseCheckoutStateType } from '@/app/utils/types';
 
-export default function AccountSection({ email, cpf, telefone }: {email: string, cpf: string, telefone: string}) {
-    return (
-        <section className='flex flex-col w-full bg-green-50 border-green-200 p-2 border-2 rounded-lg px-6'>
-            <div className='flex justify-between w-full'>
+interface AccountSectionProps {
+    state: UseCheckoutStateType
+    handleShowRegisterSection: (isLogin: boolean) => void;
+  }
 
-                <p className="font-bold">CONTA</p>
-                <p
-                    className='text-blue-400 text-sm w-full text-end'
-                >
-              Trocar de conta
-                </p>
-            </div>
+export default function AccountSection({ state, handleShowRegisterSection }: AccountSectionProps) {
+    const { userInfo } = useUserInfo();
 
-            <div className='flex flex-col p-2'>
-                <p>{ email }</p>
-                <p>{ cpf }</p>
-                <p>{ telefone }</p>
-            </div>
-        </section>
-    );
+    if (userInfo) return <AccountSectionFilled cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } />;
+
+    if (state.showRegisterSection && !userInfo) return <RegisterSection setShowRegister={ handleShowRegisterSection }/>;
+
+    if(!state.showRegisterSection && !userInfo) return <LoginSection setShowRegister={ handleShowRegisterSection } />;
 }

@@ -1,7 +1,6 @@
 // app/hooks/useCheckoutState.ts
-
 import { useEffect, useReducer, useCallback } from 'react';
-import { AddressType, DeliveryOptionType } from '../utils/types';
+import { AddressType, DeliveryOptionType, UseCheckoutStateType } from '../utils/types';
 import { useUserInfo } from '../hooks/useUserInfo';
 
 
@@ -24,19 +23,8 @@ type ActionType =
     | { type: 'SET_ADDRESS', payload: AddressType }
 
 
-// Define state type
-type StateType = {
-    showFullOrderSummary: boolean;
-    showRegisterSection: boolean;
-    editingAddressMode: boolean;
-    selectedDeliveryOption: string | null;
-    selectedPaymentOption: string | null;
-    deliveryOption: DeliveryOptionType | null;
-    address: AddressType;
-};
-
 // Initial state
-const initialState: StateType = {
+const initialState: UseCheckoutStateType = {
     showFullOrderSummary: false,
     showRegisterSection: false,
     editingAddressMode: false,
@@ -61,7 +49,7 @@ const initialState: StateType = {
 };
 
 // Reducer function
-function reducer(state: StateType, action: ActionType): StateType {
+function reducer(state: UseCheckoutStateType, action: ActionType): UseCheckoutStateType {
     switch (action.type) {
     case 'SET_SHOW_REGISTER_SECTION':
         return { ...state, showRegisterSection: action.payload };

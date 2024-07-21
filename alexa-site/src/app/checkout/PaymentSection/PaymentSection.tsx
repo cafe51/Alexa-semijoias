@@ -1,38 +1,49 @@
 // app/checkout/PaymentSection/PaymentSection.tsx
-
 import ChoosePaymentOptionSection from './ChoosePaymentOptionSection';
 import CreditPaymentSection from './CreditPaymentSection';
+import PaymentSectionPending from './PaymentSectionPending';
 import PixPaymentSection from './PixPaymentSection';
+import { UseCheckoutStateType } from '@/app/utils/types';
 
 interface PaymentSectionProps {
-    selectedPaymentOption: string | null;
-    setSelectedPaymentOption: (paymentOption: string | null) => void;
-    totalPrice: number;
+    state: UseCheckoutStateType;
+    cartPrice: number;
+    handleSelectedPaymentOption: (paymentOption: string | null) => void;
 }
 
-export default function PaymentSection({ selectedPaymentOption, setSelectedPaymentOption, totalPrice }: PaymentSectionProps) {
+export default function PaymentSection({  cartPrice, state: { editingAddressMode, deliveryOption, selectedDeliveryOption, selectedPaymentOption }, handleSelectedPaymentOption }: PaymentSectionProps) {
+    if (editingAddressMode || !(selectedDeliveryOption && deliveryOption)) return <PaymentSectionPending />;
 
     const renderPaymentSection = () => {
         if (!selectedPaymentOption) {
             return (
-                <ChoosePaymentOptionSection selectedPaymentOption={ selectedPaymentOption } setSelectedPaymentOption={ setSelectedPaymentOption } totalPrice={ totalPrice }/>
+                <ChoosePaymentOptionSection
+                    selectedPaymentOption={ selectedPaymentOption }
+                    handleSelectedPaymentOption={ handleSelectedPaymentOption }
+                    totalPrice={ cartPrice + ((deliveryOption?.price) ? deliveryOption?.price : 0) }
+                />
 
             );
         }
 
         if (selectedPaymentOption === 'Cartão de Crédito') {
             return (
-                <CreditPaymentSection setSelectedPaymentOption={ setSelectedPaymentOption } totalPrice={ totalPrice }/>
+                <CreditPaymentSection
+                    handleSelectedPaymentOption={ handleSelectedPaymentOption }
+                    totalPrice={ cartPrice + ((deliveryOption?.price) ? deliveryOption?.price : 0) }
+                />
 
             );
         } 
         if (selectedPaymentOption === 'Pix') {
             return (
-                <PixPaymentSection setSelectedPaymentOption={ setSelectedPaymentOption }/>
+                <PixPaymentSection handleSelectedPaymentOption={ handleSelectedPaymentOption }/>
 
             );
         } 
     };
+
+
 
 
     return (

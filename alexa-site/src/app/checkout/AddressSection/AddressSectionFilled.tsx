@@ -1,14 +1,12 @@
 // app/checkout/AddressSection/AddressSectionFilled.tsx
-
 import { AddressType } from '@/app/utils/types';
 
 interface AddressSectionFilledProps {
     address: AddressType;
-    setEditingAddressMode: (mode: boolean) => void; 
+    handleEditingAddressMode: (mode: boolean) => void; 
 }
 
-export default function AddressSectionFilled({ address, setEditingAddressMode  }: AddressSectionFilledProps) {
-
+export default function AddressSectionFilled({ address, handleEditingAddressMode  }: AddressSectionFilledProps) {
     return(
 
         <section className='flex flex-col w-full bg-green-50 border-green-200 p-2 border-2 rounded-lg px-6'>
@@ -16,7 +14,7 @@ export default function AddressSectionFilled({ address, setEditingAddressMode  }
                 <p className="font-bold">ENDEREÇO</p>
                 <p
                     className='text-blue-400 text-sm w-full text-end'
-                    onClick={ () => setEditingAddressMode(true) }
+                    onClick={ () => handleEditingAddressMode(true) }
                 >
                             Trocar endereço
                 </p>

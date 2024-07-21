@@ -1,17 +1,15 @@
 // app/checkout/PaymentSection/ChoosePaymentOptionSection.tsx
-
 import formatPrice from '@/app/utils/formatPrice';
 
 interface ChoosePaymentOptionSectionProps {
     selectedPaymentOption: string | null;
-    setSelectedPaymentOption: (paymentOption: string | null) => void;
+    handleSelectedPaymentOption: (paymentOption: string | null) => void;
     totalPrice: number;
 }
 
-export default function ChoosePaymentOptionSection({ selectedPaymentOption, setSelectedPaymentOption, totalPrice }: ChoosePaymentOptionSectionProps) {
-
+export default function ChoosePaymentOptionSection({ selectedPaymentOption, handleSelectedPaymentOption, totalPrice }: ChoosePaymentOptionSectionProps) {
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedPaymentOption(event.target.value);
+        handleSelectedPaymentOption(event.target.value);
         console.log(selectedPaymentOption);
     };
 

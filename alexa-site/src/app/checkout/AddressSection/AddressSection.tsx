@@ -1,31 +1,27 @@
 // app/checkout/AddressSection/AddressSection.tsx
-
 import { useState } from 'react';
 import fetchAddressFromCEP from '../../utils/fetchAddressFromCEP';
-import { AddressType } from '../../utils/types';
+import { AddressType, UseCheckoutStateType } from '../../utils/types';
 import { formatCep } from '../../utils/formatCep';
 import AddressForm from './AddressForm';
 import CepInput from './CepInput';
 import { useCollection } from '@/app/hooks/useCollection';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
+import AddressSectionFilled from './AddressSectionFilled';
 
 interface AddressSectionProps {
-    address: AddressType;
-    setAddress: (newAddress: AddressType) => void;
-    setEditingAddressMode: (mode: boolean) => void;
+    state: UseCheckoutStateType;
+    handleAddressChange: (newAddress: AddressType) => void;
+    handleEditingAddressMode: (mode: boolean) => void;
 }
 
-
-export default function AddressSection({ address, setAddress, setEditingAddressMode }: AddressSectionProps) {
+export default function AddressSection({ state: { address, editingAddressMode }, handleAddressChange, handleEditingAddressMode }: AddressSectionProps) {
     const { updateDocumentField } = useCollection('usuarios');
     const { userInfo } = useUserInfo();
     const [cep, setCep] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [formError, setFormError] = useState('');
-    
-
-
 
     const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newCep = formatCep(e.target.value);
@@ -43,7 +39,7 @@ export default function AddressSection({ address, setAddress, setEditingAddressM
             if (fetchedAddress.erro) {
                 setError('CEP inválido ou não encontrado.');
             } else {
-                setAddress(fetchedAddress);
+                handleAddressChange(fetchedAddress);
                 setCep(formatCep(cepToFetch));
             }
         } catch {
@@ -53,9 +49,9 @@ export default function AddressSection({ address, setAddress, setEditingAddressM
         }
     };
 
-    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleStateAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setAddress({ ...address, [name]: value });
+        handleAddressChange({ ...address, [name]: value });
     };
 
     const isFormValid = () => {
@@ -67,7 +63,7 @@ export default function AddressSection({ address, setAddress, setEditingAddressM
         if (isFormValid() && userInfo) {
             console.log(address);
             updateDocumentField(userInfo?.id, 'address', address);
-            setEditingAddressMode(false);
+            handleEditingAddressMode(false);
             setFormError('');
         } else {
             if (!isFormValid()) setFormError('Por favor, preencha todos os campos obrigatórios.');
@@ -75,29 +71,37 @@ export default function AddressSection({ address, setAddress, setEditingAddressM
         }
     };
 
+    if(editingAddressMode){
+        return (
+            <section className="flex flex-col w-full bg-white p-2 px-4 border-2 rounded gap-2">
+                <p>Endereço de entrega</p>
+                { !address.logradouro ? (
+                    <CepInput
+                        cep={ cep }
+                        handleCepChange={ handleCepChange }
+                        handleCepSubmit={ () => handleCepSubmit(cep.replace('-', '')) }
+                        loading={ loading }
+                        error={ error }
+                    />
+                ) : (
+                    <AddressForm
+                        address={ address }
+                        cep={ cep }
+                        handleCepChange={ handleCepChange }
+                        handleStateAddressChange={ handleStateAddressChange }
+                        handleFormSubmit={ handleFormSubmit }
+                        isFormValid={ isFormValid }
+                        loading={ loading }
+                        formError={ formError }
+                    />
+                ) }
+            </section>
+        );
+    }
     return (
-        <section className="flex flex-col w-full bg-white p-2 px-4 border-2 rounded gap-2">
-            <p>Endereço de entrega</p>
-            { !address.logradouro ? (
-                <CepInput
-                    cep={ cep }
-                    handleCepChange={ handleCepChange }
-                    handleCepSubmit={ () => handleCepSubmit(cep.replace('-', '')) }
-                    loading={ loading }
-                    error={ error }
-                />
-            ) : (
-                <AddressForm
-                    address={ address }
-                    cep={ cep }
-                    handleCepChange={ handleCepChange }
-                    handleAddressChange={ handleAddressChange }
-                    handleFormSubmit={ handleFormSubmit }
-                    isFormValid={ isFormValid }
-                    loading={ loading }
-                    formError={ formError }
-                />
-            ) }
-        </section>
+        <AddressSectionFilled 
+            address={ address } 
+            handleEditingAddressMode={ handleEditingAddressMode } 
+        />
     );
 }

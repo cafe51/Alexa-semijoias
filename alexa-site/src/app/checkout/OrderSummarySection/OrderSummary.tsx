@@ -1,5 +1,4 @@
 // app/checkout/OrderSummarySection/OrderSummary.tsx
-
 import { PiXBold } from 'react-icons/pi';
 import { ProductCartType } from '../../utils/types';
 import PriceSummarySection from './PriceSummarySection';
@@ -7,13 +6,13 @@ import SummaryCard from './SummaryCard';
 import Link from 'next/link';
 
 interface OrderSummaryProps {
-    setShowFullOrderSummary: (option: boolean) => void;
+    handleShowFullOrderSummary: (option: boolean) => void;
     carrinho: ProductCartType[] | null;
     subtotalPrice: number | undefined
     frete: number | undefined
 }
 
-export default function OrderSummary({ setShowFullOrderSummary, carrinho, subtotalPrice, frete }: OrderSummaryProps) {
+export default function OrderSummary({ handleShowFullOrderSummary, carrinho, subtotalPrice, frete }: OrderSummaryProps) {
 
     console.log('CARRINHO', carrinho);
 
@@ -26,7 +25,7 @@ export default function OrderSummary({ setShowFullOrderSummary, carrinho, subtot
                     <h3 className="text-lg font-bold">Resumo</h3>
                     <button
                         className="px-2 rounded-md bg-gray-200"
-                        onClick={ () => setShowFullOrderSummary(false) }
+                        onClick={ () => handleShowFullOrderSummary(false) }
                     >
                         <PiXBold />
                     </button>

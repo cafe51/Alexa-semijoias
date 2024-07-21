@@ -3,7 +3,7 @@
 import formatPrice from '@/app/utils/formatPrice';
 
 interface DeliveryPriceSectionFilledProps {
-    setSelectedDeliveryOption:  (option: string | null) => void
+    handleSelectedDeliveryOption:  (option: string | null) => void
     type: string,
     price: number,
     term: number,
@@ -11,13 +11,13 @@ interface DeliveryPriceSectionFilledProps {
 
 
 export default function DeliveryPriceSectionFilled({
-    setSelectedDeliveryOption,
+    handleSelectedDeliveryOption,
     price,
     term,
     type,
 } : DeliveryPriceSectionFilledProps) {
     const handleOptionChange = () => {
-        setSelectedDeliveryOption(null);
+        handleSelectedDeliveryOption(null);
     };
 
     return(

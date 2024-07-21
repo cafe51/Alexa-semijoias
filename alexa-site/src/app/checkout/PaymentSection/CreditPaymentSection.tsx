@@ -1,11 +1,10 @@
 // app/checkout/PaymentSection/CreditPaymentSection.tsx
-
 import { useState } from 'react';
 import InstallmentOptions from './InstallmentOptions';
 import InputField from '../AddressSection/InputField';
 
 interface CreditPaymentSectionProps {
-    setSelectedPaymentOption: (paymentOption: string | null) => void;
+    handleSelectedPaymentOption: (paymentOption: string | null) => void;
     totalPrice: number
 }
 
@@ -27,7 +26,7 @@ const months = [
 
 const years = Array.from({ length: 57 }, (_, i) => ({ value: (24 + i).toString(), label: (24 + i).toString() }));
 
-export default function CreditPaymentSection({ setSelectedPaymentOption, totalPrice }: CreditPaymentSectionProps) {
+export default function CreditPaymentSection({ handleSelectedPaymentOption, totalPrice }: CreditPaymentSectionProps) {
     const [selectedInstallment, setSelectedInstallment] = useState(1);
     const [cardNumber, setCardNumber] = useState('');
     const [cardName, setCardName] = useState('');
@@ -44,7 +43,7 @@ export default function CreditPaymentSection({ setSelectedPaymentOption, totalPr
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">PAGAMENTO</h3>
                 <button
-                    onClick={ () => setSelectedPaymentOption(null) }
+                    onClick={ () => handleSelectedPaymentOption(null) }
                     className="text-sm text-green-500">
                     Alterar
                 </button>

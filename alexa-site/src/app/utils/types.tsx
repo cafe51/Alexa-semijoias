@@ -1,6 +1,15 @@
 //app/utils/types.tsx
-
 import { WhereFilterOp } from 'firebase/firestore';
+
+export type UseCheckoutStateType = {
+    showFullOrderSummary: boolean;
+    showRegisterSection: boolean;
+    editingAddressMode: boolean;
+    selectedDeliveryOption: string | null;
+    selectedPaymentOption: string | null;
+    deliveryOption: DeliveryOptionType | null;
+    address: AddressType;
+};
 
 export type ProductType = {
     categoria: string,
