@@ -3,7 +3,7 @@ import { WhereFilterOp } from 'firebase/firestore';
 
 export type UseCheckoutStateType = {
     showFullOrderSummary: boolean;
-    showRegisterSection: boolean;
+    showLoginSection: boolean;
     editingAddressMode: boolean;
     selectedDeliveryOption: string | null;
     selectedPaymentOption: string | null;

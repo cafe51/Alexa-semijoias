@@ -5,7 +5,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 
 
 // const SET_SHOW_FULL_ORDER_SUMMARY = 'SET_SHOW_FULL_ORDER_SUMMARY'
-// const SET_SHOW_REGISTER_SECTION = 'SET_SHOW_REGISTER_SECTION'
+// const SET_SHOW_LOGIN_SECTION = 'SET_SHOW_LOGIN_SECTION'
 // const SET_EDITING_ADDRESS_MODE = 'SET_EDITING_ADDRESS_MODE'
 // const SET_SELECTED_DELIVERY_OPTION = 'SET_SELECTED_DELIVERY_OPTION'
 // const SET_SELECTED_PAYMENT_OPTION = 'SET_SELECTED_PAYMENT_OPTION'
@@ -15,7 +15,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 // Define action types
 type ActionType = 
     | { type: 'SET_SHOW_FULL_ORDER_SUMMARY', payload: boolean }
-    | { type: 'SET_SHOW_REGISTER_SECTION', payload: boolean }
+    | { type: 'SET_SHOW_LOGIN_SECTION', payload: boolean }
     | { type: 'SET_EDITING_ADDRESS_MODE', payload: boolean }
     | { type: 'SET_SELECTED_DELIVERY_OPTION', payload: string | null }
     | { type: 'SET_SELECTED_PAYMENT_OPTION', payload: string | null }
@@ -26,7 +26,7 @@ type ActionType =
 // Initial state
 const initialState: UseCheckoutStateType = {
     showFullOrderSummary: false,
-    showRegisterSection: false,
+    showLoginSection: false,
     editingAddressMode: false,
     selectedDeliveryOption: null,
     selectedPaymentOption: null,
@@ -51,8 +51,8 @@ const initialState: UseCheckoutStateType = {
 // Reducer function
 function reducer(state: UseCheckoutStateType, action: ActionType): UseCheckoutStateType {
     switch (action.type) {
-    case 'SET_SHOW_REGISTER_SECTION':
-        return { ...state, showRegisterSection: action.payload };
+    case 'SET_SHOW_LOGIN_SECTION':
+        return { ...state, showLoginSection: action.payload };
     case 'SET_EDITING_ADDRESS_MODE':
         return { ...state, editingAddressMode: action.payload };
     case 'SET_SHOW_FULL_ORDER_SUMMARY':
@@ -93,8 +93,8 @@ export function useCheckoutState() {
         }
     }, [userInfo]);
 
-    const handleShowRegisterSection = useCallback((option: boolean) => {
-        dispatch({ type: 'SET_SHOW_REGISTER_SECTION', payload: option });
+    const handleShowLoginSection = useCallback((option: boolean) => {
+        dispatch({ type: 'SET_SHOW_LOGIN_SECTION', payload: option });
     }, []);
     
     const handleAddressChange = useCallback((newAddress: AddressType) => {
@@ -127,6 +127,6 @@ export function useCheckoutState() {
         handleShowFullOrderSummary,
         deliveryOptions,
 
-        handleShowRegisterSection,
+        handleShowLoginSection,
     };
 }

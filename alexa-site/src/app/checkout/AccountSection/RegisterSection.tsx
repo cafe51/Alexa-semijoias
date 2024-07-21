@@ -1,12 +1,12 @@
-// app/checkout/AccountSection/AccountSection.tsx
+// app/checkout/AccountSection/RegisterSection.tsx
 import { useState } from 'react';
 import RegisterForm from '@/app/components/RegisterForm';
 
 interface RegisterSectionProps {
-  setShowRegister: (isLogin: boolean) => void;
+    setShowLogin: (isLogin: boolean) => void;
 }
 
-export default function RegisterSection({ setShowRegister }: RegisterSectionProps) {
+export default function RegisterSection({ setShowLogin }: RegisterSectionProps) {
     const [loadingButton, setLoadingButton] = useState(true);
 
     return (
@@ -15,7 +15,7 @@ export default function RegisterSection({ setShowRegister }: RegisterSectionProp
                 <p className="font-bold">Cadastro</p>
                 <p
                     className='text-blue-400 text-sm w-full text-end'
-                    onClick={ () => setShowRegister(false) }
+                    onClick={ () => setShowLogin(true) }
                 >
                 Fazer login
                 </p>

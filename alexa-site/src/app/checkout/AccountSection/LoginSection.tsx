@@ -1,14 +1,12 @@
 // app/checkout/AccountSection/LoginSection.tsx
-
 import { useState } from 'react';
 import LoginForm from '@/app/components/LoginForm';
 
 interface LoginSectionProps {
-  setShowRegister: (isLogin: boolean) => void;
+  setShowLogin: (isLogin: boolean) => void;
 }
 
-export default function LoginSection({ setShowRegister }: LoginSectionProps) {
-
+export default function LoginSection({ setShowLogin }: LoginSectionProps) {
     const [loadingButton, setLoadingButton] = useState(true);
 
     return (
@@ -17,7 +15,7 @@ export default function LoginSection({ setShowRegister }: LoginSectionProps) {
                 <p className="font-bold">LOGIN</p>
                 <p
                     className='text-blue-400 text-sm w-full text-end'
-                    onClick={ () => setShowRegister(true) }
+                    onClick={ () => setShowLogin(false) }
                 >
                     Cadastre-se
                 </p>

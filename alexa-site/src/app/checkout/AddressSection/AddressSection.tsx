@@ -8,6 +8,7 @@ import CepInput from './CepInput';
 import { useCollection } from '@/app/hooks/useCollection';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import AddressSectionFilled from './AddressSectionFilled';
+import AddressSectionPending from './AddressSectionPending';
 
 interface AddressSectionProps {
     state: UseCheckoutStateType;
@@ -70,6 +71,8 @@ export default function AddressSection({ state: { address, editingAddressMode },
             if (!userInfo) setFormError('Usuário deslogado!');
         }
     };
+
+    if (!userInfo) return <AddressSectionPending />;
 
     if(editingAddressMode){
         return (

@@ -8,7 +8,6 @@ interface OrderSummarySectionProps {
     carrinho: ProductCartType[] | null;
     cartPrice: number;
     handleShowFullOrderSummary: (option: boolean) => void;
-    handleShowRegisterSection: (isLogin: boolean) => void;
   }
 
 export default function OrderSummarySection({

@@ -20,7 +20,7 @@ export default function Checkout() {
 
     const {
         state,
-        handleShowRegisterSection,
+        handleShowLoginSection,
         handleAddressChange,
         handleEditingAddressMode,
         handleSelectedDeliveryOption,
@@ -71,8 +71,8 @@ export default function Checkout() {
 
     return (
         <main className='flex flex-col w-full gap-2 relative'>
-            <OrderSummarySection carrinho={ carrinho } cartPrice={ cartPrice } handleShowFullOrderSummary={ handleShowFullOrderSummary } handleShowRegisterSection={ handleShowRegisterSection } state={ state }/>
-            <AccountSection handleShowRegisterSection={ handleShowRegisterSection } state={ state } />
+            <OrderSummarySection carrinho={ carrinho } cartPrice={ cartPrice } handleShowFullOrderSummary={ handleShowFullOrderSummary }state={ state }/>
+            <AccountSection handleShowLoginSection={ handleShowLoginSection } state={ state } />
             <AddressSection handleAddressChange={ handleAddressChange } handleEditingAddressMode={ handleEditingAddressMode } state={ state } />
             <DeliveryPriceSection deliveryOptions={ deliveryOptions } handleSelectedDeliveryOption={ handleSelectedDeliveryOption } state={ state } />
             <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>

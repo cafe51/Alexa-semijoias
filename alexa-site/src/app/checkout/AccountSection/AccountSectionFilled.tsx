@@ -1,6 +1,18 @@
 // app/checkout/AccountSection/AccountSectionFilled.tsx
+import { useLocalStorage } from '@/app/hooks/useLocalStorage';
+import { useLogout } from '@/app/hooks/useLogout';
+import { useUserInfo } from '@/app/hooks/useUserInfo';
 
 export default function AccountSectionFilled({ email, cpf, telefone }: {email: string, cpf: string, telefone: string}) {
+    const { logout } = useLogout();
+    const { carrinho } = useUserInfo();
+    const { setLocalCart } = useLocalStorage();
+
+    const changeAccount = () => {
+        carrinho ? setLocalCart(carrinho) : '';
+        logout();
+    };
+
     return (
         <section className='flex flex-col w-full bg-green-50 border-green-200 p-2 border-2 rounded-lg px-6'>
             <div className='flex justify-between w-full'>
@@ -8,6 +20,7 @@ export default function AccountSectionFilled({ email, cpf, telefone }: {email: s
                 <p className="font-bold">CONTA</p>
                 <p
                     className='text-blue-400 text-sm w-full text-end'
+                    onClick={ () => changeAccount() }
                 >
               Trocar de conta
                 </p>

@@ -7,15 +7,16 @@ import { UseCheckoutStateType } from '@/app/utils/types';
 
 interface AccountSectionProps {
     state: UseCheckoutStateType
-    handleShowRegisterSection: (isLogin: boolean) => void;
+    handleShowLoginSection: (isLogin: boolean) => void;
   }
 
-export default function AccountSection({ state, handleShowRegisterSection }: AccountSectionProps) {
+export default function AccountSection({ state, handleShowLoginSection }: AccountSectionProps) {
     const { userInfo } = useUserInfo();
 
     if (userInfo) return <AccountSectionFilled cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel } />;
+    
+    if(state.showLoginSection && !userInfo) return <LoginSection setShowLogin={ handleShowLoginSection } />;
+    
+    if (!state.showLoginSection && !userInfo) return <RegisterSection setShowLogin={ handleShowLoginSection }/>;
 
-    if (state.showRegisterSection && !userInfo) return <RegisterSection setShowRegister={ handleShowRegisterSection }/>;
-
-    if(!state.showRegisterSection && !userInfo) return <LoginSection setShowRegister={ handleShowRegisterSection } />;
 }
