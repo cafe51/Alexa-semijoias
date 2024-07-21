@@ -9,6 +9,13 @@ import { useAuthContext } from '@/app/hooks/useAuthContext';
 import { useSnapshot } from '@/app/hooks/useSnapshot';
 import { useCart } from '@/app/hooks/useCart';
 
+// import { useRouter } from 'next/navigation';
+
+jest.mock('next/navigation', () => ({
+    useRouter: jest.fn(),
+}));
+
+
 jest.mock('../../hooks/useSnapshot', () => ({
     useSnapshot: jest.fn(),
 }));
