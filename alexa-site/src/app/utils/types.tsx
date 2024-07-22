@@ -33,8 +33,9 @@ export type DeliveryOptionType = {
 export type FilterOption = { field: string, operator: WhereFilterOp, value: string | number | string[] | number[] } ;
 
 export type ProductCartType = {
-    //o que vem de ProductType exceto categoria, desconto, lancamento e descrição
+    //o que vem de ProductType exceto desconto, lancamento e descrição
     id: string,
+    categoria: string,
     exist: boolean,
     nome: string,
     image: string,
@@ -91,6 +92,11 @@ export type OrderType = {
     valor: ValueType,
     userId: string,
     endereco: AddressType
+
+    data: string;
+    totalQuantity: number,
+    paymentOption: string,
+    deliveryOption: string,
 }
 
 export type UserType = {

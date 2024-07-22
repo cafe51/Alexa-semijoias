@@ -13,6 +13,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
     "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
     "firebase": "^10.12.2",
     "firebase-mock": "^2.3.2",
     "next": "^14.2.4",

@@ -1,5 +1,4 @@
 // app/hooks/useCart.test.ts
-
 import { renderHook, waitFor } from '@testing-library/react';
 import { useCart } from '../useCart';
 import { useCollection } from '../useCollection';
@@ -66,6 +65,7 @@ describe('useCart Hook', () => {
                 image: '/imagem1.jpg',
                 preco: 10,
                 estoque: 8,
+                categoria: 'brincos',
 
                 productId: 'prod1',
                 quantidade: 2,

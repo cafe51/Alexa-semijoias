@@ -37,7 +37,7 @@ export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, produ
             if (products && products.length > 0 && cartInfos) {
                 const productsCart = products
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    .map(({ categoria, desconto, descricao, image, lancamento, ...restProduct }) => {
+                    .map(({ desconto, descricao, lancamento, ...restProduct }) => {
                         const cartInfo = cartInfos.find((cart) => restProduct.id === cart.productId); 
 
                         if(!cartInfo) return undefined;
@@ -46,13 +46,13 @@ export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, produ
                                 if(user) {
                                     updateDocumentField(cartInfo.id, 'quantidade', cartInfo.quantidade = restProduct.estoque);
                                 } else {
-                                    const fullProduct = { categoria, desconto, descricao, image, lancamento, ...restProduct };
+                                    const fullProduct = { desconto, descricao, lancamento, ...restProduct };
                                     fixQuantityByStockInLocalStorage(fullProduct);
                                 }
                             }
                             return {
                                 ...restProduct,
-                                image: image[0],
+                                image: restProduct.image[0],
                                 ...cartInfo,
                             };}
                         

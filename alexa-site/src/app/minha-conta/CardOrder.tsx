@@ -5,6 +5,7 @@ import {  OrderType } from '../utils/types';
 export default function CardOrder({ pedido } : { pedido: OrderType }) {
     return (
         <div className='flex flex-col items-center justify-center w-full gap-2  p-4  shadow-lg shadowColor rounded-lg '>
+            <p>{ pedido.data }</p> 
             <div className='w-full border-2 border-solid border-pink-100'></div>
             <div className='relative h-24 flex self-start'>
                 { pedido.cartSnapShot.map((item, index) => {

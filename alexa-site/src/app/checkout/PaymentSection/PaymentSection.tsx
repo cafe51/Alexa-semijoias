@@ -7,6 +7,7 @@ import PixPaymentSection from './PixPaymentSection';
 import { OrderType, UseCheckoutStateType } from '@/app/utils/types';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useCollection } from '@/app/hooks/useCollection';
+import { formatDateToCustomString } from '@/app/utils/formatDateToCustomString';
 
 interface PaymentSectionProps {
     state: UseCheckoutStateType;
@@ -23,12 +24,14 @@ export default function PaymentSection({  cartPrice, state, handleSelectedPaymen
         const { address, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
         const deliveryPrice = deliveryOption?.price || 0;
         const cartPrice = carrinho?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0) || 0;
-        // const totalQuantity = carrinho?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) || 0;
+        const totalQuantity = carrinho?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) || 0;
+        const currentDate = new Date();
+        const formattedDate = formatDateToCustomString(currentDate);
 
-        if(userInfo && carrinho) {
+        if(userInfo && carrinho && address && deliveryOption && selectedDeliveryOption && selectedPaymentOption) {
             const newOrder = {
                 endereco: address,
-                cartSnapShot: carrinho.map(({ image, nome, preco, productId }) => ({ categoria: /* cartItem.categoria */ 'anel', image, nome, preco, productId })),
+                cartSnapShot: carrinho.map(({ image, nome, categoria, preco, productId }) => ({ categoria: categoria, image, nome, preco, productId })),
                 status: 'pendente',
                 userId: userInfo.userId,
                 valor: {
@@ -36,23 +39,15 @@ export default function PaymentSection({  cartPrice, state, handleSelectedPaymen
                     soma: cartPrice,
                     total: cartPrice + deliveryPrice,
                 },
-                
-                // paymentOption,
-                // deliveryOption: deliveryOption,
-                // data,
-                // totalQuantity,
-
+                totalQuantity,
+                paymentOption: selectedPaymentOption,
+                deliveryOption: selectedDeliveryOption,
+                data: formattedDate,
             };
             addDocument(newOrder);
         } else {
             console.error('Erro ao acessar dados do usuário ou do carrinho');
         }
-        console.log({
-            // newOrder,
-            deliveryOption,
-            selectedDeliveryOption,
-            selectedPaymentOption,
-        });
     }; 
 
     if (editingAddressMode || !(selectedDeliveryOption && deliveryOption)) return <PaymentSectionPending />;
@@ -81,7 +76,6 @@ export default function PaymentSection({  cartPrice, state, handleSelectedPaymen
         if (selectedPaymentOption === 'Pix') {
             return (
                 <PixPaymentSection handleSelectedPaymentOption={ handleSelectedPaymentOption }/>
-
             );
         } 
     };
@@ -92,11 +86,6 @@ export default function PaymentSection({  cartPrice, state, handleSelectedPaymen
             <LargeButton color='green' loadingButton={ false } onClick={ finishPayment }>
                 Finalizar Compra
             </LargeButton>
-            { /* <button
-                className="bg-green-500 p-2 disabled:bg-yellow-100 disabled:text-gray-400 w-full mt-4"
-            >
-              Finalizar
-            </button> */ }
         </section>
     );
 }
