@@ -1,9 +1,12 @@
 // app/checkout/PaymentSection/PaymentSection.tsx
+import LargeButton from '@/app/components/LargeButton';
 import ChoosePaymentOptionSection from './ChoosePaymentOptionSection';
 import CreditPaymentSection from './CreditPaymentSection';
 import PaymentSectionPending from './PaymentSectionPending';
 import PixPaymentSection from './PixPaymentSection';
-import { UseCheckoutStateType } from '@/app/utils/types';
+import { OrderType, UseCheckoutStateType } from '@/app/utils/types';
+import { useUserInfo } from '@/app/hooks/useUserInfo';
+import { useCollection } from '@/app/hooks/useCollection';
 
 interface PaymentSectionProps {
     state: UseCheckoutStateType;
@@ -11,7 +14,47 @@ interface PaymentSectionProps {
     handleSelectedPaymentOption: (paymentOption: string | null) => void;
 }
 
-export default function PaymentSection({  cartPrice, state: { editingAddressMode, deliveryOption, selectedDeliveryOption, selectedPaymentOption }, handleSelectedPaymentOption }: PaymentSectionProps) {
+export default function PaymentSection({  cartPrice, state, handleSelectedPaymentOption }: PaymentSectionProps) {
+    const { userInfo, carrinho } = useUserInfo();
+    const { addDocument  } = useCollection<OrderType>('pedidos');
+    const { editingAddressMode, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
+
+    const finishPayment = () => {
+        const { address, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
+        const deliveryPrice = deliveryOption?.price || 0;
+        const cartPrice = carrinho?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0) || 0;
+        // const totalQuantity = carrinho?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) || 0;
+
+        if(userInfo && carrinho) {
+            const newOrder = {
+                endereco: address,
+                cartSnapShot: carrinho.map(({ image, nome, preco, productId }) => ({ categoria: /* cartItem.categoria */ 'anel', image, nome, preco, productId })),
+                status: 'pendente',
+                userId: userInfo.userId,
+                valor: {
+                    frete: deliveryPrice,
+                    soma: cartPrice,
+                    total: cartPrice + deliveryPrice,
+                },
+                
+                // paymentOption,
+                // deliveryOption: deliveryOption,
+                // data,
+                // totalQuantity,
+
+            };
+            addDocument(newOrder);
+        } else {
+            console.error('Erro ao acessar dados do usuário ou do carrinho');
+        }
+        console.log({
+            // newOrder,
+            deliveryOption,
+            selectedDeliveryOption,
+            selectedPaymentOption,
+        });
+    }; 
+
     if (editingAddressMode || !(selectedDeliveryOption && deliveryOption)) return <PaymentSectionPending />;
 
     const renderPaymentSection = () => {
@@ -43,17 +86,17 @@ export default function PaymentSection({  cartPrice, state: { editingAddressMode
         } 
     };
 
-
-
-
     return (
         <section className="border p-4 rounded-md shadow-md max-w-sm mx-auto bg-white w-full">
             { renderPaymentSection() }
-            <button
+            <LargeButton color='green' loadingButton={ false } onClick={ finishPayment }>
+                Finalizar Compra
+            </LargeButton>
+            { /* <button
                 className="bg-green-500 p-2 disabled:bg-yellow-100 disabled:text-gray-400 w-full mt-4"
             >
               Finalizar
-            </button>
+            </button> */ }
         </section>
     );
 }

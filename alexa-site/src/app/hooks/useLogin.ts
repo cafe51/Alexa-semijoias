@@ -1,5 +1,4 @@
 // app/hooks/useLogin.ts
-
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../firebase/config';

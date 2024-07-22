@@ -4,12 +4,13 @@ import { useLogout } from '@/app/hooks/useLogout';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 
 interface AccountSectionFilledProps {
+    nome: string;
     email: string;
     cpf: string;
     telefone: string;
   }
 
-export default function AccountSectionFilled({ email, cpf, telefone }: AccountSectionFilledProps) {
+export default function AccountSectionFilled({ nome, email, cpf, telefone }: AccountSectionFilledProps) {
     const { logout } = useLogout();
     const { carrinho } = useUserInfo();
     const { setLocalCart } = useLocalStorage();
@@ -42,6 +43,7 @@ export default function AccountSectionFilled({ email, cpf, telefone }: AccountSe
             </div>
 
             <div className='flex flex-col p-2'>
+                <p>{ nome }</p>
                 <p>{ email }</p>
                 <p>{ cpf }</p>
                 <p>{ telefone }</p>
