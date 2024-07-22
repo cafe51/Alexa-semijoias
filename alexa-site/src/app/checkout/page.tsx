@@ -30,11 +30,13 @@ export default function Checkout() {
     } = useCheckoutState();
 
     useEffect(() => {
-        if (carrinho === null) {
+        if (!carrinho || carrinho.length < 1) {
             // Simulate fetching cart data or some async operation
+            setLoadingScreen(true);
+            setIsCartLoading(true);
             setTimeout(() => {
                 setIsCartLoading(false);
-            }, 2000); 
+            }, 8000); 
         } else {
             setIsCartLoading(false);
         }
@@ -72,7 +74,7 @@ export default function Checkout() {
     return (
         <main className='flex flex-col w-full gap-2 relative'>
             <OrderSummarySection carrinho={ carrinho } cartPrice={ cartPrice } handleShowFullOrderSummary={ handleShowFullOrderSummary }state={ state }/>
-            <AccountSection handleShowLoginSection={ handleShowLoginSection } state={ state } />
+            <AccountSection handleShowLoginSection={ handleShowLoginSection } state={ state } setIsCartLoading={ setIsCartLoading }/>
             <AddressSection handleAddressChange={ handleAddressChange } handleEditingAddressMode={ handleEditingAddressMode } state={ state } />
             <DeliveryPriceSection deliveryOptions={ deliveryOptions } handleSelectedDeliveryOption={ handleSelectedDeliveryOption } state={ state } />
             <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>

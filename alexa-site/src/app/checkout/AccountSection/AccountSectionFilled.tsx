@@ -3,13 +3,28 @@ import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { useLogout } from '@/app/hooks/useLogout';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 
-export default function AccountSectionFilled({ email, cpf, telefone }: {email: string, cpf: string, telefone: string}) {
+interface AccountSectionFilledProps {
+    email: string;
+    cpf: string;
+    telefone: string;
+  }
+
+export default function AccountSectionFilled({ email, cpf, telefone }: AccountSectionFilledProps) {
     const { logout } = useLogout();
     const { carrinho } = useUserInfo();
     const { setLocalCart } = useLocalStorage();
 
     const changeAccount = () => {
-        carrinho ? setLocalCart(carrinho) : '';
+        if(carrinho && carrinho.length > 0) {
+            const cartInfos = carrinho.map(({ productId, quantidade }) => {
+                return {
+                    productId,
+                    quantidade,
+                    userId: 'guest',
+                };
+            });
+            setLocalCart(cartInfos);
+        }
         logout();
     };
 

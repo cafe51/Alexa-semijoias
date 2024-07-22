@@ -7,9 +7,10 @@ import LargeButton from './LargeButton';
 interface LoginFormProps {
     loadingButton: boolean
     setLoadingButton: Dispatch<SetStateAction<boolean>>
+    onClick: () => void;
 }
 
-export default function LoginForm({ loadingButton, setLoadingButton } : LoginFormProps) {
+export default function LoginForm({ loadingButton, setLoadingButton, onClick } : LoginFormProps) {
     const { error, login } = useLogin();
     const [loadingComponent, setLoadingComponent] = useState(true);
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
@@ -102,7 +103,7 @@ export default function LoginForm({ loadingButton, setLoadingButton } : LoginFor
                     { loginErrorMessage }
                 </p>
             ) }
-            <LargeButton color='green' disabled={ isButtonDisabled() } loadingButton={ loadingButton }>
+            <LargeButton color='green' disabled={ isButtonDisabled() } loadingButton={ loadingButton } onClick={ onClick }>
                 Continuar
             </LargeButton>
             { error && <p className='text-red-500'>{ error }</p> }

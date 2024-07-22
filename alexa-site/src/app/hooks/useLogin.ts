@@ -17,17 +17,17 @@ export const useLogin = () => {
     const syncLocalCartToFirebase = async(userId: string) => {
         try {
             const carrinhoItems = await getAllDocuments([{ field: 'userId', operator: '==', value: userId }]);
-
-            await Promise.all(carrinhoItems.map(item => deleteCartItemFromDb(item.id)));
-
             const localCart: CartInfoType[] = getLocalCart();
-
-            await Promise.all(localCart.map((item) => {
-                item.userId = userId;
-                return createNewCart(item);
-            }));
+            
+            if(localCart && localCart.length > 0) {    
+                await Promise.all(carrinhoItems.map(item => deleteCartItemFromDb(item.id)));
+                await Promise.all(localCart.map((item) => {
+                    item.userId = userId;
+                    return createNewCart(item);
+                }));
+                setLocalCart([]); 
+            }
         
-            setLocalCart([]); 
         } catch (error) {
             console.error('Erro ao sincronizar carrinho:', error);
             setError('Ocorreu um erro ao sincronizar o carrinho. Por favor, tente novamente.'); 
