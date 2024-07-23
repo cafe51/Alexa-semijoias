@@ -9,7 +9,6 @@ import AddressSection from './AddressSection/AddressSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 import PaymentSection from './PaymentSection/PaymentSection';
 import OrderSummarySection from './OrderSummarySection/OrderSummarySection';
-// import LargeButton from '../components/LargeButton';
 
 export default function Checkout() {
     const router = useRouter();
@@ -79,18 +78,6 @@ export default function Checkout() {
             <AddressSection handleAddressChange={ handleAddressChange } handleEditingAddressMode={ handleEditingAddressMode } state={ state } />
             <DeliveryPriceSection deliveryOptions={ deliveryOptions } handleSelectedDeliveryOption={ handleSelectedDeliveryOption } state={ state } />
             <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
-            { /* <LargeButton color='green' loadingButton={ loadingScreen } onClick={ () => {
-                const { address, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
-                const newOrder = {
-                    address,
-                    deliveryOption,
-                    selectedDeliveryOption,
-                    selectedPaymentOption,
-                };
-                console.log(newOrder);
-            } }>
-                Finalizar Compra
-            </LargeButton> */ }
         </main>
     );
 }
