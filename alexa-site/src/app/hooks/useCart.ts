@@ -10,8 +10,7 @@ export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, produ
     const { user } = useAuthContext();
     // const { fixQuantityByStockInLocalStorage } = useLocalStorage();
 
-
-    const { updateDocumentField } = useCollection(
+    const { updateDocumentField, deleteDocument } = useCollection(
         'carrinhos',
     );
     const [mappedProducts, setProdutos] = useState<ProductCartType[] | null>(null);
@@ -24,11 +23,34 @@ export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, produ
         if (cartItem && cartItem.quantidade > product.estoque) {
             cartItem.quantidade = product.estoque;
         }
+
+        if (cartItem && cartItem.quantidade < 1) {
+            localCart = localCart.filter((element) => element != cartItem);
+        }
         
         localStorage.setItem('cart', JSON.stringify(localCart));
         console.warn('Quantidade do produto do produto', product.id ,' do carrinho corrigida.');
         setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
         return;
+    };
+
+    const fixQuantityByStockInFirebase = (
+        cartInfo: CartInfoType & DocumentData,
+        product: {
+            categoria: string;
+            id: string;
+            exist: boolean;
+            nome: string;
+            image: string[];
+            preco: number;
+            estoque: number;
+    }) => {
+        if(cartInfo.quantidade > product.estoque) {
+            updateDocumentField(cartInfo.id, 'quantidade', cartInfo.quantidade = product.estoque);
+        }
+        if (cartInfo.quantidade < 1) {
+            deleteDocument(cartInfo.id);
+        }
     };
 
     useEffect(() => {
@@ -42,10 +64,11 @@ export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, produ
 
                         if(!cartInfo) return undefined;
                         if(cartInfo) {
-                            if (cartInfo.quantidade > restProduct.estoque) {
+                            if ((cartInfo.quantidade > restProduct.estoque) || cartInfo.quantidade < 1) {
                                 if(user) {
-                                    updateDocumentField(cartInfo.id, 'quantidade', cartInfo.quantidade = restProduct.estoque);
-                                } else {
+                                    fixQuantityByStockInFirebase(cartInfo, restProduct);
+                                }
+                                else {
                                     const fullProduct = { desconto, descricao, lancamento, ...restProduct };
                                     fixQuantityByStockInLocalStorage(fullProduct);
                                 }
