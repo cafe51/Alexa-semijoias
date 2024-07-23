@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import {  OrderType } from '../utils/types';
 import formatPrice from '../utils/formatPrice';
+import { Dispatch, SetStateAction } from 'react';
 
 function CardImages({ pedido }: { pedido: OrderType }) {
     return(
@@ -11,7 +12,7 @@ function CardImages({ pedido }: { pedido: OrderType }) {
                     <div
                         key={ index }
                         className={ 'absolute rounded-lg w-24 h-24 overflow-hidden' }
-                        style={ { left: index * (80 - (index ** 2.2 <= 80 ? index ** 2.2 : 80)), zIndex: pedido.cartSnapShot.length - index } }
+                        style={ { left: index * (80 - (index ** 2.4 <= 70 ? index ** 2.4 : 80)), zIndex: pedido.cartSnapShot.length - index } }
                     >
                         <Image
                             src={ item.image }
@@ -29,9 +30,22 @@ function CardImages({ pedido }: { pedido: OrderType }) {
     );
 }
 
-export default function CardOrder({ pedido }: { pedido: OrderType }) {
+interface CardOrderlProps {
+    pedido: OrderType
+    setShowFullOrderModal: Dispatch<SetStateAction<{
+        pedido?: OrderType;
+    }>>
+}
+
+
+export default function CardOrder({ pedido, setShowFullOrderModal }: CardOrderlProps) {
     return (
-        <div className='flex flex-col bg-white text-sm w-full gap-2 p-4  shadow-lg shadowColor rounded-lg '>
+        <div
+            className='flex flex-col bg-white text-sm w-full gap-2 p-4  shadow-lg shadowColor rounded-lg '
+            onClick={ () => setShowFullOrderModal({
+                pedido: pedido,
+            }) }
+        >
             <div className="mb-2 text-orange-500 font-semibold">
                 { pedido.status }
             </div>

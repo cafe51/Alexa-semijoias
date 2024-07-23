@@ -1,9 +1,8 @@
 // app/checkout/OrderSummarySection/SummaryCard.tsx
-
-import { ProductCartType } from '@/app/utils/types';
+import { CartHistoryType, ProductCartType } from '@/app/utils/types';
 import Image from 'next/image';
 
-export default function SummaryCard({ produto }: { produto: ProductCartType }) {
+export default function SummaryCard({ produto }: { produto: ProductCartType | CartHistoryType }) {
 
     return (
         <div className='flex flex-col gap-4 w-full h-full p-4 bg-white rounded-lg border-b' >

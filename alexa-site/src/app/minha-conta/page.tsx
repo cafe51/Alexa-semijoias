@@ -1,6 +1,5 @@
 // app/minha-conta/page.tsx
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import Link from 'next/link';
@@ -11,14 +10,16 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import { OrderType } from '../utils/types';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import DeleteMySelfForm from './DeleteMySelfForm';
+import FullOrderModal from './FullOrderModal';
 
 export default function ClientProfile() {
     const{ user } = useAuthContext();
     const [deleteUseForm, setDeleteUseForm] = useState(false);
-    // const  { userInfo, pedidos } = useUserInfo();
-    const  userInfo = useUserInfo()?.userInfo;
-    const  pedidos = useUserInfo()?.pedidos;
+    const  { userInfo, pedidos } = useUserInfo();
     const router = useRouter();
+    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: OrderType }>({
+        pedido: undefined,
+    });
     const { error: deleteUserError } = useDeleteUser();
 
     useEffect(() => {
@@ -51,13 +52,13 @@ export default function ClientProfile() {
 
     const listaDeCompras = (
         pedidos?.map((pedido: OrderType, index: number) => {
-            return (<CardOrder pedido={ pedido } key={ index } />);
+            return (<CardOrder pedido={ pedido } key={ index } setShowFullOrderModal={ setShowFullOrderModal } />);
         })
     );
 
-
     return (
         <main className='h-full'>
+            { showFullOrderModal.pedido ? <FullOrderModal setShowFullOrderModal={ setShowFullOrderModal } pedido={ showFullOrderModal.pedido } /> : '' }
             <div className='flex gap-2 h-full'>
                 <Link href={ '/' } className='font-normal'>Início</Link>
                 <span className='font-normal'>{ '>' }</span>
@@ -66,18 +67,18 @@ export default function ClientProfile() {
             <h1>Minha conta</h1>
             <div className='flex flex-col w-full gap-4'>
 
-                <section className='flex flex-col  w-full'>
-                    <div className='flex justify-between items-center'>
+                <section className='flex flex-col w-full'>
+                    <div className='flex items-center'>
                         <h2>Dados</h2>
-                        <span className='textColored'>Editar</span>
                     </div>
                     <div className='w-full border-2 border-solid border-pink-100'></div>
-                    <div className='flex p-4 w-full shadow-lg rounded-lg shadowColor'>
+                    <div className='flex justify-between  p-4 w-full shadow-lg rounded-lg shadowColor bg-white '>
                         <div className='flex flex-col gap-1'>
                             <h3>{ userInfo?.nome }</h3>
                             <h3>{ userInfo?.email }</h3>
                             <h3>{ userInfo?.tel }</h3>
                         </div>
+                        <span className='textColored'>Editar</span>
                     </div>
                 </section>
 

@@ -73,8 +73,10 @@ export type CartInfoType = {
 }
 
 export type CartHistoryType = {
+    id: string;
     categoria: string,
     productId: string,
+    quantidade: number,
     nome: string,
     image: string,
     preco: number

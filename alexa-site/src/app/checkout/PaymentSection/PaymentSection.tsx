@@ -31,7 +31,7 @@ export default function PaymentSection({  cartPrice, state, handleSelectedPaymen
         if(userInfo && carrinho && address && deliveryOption && selectedDeliveryOption && selectedPaymentOption) {
             const newOrder = {
                 endereco: address,
-                cartSnapShot: carrinho.map(({ image, nome, categoria, preco, productId }) => ({ categoria: categoria, image, nome, preco, productId })),
+                cartSnapShot: carrinho.map(({ image, nome, categoria, preco, productId, quantidade, id }) => ({ categoria: categoria, image, nome, preco, productId, quantidade, id })),
                 status: 'pendente',
                 userId: userInfo.userId,
                 valor: {
