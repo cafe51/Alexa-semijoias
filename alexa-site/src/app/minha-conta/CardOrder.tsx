@@ -30,7 +30,7 @@ function CardImages({ pedido }: { pedido: OrderType }) {
     );
 }
 
-interface CardOrderlProps {
+interface CardOrderProps {
     pedido: OrderType
     setShowFullOrderModal: Dispatch<SetStateAction<{
         pedido?: OrderType;
@@ -38,7 +38,7 @@ interface CardOrderlProps {
 }
 
 
-export default function CardOrder({ pedido, setShowFullOrderModal }: CardOrderlProps) {
+export default function CardOrder({ pedido, setShowFullOrderModal }: CardOrderProps) {
     return (
         <div
             className='flex flex-col bg-white text-sm w-full gap-2 p-4  shadow-lg shadowColor rounded-lg '
