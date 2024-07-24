@@ -1,7 +1,5 @@
 //app/components/ProductsList.tsx
-
 'use client';
-
 import { useEffect, useMemo, useState } from 'react';
 import Card from './Card';
 import { useSnapshot } from '../hooks/useSnapshot';
@@ -10,8 +8,11 @@ import { FilterOption, ProductType } from '../utils/types';
 export default function ProductsList({ productType }: { productType: string }) {
 
     const pedidosFiltrados = useMemo<FilterOption[]>(() => 
-        [{ field: 'categoria', operator: '==', value: productType }],
-    [productType], // Só recriar a query quando 'productType' mudar
+        [
+            { field: 'estoque', operator: '>', value: 0 },
+            { field: 'categoria', operator: '==', value: productType },
+        ],
+    [productType], 
     );
 
     const { documents } = useSnapshot<ProductType>(
