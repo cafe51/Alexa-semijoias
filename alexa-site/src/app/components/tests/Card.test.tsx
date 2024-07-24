@@ -1,5 +1,4 @@
 // Card.test.tsx
-
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Card from '../Card';
 import { ProductType } from '@/app/utils/types';
@@ -51,7 +50,7 @@ describe('Card Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Card cardData={ productData } productType="aneis" />
+                        <Card productData={ productData } productType="aneis" />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -71,7 +70,7 @@ describe('Card Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Card cardData={ null } productType="aneis" />
+                        <Card productData={ null } productType="aneis" />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -92,7 +91,7 @@ describe('Card Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Card cardData={ productData } productType="aneis" />
+                        <Card productData={ productData } productType="aneis" />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -142,7 +141,7 @@ describe('Card Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Card cardData={ productData } productType="aneis" />
+                        <Card productData={ productData } productType="aneis" />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );

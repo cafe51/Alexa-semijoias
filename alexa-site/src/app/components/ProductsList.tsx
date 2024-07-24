@@ -6,7 +6,7 @@ import { useSnapshot } from '../hooks/useSnapshot';
 import { FilterOption, ProductType } from '../utils/types';
 
 export default function ProductsList({ productType }: { productType: string }) {
-
+    const [isLoading, setIsLoading] = useState(true);
     const pedidosFiltrados = useMemo<FilterOption[]>(() => 
         [
             { field: 'estoque', operator: '>', value: 0 },
@@ -19,7 +19,6 @@ export default function ProductsList({ productType }: { productType: string }) {
         'produtos', 
         pedidosFiltrados, 
     );
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
@@ -38,14 +37,13 @@ export default function ProductsList({ productType }: { productType: string }) {
 
     if(documents && documents.length <= 0) return  <h1>Ainda não há produtos nessa categoria</h1>;
 
-
     return (
         <main>
             <h2>{ productType.charAt(0).toUpperCase() + productType.slice(1) }</h2>
             { documents && documents[0] && (
                 <div className=" flex flex-wrap justify-center gap-2 ">
-                    { documents.map((productsData) => {
-                        return <Card key={ productsData.id } productType={ productType } cardData={ productsData }  />;
+                    { documents.map((productData) => {
+                        return <Card key={ productData.id } productType={ productType } productData={ productData }  />;
                     }) }
                 </div>
             ) }
