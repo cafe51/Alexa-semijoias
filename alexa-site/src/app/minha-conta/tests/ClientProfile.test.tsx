@@ -39,13 +39,22 @@ const mockOrders: OrderType[] = [
         endereco: {
             cep: '12345678',
             bairro: 'Bairro Teste',
-            rua: 'Rua Teste',
-            cidade: 'Cidade Teste',
-            estado: 'Estado Teste',
+            logradouro: 'Rua Teste',
+            localidade: 'Cidade Teste',
+            uf: 'Estado Teste',
             numero: '123',
             complemento: 'Apto 456',
             referencia: 'Próximo ao mercado',
+            ddd: '',
+            gia: '',
+            ibge: '',
+            siafi: '',
+            unidade: '',
         },
+        userId: '',
+        totalQuantity: 2,
+        paymentOption: '',
+        deliveryOption: '',
     },
     {
         cartSnapShot: [],
@@ -55,13 +64,22 @@ const mockOrders: OrderType[] = [
         endereco: {
             cep: '87654321',
             bairro: 'Outro Bairro',
-            rua: 'Outra Rua',
-            cidade: 'Outra Cidade',
-            estado: 'Outro Estado',
+            logradouro: 'Outra Rua',
+            localidade: 'Outra Cidade',
+            uf: 'Outro Estado',
             numero: '456',
             complemento: 'Casa',
             referencia: 'Em frente à padaria',
+            ddd: '',
+            gia: '',
+            ibge: '',
+            siafi: '',
+            unidade: '',
         },
+        userId: '',
+        totalQuantity: 4,
+        paymentOption: '',
+        deliveryOption: '',
     },
 ];
 
@@ -76,6 +94,8 @@ describe('ClientProfile Component', () => {
 
     it('redireciona para a página de login se o usuário não estiver autenticado', async() => {
         (useAuthContext as jest.Mock).mockReturnValue({ user: undefined, authIsReady: false }); 
+        (useUserInfo as jest.Mock).mockReturnValue({ userInfo: undefined, carrinho: [], pedidos: undefined });
+
 
         render(
             <AuthContextProvider>

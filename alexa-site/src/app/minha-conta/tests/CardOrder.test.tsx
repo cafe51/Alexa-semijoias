@@ -20,12 +20,18 @@ const mockOrder: OrderType = {
             nome: 'Produto 1',
             image: '/imagem1.jpg',
             preco: 20,
+            categoria: '',
+            productId: '',
+            quantidade: 4,
         },
         {
             id: 'prod2',
             nome: 'Produto 2',
             image: '/imagem2.jpg',
             preco: 30,
+            categoria: '',
+            productId: '',
+            quantidade: 3,
         },
     ],
     data: '01/04/2023',
@@ -34,29 +40,41 @@ const mockOrder: OrderType = {
     endereco: {
         cep: '12345678',
         bairro: 'Bairro Teste',
-        rua: 'Rua Teste',
-        cidade: 'Cidade Teste',
-        estado: 'Estado Teste',
+        logradouro: 'Rua Teste',
+        localidade: 'Cidade Teste',
+        uf: 'Estado Teste',
         numero: '123',
         complemento: 'Apto 456',
         referencia: 'Próximo ao mercado',
+        ddd: '',
+        gia: '',
+        ibge: '',
+        siafi: '',
+        unidade: '',
     },
+    userId: '',
+    totalQuantity: 6,
+    paymentOption: '',
+    deliveryOption: '',
 };
 
 describe('CardOrder Component', () => {
     it('renderiza os detalhes do pedido', async() => {
+        const setShowFullOrderModalMock = jest.fn() as jest.MockedFunction<
+            React.Dispatch<React.SetStateAction<{ pedido?: OrderType }>>
+        >;
         await act(async() => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <CardOrder pedido={ mockOrder } />
+                        <CardOrder setShowFullOrderModal={ setShowFullOrderModalMock } pedido={ mockOrder } />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
         });
 
         expect(screen.getByText('01/04/2023')).toBeInTheDocument();
-        expect(screen.getByText('R$ 60.00')).toBeInTheDocument();
+        expect(screen.getByText('R$ 60,00')).toBeInTheDocument();
         expect(screen.getByText('Entregue')).toBeInTheDocument();
 
         const productImages = screen.getAllByTestId('product-image');
