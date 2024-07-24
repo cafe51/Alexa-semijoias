@@ -1,5 +1,4 @@
 //app/components/Card.tsx
-
 import Image from 'next/image';
 import { CartInfoType, ProductType } from '../utils/types';
 import Link from 'next/link';
@@ -10,10 +9,13 @@ import { useCollection } from '../hooks/useCollection';
 import { User } from 'firebase/auth';
 import { DocumentData } from 'firebase/firestore';
 import formatPrice from '../utils/formatPrice';
+import SmallButton from './SmallButton';
+import { useState } from 'react';
 
 export default function Card({ cardData, productType }: { cardData: ProductType | null, productType: string }) {
     const { addItemToLocalStorageCart } = useLocalStorage();
     const { addDocument, updateDocumentField } = useCollection('carrinhos');
+    const  [isLoadingButton, setIsloadingButton ] = useState(false);
     const { user } = useAuthContext();
     const { carrinho } = useUserInfo();
 
@@ -39,6 +41,7 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
 
     const handleAddToCart = () => {
         try{
+            setIsloadingButton(true);
             if (!user) {
                 // Usuário não está logado, salva no localStorage
                 addItemToLocalStorageCart(cardData);
@@ -49,6 +52,11 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
             }
         } catch(error){
             console.log('erro ao tentar adicionar ao carrinho', error);
+        }
+        finally {
+            setTimeout(() => {
+                setIsloadingButton(false);
+            }, 1000);
         }
         
     };
@@ -84,12 +92,10 @@ export default function Card({ cardData, productType }: { cardData: ProductType 
                     <p className='font-bold text-xl'>{ formatPrice(cardData.preco / 6) }</p>
                     <p> sem juros</p>
                 </div>
-                <button
-                    onClick={ handleAddToCart }
-                    disabled={ isDisabled() }
-                    className='rounded-full bg-green-500 p-4 px-6 font-bold text-white disabled:bg-green-200'>
-          COMPRAR
-                </button>
+                <SmallButton  color='green' loadingButton={ isLoadingButton } disabled={ isDisabled() } onClick={ handleAddToCart }>
+                    COMPRAR
+                </SmallButton> 
+
             </section>
 
         </div>
