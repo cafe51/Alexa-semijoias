@@ -15,12 +15,16 @@ interface PaymentSectionProps {
     handleSelectedPaymentOption: (paymentOption: string | null) => void;
 }
 
-export default function PaymentSection({  cartPrice, state, handleSelectedPaymentOption }: PaymentSectionProps) {
+export default function PaymentSection({ cartPrice, state, handleSelectedPaymentOption }: PaymentSectionProps) {
     const { userInfo, carrinho } = useUserInfo();
     const { addDocument  } = useCollection<OrderType>('pedidos');
+    const { updateDocumentField  } = useCollection('produtos');
+    const { deleteDocument: deleteCartItemFromDb } = useCollection('carrinhos');
+
+
     const { editingAddressMode, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
 
-    const finishPayment = () => {
+    const finishPayment = async() => {
         const { address, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
         const deliveryPrice = deliveryOption?.price || 0;
         const cartPrice = carrinho?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0) || 0;
@@ -45,6 +49,10 @@ export default function PaymentSection({  cartPrice, state, handleSelectedPaymen
                 data: formattedDate,
             };
             addDocument(newOrder);
+
+            await Promise.all(carrinho.map(item => updateDocumentField(item.productId, 'estoque', item.estoque - item.quantidade)));
+            await Promise.all(carrinho.map(item => deleteCartItemFromDb(item.id)));
+
         } else {
             console.error('Erro ao acessar dados do usuário ou do carrinho');
         }
