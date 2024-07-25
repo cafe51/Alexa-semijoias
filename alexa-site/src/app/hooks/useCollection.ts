@@ -31,7 +31,7 @@ export const useCollection = <T>(collectionName: string) => {
         };
     };
 
-    const getAllDocuments = async(filterOptions: FilterOption[] | null): Promise<(T & WithFieldValue<DocumentData>)[]> => {
+    const getAllDocuments = async(filterOptions?: FilterOption[] | null): Promise<(T & WithFieldValue<DocumentData>)[]> => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
         if(filterOptions) {
