@@ -2,10 +2,7 @@
 
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, WithFieldValue  } from 'firebase/firestore';
-
-type FilterOption = { field: string, operator: '==' | 'in', value: string | number | string[] | number[] } ;
-
-
+import { FilterOption } from '../utils/types';
 
 export const useCollection = <T>(collectionName: string) => {
     const addDocument = async(dataObj: T & WithFieldValue<DocumentData>) => await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
@@ -15,7 +12,7 @@ export const useCollection = <T>(collectionName: string) => {
 
     const updateDocumentField = async(id: string, field: string, value: string | number | string[] | number[] | object) => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id);
-        console.log('chamou', id, field, value, docRef);
+        console.log('chamou update', id, field, value, docRef);
         await updateDoc(docRef, { [field]: value });
     };
 
