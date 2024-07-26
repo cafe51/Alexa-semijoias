@@ -12,7 +12,7 @@ import { useDeleteUser } from '../hooks/useDeleteUser';
 import DeleteMySelfForm from './DeleteMySelfForm';
 import FullOrderModal from './FullOrderModal';
 
-export default function ClientProfile() {
+export default function MyProfile() {
     const{ user } = useAuthContext();
     const [deleteUseForm, setDeleteUseForm] = useState(false);
     const  { userInfo, pedidos } = useUserInfo();

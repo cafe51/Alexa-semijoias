@@ -1,6 +1,6 @@
-// app/minha-conta/tests/ClientProfile.test.tsx
+// app/minha-conta/tests/MyProfile.test.tsx
 import { render, screen, act, waitFor, fireEvent } from '@testing-library/react';
-import ClientProfile from '../page';
+import MyProfile from '../page';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useUserInfo } from '../../hooks/useUserInfo';
 import { UserType, OrderType } from '../../utils/types';
@@ -83,7 +83,7 @@ const mockOrders: OrderType[] = [
     },
 ];
 
-describe('ClientProfile Component', () => {
+describe('MyProfile Component', () => {
     let mockPush: jest.Mock;
 
     beforeEach(() => {
@@ -100,7 +100,7 @@ describe('ClientProfile Component', () => {
         render(
             <AuthContextProvider>
                 <UserInfoProvider>
-                    <ClientProfile />
+                    <MyProfile />
                 </UserInfoProvider>
             </AuthContextProvider>,
         );
@@ -118,7 +118,7 @@ describe('ClientProfile Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <ClientProfile />
+                        <MyProfile />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -145,7 +145,7 @@ describe('ClientProfile Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <ClientProfile />
+                        <MyProfile />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -162,7 +162,7 @@ describe('ClientProfile Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <ClientProfile />
+                        <MyProfile />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -180,7 +180,7 @@ describe('ClientProfile Component', () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <ClientProfile />
+                        <MyProfile />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );

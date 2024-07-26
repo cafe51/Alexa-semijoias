@@ -5,6 +5,8 @@ import { FilterOption, OrderType, UserType } from '@/app/utils/types';
 import { useEffect, useMemo, useState } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 import formatPrice from '@/app/utils/formatPrice';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface UserCardProps {
     user?: UserType;
@@ -13,6 +15,7 @@ interface UserCardProps {
 }
 
 export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCardProps){
+    const pathname = usePathname();
     const [pedidos, setPedidos] = useState<OrderType[] | null>(null);
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
 
@@ -39,12 +42,12 @@ export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCa
     return (
         <div className="flex items-end flex-col border-b py-4 gap-4 ">
             <div className="flex justify-between items-center gap-4 w-full">
-                <a
-                    onClick={ () => console.log('pedidos do usuário', user?.nome, pedidos?.map((pedido) => pedido.valor.soma).reduce((a, b) => a + b, 0)) }
-                    href="#"
-                    className="text-blue-500">
+                <Link
+                    href={ `${ pathname }/${user?.id}` }
+                    className="text-blue-500"
+                >
                     { user?.nome }
-                </a>
+                </Link>
                 <div>
                     <button onClick={ onEmailClick } className="border p-2 rounded-full">
                         <CiMail size={ 24 }/>

@@ -1,6 +1,5 @@
 // app/context/UserInfoContext
 'use client';
-
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { CartInfoType, FilterOption, OrderType, ProductCartType, ProductType, UserType } from '../utils/types';
@@ -23,7 +22,6 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     
     const [productIds, setProductIds] = useState<string[]>(['']);
     
-    
     const { user } = useAuthContext();
     
     const userQuery = useMemo<FilterOption[]>(() => 
@@ -45,7 +43,6 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         'pedidos', 
         userQuery, 
     );
-
 
     const pedidosDoCarrinhoQuery = useMemo<FilterOption[]>(() => 
         [{ field: 'id', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }],
