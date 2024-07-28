@@ -33,7 +33,7 @@ export const useSignUp = () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { password, ...sigInDataWithoutPassword } = singInData;
 
-            await createNewUser({ ...sigInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' });
+            await createNewUser({ ...sigInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' }, res.user.uid);
 
             await syncLocalCartToFirebase(res.user.uid);
 

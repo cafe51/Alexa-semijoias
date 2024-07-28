@@ -1,11 +1,20 @@
 // app/hooks/useCollection.ts
 
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, WithFieldValue  } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, WithFieldValue, setDoc  } from 'firebase/firestore';
 import { FilterOption } from '../utils/types';
 
 export const useCollection = <T>(collectionName: string) => {
-    const addDocument = async(dataObj: T & WithFieldValue<DocumentData>) => await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
+    const addDocument = async(dataObj: T & WithFieldValue<DocumentData>, id?: string) => {
+        if (id) {
+            // Define o ID específico
+            const docRef = doc(projectFirestoreDataBase, collectionName, id);
+            await setDoc(docRef, dataObj);
+        } else {
+            // Gera um ID automaticamente
+            await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
+        }
+    };
 
   
     const deleteDocument = async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
