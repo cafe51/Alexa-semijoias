@@ -51,8 +51,8 @@ export default function MyProfile() {
     );
 
     const listaDeCompras = (
-        pedidos?.map((pedido: OrderType, index: number) => {
-            return (<CardOrder pedido={ pedido } key={ index } setShowFullOrderModal={ setShowFullOrderModal } />);
+        pedidos?.map((pedido: OrderType) => {
+            return (<CardOrder pedido={ pedido } key={ pedido.id } setShowFullOrderModal={ setShowFullOrderModal } />);
         })
     );
 
