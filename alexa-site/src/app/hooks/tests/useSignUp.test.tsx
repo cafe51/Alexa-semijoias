@@ -87,7 +87,7 @@ describe('useSignUp Hook', () => {
             userId: mockUser.uid,
             admin: false,
             cpf: '',
-        });
+        }, mockUser.uid);
         expect(mockLogin).toHaveBeenCalledWith(singInData.email, singInData.password);
 
         expect(result.current.error).toBeNull();
