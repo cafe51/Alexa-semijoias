@@ -89,6 +89,7 @@ type ValueType = {
 }
 
 export type OrderType = {
+    id: string,
     cartSnapShot: CartHistoryType[],
     status: string,
     valor: ValueType,
