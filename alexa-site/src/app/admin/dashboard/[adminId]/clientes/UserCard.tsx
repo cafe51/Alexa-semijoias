@@ -18,6 +18,8 @@ export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCa
     const pathname = usePathname();
     const [pedidos, setPedidos] = useState<OrderType[] | null>(null);
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
+    const { updateDocumentField } = useCollection<UserType>('usuarios');
+
 
     const userQuery = useMemo<FilterOption[]>(() => 
         [{ field: 'userId', operator: '==', value: user ? user.userId : 'invalidId' }],
@@ -39,14 +41,19 @@ export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCa
         return 0;
     };
 
+    if(!user) return <p>Loading...</p>;
+
     return (
         <div className="flex items-end flex-col border-b py-4 gap-4 ">
+            <button onClick={ () => {
+                updateDocumentField(user.id, 'id', user.userId);
+            } }>Change Id</button>
             <div className="flex justify-between items-center gap-4 w-full">
                 <Link
                     href={ `${ pathname }/${user?.id}` }
                     className="text-blue-500"
                 >
-                    { user?.nome }
+                    { user.nome }
                 </Link>
                 <div>
                     <button onClick={ onEmailClick } className="border p-2 rounded-full">

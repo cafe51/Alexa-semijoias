@@ -50,8 +50,8 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
             };
             addDocument(newOrder);
 
-            await Promise.all(carrinho.map(item => updateDocumentField(item.productId, 'estoque', item.estoque - item.quantidade)));
-            await Promise.all(carrinho.map(item => deleteCartItemFromDb(item.id)));
+            // await Promise.all(carrinho.map(item => updateDocumentField(item.productId, 'estoque', item.estoque - item.quantidade)));
+            // await Promise.all(carrinho.map(item => deleteCartItemFromDb(item.id)));
 
         } else {
             console.error('Erro ao acessar dados do usuário ou do carrinho');
