@@ -2,20 +2,20 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useCollection } from './useCollection';
 import { ProductCartType, CartInfoType, ProductType } from '../utils/types';
-import { DocumentData } from 'firebase/firestore';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useAuthContext } from './useAuthContext';
 // import { useLocalStorage } from './useLocalStorage';
 
-export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, products: (ProductType & DocumentData)[] | null, setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>) => {
+export const useCart = (cartInfos: (CartInfoType & WithFieldValue<DocumentData>)[] | null, products: (ProductType & WithFieldValue<DocumentData>)[] | null, setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>) => {
     const { user } = useAuthContext();
     // const { fixQuantityByStockInLocalStorage } = useLocalStorage();
 
     const { updateDocumentField, deleteDocument } = useCollection(
         'carrinhos',
     );
-    const [mappedProducts, setProdutos] = useState<ProductCartType[] | null>(null);
+    const [mappedProducts, setProdutos] = useState<(ProductCartType & WithFieldValue<DocumentData>)[] | null>(null);
 
-    const fixQuantityByStockInLocalStorage = (product: ProductType) => {
+    const fixQuantityByStockInLocalStorage = (product: ProductType & WithFieldValue<DocumentData>) => {
         // eslint-disable-next-line prefer-const
         let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
         const cartItem = localCart.find((item) => item.productId === product.id);
@@ -35,10 +35,9 @@ export const useCart = (cartInfos: (CartInfoType & DocumentData)[] | null, produ
     };
 
     const fixQuantityByStockInFirebase = (
-        cartInfo: CartInfoType & DocumentData,
+        cartInfo: CartInfoType & WithFieldValue<DocumentData>,
         product: {
             categoria: string;
-            id: string;
             exist: boolean;
             nome: string;
             image: string[];

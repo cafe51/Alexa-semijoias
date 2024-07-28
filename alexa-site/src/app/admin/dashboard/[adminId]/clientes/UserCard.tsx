@@ -7,22 +7,23 @@ import { useCollection } from '@/app/hooks/useCollection';
 import formatPrice from '@/app/utils/formatPrice';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 interface UserCardProps {
-    user?: UserType;
+    user?: UserType & WithFieldValue<DocumentData>;
     onEmailClick: () => void;
     onWhatsAppClick: () => void;
 }
 
 export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCardProps){
     const pathname = usePathname();
-    const [pedidos, setPedidos] = useState<OrderType[] | null>(null);
+    const [pedidos, setPedidos] = useState<(OrderType & WithFieldValue<DocumentData>)[] | null>(null);
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
     const { updateDocumentField } = useCollection<UserType>('usuarios');
 
 
     const userQuery = useMemo<FilterOption[]>(() => 
-        [{ field: 'userId', operator: '==', value: user ? user.userId : 'invalidId' }],
+        [{ field: 'userId', operator: '==', value: user ? user.id : 'invalidId' }],
     [user], // Só recriar a query quando 'user' mudar
     );
 

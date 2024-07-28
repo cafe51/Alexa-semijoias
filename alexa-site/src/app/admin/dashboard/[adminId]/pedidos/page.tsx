@@ -5,10 +5,11 @@ import { useCollection } from '@/app/hooks/useCollection';
 import { OrderType } from '@/app/utils/types';
 import SearchBar from '../clientes/SearchBar';
 import OrderList from './OrderList';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function DashBoardUsers() {
     const [searchQuery, setSearchQuery] = useState('');
-    const [pedidos, setPedidos] = useState<OrderType[] | undefined | null>(null);
+    const [pedidos, setPedidos] = useState<(OrderType & WithFieldValue<DocumentData>)[] | undefined | null>(null);
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
 
     useEffect(() => {

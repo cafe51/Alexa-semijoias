@@ -3,19 +3,20 @@ import { useCollection } from '@/app/hooks/useCollection';
 import CardOrder from '@/app/minha-conta/CardOrder';
 import FullOrderModal from '@/app/minha-conta/FullOrderModal';
 import { OrderType, UserType } from '@/app/utils/types';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ClientProfile({ params }: { params: { id: string } }) {
     const pathname = usePathname();
-    const [userData, setUserData ] = useState<UserType | null>(null);
+    const [userData, setUserData ] = useState<(UserType & WithFieldValue<DocumentData>) | null>(null);
     const [userOrders, setUserOrders] = useState<OrderType[] | null>(null);
     const [loadingOrders, setLoadingOrders] = useState(true);
     const { getDocumentById } = useCollection<UserType>('usuarios');
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
 
-    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: OrderType }>({
+    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: OrderType & WithFieldValue<DocumentData> }>({
         pedido: undefined,
     });
 
@@ -37,14 +38,17 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
 
     useEffect(() => {
         async function getUserOrders() {
-            setTimeout(async() => {
-                const res = await getAllDocuments([{ field: 'userId', operator: '==', value: userData ? userData.userId : 'invalidId' }]);
-                setUserOrders(res);
-                setLoadingOrders(false);
-
-            }, 1000);
+            if(userData) {
+                setTimeout(async() => {
+                    console.log('chamou o userDate getAll documents set timeout', userData);
+                    const res = await getAllDocuments([{ field: 'userId', operator: '==', value: userData.id }]);
+                    setUserOrders(res);
+                    setLoadingOrders(false);
+    
+                }, 1000);
+            }
+            setLoadingOrders(true);
         }
-        setLoadingOrders(true);
 
         getUserOrders();
 

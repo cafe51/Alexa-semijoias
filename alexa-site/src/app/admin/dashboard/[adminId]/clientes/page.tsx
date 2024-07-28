@@ -5,10 +5,11 @@ import SearchBar from './SearchBar';
 import UserList from './UserList';
 import { useCollection } from '@/app/hooks/useCollection';
 import { UserType } from '@/app/utils/types';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function DashBoardUsers() {
     const [searchQuery, setSearchQuery] = useState('');
-    const [users, setUsers] = useState<UserType[] | undefined | null>(null);
+    const [users, setUsers] = useState<(UserType & WithFieldValue<DocumentData>)[] | undefined | null>(null);
     const { getAllDocuments } = useCollection<UserType>('usuarios');
 
     useEffect(() => {

@@ -37,7 +37,7 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
                 endereco: address,
                 cartSnapShot: carrinho.map(({ image, nome, categoria, preco, productId, quantidade, id }) => ({ categoria: categoria, image, nome, preco, productId, quantidade, id })),
                 status: 'pendente',
-                userId: userInfo.userId,
+                userId: userInfo.id,
                 valor: {
                     frete: deliveryPrice,
                     soma: cartPrice,
@@ -50,8 +50,8 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
             };
             addDocument(newOrder);
 
-            // await Promise.all(carrinho.map(item => updateDocumentField(item.productId, 'estoque', item.estoque - item.quantidade)));
-            // await Promise.all(carrinho.map(item => deleteCartItemFromDb(item.id)));
+            await Promise.all(carrinho.map(item => updateDocumentField(item.productId, 'estoque', item.estoque - item.quantidade)));
+            await Promise.all(carrinho.map(item => deleteCartItemFromDb(item.id)));
 
         } else {
             console.error('Erro ao acessar dados do usuário ou do carrinho');

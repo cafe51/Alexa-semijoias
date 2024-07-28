@@ -1,9 +1,10 @@
 // UserList.tsx
 import { UserType } from '@/app/utils/types';
 import UserCard from './UserCard';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 interface UserListProps {
-    users?: UserType[];
+    users?: (UserType & WithFieldValue<DocumentData>)[];
     onEmailClick: (email: string) => void;
     onWhatsAppClick: (whatsapp: string) => void;
 }

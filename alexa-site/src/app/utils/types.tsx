@@ -15,7 +15,6 @@ export type ProductType = {
     categoria: string,
     descricao: string,
     desconto: number,
-    id: string,
     exist: boolean,
     nome: string,
     image: string[],
@@ -89,7 +88,6 @@ type ValueType = {
 }
 
 export type OrderType = {
-    id: string,
     cartSnapShot: CartHistoryType[],
     status: string,
     valor: ValueType,
@@ -103,16 +101,13 @@ export type OrderType = {
 }
 
 export type UserType = {
-    id: string,
     nome: string,
     email: string,
-
+    userId: string,
     cpf: string,
     tel: string,
     admin: boolean,
     
-    userId: string,
-
     address?: AddressType | null
 }
 

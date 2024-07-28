@@ -3,6 +3,7 @@
 import { useCollection } from '@/app/hooks/useCollection';
 import formatPrice from '@/app/utils/formatPrice';
 import { OrderType, UserType } from '@/app/utils/types';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 // import { usePathname } from 'next/navigation';
@@ -13,7 +14,7 @@ interface OrderCardProps {
 
 export default function OrderCard({ pedido }: OrderCardProps){
     const { getDocumentById } = useCollection<UserType>('usuarios');
-    const [user, setUser] = useState<UserType | null>(null);
+    const [user, setUser] = useState<(UserType & WithFieldValue<DocumentData>) | null>(null);
     // const pathname = usePathname();
 
     useEffect(() => {

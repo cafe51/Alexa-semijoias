@@ -4,13 +4,13 @@ import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useMemo,
 import { useAuthContext } from '../hooks/useAuthContext';
 import { CartInfoType, FilterOption, OrderType, ProductCartType, ProductType, UserType } from '../utils/types';
 import { useSnapshot } from '../hooks/useSnapshot';
-import { DocumentData } from 'firebase/firestore';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useCart } from '../hooks/useCart';
 
 interface IUserInfoContext {
     carrinho: (ProductCartType)[] | null;
-    userInfo: (UserType & DocumentData) | null;
-    pedidos: (OrderType & DocumentData)[] | null;
+    userInfo: (UserType & WithFieldValue<DocumentData>) | null;
+    pedidos: (OrderType & WithFieldValue<DocumentData>)[] | null;
     setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>;
 }
 export const UserInfoContext = createContext<IUserInfoContext | null>(null);

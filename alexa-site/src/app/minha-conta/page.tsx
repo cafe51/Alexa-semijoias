@@ -11,13 +11,14 @@ import { OrderType } from '../utils/types';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import DeleteMySelfForm from './DeleteMySelfForm';
 import FullOrderModal from './FullOrderModal';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function MyProfile() {
     const{ user } = useAuthContext();
     const [deleteUseForm, setDeleteUseForm] = useState(false);
     const  { userInfo, pedidos } = useUserInfo();
     const router = useRouter();
-    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: OrderType }>({
+    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: (OrderType & WithFieldValue<DocumentData>) }>({
         pedido: undefined,
     });
     const { error: deleteUserError } = useDeleteUser();
@@ -51,7 +52,7 @@ export default function MyProfile() {
     );
 
     const listaDeCompras = (
-        pedidos?.map((pedido: OrderType) => {
+        pedidos?.map((pedido: OrderType & WithFieldValue<DocumentData>) => {
             return (<CardOrder pedido={ pedido } key={ pedido.id } setShowFullOrderModal={ setShowFullOrderModal } />);
         })
     );
