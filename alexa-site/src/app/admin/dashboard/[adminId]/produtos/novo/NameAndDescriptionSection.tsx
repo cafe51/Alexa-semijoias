@@ -1,3 +1,4 @@
+// app/admin/dashboard/[adminId]/produtos/novo/NameAndDescriptionSection.tsx
 import { UseNewProductStateType } from '@/app/utils/types';
 
 interface NameAndDescriptionSectionProps {

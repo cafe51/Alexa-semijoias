@@ -1,8 +1,10 @@
+// app/admin/dashboard/[adminId]/produtos/novo/page.tsx
 'use client';
 
 import { useNewProductState } from '@/app/hooks/useNewProductState';
 import NameAndDescriptionSection from './NameAndDescriptionSection';
 import LargeButton from '@/app/components/LargeButton';
+import PhotosSection from './PhotosSection';
 
 export default function NewProductPage() {
     const {
@@ -17,6 +19,7 @@ export default function NewProductPage() {
                 handleNameChange={ handleNameChange }
                 handleDescriptionChange={ handleDescriptionChange }
             />
+            <PhotosSection />
             <LargeButton color='blue' onClick={ () => console.log(state) } loadingButton={ false }>
             mostrar estado
             </LargeButton>
