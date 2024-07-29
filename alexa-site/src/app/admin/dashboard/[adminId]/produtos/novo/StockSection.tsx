@@ -17,26 +17,30 @@ export default function StockSection({
         <section className="p-4 border rounded-md bg-white">
             <h2 className="text-lg font-bold">Estoque</h2>
             <div className="mt-2">
-                <label className="block text-sm font-medium">Infinito</label>
+                <label htmlFor='stockType' className="block text-sm font-medium">Infinito</label>
                 <input
-                    type="radio"
+                    id='stockType'
                     name="stockType"
+                    type="radio"
                     checked={ state.stockType === 'infinite' }
                     onChange={ () => handleStockTypeChange('infinite') }
                     className="mr-2"
                 />
             </div>
             <div className="mt-2">
-                <label className="block text-sm font-medium">Limitado</label>
+                <label htmlFor='stockType' className="block text-sm font-medium">Limitado</label>
                 <input
-                    type="radio"
+                    id='stockType'
                     name="stockType"
+                    type="radio"
                     checked={ state.stockType === 'limited' }
                     onChange={ () => handleStockTypeChange('limited') }
                     className="mr-2"
                 />
                 { state.stockType === 'limited' && (
                     <input
+                        id='stockQuantity'
+                        name="stockType"
                         type="number"
                         value={ state.stockQuantity }
                         onChange={ (e) => handleStockQuantityChange(Number(e.target.value)) }

@@ -15,8 +15,10 @@ export default function PricesSection({
         <section className="p-4 border rounded-md bg-white">
             <h2 className="text-lg font-bold">Preços</h2>
             <div className="mt-2">
-                <label className="block text-sm font-medium">Preço de venda</label>
+                <label htmlFor='price' className="block text-sm font-medium">Preço de venda</label>
                 <input
+                    id='price'
+                    name='price'
                     type="number"
                     value={ state.value.price }
                     onChange={ (e) => handleValueChange({ ...state.value, price: Number(e.target.value) }) }
@@ -25,8 +27,10 @@ export default function PricesSection({
                 />
             </div>
             <div className="mt-2">
-                <label className="block text-sm font-medium">Preço promocional</label>
+                <label htmlFor='promotionalPrice' className="block text-sm font-medium">Preço promocional</label>
                 <input
+                    id='promotionalPrice'
+                    name='promotionalPrice'
                     type="number"
                     value={ state.value.promotionalPrice }
                     onChange={ (e) => handleValueChange({ ...state.value, promotionalPrice: Number(e.target.value) }) }
@@ -35,8 +39,10 @@ export default function PricesSection({
                 />
             </div>
             <div className="mt-2">
-                <label className="block text-sm font-medium">Custo</label>
+                <label htmlFor='cost' className="block text-sm font-medium">Custo</label>
                 <input
+                    id='cost'
+                    name='cost'
                     type="number"
                     value={ state.value.cost }
                     onChange={ (e) => handleValueChange({ ...state.value, cost: Number(e.target.value) }) }

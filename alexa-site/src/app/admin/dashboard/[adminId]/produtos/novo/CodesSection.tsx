@@ -1,11 +1,9 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CodesSection.tsx
+import { UseNewProductStateType } from '@/app/utils/types';
 import React from 'react';
 
 interface CodesSectionProps {
-    state: {
-        sku: string;
-        barcode: string;
-    };
+    state: UseNewProductStateType;
     handleSkuChange: (sku: string) => void;
     handleBarcodeChange: (barcode: string) => void;
 }
@@ -19,8 +17,10 @@ export default function CodesSection({
         <section className="p-4 border rounded-md bg-white">
             <h2 className="text-lg font-bold">Códigos</h2>
             <div className="mt-2">
-                <label className="block text-sm font-medium">SKU</label>
+                <label className="block text-sm font-medium" htmlFor='sku'>SKU</label>
                 <input
+                    id='sku'
+                    name='sku'
                     type="text"
                     value={ state.sku }
                     onChange={ (e) => handleSkuChange(e.target.value) }
@@ -29,8 +29,10 @@ export default function CodesSection({
                 />
             </div>
             <div className="mt-2">
-                <label className="block text-sm font-medium">Código de barras</label>
+                <label className="block text-sm font-medium" htmlFor='barcode'>Código de barras</label>
                 <input
+                    id='barcode'
+                    name='barcode'
                     type="text"
                     value={ state.barcode }
                     onChange={ (e) => handleBarcodeChange(e.target.value) }
