@@ -1,7 +1,7 @@
 'use client';
 
 import { useNewProductState } from '@/app/hooks/useNewProductState';
-import NameAndDescriptionSection from './NameAndDescriptionForm';
+import NameAndDescriptionSection from './NameAndDescriptionSection';
 import LargeButton from '@/app/components/LargeButton';
 
 export default function NewProductPage() {
