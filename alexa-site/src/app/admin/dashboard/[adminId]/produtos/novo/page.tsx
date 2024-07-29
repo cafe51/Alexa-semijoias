@@ -6,6 +6,7 @@ import NameAndDescriptionSection from './NameAndDescriptionSection';
 import PhotosSection from './PhotosSection';
 import PricesSection from './PricesSection';
 import StockSection from './StockSection';
+import CodesSection from './CodesSection';
 
 export default function NewProductPage() {
     const {
@@ -15,6 +16,8 @@ export default function NewProductPage() {
         handleValueChange,
         handleStockQuantityChange,
         handleStockTypeChange,
+        handleBarcodeChange,
+        handleSkuChange,
     } = useNewProductState();
 
     return (
@@ -31,9 +34,17 @@ export default function NewProductPage() {
                 handleValueChange={ handleValueChange }
             />
 
-            <StockSection state={ state }
+            <StockSection
+                state={ state }
                 handleStockQuantityChange={ handleStockQuantityChange }
-                handleStockTypeChange={ handleStockTypeChange } />
+                handleStockTypeChange={ handleStockTypeChange }
+            />
+
+            <CodesSection
+                state={ state }
+                handleBarcodeChange={ handleBarcodeChange }
+                handleSkuChange={ handleSkuChange }
+            />
             <LargeButton color='blue' onClick={ () => console.log(state) } loadingButton={ false }>
             mostrar estado
             </LargeButton>
