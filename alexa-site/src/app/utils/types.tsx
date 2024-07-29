@@ -4,6 +4,16 @@ import { WhereFilterOp } from 'firebase/firestore';
 export type UseNewProductStateType = {
     name: string;
     description: string;
+    value: {
+        price: number,
+        promotionalPrice: number,
+        cost: number,
+    }
+    stockType: string,
+    stockQuantity: number,
+    sku: string,
+    barcode: string,
+    dimensions: { length: number, width: number, height: number, weight: number },
 };
 
 
