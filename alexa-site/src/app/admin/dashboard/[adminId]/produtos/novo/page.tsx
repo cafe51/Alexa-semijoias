@@ -8,6 +8,7 @@ import PricesSection from './PricesSection';
 import StockSection from './StockSection';
 import CodesSection from './CodesSection';
 import DimensionsSection from './DimensionsSection';
+import CategoriesSection from './CategoriesSection';
 
 export default function NewProductPage() {
     const {
@@ -52,6 +53,8 @@ export default function NewProductPage() {
                 state={ state }
                 handleDimensionsChange={ handleDimensionsChange }
             />
+
+            <CategoriesSection />
 
             <LargeButton color='blue' onClick={ () => console.log(state) } loadingButton={ false }>
             mostrar estado
