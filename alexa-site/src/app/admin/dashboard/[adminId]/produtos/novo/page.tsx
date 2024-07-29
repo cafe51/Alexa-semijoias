@@ -5,6 +5,7 @@ import LargeButton from '@/app/components/LargeButton';
 import NameAndDescriptionSection from './NameAndDescriptionSection';
 import PhotosSection from './PhotosSection';
 import PricesSection from './PricesSection';
+import StockSection from './StockSection';
 
 export default function NewProductPage() {
     const {
@@ -12,6 +13,8 @@ export default function NewProductPage() {
         handleNameChange,
         handleDescriptionChange,
         handleValueChange,
+        handleStockQuantityChange,
+        handleStockTypeChange,
     } = useNewProductState();
 
     return (
@@ -22,10 +25,15 @@ export default function NewProductPage() {
                 handleDescriptionChange={ handleDescriptionChange }
             />
             <PhotosSection />
+
             <PricesSection
                 state={ state }
                 handleValueChange={ handleValueChange }
             />
+
+            <StockSection state={ state }
+                handleStockQuantityChange={ handleStockQuantityChange }
+                handleStockTypeChange={ handleStockTypeChange } />
             <LargeButton color='blue' onClick={ () => console.log(state) } loadingButton={ false }>
             mostrar estado
             </LargeButton>
