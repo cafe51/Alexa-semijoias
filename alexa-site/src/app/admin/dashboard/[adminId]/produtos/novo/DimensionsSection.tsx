@@ -1,4 +1,5 @@
-// components/DimensionsSection.tsx
+// app/admin/dashboard/[adminId]/produtos/novo/DimensionsSection.tsx
+
 import { UseNewProductStateType } from '@/app/utils/types';
 import React from 'react';
 
