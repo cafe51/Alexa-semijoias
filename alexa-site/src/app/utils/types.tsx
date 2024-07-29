@@ -1,6 +1,12 @@
 //app/utils/types.tsx
 import { WhereFilterOp } from 'firebase/firestore';
 
+export type UseNewProductStateType = {
+    name: string;
+    description: string;
+};
+
+
 export type UseCheckoutStateType = {
     showFullOrderSummary: boolean;
     showLoginSection: boolean;
