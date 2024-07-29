@@ -7,6 +7,7 @@ import PhotosSection from './PhotosSection';
 import PricesSection from './PricesSection';
 import StockSection from './StockSection';
 import CodesSection from './CodesSection';
+import DimensionsSection from './DimensionsSection';
 
 export default function NewProductPage() {
     const {
@@ -18,6 +19,7 @@ export default function NewProductPage() {
         handleStockTypeChange,
         handleBarcodeChange,
         handleSkuChange,
+        handleDimensionsChange,
     } = useNewProductState();
 
     return (
@@ -45,6 +47,12 @@ export default function NewProductPage() {
                 handleBarcodeChange={ handleBarcodeChange }
                 handleSkuChange={ handleSkuChange }
             />
+
+            <DimensionsSection
+                state={ state }
+                handleDimensionsChange={ handleDimensionsChange }
+            />
+
             <LargeButton color='blue' onClick={ () => console.log(state) } loadingButton={ false }>
             mostrar estado
             </LargeButton>
