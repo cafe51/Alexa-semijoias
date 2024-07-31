@@ -9,24 +9,31 @@ import StockSection from './StockSection';
 import CodesSection from './CodesSection';
 import DimensionsSection from './DimensionsSection';
 import CategoriesSection from './CategoriesSection';
-import VariationsSection from './VariationsSection';
+import VariationsSection from './VariationSection/VariationsSection';
+import { useState } from 'react';
 
 export default function NewProductPage() {
+    const [showVariationEditionModal, setShowVariationEditionModal] = useState(false);
+
+
     const {
         state,
         handleNameChange,
         handleDescriptionChange,
         handleValueChange,
         handleStockQuantityChange,
+        handleVariationsChange,
         handleStockTypeChange,
         handleBarcodeChange,
         handleSkuChange,
         handleDimensionsChange,
+        handleAddProductVariation,
+        handleClearProductVariations,
     } = useNewProductState();
 
     return (
-        <main className='flex flex-col gap-2'>
-            <NameAndDescriptionSection
+        <main className='flex flex-col gap-2 w-full'>
+            { /* <NameAndDescriptionSection
                 state={ state }
                 handleNameChange={ handleNameChange }
                 handleDescriptionChange={ handleDescriptionChange }
@@ -36,7 +43,7 @@ export default function NewProductPage() {
             <PricesSection
                 state={ state }
                 handleValueChange={ handleValueChange }
-            />
+            /> */ }
 
             <StockSection
                 state={ state }
@@ -44,7 +51,7 @@ export default function NewProductPage() {
                 handleStockTypeChange={ handleStockTypeChange }
             />
 
-            <CodesSection
+            { /* <CodesSection
                 state={ state }
                 handleBarcodeChange={ handleBarcodeChange }
                 handleSkuChange={ handleSkuChange }
@@ -55,9 +62,15 @@ export default function NewProductPage() {
                 handleDimensionsChange={ handleDimensionsChange }
             />
 
-            <CategoriesSection />
+            <CategoriesSection /> */ }
 
-            <VariationsSection />
+            <VariationsSection
+                state={ state }
+                setShowVariationEditionModal={ setShowVariationEditionModal }
+                showVariationEditionModal={ showVariationEditionModal }
+                handleVariationsChange={ handleVariationsChange }
+                handleAddProductVariation={ handleAddProductVariation }
+            />
 
             <LargeButton color='blue' onClick={ () => console.log(state) } loadingButton={ false }>
             mostrar estado

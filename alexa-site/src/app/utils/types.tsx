@@ -10,10 +10,12 @@ export type UseNewProductStateType = {
         cost: number,
     }
     stockType: string,
-    stockQuantity: number,
+    stockQuantity: number | undefined,
+    variations: string[] | never[],
     sku: string,
     barcode: string,
     dimensions: { length: number, width: number, height: number, weight: number },
+    productVariations: any;
 };
 
 

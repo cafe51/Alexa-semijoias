@@ -7,10 +7,13 @@ type ActionType =
     | { type: 'SET_DESCRIPTION', payload: string }
     | { type: 'SET_VALUE', payload: { price: number, promotionalPrice: number, cost: number, } }
     | { type: 'SET_STOCK_TYPE', payload: 'infinite' | 'limited' }
-    | { type: 'SET_STOCK_QUANTITY', payload: number }
+    | { type: 'SET_STOCK_QUANTITY', payload: number | undefined }
+    | { type: 'SET_VARIATIONS', payload: string[] | never[] }
     | { type: 'SET_SKU', payload: string }
     | { type: 'SET_BARCODE', payload: string }
     | { type: 'SET_DIMENSIONS', payload: { length: number, width: number, height: number, weight: number } }
+    | { type: 'ADD_PRODUCT_VARIATION', payload: any }
+    | { type: 'CLEAR_PRODUCT_VARIATIONS' }
 
 const initialState: UseNewProductStateType = {
     name: '',
@@ -20,11 +23,13 @@ const initialState: UseNewProductStateType = {
         promotionalPrice: 0,
         cost: 0,
     },
+    variations: [],
     stockType: 'infinite',
     stockQuantity: 0,
     sku: '',
     barcode: '',
     dimensions: { length: 0, width: 0, height: 0, weight: 0 },
+    productVariations: [],
 };
 
 function reducer(state: UseNewProductStateType, action: ActionType): UseNewProductStateType {
@@ -37,6 +42,12 @@ function reducer(state: UseNewProductStateType, action: ActionType): UseNewProdu
         return { ...state, value: action.payload };
     case 'SET_STOCK_TYPE':
         return { ...state, stockType: action.payload };
+    case 'SET_VARIATIONS':
+        return { ...state, variations: action.payload };
+    case 'ADD_PRODUCT_VARIATION':
+        return { ...state, productVariations: [...state.productVariations, action.payload] };
+    case 'CLEAR_PRODUCT_VARIATIONS':
+        return { ...state, productVariations: [] };
     case 'SET_STOCK_QUANTITY':
         return { ...state, stockQuantity: action.payload };
     case 'SET_SKU':
@@ -73,6 +84,10 @@ export function useNewProductState() {
         dispatch({ type: 'SET_STOCK_QUANTITY', payload: stockQuantity });
     }, []);
 
+    const handleVariationsChange = useCallback((variations: string[] | never[]) => {
+        dispatch({ type: 'SET_VARIATIONS', payload: variations });
+    }, []);
+
     const handleSkuChange = useCallback((sku: string) => {
         dispatch({ type: 'SET_SKU', payload: sku });
     }, []);
@@ -85,6 +100,14 @@ export function useNewProductState() {
         dispatch({ type: 'SET_DIMENSIONS', payload: dimensions });
     }, []);
 
+    const handleAddProductVariation = useCallback((productVariation: any) => {
+        dispatch({ type: 'ADD_PRODUCT_VARIATION', payload: productVariation });
+    }, []);
+
+    const handleClearProductVariations = useCallback(() => {
+        dispatch({ type: 'CLEAR_PRODUCT_VARIATIONS' });
+    }, []);
+
     return {
         state,
         handleNameChange,
@@ -92,8 +115,11 @@ export function useNewProductState() {
         handleValueChange,
         handleStockTypeChange,
         handleStockQuantityChange,
+        handleVariationsChange,
         handleSkuChange,
         handleBarcodeChange,
         handleDimensionsChange,
+        handleAddProductVariation,
+        handleClearProductVariations,
     };
 }
