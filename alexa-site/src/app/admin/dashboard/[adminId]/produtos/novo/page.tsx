@@ -28,12 +28,13 @@ export default function NewProductPage() {
         handleSkuChange,
         handleDimensionsChange,
         handleAddProductVariation,
-        handleClearProductVariations,
+        handleRemoveProductVariation,
+        handleUpdateProductVariation,
     } = useNewProductState();
 
     return (
         <main className='flex flex-col gap-2 w-full'>
-            { /* <NameAndDescriptionSection
+            <NameAndDescriptionSection
                 state={ state }
                 handleNameChange={ handleNameChange }
                 handleDescriptionChange={ handleDescriptionChange }
@@ -43,7 +44,7 @@ export default function NewProductPage() {
             <PricesSection
                 state={ state }
                 handleValueChange={ handleValueChange }
-            /> */ }
+            />
 
             <StockSection
                 state={ state }
@@ -51,7 +52,7 @@ export default function NewProductPage() {
                 handleStockTypeChange={ handleStockTypeChange }
             />
 
-            { /* <CodesSection
+            <CodesSection
                 state={ state }
                 handleBarcodeChange={ handleBarcodeChange }
                 handleSkuChange={ handleSkuChange }
@@ -62,7 +63,7 @@ export default function NewProductPage() {
                 handleDimensionsChange={ handleDimensionsChange }
             />
 
-            <CategoriesSection /> */ }
+            <CategoriesSection />
 
             <VariationsSection
                 state={ state }
@@ -70,9 +71,16 @@ export default function NewProductPage() {
                 showVariationEditionModal={ showVariationEditionModal }
                 handleVariationsChange={ handleVariationsChange }
                 handleAddProductVariation={ handleAddProductVariation }
+                handleRemoveProductVariation={ handleRemoveProductVariation }
+                handleUpdateProductVariation={ handleUpdateProductVariation }
             />
 
-            <LargeButton color='blue' onClick={ () => console.log(state) } loadingButton={ false }>
+            <LargeButton color='blue'
+                loadingButton={ false }
+                onClick={ () => {
+                    console.log(state);
+                } }
+            >
             mostrar estado
             </LargeButton>
         </main>

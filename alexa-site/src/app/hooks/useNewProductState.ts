@@ -2,18 +2,20 @@
 import { useReducer, useCallback } from 'react';
 import { UseNewProductStateType } from '../utils/types';
 
-type ActionType = 
+type ActionType =
     | { type: 'SET_NAME', payload: string }
     | { type: 'SET_DESCRIPTION', payload: string }
     | { type: 'SET_VALUE', payload: { price: number, promotionalPrice: number, cost: number, } }
     | { type: 'SET_STOCK_TYPE', payload: 'infinite' | 'limited' }
     | { type: 'SET_STOCK_QUANTITY', payload: number | undefined }
+    | { type: 'ADD_PRODUCT_VARIATION', payload: any }
+    | { type: 'CLEAR_PRODUCT_VARIATIONS' }
+    | { type: 'REMOVE_PRODUCT_VARIATION', payload: any }
+    | { type: 'UPDATE_PRODUCT_VARIATION', payload: any }
     | { type: 'SET_VARIATIONS', payload: string[] | never[] }
     | { type: 'SET_SKU', payload: string }
     | { type: 'SET_BARCODE', payload: string }
     | { type: 'SET_DIMENSIONS', payload: { length: number, width: number, height: number, weight: number } }
-    | { type: 'ADD_PRODUCT_VARIATION', payload: any }
-    | { type: 'CLEAR_PRODUCT_VARIATIONS' }
 
 const initialState: UseNewProductStateType = {
     name: '',
@@ -48,6 +50,15 @@ function reducer(state: UseNewProductStateType, action: ActionType): UseNewProdu
         return { ...state, productVariations: [...state.productVariations, action.payload] };
     case 'CLEAR_PRODUCT_VARIATIONS':
         return { ...state, productVariations: [] };
+    case 'REMOVE_PRODUCT_VARIATION':
+        return { ...state, productVariations: state.productVariations.filter((pv: any) => pv !== action.payload) };
+    case 'UPDATE_PRODUCT_VARIATION':
+        return {
+            ...state,
+            productVariations: state.productVariations.map((pv: any) =>
+                pv === action.payload.oldVariation ? action.payload.newVariation : pv,
+            ),
+        };
     case 'SET_STOCK_QUANTITY':
         return { ...state, stockQuantity: action.payload };
     case 'SET_SKU':
@@ -83,7 +94,23 @@ export function useNewProductState() {
     const handleStockQuantityChange = useCallback((stockQuantity: number) => {
         dispatch({ type: 'SET_STOCK_QUANTITY', payload: stockQuantity });
     }, []);
+    
+    const handleAddProductVariation = useCallback((productVariation: any) => {
+        dispatch({ type: 'ADD_PRODUCT_VARIATION', payload: productVariation });
+    }, []);
 
+    const handleClearProductVariations = useCallback(() => {
+        dispatch({ type: 'CLEAR_PRODUCT_VARIATIONS' });
+    }, []);
+
+    const handleRemoveProductVariation = useCallback((productVariation: any) => {
+        dispatch({ type: 'REMOVE_PRODUCT_VARIATION', payload: productVariation });
+    }, []);
+    
+    const handleUpdateProductVariation = useCallback((oldVariation: any, newVariation: any) => {
+        dispatch({ type: 'UPDATE_PRODUCT_VARIATION', payload: { oldVariation, newVariation } });
+    }, []);
+    
     const handleVariationsChange = useCallback((variations: string[] | never[]) => {
         dispatch({ type: 'SET_VARIATIONS', payload: variations });
     }, []);
@@ -100,13 +127,6 @@ export function useNewProductState() {
         dispatch({ type: 'SET_DIMENSIONS', payload: dimensions });
     }, []);
 
-    const handleAddProductVariation = useCallback((productVariation: any) => {
-        dispatch({ type: 'ADD_PRODUCT_VARIATION', payload: productVariation });
-    }, []);
-
-    const handleClearProductVariations = useCallback(() => {
-        dispatch({ type: 'CLEAR_PRODUCT_VARIATIONS' });
-    }, []);
 
     return {
         state,
@@ -121,5 +141,7 @@ export function useNewProductState() {
         handleDimensionsChange,
         handleAddProductVariation,
         handleClearProductVariations,
+        handleRemoveProductVariation,
+        handleUpdateProductVariation,
     };
 }
