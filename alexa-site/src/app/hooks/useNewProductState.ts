@@ -12,6 +12,8 @@ type ActionType =
     | { type: 'CLEAR_PRODUCT_VARIATIONS' }
     | { type: 'REMOVE_PRODUCT_VARIATION', payload: any }
     | { type: 'UPDATE_PRODUCT_VARIATION', payload: any }
+    | { type: 'ADD_NEW_VARIATION_IN_ALL_PRODUCTS_VARIATIONS', payload: string }
+    | { type: 'REMOVE_A_VARIATION_IN_ALL_PRODUCTS_VARIATIONS', payload: string }
     | { type: 'SET_VARIATIONS', payload: string[] | never[] }
     | { type: 'SET_SKU', payload: string }
     | { type: 'SET_BARCODE', payload: string }
@@ -58,6 +60,20 @@ function reducer(state: UseNewProductStateType, action: ActionType): UseNewProdu
             productVariations: state.productVariations.map((pv: any) =>
                 pv === action.payload.oldVariation ? action.payload.newVariation : pv,
             ),
+        };
+    case 'ADD_NEW_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
+        return {
+            ...state,
+            productVariations: state.productVariations.map((pv: any) =>({ ...pv, [action.payload]: '' })),
+        };
+    case 'REMOVE_A_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
+        return {
+            ...state,
+            productVariations: state.productVariations.map((pv: any) =>{
+                const newProductVariation = { ...pv };
+                delete newProductVariation[action.payload];
+                return newProductVariation;
+            }),
         };
     case 'SET_STOCK_QUANTITY':
         return { ...state, stockQuantity: action.payload };
@@ -115,6 +131,14 @@ export function useNewProductState() {
         dispatch({ type: 'SET_VARIATIONS', payload: variations });
     }, []);
 
+    const handleAddNewVariationInAllProductVariations = useCallback((newVariation: string) => {
+        dispatch({ type: 'ADD_NEW_VARIATION_IN_ALL_PRODUCTS_VARIATIONS', payload: newVariation });
+    }, []);
+
+    const handleRemoveVariationInAllProductVariations = useCallback((variationToBeRemoved: string) => {
+        dispatch({ type: 'REMOVE_A_VARIATION_IN_ALL_PRODUCTS_VARIATIONS', payload: variationToBeRemoved });
+    }, []);
+
     const handleSkuChange = useCallback((sku: string) => {
         dispatch({ type: 'SET_SKU', payload: sku });
     }, []);
@@ -143,5 +167,7 @@ export function useNewProductState() {
         handleClearProductVariations,
         handleRemoveProductVariation,
         handleUpdateProductVariation,
+        handleAddNewVariationInAllProductVariations,
+        handleRemoveVariationInAllProductVariations,
     };
 }

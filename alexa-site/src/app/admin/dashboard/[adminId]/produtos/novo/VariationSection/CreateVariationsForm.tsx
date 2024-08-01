@@ -7,18 +7,31 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 interface CreateVariationsFormProps {
   handleVariationsChange: (variations: string[] | never[]) => void;
   variations: string[] | never[];
+  handleAddNewVariationInAllProductVariations: (newVariation: string) => void;
+  handleRemoveVariationInAllProductVariations: (variationToBeRemoved: string) => void;
+  handleClearProductVariations: () => void;
 }
 
-export default function CreateVariationsForm({ handleVariationsChange, variations }: CreateVariationsFormProps) {
+export default function CreateVariationsForm({
+    handleVariationsChange,
+    variations,
+    handleAddNewVariationInAllProductVariations,
+    handleRemoveVariationInAllProductVariations,
+    handleClearProductVariations,
+}: CreateVariationsFormProps) {
     const [newVariation, setNewVariation] = useState('');
 
     function handleAddVariationClick() {
         (newVariation && newVariation.length > 0) && handleVariationsChange([...variations, newVariation]);
+        handleAddNewVariationInAllProductVariations(newVariation);
         setNewVariation('');
     }
 
     function handleRemoveVariation(v: string) {
-        handleVariationsChange(variations.filter((vstate) => vstate !== v));
+        const newVariations = variations.filter((vstate) => vstate !== v);
+        handleVariationsChange(newVariations);
+        handleRemoveVariationInAllProductVariations(v);
+        newVariations.length === 0 && handleClearProductVariations();
     }
 
     return (

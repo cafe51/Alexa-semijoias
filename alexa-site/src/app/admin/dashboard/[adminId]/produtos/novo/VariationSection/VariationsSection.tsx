@@ -13,7 +13,11 @@ interface VariationsSectionProps {
     state: UseNewProductStateType;
     handleAddProductVariation: (productVariation: any) => void;
     handleRemoveProductVariation: (productVariation: any) => void;
-    handleUpdateProductVariation: (oldVariation: any, newVariation: any) => void
+    handleUpdateProductVariation: (oldVariation: any, newVariation: any) => void;
+    handleAddNewVariationInAllProductVariations: (newVariation: string) => void;
+    handleRemoveVariationInAllProductVariations: (variationToBeRemoved: string) => void;
+    handleClearProductVariations: () => void;
+
 }
 
 // const vars = ['cor', 'tamanho'];
@@ -32,6 +36,9 @@ export default function VariationsSection({
     handleAddProductVariation,
     handleRemoveProductVariation,
     handleUpdateProductVariation,
+    handleAddNewVariationInAllProductVariations,
+    handleRemoveVariationInAllProductVariations,
+    handleClearProductVariations,
 }: VariationsSectionProps) {
     const [productVariationState, setProductVariationState] = useState({});
 
@@ -43,7 +50,14 @@ export default function VariationsSection({
         <section className="flex flex-col gap-2 p-4 border rounded-md bg-white w-full">
             { (showVariationEditionModal) && (
                 <ModalMaker title='Crie novas variações' closeModelClick={ handleShowModal }>
-                    <CreateVariationsForm handleVariationsChange={ handleVariationsChange } variations={ variations }/>
+                    <CreateVariationsForm
+                        handleVariationsChange={ handleVariationsChange }
+                        variations={ variations }
+                        handleAddNewVariationInAllProductVariations={ handleAddNewVariationInAllProductVariations }
+                        handleRemoveVariationInAllProductVariations={ handleRemoveVariationInAllProductVariations }
+                        handleClearProductVariations={ handleClearProductVariations }
+
+                    />
                 </ModalMaker>
             ) }
             <div className='flex justify-between'>

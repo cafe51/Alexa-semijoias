@@ -30,6 +30,9 @@ export default function NewProductPage() {
         handleAddProductVariation,
         handleRemoveProductVariation,
         handleUpdateProductVariation,
+        handleAddNewVariationInAllProductVariations,
+        handleRemoveVariationInAllProductVariations,
+        handleClearProductVariations,
     } = useNewProductState();
 
     return (
@@ -73,6 +76,9 @@ export default function NewProductPage() {
                 handleAddProductVariation={ handleAddProductVariation }
                 handleRemoveProductVariation={ handleRemoveProductVariation }
                 handleUpdateProductVariation={ handleUpdateProductVariation }
+                handleAddNewVariationInAllProductVariations={ handleAddNewVariationInAllProductVariations }
+                handleRemoveVariationInAllProductVariations={ handleRemoveVariationInAllProductVariations }
+                handleClearProductVariations={ handleClearProductVariations }
             />
 
             <LargeButton color='blue'
