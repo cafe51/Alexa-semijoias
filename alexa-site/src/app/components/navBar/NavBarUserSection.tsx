@@ -4,9 +4,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { useLogout } from '../hooks/useLogout';
-import { useUserInfo } from '../hooks/useUserInfo';
+import { useAuthContext } from '@/app/hooks/useAuthContext';
+import { useLogout } from '@/app/hooks/useLogout';
+import { useUserInfo } from '@/app/hooks/useUserInfo';
 
 export default function NavBarUserSection() {
     const router = useRouter();

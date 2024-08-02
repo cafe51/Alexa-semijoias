@@ -1,7 +1,7 @@
 // Navbar.test.tsx
 
 import { act, render, screen } from '@testing-library/react';
-import Navbar from '../Navbar';
+import Navbar from '../navBar/Navbar';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
 

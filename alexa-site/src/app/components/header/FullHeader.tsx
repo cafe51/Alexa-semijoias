@@ -2,7 +2,7 @@
 
 'use client';
 import { useEffect, useState } from 'react';
-import Navbar from '../Navbar';
+import Navbar from '../navBar/Navbar';
 import { FaRegUser } from 'react-icons/fa';
 import SearchBar from '../SearchBar';
 import Link from 'next/link';
