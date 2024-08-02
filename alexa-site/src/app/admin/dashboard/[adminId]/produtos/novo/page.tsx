@@ -13,6 +13,7 @@ import VariationsSection from './VariationSection/VariationsSection';
 import { useState } from 'react';
 import AssocietedProductsSection from './AssocietedProductsSection';
 import RecomendedProductsSection from './RecomendedProductsSection';
+import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 
 export default function NewProductPage() {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState(false);
@@ -72,6 +73,8 @@ export default function NewProductPage() {
                 handleRemoveVariationInAllProductVariations={ handleRemoveVariationInAllProductVariations }
                 handleClearProductVariations={ handleClearProductVariations }
             />
+
+            <SiteSectionSection />
 
             <AssocietedProductsSection />
             <RecomendedProductsSection />

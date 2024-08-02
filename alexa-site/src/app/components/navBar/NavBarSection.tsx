@@ -33,7 +33,7 @@ export default function NavBarSection({ section }: NavBarSectionProps) {
                     { section.subsections.map((subsectionName) => <NavBarItem key={ subsectionName } sectionName={ subsectionName }/>) }
                 </div>
             }
-            <div className='w-full h-1 bg-pink-300'></div>
+            <div className='w-full h-1 bg-pink-'></div>
         </section>
     );
 }
