@@ -10,13 +10,11 @@ import CodesSection from './CodesSection';
 import DimensionsSection from './DimensionsSection';
 import CategoriesSection from './CategoriesSection';
 import VariationsSection from './VariationSection/VariationsSection';
-import { useState } from 'react';
 import AssocietedProductsSection from './AssocietedProductsSection';
 import RecomendedProductsSection from './RecomendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 
 export default function NewProductPage() {
-    const [showVariationEditionModal, setShowVariationEditionModal] = useState(false);
 
     const {
         state, handleNameChange, handleDescriptionChange, handleValueChange,
@@ -63,8 +61,6 @@ export default function NewProductPage() {
 
             <VariationsSection
                 state={ state }
-                setShowVariationEditionModal={ setShowVariationEditionModal }
-                showVariationEditionModal={ showVariationEditionModal }
                 handleVariationsChange={ handleVariationsChange }
                 handleAddProductVariation={ handleAddProductVariation }
                 handleRemoveProductVariation={ handleRemoveProductVariation }

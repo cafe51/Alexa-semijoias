@@ -1,14 +1,12 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/VariationsSection.tsx
 import ModalMaker from '@/app/components/ModalMaker';
 import { UseNewProductStateType } from '@/app/utils/types';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import CreateVariationsForm from './CreateVariationsForm';
 import ProductVariationFormFilled from './ProductVariationFormFilled';
 import CreateNewProductVariationForm from './CreateNewProductVariationForm';
 
 interface VariationsSectionProps {
-    showVariationEditionModal: boolean;
-    setShowVariationEditionModal: Dispatch<SetStateAction<boolean>>;
     handleVariationsChange: (variations: string[] | never[]) => void;
     state: UseNewProductStateType;
     handleAddProductVariation: (productVariation: any) => void;
@@ -30,8 +28,6 @@ interface VariationsSectionProps {
 
 export default function VariationsSection({
     state: { variations, productVariations },
-    showVariationEditionModal,
-    setShowVariationEditionModal,
     handleVariationsChange,
     handleAddProductVariation,
     handleRemoveProductVariation,
@@ -41,15 +37,15 @@ export default function VariationsSection({
     handleClearProductVariations,
 }: VariationsSectionProps) {
     const [productVariationState, setProductVariationState] = useState({});
-
-    function handleShowModal() {
-        showVariationEditionModal ? setShowVariationEditionModal(false) : setShowVariationEditionModal(true);
-    }
+    const [showVariationEditionModal, setShowVariationEditionModal] = useState(false);
 
     return (
         <section className="flex flex-col gap-2 p-4 border rounded-md bg-white w-full">
             { (showVariationEditionModal) && (
-                <ModalMaker title='Crie novas variações' closeModelClick={ handleShowModal }>
+                <ModalMaker
+                    title='Crie novas variações'
+                    closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
+                >
                     <CreateVariationsForm
                         handleVariationsChange={ handleVariationsChange }
                         variations={ variations }
@@ -62,7 +58,11 @@ export default function VariationsSection({
             ) }
             <div className='flex justify-between'>
                 <h2 className="text-lg font-bold">Variações</h2>
-                { (variations && variations.length > 0) && <p className='text-blue-500' onClick={ handleShowModal }>Editar</p> }
+                { (variations && variations.length > 0) &&
+                <p className='text-blue-500'
+                    onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }>
+                        Editar
+                </p> }
             </div>
             <div className=' border-t border-solid w-full'>
                 {
@@ -77,7 +77,12 @@ export default function VariationsSection({
                         
                         :
                         (<div className="mt-2 text-center w-full">
-                            <button className="text-blue-500" onClick={ handleShowModal } >Adicionar variações</button>
+                            <button
+                                className="text-blue-500"
+                                onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
+                            >
+                                Adicionar variações
+                            </button>
                         </div>)
                 }
                 {
