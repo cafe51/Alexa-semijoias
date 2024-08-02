@@ -1,6 +1,6 @@
 // Header.test.tsx
 import { act, render, screen } from '@testing-library/react';
-import Header from '../Header';
+import Header from '../header/Header';
 
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';

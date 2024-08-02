@@ -2,12 +2,12 @@
 
 'use client';
 import { useEffect, useState } from 'react';
-import Navbar from './Navbar';
+import Navbar from '../Navbar';
 import { FaRegUser } from 'react-icons/fa';
-import SearchBar from './SearchBar';
+import SearchBar from '../SearchBar';
 import Link from 'next/link';
-import CartIcon from './CartIcon';
-import { useAuthContext } from '../hooks/useAuthContext';
+import CartIcon from '../CartIcon';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 
 const FullHeader = () => {

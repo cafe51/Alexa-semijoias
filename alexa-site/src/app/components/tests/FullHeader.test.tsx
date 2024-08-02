@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 // FullHeader.test.tsx
 import { act, render, screen } from '@testing-library/react';
-import FullHeader from '../FullHeader';
+import FullHeader from '../header/FullHeader';
 import { AuthContextProvider } from '@/app/context/AuthContext';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
 
