@@ -15,7 +15,6 @@ import { useState } from 'react';
 export default function NewProductPage() {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState(false);
 
-
     const {
         state,
         handleNameChange,
@@ -61,10 +60,13 @@ export default function NewProductPage() {
 
             <CategoriesSection />
 
-            <StockSection
-                state={ state }
-                handleStockQuantityChange={ handleStockQuantityChange }
-            />
+            { 
+                (!state.productVariations || state.productVariations.length == 0) && <StockSection
+                    state={ state }
+                    handleStockQuantityChange={ handleStockQuantityChange }
+                />
+            }
+
 
             <VariationsSection
                 state={ state }
