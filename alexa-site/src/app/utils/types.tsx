@@ -1,6 +1,11 @@
 //app/utils/types.tsx
 import { WhereFilterOp } from 'firebase/firestore';
 
+export type SectionType = {
+    sectionName: string,
+    subsections?: string[] | null | undefined,
+}
+
 export type UseNewProductStateType = {
     name: string;
     description: string;

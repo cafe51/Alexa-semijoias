@@ -1,7 +1,11 @@
 //app/components/Navbar.tsx
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import NavBarUserSection from './NavBarUserSection';
+import { useCollection } from '@/app/hooks/useCollection';
+import { SectionType } from '@/app/utils/types';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
+import NavBarSection from './NavBarSection';
 
 interface NavbarProps {
   isMenuOpen: boolean;
@@ -10,8 +14,20 @@ interface NavbarProps {
 
 const navItemsStyle = 'hover:text-gray-800 hover:bg-gray-200 transition-colors duration-300 p-2';
 
+// const sections = ['brincos', 'pulseiras', 'colares', 'aneis'];
 
 const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
+    const { getAllDocuments } = useCollection<SectionType>('siteSections');
+    const [sections, setSections] = useState<(SectionType & WithFieldValue<DocumentData>)[] | never[]>([]);
+
+    useEffect(() => {
+        async function getSectionsFromFireBase() {
+            const res = await getAllDocuments();
+            setSections(res);
+        }
+        getSectionsFromFireBase();
+    }, []);
+
     const node = useRef<HTMLDivElement>(null);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
@@ -59,18 +75,19 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
             md:translate-x-0
             md:static
             md:h-auto
-
             md:justify-end
             py-4`
         }>
             <div className="nav-gradient font-bold text-center">
                 <div className="flex flex-col space-y-8 py-4  md:flex-row md:space-y-0  md:py-0 md:px-0 md:justify-end lg:gap-6 ">
                     <a href="/" onClick={ goToStart } className={ navItemsStyle } >Início</a>
-                    <a href="/brincos" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Brincos</a>
-                    <a href="/pulseiras" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Pulseiras</a>
-                    <a href="/colares" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Colares</a>
-                    <a href="/aneis" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Anéis</a>
+                    {
+                        sections.map(
+                            (section) => <NavBarSection key={ section.sectionName } section={ section } closeMenu={ () => setIsMenuOpen(false) }/>,
+                        )
+                    }
                     <a href="/contact" onClick={ () => setIsMenuOpen(false) } className={ navItemsStyle }>Fale Comigo</a>
+
                     <NavBarUserSection />
 
                 </div>
