@@ -11,26 +11,18 @@ import DimensionsSection from './DimensionsSection';
 import CategoriesSection from './CategoriesSection';
 import VariationsSection from './VariationSection/VariationsSection';
 import { useState } from 'react';
+import AssocietedProductsSection from './AssocietedProductsSection';
+import RecomendedProductsSection from './RecomendedProductsSection';
 
 export default function NewProductPage() {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState(false);
 
     const {
-        state,
-        handleNameChange,
-        handleDescriptionChange,
-        handleValueChange,
-        handleStockQuantityChange,
-        handleVariationsChange,
-        handleBarcodeChange,
-        handleSkuChange,
-        handleDimensionsChange,
-        handleAddProductVariation,
-        handleRemoveProductVariation,
-        handleUpdateProductVariation,
-        handleAddNewVariationInAllProductVariations,
-        handleRemoveVariationInAllProductVariations,
-        handleClearProductVariations,
+        state, handleNameChange, handleDescriptionChange, handleValueChange,
+        handleStockQuantityChange, handleVariationsChange, handleBarcodeChange,
+        handleSkuChange, handleDimensionsChange, handleAddProductVariation,
+        handleRemoveProductVariation, handleUpdateProductVariation, handleAddNewVariationInAllProductVariations,
+        handleRemoveVariationInAllProductVariations, handleClearProductVariations,
     } = useNewProductState();
 
     return (
@@ -80,6 +72,9 @@ export default function NewProductPage() {
                 handleRemoveVariationInAllProductVariations={ handleRemoveVariationInAllProductVariations }
                 handleClearProductVariations={ handleClearProductVariations }
             />
+
+            <AssocietedProductsSection />
+            <RecomendedProductsSection />
 
             <LargeButton color='blue'
                 loadingButton={ false }
