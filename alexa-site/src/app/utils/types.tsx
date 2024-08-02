@@ -9,7 +9,6 @@ export type UseNewProductStateType = {
         promotionalPrice: number,
         cost: number,
     }
-    stockType: string,
     stockQuantity: number | undefined,
     variations: string[] | never[],
     sku: string,

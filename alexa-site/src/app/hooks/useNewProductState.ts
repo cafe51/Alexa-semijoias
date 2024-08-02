@@ -6,7 +6,6 @@ type ActionType =
     | { type: 'SET_NAME', payload: string }
     | { type: 'SET_DESCRIPTION', payload: string }
     | { type: 'SET_VALUE', payload: { price: number, promotionalPrice: number, cost: number, } }
-    | { type: 'SET_STOCK_TYPE', payload: 'infinite' | 'limited' }
     | { type: 'SET_STOCK_QUANTITY', payload: number | undefined }
     | { type: 'ADD_PRODUCT_VARIATION', payload: any }
     | { type: 'CLEAR_PRODUCT_VARIATIONS' }
@@ -28,7 +27,6 @@ const initialState: UseNewProductStateType = {
         cost: 0,
     },
     variations: [],
-    stockType: 'infinite',
     stockQuantity: 0,
     sku: '',
     barcode: '',
@@ -44,8 +42,6 @@ function reducer(state: UseNewProductStateType, action: ActionType): UseNewProdu
         return { ...state, description: action.payload };
     case 'SET_VALUE':
         return { ...state, value: action.payload };
-    case 'SET_STOCK_TYPE':
-        return { ...state, stockType: action.payload };
     case 'SET_VARIATIONS':
         return { ...state, variations: action.payload };
     case 'ADD_PRODUCT_VARIATION':
@@ -103,10 +99,6 @@ export function useNewProductState() {
         dispatch({ type: 'SET_VALUE', payload: value });
     }, []);
 
-    const handleStockTypeChange = useCallback((stockType: 'infinite' | 'limited') => {
-        dispatch({ type: 'SET_STOCK_TYPE', payload: stockType });
-    }, []);
-
     const handleStockQuantityChange = useCallback((stockQuantity: number) => {
         dispatch({ type: 'SET_STOCK_QUANTITY', payload: stockQuantity });
     }, []);
@@ -157,7 +149,6 @@ export function useNewProductState() {
         handleNameChange,
         handleDescriptionChange,
         handleValueChange,
-        handleStockTypeChange,
         handleStockQuantityChange,
         handleVariationsChange,
         handleSkuChange,

@@ -23,7 +23,6 @@ export default function NewProductPage() {
         handleValueChange,
         handleStockQuantityChange,
         handleVariationsChange,
-        handleStockTypeChange,
         handleBarcodeChange,
         handleSkuChange,
         handleDimensionsChange,
@@ -49,12 +48,6 @@ export default function NewProductPage() {
                 handleValueChange={ handleValueChange }
             />
 
-            <StockSection
-                state={ state }
-                handleStockQuantityChange={ handleStockQuantityChange }
-                handleStockTypeChange={ handleStockTypeChange }
-            />
-
             <CodesSection
                 state={ state }
                 handleBarcodeChange={ handleBarcodeChange }
@@ -67,6 +60,11 @@ export default function NewProductPage() {
             />
 
             <CategoriesSection />
+
+            <StockSection
+                state={ state }
+                handleStockQuantityChange={ handleStockQuantityChange }
+            />
 
             <VariationsSection
                 state={ state }
