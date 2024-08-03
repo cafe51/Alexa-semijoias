@@ -22,6 +22,7 @@ export default function NewProductPage() {
         handleSkuChange, handleDimensionsChange, handleAddProductVariation,
         handleRemoveProductVariation, handleUpdateProductVariation, handleAddNewVariationInAllProductVariations,
         handleRemoveVariationInAllProductVariations, handleClearProductVariations,
+        handleAddSection,
     } = useNewProductState();
 
     return (
@@ -70,7 +71,7 @@ export default function NewProductPage() {
                 handleClearProductVariations={ handleClearProductVariations }
             />
 
-            <SiteSectionSection />
+            <SiteSectionSection state={ state } handleAddSection={ handleAddSection }/>
 
             <AssocietedProductsSection />
             <RecomendedProductsSection />

@@ -1,6 +1,6 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { UseNewProductStateType } from '../utils/types';
+import { SectionType, UseNewProductStateType } from '../utils/types';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
@@ -17,6 +17,7 @@ type ActionType =
     | { type: 'SET_SKU', payload: string }
     | { type: 'SET_BARCODE', payload: string }
     | { type: 'SET_DIMENSIONS', payload: { length: number, width: number, height: number, weight: number } }
+    | { type: 'SET_SECTIONS', payload: SectionType[] | never[] }
 
 const initialState: UseNewProductStateType = {
     name: '',
@@ -32,6 +33,7 @@ const initialState: UseNewProductStateType = {
     barcode: '',
     dimensions: { length: 0, width: 0, height: 0, weight: 0 },
     productVariations: [],
+    sectionsSite: [],
 };
 
 function reducer(state: UseNewProductStateType, action: ActionType): UseNewProductStateType {
@@ -79,6 +81,8 @@ function reducer(state: UseNewProductStateType, action: ActionType): UseNewProdu
         return { ...state, barcode: action.payload };
     case 'SET_DIMENSIONS':
         return { ...state, dimensions: action.payload };
+    case 'SET_SECTIONS':
+        return { ...state, sectionsSite: action.payload };
     default:
         return state;
     }
@@ -143,6 +147,10 @@ export function useNewProductState() {
         dispatch({ type: 'SET_DIMENSIONS', payload: dimensions });
     }, []);
 
+    const handleAddSection = useCallback((sections: SectionType[] | never[]) => {
+        dispatch({ type: 'SET_SECTIONS', payload: sections });
+    }, []);
+
 
     return {
         state,
@@ -160,5 +168,6 @@ export function useNewProductState() {
         handleUpdateProductVariation,
         handleAddNewVariationInAllProductVariations,
         handleRemoveVariationInAllProductVariations,
+        handleAddSection,
     };
 }

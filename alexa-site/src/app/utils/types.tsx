@@ -20,6 +20,7 @@ export type UseNewProductStateType = {
     barcode: string,
     dimensions: { length: number, width: number, height: number, weight: number },
     productVariations: any;
+    sectionsSite: SectionType[] | never[],
 };
 
 
