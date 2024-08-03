@@ -56,14 +56,16 @@ export default function VariationsSection({
                     />
                 </ModalMaker>
             ) }
+
             <div className='flex justify-between'>
                 <h2 className="text-lg font-bold">Variações</h2>
                 { (variations && variations.length > 0) &&
-                <p className='text-blue-500'
+                <button className='text-blue-500'
                     onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }>
                         Editar
-                </p> }
+                </button> }
             </div>
+            
             <div className=' border-t border-solid w-full'>
                 {
                     (variations && variations.length > 0)
