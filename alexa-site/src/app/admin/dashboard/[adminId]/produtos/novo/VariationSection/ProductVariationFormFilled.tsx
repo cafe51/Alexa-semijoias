@@ -10,26 +10,57 @@ interface VariationFieldInputFilledProps {
 
 function VariationFieldInputFilled({ productVariation }: VariationFieldInputFilledProps) {
 
-    return (
-        Object.keys(productVariation).map((key, index) => {
-            // if(key === 'quantity') return undefined;
-            return (
-                <div className="flex w-5/12" key={ index }>
-                    <div className='flex flex-col gap-2 w-full'>
-                        <label className="text-xs" htmlFor={ key }>{ key.charAt(0).toUpperCase() + key.slice(1) }</label>
-                        <input
-                            className="text-xs self-center px-3 py-2 border rounded-md w-5/6 bg-green-600 text-white"
-                            id={ key }
-                            name={ key }
-                            type={ typeof productVariation[key] }
-                            value={ productVariation[key] }
-                            placeholder=''
-                            readOnly={ true }
+    // const productVariationClone = { ...productVariation };
 
-                        />
-                    </div>
-                </div>);
-        })
+    return (
+        <div className='flex flex-col gap-2 w-full'>
+            <div className='flex gap-2 w-full'>
+
+                {
+                    Object.keys(productVariation)
+                        .filter(e => e !== 'quantidade')
+                        .filter(e => e !== 'peso')
+                        .filter(e => e !== 'altura')
+                        .filter(e => e !== 'comprimento')
+                        .filter(e => e !== 'largura')
+
+                        .map((property, index) => {
+                            if(property in productVariation) {
+                                return (
+                                    <div className="flex w-5/12" key={ index }>
+                                        <div className='flex flex-col gap-2 w-full'>
+                                            <label className="text-xs" htmlFor={ property }>{ property.charAt(0).toUpperCase() + property.slice(1) }</label>
+                                            <input
+                                                className="text-xs self-center px-3 py-2 border rounded-md w-5/6 bg-green-600 text-white"
+                                                id={ property }
+                                                name={ property }
+                                                type={ typeof productVariation[property] }
+                                                value={ productVariation[property as keyof typeof productVariation] }
+                                                placeholder=''
+                                                readOnly={ true }
+    
+                                            />
+                                        </div>
+                                    </div>);
+                            }
+                        })
+                }
+            </div>
+
+            <div className=''>
+                <label className="text-xs" htmlFor={ 'quantidade' }>{ 'quantidade'.charAt(0).toUpperCase() + 'quantidade'.slice(1) }</label>
+                <input
+                    className="text-xs self-center px-3 py-2 border rounded-md w-5/6 bg-green-600 text-white"
+                    id={ 'quantidade' }
+                    name={ 'quantidade' }
+                    type={ typeof productVariation['quantidade'] }
+                    value={ productVariation['quantidade'] }
+                    placeholder=''
+                    readOnly={ true }
+    
+                />
+            </div>
+        </div>
 
     );
 }
