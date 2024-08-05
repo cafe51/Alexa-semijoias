@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md';
 import ProductVariationForm from './ProductVariationForm';
+import { VariationProductType } from '@/app/utils/types';
 
 
 interface UpdateProductVariationFormProps {
   variations: string[];
-  handleUpdateProductVariation: (oldVariation: any, newVariation: any) => void
-  productVariation: any;
+  handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void
+  productVariation: VariationProductType;
   setEditionProductVariationMode: () => void;
 
 
@@ -21,8 +22,12 @@ export default function UpdateProductVariationForm({
     handleUpdateProductVariation,
     setEditionProductVariationMode,
 }: UpdateProductVariationFormProps) {
-    const [newProductVariationState, setNewProductVariationState] = useState(productVariation);
-    const [quantidade, setQuantidade] = useState(productVariation.quantidade);
+    const [newProductVariationState, setNewProductVariationState] = useState<VariationProductType>(productVariation);
+    const [quantidade, setQuantidade] = useState(productVariation.defaultProperties.quantidade);
+    const [peso, setPeso] = useState(productVariation.defaultProperties.peso);
+    const [dimensions, setDimensions] = useState(productVariation.defaultProperties.dimensions);
+
+    
     const [isFormValid, setIsFormValid] = useState(false);
 
     function handleUpdateVariation() {
@@ -32,7 +37,15 @@ export default function UpdateProductVariationForm({
             if (!isFormValid) {
                 throw new Error('Todos os campos devem estar preenchidos');
             }
-            handleUpdateProductVariation(productVariation, { ...newProductVariationState, quantidade });
+            handleUpdateProductVariation(productVariation, {
+                ...newProductVariationState,
+                defaultProperties: {
+                    ...newProductVariationState.defaultProperties,
+                    dimensions,
+                    peso,
+                    quantidade,
+                },
+            });
             setEditionProductVariationMode();
             setQuantidade(0);
         } catch(error) {
@@ -48,6 +61,10 @@ export default function UpdateProductVariationForm({
                 productVariationState={ newProductVariationState }
                 setProductVariationState={ setNewProductVariationState }
                 quantidade={ quantidade }
+                dimensions={ dimensions }
+                peso={ peso }
+                setDimensions={ setDimensions }
+                setPeso={ setPeso }
                 setQuantidade={ setQuantidade }
             />
             <div className='flex flex-col justify-between pr-2 py-2'>

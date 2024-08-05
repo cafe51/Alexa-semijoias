@@ -2,30 +2,27 @@
 
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import VariationFieldInput from './VariationFieldInput';
-
-function InputQuantity({ quantidade, setQuantidade }: { quantidade: number; setQuantidade: Dispatch<SetStateAction<number>> }) {
-    return (
-        <div className='flex flex-col gap-2 w-5/12 justify-self-start'>
-            <label className="text-xs font-small" htmlFor="quantidade">Quantidade</label>
-            <input
-                className="text-xs self-center px-3 py-2 border rounded-md w-5/6"
-                id="quantidade"
-                name="quantidade"
-                type="number"
-                value={ quantidade }
-                onChange={ (e) => setQuantidade(Number(e.target.value)) }
-                placeholder=''
-            />
-        </div>
-    );
-}
+import InputStandartProperties from './InputStandartProperties';
+import { VariationProductType } from '@/app/utils/types';
 
 interface ProductVariationFormProps {
   variations: string[];
-  setProductVariationState: Dispatch<SetStateAction<any>>;
-  productVariationState: any;
+  setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
+  productVariationState: VariationProductType;
   quantidade: number;
   setQuantidade: Dispatch<SetStateAction<number>>;
+  peso: number;
+  setPeso: Dispatch<SetStateAction<number>>;
+  dimensions: {
+    altura: number;
+    largura: number;
+    comprimento: number;
+}
+  setDimensions: Dispatch<SetStateAction<{
+    altura: number;
+    largura: number;
+    comprimento: number;
+}>>
   setIsFormValid: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -34,7 +31,11 @@ export default function ProductVariationForm({
     productVariationState,
     setProductVariationState,
     quantidade,
+    dimensions,
+    peso,
     setQuantidade,
+    setDimensions,
+    setPeso,
     setIsFormValid,
 }: ProductVariationFormProps) {
 
@@ -50,17 +51,21 @@ export default function ProductVariationForm({
 
     const validateForm = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { quantidade, ...rest } = productVariationState;
-        if (JSON.stringify(variations) !== JSON.stringify(Object.keys(rest))) {
+        const { customProperties, defaultProperties } = productVariationState;
+
+        console.log('JSON.stringify(variations)', JSON.stringify(variations));
+        console.log('JSON.stringify(Object.keys(rest))', JSON.stringify(Object.keys(customProperties)));
+        
+        if (JSON.stringify(variations) !== JSON.stringify(Object.keys(customProperties))) {
             return false;
         }
 
-        if (!rest || Object.keys(rest).length === 0) {
+        if (!customProperties || Object.keys(customProperties).length === 0) {
             return false;
         }
 
-        for (const key in rest) {
-            if (rest[key] === '') {
+        for (const key in customProperties) {
+            if (customProperties[key] === '') {
                 return false;
             }
         }
@@ -80,7 +85,14 @@ export default function ProductVariationForm({
                     />
                 )) }
       
-                <InputQuantity quantidade={ quantidade } setQuantidade={ setQuantidade } />
+                <InputStandartProperties
+                    quantidade={ quantidade }
+                    setQuantidade={ setQuantidade }
+                    peso={ peso }
+                    setPeso={ setPeso }
+                    dimensions={ dimensions }
+                    setDimensions={ setDimensions }
+                />
             </div>
 
         </div>

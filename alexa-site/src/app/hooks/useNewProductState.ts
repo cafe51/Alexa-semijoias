@@ -1,16 +1,16 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { SectionType, UseNewProductStateType } from '../utils/types';
+import { SectionType, UseNewProductStateType, VariationProductType } from '../utils/types';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
     | { type: 'SET_DESCRIPTION', payload: string }
     | { type: 'SET_VALUE', payload: { price: number, promotionalPrice: number, cost: number, } }
     | { type: 'SET_STOCK_QUANTITY', payload: number | undefined }
-    | { type: 'ADD_PRODUCT_VARIATION', payload: any }
+    | { type: 'ADD_PRODUCT_VARIATION', payload: VariationProductType }
     | { type: 'CLEAR_PRODUCT_VARIATIONS' }
-    | { type: 'REMOVE_PRODUCT_VARIATION', payload: any }
-    | { type: 'UPDATE_PRODUCT_VARIATION', payload: any }
+    | { type: 'REMOVE_PRODUCT_VARIATION', payload: VariationProductType }
+    | { type: 'UPDATE_PRODUCT_VARIATION', payload: { newVariation: VariationProductType, oldVariation: VariationProductType } }
     | { type: 'ADD_NEW_VARIATION_IN_ALL_PRODUCTS_VARIATIONS', payload: string }
     | { type: 'REMOVE_A_VARIATION_IN_ALL_PRODUCTS_VARIATIONS', payload: string }
     | { type: 'SET_VARIATIONS', payload: string[] | never[] }
@@ -51,25 +51,31 @@ function reducer(state: UseNewProductStateType, action: ActionType): UseNewProdu
     case 'CLEAR_PRODUCT_VARIATIONS':
         return { ...state, productVariations: [] };
     case 'REMOVE_PRODUCT_VARIATION':
-        return { ...state, productVariations: state.productVariations.filter((pv: any) => pv !== action.payload) };
+        return { ...state, productVariations: state.productVariations.filter((pv) => pv !== action.payload) };
     case 'UPDATE_PRODUCT_VARIATION':
         return {
             ...state,
-            productVariations: state.productVariations.map((pv: any) =>
+            productVariations: state.productVariations.map((pv) =>
                 pv === action.payload.oldVariation ? action.payload.newVariation : pv,
             ),
         };
     case 'ADD_NEW_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
         return {
             ...state,
-            productVariations: state.productVariations.map((pv: any) =>({ ...pv, [action.payload]: '' })),
+            productVariations: state.productVariations.map((pv) =>({
+                ...pv,
+                customProperties: {
+                    ...pv.customProperties,
+                    [action.payload]: '',
+                },
+            })),
         };
     case 'REMOVE_A_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
         return {
             ...state,
-            productVariations: state.productVariations.map((pv: any) =>{
+            productVariations: state.productVariations.map((pv) =>{
                 const newProductVariation = { ...pv };
-                delete newProductVariation[action.payload];
+                delete newProductVariation.customProperties[action.payload];
                 return newProductVariation;
             }),
         };

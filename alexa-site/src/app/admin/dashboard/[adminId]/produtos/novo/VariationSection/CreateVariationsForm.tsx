@@ -1,6 +1,7 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/CreateVariationsForm.tsx
 
-import { useState } from 'react';
+import { VariationProductType } from '@/app/utils/types';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { FaRegTrashAlt } from 'react-icons/fa';
 
 
@@ -10,6 +11,7 @@ interface CreateVariationsFormProps {
   handleAddNewVariationInAllProductVariations: (newVariation: string) => void;
   handleRemoveVariationInAllProductVariations: (variationToBeRemoved: string) => void;
   handleClearProductVariations: () => void;
+  setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
 }
 
 export default function CreateVariationsForm({
@@ -18,11 +20,20 @@ export default function CreateVariationsForm({
     handleAddNewVariationInAllProductVariations,
     handleRemoveVariationInAllProductVariations,
     handleClearProductVariations,
+    setProductVariationState,
 }: CreateVariationsFormProps) {
     const [newVariation, setNewVariation] = useState('');
 
     function handleAddVariationClick() {
         (newVariation && newVariation.length > 0) && handleVariationsChange([...variations, newVariation]);
+        setProductVariationState((prevState) => ({
+            ...prevState,
+            customProperties: {
+                ...prevState.customProperties,
+                [newVariation]: '',
+            },
+
+        }));
         handleAddNewVariationInAllProductVariations(newVariation);
         setNewVariation('');
     }
@@ -30,6 +41,13 @@ export default function CreateVariationsForm({
     function handleRemoveVariation(v: string) {
         const newVariations = variations.filter((vstate) => vstate !== v);
         handleVariationsChange(newVariations);
+        setProductVariationState((prevState) => {
+            const newState = { ...prevState };
+            delete newState.customProperties[v];
+            return newState;
+        });
+       
+
         handleRemoveVariationInAllProductVariations(v);
         newVariations.length === 0 && handleClearProductVariations();
     }

@@ -1,6 +1,11 @@
 //app/utils/types.tsx
 import { WhereFilterOp } from 'firebase/firestore';
 
+export type VariationProductType = {
+    customProperties: any,
+    defaultProperties: { quantidade: number, peso: number, dimensions: { largura: number, altura: number, comprimento: number }} 
+}
+
 export type SectionType = {
     sectionName: string,
     subsections?: string[] | null | undefined,
@@ -19,7 +24,7 @@ export type UseNewProductStateType = {
     sku: string,
     barcode: string,
     dimensions: { length: number, width: number, height: number, weight: number },
-    productVariations: any;
+    productVariations: VariationProductType[];
     sectionsSite: SectionType[] | never[],
 };
 
