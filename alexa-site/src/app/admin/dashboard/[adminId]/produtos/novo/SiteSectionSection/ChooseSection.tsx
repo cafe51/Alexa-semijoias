@@ -31,23 +31,12 @@ export default function ChooseSection({ firebaseSections, handleAddSection, init
             const initialSavedSections = initialStateCloneClone.map((e) => e.sectionName);
             setSavedSections(initialSavedSections); // define as cores das sections inicial
 
+            const SavedSubSections = initialStateClone
+                .map(({ sectionName, subsections }) => subsections?.map((subsection) => ({ sectionName, subsection })))  // isso vai retornar um array do tipo: [[a,b], [c,d]]
+                .filter((element) => element != undefined) // filtra os undefined
+                .flatMap(arr => arr); // achata o array de [[a,b], [c,d]] para [a, b, c, d]
 
-            const initialSavedSubSections = initialStateClone.map((e) => {
-                if (e.subsections) {
-                    return e.subsections.map((subsection) => ({ sectionName: e.sectionName, subsection: subsection }));
-                }
-            }); // isso vai retornar um array do tipo: [[a,b], [c,d]]
-
-
-            const flattenedInitialSavedSubSections = initialSavedSubSections.reduce((accumulator, current) => {
-                if(accumulator && current) {
-                    return [...accumulator, ...current];
-                }
-            }, []); // isso transforma o array para: [a,b,c,d]
-
-            console.log('to be saved on:', flattenedInitialSavedSubSections);
-            flattenedInitialSavedSubSections && setSavedSubSections(flattenedInitialSavedSubSections);  // define as cores das subsections inicial
-
+            setSavedSubSections(SavedSubSections);  // define as cores das subsections inicial
         }
     }, []);
 
@@ -137,13 +126,13 @@ export default function ChooseSection({ firebaseSections, handleAddSection, init
 
     return (
         <section className="flex flex-col h-full w-full gap-2">
-            <div className="flex gap-2 p-2 h-full w-full">
+            <div className="flex gap-2 h-full w-full">
                 <div className="flex flex-col gap-2">
                     { sections.map((section, index) => {
                         return (
                             <p
                                 key={ index }
-                                className={ `p-2 rounded-lg text-xs min-w-20 ${selectedSection?.sectionName === section.sectionName ? 'bg-blue-500 text-white' : savedSections.includes(section.sectionName) ? 'bg-green-500 text-white' : 'bg-gray-100'}` }
+                                className={ `p-2 rounded-lg text-sm min-w-20 ${selectedSection?.sectionName === section.sectionName ? 'bg-blue-500 text-white' : savedSections.includes(section.sectionName) ? 'bg-green-500 text-white' : 'bg-gray-100'}` }
                                 onClick={ () => handleSectionClick(section) }
                             >
                                 { section.sectionName }
