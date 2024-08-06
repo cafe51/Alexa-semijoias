@@ -13,6 +13,7 @@ export type SectionType = {
 
 export type UseNewProductStateType = {
     name: string;
+    categories: string[],
     description: string;
     value: {
         price: number,

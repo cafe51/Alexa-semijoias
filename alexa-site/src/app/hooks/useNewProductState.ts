@@ -18,9 +18,14 @@ type ActionType =
     | { type: 'SET_BARCODE', payload: string }
     | { type: 'SET_DIMENSIONS', payload: { length: number, width: number, height: number, weight: number } }
     | { type: 'SET_SECTIONS', payload: SectionType[] | never[] }
+    | { type: 'SET_ADD_CATEGORIES', payload: string }
+    | { type: 'SET_ADD_CATEGORIES', payload: string }
+    | { type: 'SET_REMOVE_ALL_CATEGORIES' }
+    | { type: 'SET_REMOVE_CATEGORY', payload: string }
 
 const initialState: UseNewProductStateType = {
     name: '',
+    categories: [],
     description: '',
     value: {
         price: 0,
@@ -89,6 +94,12 @@ function reducer(state: UseNewProductStateType, action: ActionType): UseNewProdu
         return { ...state, dimensions: action.payload };
     case 'SET_SECTIONS':
         return { ...state, sectionsSite: action.payload };
+    case 'SET_ADD_CATEGORIES':
+        return { ...state, categories: [...state.categories, action.payload] };
+    case 'SET_REMOVE_CATEGORY':
+        return { ...state, categories: state.categories.filter((c) => c !== action.payload) };
+    case 'SET_REMOVE_ALL_CATEGORIES':
+        return { ...state, categories: [] };
     default:
         return state;
     }
@@ -157,6 +168,18 @@ export function useNewProductState() {
         dispatch({ type: 'SET_SECTIONS', payload: sections });
     }, []);
 
+    const handleAddCategories = useCallback((category: string) => {
+        dispatch({ type: 'SET_ADD_CATEGORIES', payload: category });
+    }, []);
+
+    const handleRemoveCategory = useCallback((category: string) => {
+        dispatch({ type: 'SET_REMOVE_CATEGORY', payload: category });
+    }, []);
+
+    const handleRemoveAllCategories = useCallback(() => {
+        dispatch({ type: 'SET_REMOVE_ALL_CATEGORIES' });
+    }, []);
+
 
     return {
         state,
@@ -175,5 +198,8 @@ export function useNewProductState() {
         handleAddNewVariationInAllProductVariations,
         handleRemoveVariationInAllProductVariations,
         handleAddSection,
+        handleAddCategories,
+        handleRemoveCategory,
+        handleRemoveAllCategories,
     };
 }
