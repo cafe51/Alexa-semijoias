@@ -5,7 +5,7 @@ import React from 'react';
 
 interface DimensionsSectionProps {
     state: FullProductType;
-    handleDimensionsChange: (dimensions: { length: number, width: number, height: number, weight: number }) => void;
+    handleDimensionsChange: (dimensions: { largura: number, altura: number, comprimento: number, peso: number }) => void;
 }
 
 export default function DimensionsSection({
@@ -22,16 +22,16 @@ export default function DimensionsSection({
         }
         if(state && !state.dimensions) {
             handleDimensionsChange({
-                height: 0,
-                length: 0,
-                weight: 0,
-                width: 0,
+                altura: 0,
+                comprimento: 0,
+                largura: 0,
+                peso: 0,
                 [property]: Number(e.target.value),
             });
         }
     }
 
-    const properties: ['weight', 'length', 'height', 'width'] = ['weight', 'length', 'height', 'width'];
+    const properties: ['largura', 'altura', 'comprimento', 'peso'] = ['largura', 'altura', 'comprimento', 'peso'];
 
     return (
         <section className="flex flex-col gap-2 p-2 py-4 border rounded-md bg-white w-full">
@@ -41,7 +41,7 @@ export default function DimensionsSection({
                     properties.map((property, index) => {
                         return (
                             <div key={ index } className="w-5/12">
-                                <label htmlFor={ property } className="text-xs font-medium w-full">{ property }</label>
+                                <label htmlFor={ property } className="text-xs font-medium w-full">{ property.replace(/^\w/, (c) => c.toUpperCase()) }</label>
                                 <input
                                     id={ property }
                                     name={ property }                                

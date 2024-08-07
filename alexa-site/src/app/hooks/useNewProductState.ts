@@ -16,7 +16,7 @@ type ActionType =
     | { type: 'SET_VARIATIONS', payload: string[] | never[] }
     | { type: 'SET_SKU', payload: string }
     | { type: 'SET_BARCODE', payload: string }
-    | { type: 'SET_DIMENSIONS', payload: { length: number, width: number, height: number, weight: number } }
+    | { type: 'SET_DIMENSIONS', payload: { largura: number, altura: number, comprimento: number, peso: number }  }
     | { type: 'SET_SECTIONS', payload: SectionType[] | never[] }
     | { type: 'SET_ADD_CATEGORIES', payload: string }
     | { type: 'SET_ADD_CATEGORIES', payload: string }
@@ -32,13 +32,13 @@ const initialState: FullProductType = {
         promotionalPrice: 0,
         cost: 0,
     },
-    variations: [],
-    stockQuantity: 0,
-    sku: '',
-    barcode: '',
-    dimensions: { length: 0, width: 0, height: 0, weight: 0 },
-    productVariations: [],
     sectionsSite: [],
+    variations: [],
+    productVariations: [],
+    stockQuantity: undefined,
+    sku: undefined,
+    barcode: undefined,
+    dimensions: undefined,
 };
 
 function reducer(state: FullProductType, action: ActionType): FullProductType {
@@ -160,7 +160,7 @@ export function useNewProductState() {
         dispatch({ type: 'SET_BARCODE', payload: barcode });
     }, []);
 
-    const handleDimensionsChange = useCallback((dimensions: { length: number, width: number, height: number, weight: number }) => {
+    const handleDimensionsChange = useCallback((dimensions: { largura: number, altura: number, comprimento: number, peso: number }) => {
         dispatch({ type: 'SET_DIMENSIONS', payload: dimensions });
     }, []);
 

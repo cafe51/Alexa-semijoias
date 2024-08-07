@@ -26,7 +26,7 @@ export type FullProductType = {
     stockQuantity?: number | undefined,
     sku?: string | undefined,
     barcode?: string | undefined,
-    dimensions?: { length: number, width: number, height: number, weight: number } | undefined,
+    dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,
 }
 
 
