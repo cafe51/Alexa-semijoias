@@ -1,10 +1,10 @@
 // app/admin/dashboard/[adminId]/produtos/novo/DimensionsSection.tsx
 
-import { UseNewProductStateType } from '@/app/utils/types';
+import { FullProductType } from '@/app/utils/types';
 import React from 'react';
 
 interface DimensionsSectionProps {
-    state: UseNewProductStateType;
+    state: FullProductType;
     handleDimensionsChange: (dimensions: { length: number, width: number, height: number, weight: number }) => void;
 }
 

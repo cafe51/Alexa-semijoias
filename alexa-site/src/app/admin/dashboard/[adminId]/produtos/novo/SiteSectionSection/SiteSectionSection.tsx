@@ -1,13 +1,13 @@
 // app/admin/dashboard/[adminId]/produtos/novo/SiteSectionSection.tsx
 import ModalMaker from '@/app/components/ModalMaker';
 import { useCollection } from '@/app/hooks/useCollection';
-import { SectionType, UseNewProductStateType } from '@/app/utils/types';
+import { SectionType, FullProductType } from '@/app/utils/types';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import ChooseSection from './ChooseSection';
 
 interface SiteSectionSectionProps {
-    state: UseNewProductStateType;
+    state: FullProductType;
     handleAddSection: (sections: SectionType[] | never[]) => void
 }
 export default function SiteSectionSection({ state: { sectionsSite }, handleAddSection }: SiteSectionSectionProps) {

@@ -3,13 +3,13 @@
 import ModalMaker from '@/app/components/ModalMaker';
 import { useState } from 'react';
 import CreateCategoriesForm from './CreateCategories';
-import { UseNewProductStateType } from '@/app/utils/types';
+import { FullProductType } from '@/app/utils/types';
 
 interface CategoriesSectionmProps {
     handleAddCategories: (category: string) => void
     handleRemoveAllCategories: () => void
     handleRemoveCategory: (category: string) => void
-    state: UseNewProductStateType;
+    state: FullProductType;
   }
   
 

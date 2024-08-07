@@ -1,6 +1,6 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { SectionType, UseNewProductStateType, VariationProductType } from '../utils/types';
+import { SectionType, FullProductType, VariationProductType } from '../utils/types';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
@@ -23,7 +23,7 @@ type ActionType =
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
 
-const initialState: UseNewProductStateType = {
+const initialState: FullProductType = {
     name: '',
     categories: [],
     description: '',
@@ -41,7 +41,7 @@ const initialState: UseNewProductStateType = {
     sectionsSite: [],
 };
 
-function reducer(state: UseNewProductStateType, action: ActionType): UseNewProductStateType {
+function reducer(state: FullProductType, action: ActionType): FullProductType {
     switch (action.type) {
     case 'SET_NAME':
         return { ...state, name: action.payload };

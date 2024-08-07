@@ -1,9 +1,9 @@
 // app/admin/dashboard/[adminId]/produtos/novo/StockSection.tsx
-import { UseNewProductStateType } from '@/app/utils/types';
+import { FullProductType } from '@/app/utils/types';
 import React from 'react';
 
 interface StockSectionProps {
-    state: UseNewProductStateType;
+    state: FullProductType;
     handleStockQuantityChange: (stockQuantity: number) => void;
 }
 

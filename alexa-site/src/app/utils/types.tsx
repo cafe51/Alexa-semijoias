@@ -11,10 +11,10 @@ export type SectionType = {
     subsections?: string[] | null | undefined,
 }
 
-export type UseNewProductStateType = {
+export type FullProductType = {
     name: string;
-    categories: string[],
     description: string;
+    categories: string[],
     value: {
         price: number,
         promotionalPrice: number,
@@ -27,7 +27,7 @@ export type UseNewProductStateType = {
     dimensions: { length: number, width: number, height: number, weight: number },
     productVariations: VariationProductType[];
     sectionsSite: SectionType[] | never[],
-};
+}
 
 
 export type UseCheckoutStateType = {

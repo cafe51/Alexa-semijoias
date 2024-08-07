@@ -1,9 +1,9 @@
 // app/admin/dashboard/[adminId]/produtos/novo/PricesSection.tsx
 
-import { UseNewProductStateType } from '@/app/utils/types';
+import { FullProductType } from '@/app/utils/types';
 
 interface PricesSectionProps {
-    state: UseNewProductStateType;
+    state: FullProductType;
     handleValueChange: (value: { price: number, promotionalPrice: number, cost: number, }) => void;
 }
 
