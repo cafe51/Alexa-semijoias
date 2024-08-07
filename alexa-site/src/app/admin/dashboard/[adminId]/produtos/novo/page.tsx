@@ -13,9 +13,11 @@ import VariationsSection from './VariationSection/VariationsSection';
 import AssocietedProductsSection from './AssocietedProductsSection';
 import RecomendedProductsSection from './RecomendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
+import { useCollection } from '@/app/hooks/useCollection';
+import { FullProductType } from '@/app/utils/types';
 
 export default function NewProductPage() {
-
+    const { addDocument } = useCollection<FullProductType>('products');
     const {
         state, handleNameChange, handleDescriptionChange, handleValueChange,
         handleStockQuantityChange, handleVariationsChange, handleBarcodeChange,
@@ -91,6 +93,7 @@ export default function NewProductPage() {
                 loadingButton={ false }
                 onClick={ () => {
                     console.log(state);
+                    addDocument(state);
                 } }
             >
             mostrar estado
