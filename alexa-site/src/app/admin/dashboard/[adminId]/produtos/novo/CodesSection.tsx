@@ -22,7 +22,7 @@ export default function CodesSection({
                     id='sku'
                     name='sku'
                     type="text"
-                    value={ state.sku }
+                    value={ state.sku ? state.sku : '' }
                     onChange={ (e) => handleSkuChange(e.target.value) }
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                     placeholder="SKU"
@@ -34,7 +34,7 @@ export default function CodesSection({
                     id='barcode'
                     name='barcode'
                     type="text"
-                    value={ state.barcode }
+                    value={ state.barcode ? state.barcode : '' }
                     onChange={ (e) => handleBarcodeChange(e.target.value) }
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                     placeholder="Código de barras"

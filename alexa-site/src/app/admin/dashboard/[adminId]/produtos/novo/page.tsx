@@ -92,8 +92,26 @@ export default function NewProductPage() {
             <LargeButton color='blue'
                 loadingButton={ false }
                 onClick={ () => {
-                    console.log(state);
-                    addDocument(state);
+                    // console.log(state);
+                    const { barcode, sku, stockQuantity, dimensions } = state;
+
+                    const newProduct = {
+                        ...state,
+                        barcode: (barcode && (barcode.length > 0)) ? barcode : undefined,
+                        sku: (sku && (sku.length > 0)) ? sku : undefined,
+                        stockQuantity: stockQuantity ? stockQuantity : undefined,
+                        dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
+                    };
+
+                    for (const property of Object.keys(newProduct)) {
+                        if(newProduct[ property as keyof typeof newProduct] === undefined) {
+                            delete newProduct[property as keyof typeof newProduct];
+                        }
+                    }
+
+                    console.log(newProduct);
+
+                    addDocument(newProduct);
                 } }
             >
             mostrar estado
