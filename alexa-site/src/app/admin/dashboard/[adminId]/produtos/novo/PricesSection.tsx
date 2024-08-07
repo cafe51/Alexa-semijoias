@@ -18,7 +18,7 @@ export default function PricesSection({
         const finalPrice = v.promotionalPrice && v.promotionalPrice > 0 ? v.promotionalPrice : v.price;
         const profit = (finalPrice - v.cost);
         const margin = profit/finalPrice;
-        return margin * 100 ;
+        return margin * 100;
     };
 
     return (
@@ -67,7 +67,7 @@ export default function PricesSection({
                         id='profitMargin'
                         name='profitMargin'
                         type="number"
-                        value={ marginProfitValue(value) }
+                        value={ marginProfitValue(value) ? marginProfitValue(value) : 0 }
                         className="mt-1 w-full px-3 py-2 border rounded-md bg-gray-100"
                         readOnly
                     />
