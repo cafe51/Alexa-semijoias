@@ -20,13 +20,13 @@ export type FullProductType = {
         promotionalPrice: number,
         cost: number,
     }
-    stockQuantity: number | undefined,
-    variations: string[] | never[],
-    sku: string,
-    barcode: string,
-    dimensions: { length: number, width: number, height: number, weight: number },
-    productVariations: VariationProductType[];
     sectionsSite: SectionType[] | never[],
+    variations: string[] | never[],
+    productVariations: VariationProductType[] | never[];
+    stockQuantity?: number | undefined,
+    sku?: string | undefined,
+    barcode?: string | undefined,
+    dimensions?: { length: number, width: number, height: number, weight: number } | undefined,
 }
 
 
