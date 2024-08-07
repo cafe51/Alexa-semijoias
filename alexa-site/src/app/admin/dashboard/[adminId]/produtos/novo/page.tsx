@@ -8,7 +8,7 @@ import PricesSection from './PricesSection';
 import StockSection from './StockSection';
 import CodesSection from './CodesSection';
 import DimensionsSection from './DimensionsSection';
-import CategoriesSection from './CategoriesSection';
+import CategoriesSection from './CategorieSection.tsx/CategoriesSection';
 import VariationsSection from './VariationSection/VariationsSection';
 import AssocietedProductsSection from './AssocietedProductsSection';
 import RecomendedProductsSection from './RecomendedProductsSection';
@@ -23,6 +23,9 @@ export default function NewProductPage() {
         handleRemoveProductVariation, handleUpdateProductVariation, handleAddNewVariationInAllProductVariations,
         handleRemoveVariationInAllProductVariations, handleClearProductVariations,
         handleAddSection,
+        handleAddCategories,
+        handleRemoveAllCategories,
+        handleRemoveCategory,
     } = useNewProductState();
 
     return (
@@ -45,18 +48,26 @@ export default function NewProductPage() {
                 handleSkuChange={ handleSkuChange }
             />
 
-            <DimensionsSection
+            <CategoriesSection
                 state={ state }
-                handleDimensionsChange={ handleDimensionsChange }
+                handleAddCategories={ handleAddCategories }
+                handleRemoveAllCategories={ handleRemoveAllCategories }
+                handleRemoveCategory={ handleRemoveCategory }
             />
 
-            <CategoriesSection />
-
             { 
-                (!state.productVariations || state.productVariations.length == 0) && <StockSection
-                    state={ state }
-                    handleStockQuantityChange={ handleStockQuantityChange }
-                />
+                (!state.productVariations || state.productVariations.length == 0) &&
+                <>
+                    <StockSection
+                        state={ state }
+                        handleStockQuantityChange={ handleStockQuantityChange }
+                    />
+                    <DimensionsSection
+                        state={ state }
+                        handleDimensionsChange={ handleDimensionsChange }
+                    />
+                </>
+
             }
 
 
