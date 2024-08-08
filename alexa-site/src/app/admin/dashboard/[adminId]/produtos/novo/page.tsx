@@ -84,6 +84,7 @@ export default function NewProductPage() {
                 handleAddNewVariationInAllProductVariations={ handleAddNewVariationInAllProductVariations }
                 handleRemoveVariationInAllProductVariations={ handleRemoveVariationInAllProductVariations }
                 handleClearProductVariations={ handleClearProductVariations }
+                handleStockQuantityChange={ handleStockQuantityChange }
             />
 
             <SiteSectionSection
@@ -99,15 +100,21 @@ export default function NewProductPage() {
             <LargeButton color='blue'
                 loadingButton={ false }
                 onClick={ () => {
-                    // console.log(state);
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const { barcode, sku, estoque, dimensions, sectionsSite, ...rest } = state;
+
+                    let totalStock = 0;
+                    if(rest.productVariations && rest.productVariations.length > 0) {
+                        for (const pv of rest.productVariations) {
+                            totalStock += pv.defaultProperties.estoque;
+                        }
+                    }
 
                     const newProduct = {
                         ...rest,
                         barcode: (barcode && (barcode.length > 0)) ? barcode : undefined,
                         sku: (sku && (sku.length > 0)) ? sku : undefined,
-                        estoque: estoque ? estoque : undefined,
+                        estoque: estoque ? estoque : totalStock,
                         dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
 
                     };

@@ -11,6 +11,7 @@ interface CreateNewProductVariationFormProps {
   setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
   productVariationState: VariationProductType;
   handleAddProductVariation: (productVariation: VariationProductType) => void;
+  handleStockQuantityChange: (estoque: number | undefined) => void;
 }
 
 export default function CreateNewProductVariationForm({
@@ -18,6 +19,7 @@ export default function CreateNewProductVariationForm({
     productVariationState, 
     setProductVariationState,
     handleAddProductVariation,
+    handleStockQuantityChange,
 }: CreateNewProductVariationFormProps) {
     const [estoque, setEstoque] = useState(0);
     const [peso, setPeso] = useState(0);
@@ -65,6 +67,7 @@ export default function CreateNewProductVariationForm({
                         },
                     } };
             });
+            handleStockQuantityChange(undefined);
             setEstoque(0);
             setPeso(0);
             setDimensions({
