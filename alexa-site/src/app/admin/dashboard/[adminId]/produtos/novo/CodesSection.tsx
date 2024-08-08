@@ -1,9 +1,9 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CodesSection.tsx
-import { FullProductType } from '@/app/utils/types';
+import { StateNewProductType } from '@/app/utils/types';
 import React from 'react';
 
 interface CodesSectionProps {
-    state: FullProductType;
+    state: StateNewProductType;
     handleSkuChange: (sku: string) => void;
     handleBarcodeChange: (barcode: string) => void;
 }

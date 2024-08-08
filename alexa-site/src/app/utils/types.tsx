@@ -11,6 +11,8 @@ export type SectionType = {
     subsections?: string[] | null | undefined,
 }
 
+export type StateNewProductType = FullProductType & { sectionsSite: SectionType[] | never[] };
+
 export type FullProductType = {
     name: string;
     description: string;

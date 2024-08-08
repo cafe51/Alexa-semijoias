@@ -1,10 +1,10 @@
 // app/admin/dashboard/[adminId]/produtos/novo/DimensionsSection.tsx
 
-import { FullProductType } from '@/app/utils/types';
+import { StateNewProductType } from '@/app/utils/types';
 import React from 'react';
 
 interface DimensionsSectionProps {
-    state: FullProductType;
+    state: StateNewProductType;
     handleDimensionsChange: (dimensions: { largura: number, altura: number, comprimento: number, peso: number }) => void;
 }
 
@@ -13,7 +13,7 @@ export default function DimensionsSection({
     handleDimensionsChange,
 }: DimensionsSectionProps) {
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>, state: FullProductType, property: string) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>, state: StateNewProductType, property: string) {
         if(state && state.dimensions){
             handleDimensionsChange({
                 ...state.dimensions,

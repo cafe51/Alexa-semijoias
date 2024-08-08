@@ -1,8 +1,8 @@
 // app/admin/dashboard/[adminId]/produtos/novo/NameAndDescriptionSection.tsx
-import { FullProductType } from '@/app/utils/types';
+import { StateNewProductType } from '@/app/utils/types';
 
 interface NameAndDescriptionSectionProps {
-    state: FullProductType;
+    state: StateNewProductType;
     handleNameChange: (name: string) => void;
     handleDescriptionChange: (description: string) => void; 
 }

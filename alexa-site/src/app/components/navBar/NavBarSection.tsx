@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import NavBarItem from './NavBarItem';
 import { SectionType } from '@/app/utils/types';
+import Link from 'next/link';
 
 interface NavBarSectionProps {
     closeMenu: () => void;
@@ -29,8 +30,8 @@ export default function NavBarSection({ section }: NavBarSectionProps) {
             {
                 showSubsection && section.subsections &&
                 <div className='flex flex-col gap-2 px-2 text-xs'>
-                    <a href={ `/${section.sectionName}` } >Ver todos</a>
-                    { section.subsections.map((subsectionName) => <NavBarItem key={ subsectionName } sectionName={ subsectionName }/>) }
+                    <Link href={ `/section/${section.sectionName}` } >Ver todos</Link>
+                    { section.subsections.map((subsectionName) => <NavBarItem key={ subsectionName } sectionName={ `${ section.sectionName }/${subsectionName}` }/>) }
                 </div>
             }
             <div className='w-full h-1 bg-pink-'></div>

@@ -5,14 +5,25 @@ import Card from './Card';
 import { useSnapshot } from '../hooks/useSnapshot';
 import { FilterOption, FullProductType } from '../utils/types';
 
-export default function ProductsList({ productType }: { productType: string }) {
+export default function ProductsList({ sectionName, subsection }: { sectionName: string, subsection?: string }) {
     const [isLoading, setIsLoading] = useState(true);
-    const pedidosFiltrados = useMemo<FilterOption[]>(() => 
-        [
+    const pedidosFiltrados = useMemo<FilterOption[]>(() => {
+        // { field: 'subsections', operator: 'array-contains', value: subsections }
+        if(subsection) {
+            return [
+                // { field: 'estoque', operator: '>', value: 0 },
+                // { field: 'sections', operator: 'array-contains', value: sectionName },
+                { field: 'subsections', operator: 'array-contains', value: subsection },
+            ];
+        } else {
+            return [
             // { field: 'estoque', operator: '>', value: 0 },
-            { field: 'sections', operator: 'array-contains', value: productType },
-        ],
-    [productType], 
+                { field: 'sections', operator: 'array-contains', value: sectionName },
+            ];
+        }
+
+    },
+    [sectionName, subsection], 
     );
 
     const { documents } = useSnapshot<FullProductType>(
@@ -40,11 +51,12 @@ export default function ProductsList({ productType }: { productType: string }) {
 
     return (
         <main>
-            <h2>{ productType.charAt(0).toUpperCase() + productType.slice(1) }</h2>
+            <h2>{ sectionName.charAt(0).toUpperCase() + sectionName.slice(1) }</h2>
+            { subsection && <h3>{ subsection.charAt(0).toUpperCase() + subsection.slice(1) }</h3> }
             { documents && documents[0] && (
                 <div className=" flex flex-wrap justify-center gap-2 ">
                     { documents.map((productData) => {
-                        return <Card key={ productData.id } productType={ productType } productData={ productData }  />;
+                        return <Card key={ productData.id } sectionName={ sectionName } productData={ productData }  />;
                     }) }
                 </div>
             ) }

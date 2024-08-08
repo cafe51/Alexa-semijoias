@@ -1,16 +1,23 @@
 // app/admin/dashboard/[adminId]/produtos/novo/SiteSectionSection.tsx
 import ModalMaker from '@/app/components/ModalMaker';
 import { useCollection } from '@/app/hooks/useCollection';
-import { SectionType, FullProductType } from '@/app/utils/types';
+import { SectionType, StateNewProductType } from '@/app/utils/types';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import ChooseSection from './ChooseSection';
 
 interface SiteSectionSectionProps {
-    state: FullProductType;
-    handleAddSection: (sections: SectionType[] | never[]) => void
+    state: StateNewProductType;
+    handleAddSection: (sections: string[]) => void
+    handleAddSubSection: (sections: string[] | undefined) => void
+    handleAddSectionsSite: (sections: SectionType[] | never[]) => void
 }
-export default function SiteSectionSection({ state: { sectionsSite }, handleAddSection }: SiteSectionSectionProps) {
+export default function SiteSectionSection({
+    state: { sectionsSite },
+    handleAddSectionsSite,
+    handleAddSubSection,
+    handleAddSection,
+}: SiteSectionSectionProps) {
     const { getAllDocuments } = useCollection<SectionType>('siteSections');
     const [sections, setSections] = useState<(SectionType & WithFieldValue<DocumentData>)[] | never[]>([]);
 
@@ -31,7 +38,12 @@ export default function SiteSectionSection({ state: { sectionsSite }, handleAddS
                     title='Selecione a seção'
                     closeModelClick={ () => setShowSectionEditionModal(!showSectionEditionModal) }
                 >
-                    <ChooseSection firebaseSections={ sections } handleAddSection={ handleAddSection } initialState={ sectionsSite }/>
+                    <ChooseSection
+                        firebaseSections={ sections }
+                        handleAddSectionsSite={ handleAddSectionsSite }
+                        handleAddSection={ handleAddSection }
+                        handleAddSubSection={ handleAddSubSection }
+                        initialState={ sectionsSite }/>
                 </ModalMaker>
             ) }
             <div className='flex justify-between'>
@@ -70,7 +82,11 @@ export default function SiteSectionSection({ state: { sectionsSite }, handleAddS
                             })
                         }
 
-                        <button onClick={ () => handleAddSection([]) }>X</button>
+                        <button onClick={ () => {
+                            handleAddSectionsSite([]);
+                            handleAddSubSection([]);
+                            handleAddSection([]);
+                        } }>X</button>
                     </div>)
         
                     :

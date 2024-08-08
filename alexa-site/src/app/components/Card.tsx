@@ -11,10 +11,10 @@ import { DocumentData } from 'firebase/firestore';
 
 interface CardProps {
     productData: FullProductType & DocumentData | null;
-    productType: string;
+    sectionName: string;
 }
 
-export default function Card({ productData, productType }: CardProps) {
+export default function Card({ productData, sectionName }: CardProps) {
     const  [isLoadingButton, setIsloadingButton ] = useState(false);
     const { carrinho } = useUserInfo();
     const { handleAddToCart } = useAddNewItemCart(carrinho, productData, setIsloadingButton);
@@ -40,7 +40,7 @@ export default function Card({ productData, productType }: CardProps) {
         <div className='flex flex-col text-center w-[160px] justify-between content-between place-content-between gap-2 shadowColor shadow-lg text-[12px] rounded-lg bg-white'>
 
             <section className='flex flex-col w-full'>
-                <Link href={ `/${productType}/${productData.id}` } className='w-full rounded-lg relative h-[200px] overflow-hidden'>
+                <Link href={ `/${sectionName}/${productData.id}` } className='w-full rounded-lg relative h-[200px] overflow-hidden'>
                     <Image
                         data-testid="product-link"
                         className='rounded-lg object-cover scale-125'

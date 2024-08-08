@@ -1,6 +1,6 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/VariationsSection.tsx
 import ModalMaker from '@/app/components/ModalMaker';
-import { FullProductType, VariationProductType } from '@/app/utils/types';
+import { StateNewProductType, VariationProductType } from '@/app/utils/types';
 import { useState } from 'react';
 import CreateVariationsForm from './CreateVariationsForm';
 import ProductVariationFormFilled from './ProductVariationFormFilled';
@@ -8,7 +8,7 @@ import CreateNewProductVariationForm from './CreateNewProductVariationForm';
 
 interface VariationsSectionProps {
     handleVariationsChange: (variations: string[] | never[]) => void;
-    state: FullProductType;
+    state: StateNewProductType;
     handleAddProductVariation: (productVariation: VariationProductType) => void;
     handleRemoveProductVariation: (productVariation: VariationProductType) => void;
     handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void;

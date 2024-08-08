@@ -14,10 +14,10 @@ import AssocietedProductsSection from './AssocietedProductsSection';
 import RecomendedProductsSection from './RecomendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
-import { FullProductType } from '@/app/utils/types';
+import { StateNewProductType } from '@/app/utils/types';
 
 export default function NewProductPage() {
-    const { addDocument } = useCollection<FullProductType>('products');
+    const { addDocument } = useCollection<StateNewProductType>('products');
     const {
         state, handleNameChange, handleDescriptionChange, handleValueChange,
         handleStockQuantityChange, handleVariationsChange, handleBarcodeChange,
@@ -28,6 +28,8 @@ export default function NewProductPage() {
         handleAddCategories,
         handleRemoveAllCategories,
         handleRemoveCategory,
+        handleAddSubSection,
+        handleAddSectionsSite,
     } = useNewProductState();
 
     return (
@@ -84,7 +86,12 @@ export default function NewProductPage() {
                 handleClearProductVariations={ handleClearProductVariations }
             />
 
-            <SiteSectionSection state={ state } handleAddSection={ handleAddSection }/>
+            <SiteSectionSection
+                state={ state }
+                handleAddSectionsSite={ handleAddSectionsSite }
+                handleAddSection={ handleAddSection }
+                handleAddSubSection={ handleAddSubSection }
+            />
 
             <AssocietedProductsSection />
             <RecomendedProductsSection />
@@ -93,14 +100,16 @@ export default function NewProductPage() {
                 loadingButton={ false }
                 onClick={ () => {
                     // console.log(state);
-                    const { barcode, sku, estoque, dimensions } = state;
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const { barcode, sku, estoque, dimensions, sectionsSite, ...rest } = state;
 
                     const newProduct = {
-                        ...state,
+                        ...rest,
                         barcode: (barcode && (barcode.length > 0)) ? barcode : undefined,
                         sku: (sku && (sku.length > 0)) ? sku : undefined,
                         estoque: estoque ? estoque : undefined,
                         dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
+
                     };
 
                     for (const property of Object.keys(newProduct)) {
@@ -111,7 +120,7 @@ export default function NewProductPage() {
 
                     console.log(newProduct);
 
-                    newProduct.sku ? addDocument(newProduct, newProduct.sku) : addDocument(newProduct);
+                    // newProduct.sku ? addDocument(newProduct, newProduct.sku) : addDocument(newProduct);
                 } }
             >
             mostrar estado

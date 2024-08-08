@@ -1,6 +1,6 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { SectionType, FullProductType, VariationProductType } from '../utils/types';
+import { SectionType, StateNewProductType, VariationProductType } from '../utils/types';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
@@ -17,13 +17,16 @@ type ActionType =
     | { type: 'SET_SKU', payload: string }
     | { type: 'SET_BARCODE', payload: string }
     | { type: 'SET_DIMENSIONS', payload: { largura: number, altura: number, comprimento: number, peso: number }  }
-    | { type: 'SET_SECTIONS', payload: SectionType[] | never[] }
+    | { type: 'SET_SECTIONS_SITE', payload: SectionType[] | never[] }
+    | { type: 'SET_SECTIONS', payload: string[] }
+    | { type: 'SET_SUB_SECTIONS', payload: string[] | undefined }
     | { type: 'SET_ADD_CATEGORIES', payload: string }
     | { type: 'SET_ADD_CATEGORIES', payload: string }
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
 
-const initialState: FullProductType = {
+
+const initialState: StateNewProductType= {
     name: '',
     categories: [],
     description: '',
@@ -33,6 +36,8 @@ const initialState: FullProductType = {
         cost: 0,
     },
     sectionsSite: [],
+    sections: [],
+    subsections: undefined,
     variations: [],
     productVariations: [],
     estoque: undefined,
@@ -41,7 +46,7 @@ const initialState: FullProductType = {
     dimensions: undefined,
 };
 
-function reducer(state: FullProductType, action: ActionType): FullProductType {
+function reducer(state: StateNewProductType, action: ActionType): StateNewProductType{
     switch (action.type) {
     case 'SET_NAME':
         return { ...state, name: action.payload };
@@ -92,8 +97,12 @@ function reducer(state: FullProductType, action: ActionType): FullProductType {
         return { ...state, barcode: action.payload };
     case 'SET_DIMENSIONS':
         return { ...state, dimensions: action.payload };
-    case 'SET_SECTIONS':
+    case 'SET_SECTIONS_SITE':
         return { ...state, sectionsSite: action.payload };
+    case 'SET_SECTIONS':
+        return { ...state, sections: action.payload };
+    case 'SET_SUB_SECTIONS':
+        return { ...state, subsections: action.payload };
     case 'SET_ADD_CATEGORIES':
         return { ...state, categories: [...state.categories, action.payload] };
     case 'SET_REMOVE_CATEGORY':
@@ -164,8 +173,16 @@ export function useNewProductState() {
         dispatch({ type: 'SET_DIMENSIONS', payload: dimensions });
     }, []);
 
-    const handleAddSection = useCallback((sections: SectionType[] | never[]) => {
+    const handleAddSectionsSite = useCallback((sections: SectionType[] | never[]) => {
+        dispatch({ type: 'SET_SECTIONS_SITE', payload: sections });
+    }, []);
+
+    const handleAddSection = useCallback((sections: string[]) => {
         dispatch({ type: 'SET_SECTIONS', payload: sections });
+    }, []);
+
+    const handleAddSubSection = useCallback((sections: string[] | undefined) => {
+        dispatch({ type: 'SET_SUB_SECTIONS', payload: sections });
     }, []);
 
     const handleAddCategories = useCallback((category: string) => {
@@ -197,7 +214,9 @@ export function useNewProductState() {
         handleUpdateProductVariation,
         handleAddNewVariationInAllProductVariations,
         handleRemoveVariationInAllProductVariations,
+        handleAddSectionsSite,
         handleAddSection,
+        handleAddSubSection,
         handleAddCategories,
         handleRemoveCategory,
         handleRemoveAllCategories,

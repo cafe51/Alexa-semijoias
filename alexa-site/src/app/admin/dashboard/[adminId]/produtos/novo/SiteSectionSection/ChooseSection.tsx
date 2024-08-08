@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 
 interface ChooseSectionProps {
   firebaseSections: never[] | (SectionType & WithFieldValue<DocumentData>)[];
-  handleAddSection: (sections: SectionType[] | never[]) => void // handleSection altera o valor que será atribuído à initialState no componente pai.
+  handleAddSection: (sections: string[]) => void
+  handleAddSubSection: (sections: string[] | undefined) => void
+  handleAddSectionsSite: (sections: SectionType[] | never[]) => void // handleSection altera o valor que será atribuído à initialState no componente pai.
   initialState: SectionType[] | never[];
 }
 
@@ -13,7 +15,13 @@ type SavedSubSectionType = {
   subsection: string;
 };
 
-export default function ChooseSection({ firebaseSections, handleAddSection, initialState }: ChooseSectionProps) {
+export default function ChooseSection({
+    firebaseSections,
+    handleAddSectionsSite,
+    handleAddSubSection,
+    handleAddSection,
+    initialState,
+}: ChooseSectionProps) {
     const [sections, setSections] = useState<SectionType[]>([]);
     const [selectedSection, setSelectedSection] = useState<SectionType | undefined>();
     const [selectedSubSection, setSelectedSubSection] = useState<string | undefined>();
@@ -51,7 +59,24 @@ export default function ChooseSection({ firebaseSections, handleAddSection, init
     useEffect(() => {
         console.log('SectionList mudou', sectionList);
         console.log('savedSubSections mudou', savedSubSections);
-        handleAddSection(sectionList);
+        if(savedSubSections && savedSubSections.length > 0) {
+            const savedSubSectionsClone = [...savedSubSections];
+            const subsectionsPairs = savedSubSectionsClone.map(({ sectionName, subsection }) => `${sectionName}:${subsection}`);
+            handleAddSubSection(subsectionsPairs);
+        }
+
+        if(savedSubSections && savedSubSections.length > 0) {
+            const savedSubSectionsClone = [...savedSubSections];
+            const subsectionsPairs = savedSubSectionsClone.map(({ sectionName, subsection }) => `${sectionName}:${subsection}`);
+            handleAddSubSection(subsectionsPairs);
+        }
+
+        if(sectionList && sectionList.length > 0) {
+            handleAddSectionsSite(sectionList);
+            const sectionListClone = [...sectionList];
+            const sectionNames= sectionListClone.map(({ sectionName }) => sectionName);
+            handleAddSection(sectionNames);
+        }
     }, [sectionList]);
 
     const handleSectionClick = (section: SectionType) => {
