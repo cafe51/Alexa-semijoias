@@ -108,6 +108,8 @@ export default function NewProductPage() {
                         for (const pv of rest.productVariations) {
                             totalStock += pv.defaultProperties.estoque;
                         }
+                    } else {
+                        handleVariationsChange([]);
                     }
 
                     const newProduct = {
@@ -116,7 +118,7 @@ export default function NewProductPage() {
                         sku: (sku && (sku.length > 0)) ? sku : undefined,
                         estoque: estoque ? estoque : totalStock,
                         dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
-
+                        variations: (rest.productVariations && rest.productVariations.length > 0) ? rest.variations : [],
                     };
 
                     for (const property of Object.keys(newProduct)) {

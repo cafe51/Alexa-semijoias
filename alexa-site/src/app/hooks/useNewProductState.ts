@@ -129,7 +129,7 @@ export function useNewProductState() {
         dispatch({ type: 'SET_VALUE', payload: value });
     }, []);
 
-    const handleStockQuantityChange = useCallback((estoque: number) => {
+    const handleStockQuantityChange = useCallback((estoque: number | undefined) => {
         dispatch({ type: 'SET_STOCK_QUANTITY', payload: estoque });
     }, []);
     
