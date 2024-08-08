@@ -52,7 +52,7 @@ export default function VariationsSection({
 
     return (
         <section className="flex flex-col gap-2 p-4 border rounded-md bg-white w-full">
-            { (showVariationEditionModal) && variations && variations.length > 0 &&(
+            { showVariationEditionModal &&(
                 <ModalMaker
                     title='Crie novas variações'
                     closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
