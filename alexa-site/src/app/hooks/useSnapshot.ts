@@ -38,7 +38,8 @@ export const useSnapshot = <T>(collectionName: string, filterOptions: FilterOpti
                 results ? setDocuments(results) : '';
             }, 150); 
         });
-
+        
+        console.log('USESNAPSHOT:', documents);
         return () => {
             if (timerRef.current) {
                 clearTimeout(timerRef.current);

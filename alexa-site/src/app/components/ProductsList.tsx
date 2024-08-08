@@ -3,22 +3,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import Card from './Card';
 import { useSnapshot } from '../hooks/useSnapshot';
-import { FilterOption, ProductType } from '../utils/types';
+import { FilterOption, FullProductType } from '../utils/types';
 
 export default function ProductsList({ productType }: { productType: string }) {
     const [isLoading, setIsLoading] = useState(true);
     const pedidosFiltrados = useMemo<FilterOption[]>(() => 
         [
-            { field: 'estoque', operator: '>', value: 0 },
-            { field: 'categoria', operator: '==', value: productType },
+            // { field: 'estoque', operator: '>', value: 0 },
+            { field: 'sections', operator: 'array-contains', value: productType },
         ],
     [productType], 
     );
 
-    const { documents } = useSnapshot<ProductType>(
-        'produtos', 
+    const { documents } = useSnapshot<FullProductType>(
+        'products', 
         pedidosFiltrados, 
     );
+
 
     useEffect(() => {
         setIsLoading(true);

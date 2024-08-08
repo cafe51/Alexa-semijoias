@@ -20,7 +20,9 @@ export type FullProductType = {
         promotionalPrice: number,
         cost: number,
     }
-    sectionsSite: SectionType[] | never[],
+    sections: string[],
+    subsections?: string[] | null | undefined,
+    // sectionsSite: SectionType[] | never[],
     variations: string[] | never[],
     productVariations: VariationProductType[] | never[];
     estoque?: number | undefined,

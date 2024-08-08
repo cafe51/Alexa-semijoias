@@ -5,10 +5,16 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import formatPrice from '../utils/formatPrice';
 import SmallButton from './SmallButton';
 import { useState } from 'react';
-import { ProductType } from '../utils/types';
+import { FullProductType } from '../utils/types';
 import { useAddNewItemCart } from '../hooks/useAddNewItemCart';
+import { DocumentData } from 'firebase/firestore';
 
-export default function Card({ productData, productType }: { productData: ProductType | null, productType: string }) {
+interface CardProps {
+    productData: FullProductType & DocumentData | null;
+    productType: string;
+}
+
+export default function Card({ productData, productType }: CardProps) {
     const  [isLoadingButton, setIsloadingButton ] = useState(false);
     const { carrinho } = useUserInfo();
     const { handleAddToCart } = useAddNewItemCart(carrinho, productData, setIsloadingButton);
@@ -16,8 +22,18 @@ export default function Card({ productData, productType }: { productData: Produc
     if (!productData) return <h3>Carregando...</h3>;
     
     const isDisabled = () => {
-        const cartItem = carrinho?.find((item) => item.productId === productData.id);
-        return cartItem ? cartItem.quantidade >= productData.estoque : false;
+        if(productData.estoque) {
+            const cartItem = carrinho?.find((item) => item.productId === productData.id);
+            return cartItem ? cartItem.quantidade >= productData.estoque : false;
+        }
+        if(productData.productVariations) {
+            const cartItem = carrinho?.find((item) => item.productId === productData.id);
+            let sumOfProductVariationsStock = 0;
+            for (const pv of productData.productVariations) {
+                sumOfProductVariationsStock += pv.defaultProperties.estoque;
+            }
+            return cartItem ? cartItem.quantidade >= sumOfProductVariationsStock : false;
+        }
     };
 
     return (
@@ -28,27 +44,32 @@ export default function Card({ productData, productType }: { productData: Produc
                     <Image
                         data-testid="product-link"
                         className='rounded-lg object-cover scale-125'
-                        src={ productData.image[0] }
+                        src={ 'https://cdn.dooca.store/69773/products/anel-organico-regulavel-folheado-em-ouro-18k1_1600x2000+fill_ffffff.jpg?v=1712695670' }
                         alt="Foto da peça"
                         fill
                     />
                 </Link>
 
                 <div>
-                    <h3 className='p-2 w-full'>{ productData.nome }</h3>
+                    <h3 className='p-2 w-full'>{ productData.name }</h3>
                 </div>
 
             </section>
 
             <section className="flex flex-col w-full p-4 ">
-                <div className='p-2 w-full bg-yellow-200'>
+                { /* <div className='p-2 w-full bg-yellow-200'>
                     <h3 >{ productData.id }</h3>
-                </div>
-
+                </div> */ }
+                {
+                    productData.value.promotionalPrice > 0 &&
+                        <p className='font-bold text-lg text-gray-400 text-decoration: line-through'>{ formatPrice(productData.value.price) }</p>
+                }
                 <div>
-                    <p className='font-bold text-xl'>{ formatPrice(productData.preco) }</p>
+
+                    
+                    <p className='font-bold text-lg '>{ formatPrice(productData.value.promotionalPrice > 0 ? productData.value.promotionalPrice : productData.value.price) }</p>
                     <p>em até 6x de</p>
-                    <p className='font-bold text-xl'>{ formatPrice(productData.preco / 6) }</p>
+                    <p className='font-bold text-lg'>{ formatPrice((productData.value.promotionalPrice > 0 ? productData.value.promotionalPrice : productData.value.price)/ 6) }</p>
                     <p> sem juros</p>
                 </div>
                 <SmallButton  color='green' loadingButton={ isLoadingButton } disabled={ isDisabled() } onClick={ handleAddToCart }>

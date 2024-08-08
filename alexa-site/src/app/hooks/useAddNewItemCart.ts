@@ -1,18 +1,18 @@
 // app/hooks/useUpdateCard.ts
 import { User } from 'firebase/auth';
-import { CartInfoType, ProductType } from '../utils/types';
+import { CartInfoType, FullProductType } from '../utils/types';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useLocalStorage } from './useLocalStorage';
 import { useCollection } from './useCollection';
 import { useAuthContext } from './useAuthContext';
 import { Dispatch, SetStateAction } from 'react';
 
-export const useAddNewItemCart = (carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, productData: ProductType & WithFieldValue<DocumentData> | null, setIsloadingButton: Dispatch<SetStateAction<boolean>>) => {
+export const useAddNewItemCart = (carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, productData: FullProductType & WithFieldValue<DocumentData> | null, setIsloadingButton: Dispatch<SetStateAction<boolean>>) => {
     const { addItemToLocalStorageCart } = useLocalStorage();
     const { addDocument, updateDocumentField } = useCollection('carrinhos');
     const { user } = useAuthContext();
 
-    const addItemToFirebaseCart = (user: User, carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, product: ProductType & WithFieldValue<DocumentData>) => {
+    const addItemToFirebaseCart = (user: User, carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, product: FullProductType & WithFieldValue<DocumentData>) => {
         const cartItem = carrinho?.find((item) => item.productId === product.id);
         if (!cartItem) {
             addDocument({
