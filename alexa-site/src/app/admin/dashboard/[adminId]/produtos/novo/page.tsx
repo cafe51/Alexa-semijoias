@@ -111,7 +111,7 @@ export default function NewProductPage() {
 
                     console.log(newProduct);
 
-                    addDocument(newProduct);
+                    newProduct.sku ? addDocument(newProduct, newProduct.sku) : addDocument(newProduct);
                 } }
             >
             mostrar estado
