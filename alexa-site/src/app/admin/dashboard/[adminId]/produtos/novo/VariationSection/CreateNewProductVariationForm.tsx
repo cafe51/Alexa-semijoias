@@ -19,7 +19,7 @@ export default function CreateNewProductVariationForm({
     setProductVariationState,
     handleAddProductVariation,
 }: CreateNewProductVariationFormProps) {
-    const [quantidade, setQuantidade] = useState(0);
+    const [estoque, setEstoque] = useState(0);
     const [peso, setPeso] = useState(0);
     const [dimensions, setDimensions] = useState({
         altura: 0,
@@ -39,7 +39,7 @@ export default function CreateNewProductVariationForm({
             handleAddProductVariation({
                 ...productVariationState,
                 defaultProperties: {
-                    quantidade: quantidade ? quantidade : 0,
+                    estoque: estoque ? estoque : 0,
                     peso: peso ? peso : 0,
                     dimensions: dimensions ? dimensions : {
                         altura: 0,
@@ -57,7 +57,7 @@ export default function CreateNewProductVariationForm({
                     customProperties: newCustomProperties,
                     defaultProperties: {
                         peso: 0,
-                        quantidade: 0,
+                        estoque: 0,
                         dimensions: {
                             largura: 0,
                             altura: 0,
@@ -65,7 +65,7 @@ export default function CreateNewProductVariationForm({
                         },
                     } };
             });
-            setQuantidade(0);
+            setEstoque(0);
             setPeso(0);
             setDimensions({
                 altura: 0,
@@ -85,8 +85,8 @@ export default function CreateNewProductVariationForm({
                 variations={ variations }
                 productVariationState={ productVariationState }
                 setProductVariationState={ setProductVariationState }
-                quantidade={ quantidade }
-                setQuantidade={ setQuantidade }
+                estoque={ estoque }
+                setEstoque={ setEstoque }
                 peso={ peso }
                 setPeso={ setPeso }
                 dimensions={ dimensions }

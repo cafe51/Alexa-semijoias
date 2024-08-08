@@ -35,7 +35,7 @@ const initialState: FullProductType = {
     sectionsSite: [],
     variations: [],
     productVariations: [],
-    stockQuantity: undefined,
+    estoque: undefined,
     sku: undefined,
     barcode: undefined,
     dimensions: undefined,
@@ -85,7 +85,7 @@ function reducer(state: FullProductType, action: ActionType): FullProductType {
             }),
         };
     case 'SET_STOCK_QUANTITY':
-        return { ...state, stockQuantity: action.payload };
+        return { ...state, estoque: action.payload };
     case 'SET_SKU':
         return { ...state, sku: action.payload };
     case 'SET_BARCODE':
@@ -120,8 +120,8 @@ export function useNewProductState() {
         dispatch({ type: 'SET_VALUE', payload: value });
     }, []);
 
-    const handleStockQuantityChange = useCallback((stockQuantity: number) => {
-        dispatch({ type: 'SET_STOCK_QUANTITY', payload: stockQuantity });
+    const handleStockQuantityChange = useCallback((estoque: number) => {
+        dispatch({ type: 'SET_STOCK_QUANTITY', payload: estoque });
     }, []);
     
     const handleAddProductVariation = useCallback((productVariation: any) => {

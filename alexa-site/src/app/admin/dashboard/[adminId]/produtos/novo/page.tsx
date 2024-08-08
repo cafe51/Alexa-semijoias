@@ -93,13 +93,13 @@ export default function NewProductPage() {
                 loadingButton={ false }
                 onClick={ () => {
                     // console.log(state);
-                    const { barcode, sku, stockQuantity, dimensions } = state;
+                    const { barcode, sku, estoque, dimensions } = state;
 
                     const newProduct = {
                         ...state,
                         barcode: (barcode && (barcode.length > 0)) ? barcode : undefined,
                         sku: (sku && (sku.length > 0)) ? sku : undefined,
-                        stockQuantity: stockQuantity ? stockQuantity : undefined,
+                        estoque: estoque ? estoque : undefined,
                         dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
                     };
 

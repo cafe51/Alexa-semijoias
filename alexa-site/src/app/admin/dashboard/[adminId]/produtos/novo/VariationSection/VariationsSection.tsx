@@ -21,9 +21,9 @@ interface VariationsSectionProps {
 // const vars = ['cor', 'tamanho'];
 // const vars = ['cor', 'tamanho', 'peso', 'idade', 'altura', 'nacionalidade', 'nome', 'sobrenome', 'seila', 'cidade', 'estado', 'rua', 'bairro', 'cep', 'idioma'];
 // const produtosMock = [
-//     { cor: 'amarelo', tamanho: 'pequeno', quantidade: 2, peso: 1,  dimensions: { altura: 2, largura: 5 ,comprimento: 4 } },
-//     { cor: 'vermelho', tamanho: 'pequeno', quantidade: 3, peso: 1,  dimensions: { altura: 2, largura: 5 ,comprimento: 4 }  },
-//     { cor: 'amarelo', tamanho: 'grande', quantidade: 5, peso: 1,  dimensions: { altura: 2, largura: 5 ,comprimento: 4 }   },
+//     { cor: 'amarelo', tamanho: 'pequeno', estoque: 2, peso: 1,  dimensions: { altura: 2, largura: 5 ,comprimento: 4 } },
+//     { cor: 'vermelho', tamanho: 'pequeno', estoque: 3, peso: 1,  dimensions: { altura: 2, largura: 5 ,comprimento: 4 }  },
+//     { cor: 'amarelo', tamanho: 'grande', estoque: 5, peso: 1,  dimensions: { altura: 2, largura: 5 ,comprimento: 4 }   },
 // ];
 
 export default function VariationsSection({
@@ -40,7 +40,7 @@ export default function VariationsSection({
         customProperties: { },
         defaultProperties: {
             peso: 0,
-            quantidade: 0,
+            estoque: 0,
             dimensions: {
                 largura: 0,
                 altura: 0,

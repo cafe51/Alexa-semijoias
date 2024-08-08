@@ -9,8 +9,8 @@ interface ProductVariationFormProps {
   variations: string[];
   setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
   productVariationState: VariationProductType;
-  quantidade: number;
-  setQuantidade: Dispatch<SetStateAction<number>>;
+  estoque: number;
+  setEstoque: Dispatch<SetStateAction<number>>;
   peso: number;
   setPeso: Dispatch<SetStateAction<number>>;
   dimensions: {
@@ -30,10 +30,10 @@ export default function ProductVariationForm({
     variations,
     productVariationState,
     setProductVariationState,
-    quantidade,
+    estoque,
     dimensions,
     peso,
-    setQuantidade,
+    setEstoque,
     setDimensions,
     setPeso,
     setIsFormValid,
@@ -42,12 +42,12 @@ export default function ProductVariationForm({
     useEffect(() => {
         console.log('dados de productVariationForm', {
             productVariationState,
-            quantidade,
+            estoque,
             variations,
         });
         const isValid = validateForm();
         setIsFormValid(isValid);
-    }, [productVariationState, quantidade, variations]);
+    }, [productVariationState, estoque, variations]);
 
     const validateForm = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -86,8 +86,8 @@ export default function ProductVariationForm({
                 )) }
       
                 <InputStandartProperties
-                    quantidade={ quantidade }
-                    setQuantidade={ setQuantidade }
+                    estoque={ estoque }
+                    setEstoque={ setEstoque }
                     peso={ peso }
                     setPeso={ setPeso }
                     dimensions={ dimensions }

@@ -23,7 +23,7 @@ export default function UpdateProductVariationForm({
     setEditionProductVariationMode,
 }: UpdateProductVariationFormProps) {
     const [newProductVariationState, setNewProductVariationState] = useState<VariationProductType>(productVariation);
-    const [quantidade, setQuantidade] = useState(productVariation.defaultProperties.quantidade);
+    const [estoque, setEstoque] = useState(productVariation.defaultProperties.estoque);
     const [peso, setPeso] = useState(productVariation.defaultProperties.peso);
     const [dimensions, setDimensions] = useState(productVariation.defaultProperties.dimensions);
 
@@ -43,11 +43,11 @@ export default function UpdateProductVariationForm({
                     ...newProductVariationState.defaultProperties,
                     dimensions,
                     peso,
-                    quantidade,
+                    estoque,
                 },
             });
             setEditionProductVariationMode();
-            setQuantidade(0);
+            setEstoque(0);
         } catch(error) {
             console.error(error);
         }
@@ -60,12 +60,12 @@ export default function UpdateProductVariationForm({
                 variations={ variations }
                 productVariationState={ newProductVariationState }
                 setProductVariationState={ setNewProductVariationState }
-                quantidade={ quantidade }
+                estoque={ estoque }
                 dimensions={ dimensions }
                 peso={ peso }
                 setDimensions={ setDimensions }
                 setPeso={ setPeso }
-                setQuantidade={ setQuantidade }
+                setEstoque={ setEstoque }
             />
             <div className='flex flex-col justify-between pr-2 py-2'>
 

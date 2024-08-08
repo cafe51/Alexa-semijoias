@@ -3,7 +3,7 @@ import { WhereFilterOp } from 'firebase/firestore';
 
 export type VariationProductType = {
     customProperties: any,
-    defaultProperties: { quantidade: number, peso: number, dimensions: { largura: number, altura: number, comprimento: number }} 
+    defaultProperties: { estoque: number, peso: number, dimensions: { largura: number, altura: number, comprimento: number }} 
 }
 
 export type SectionType = {
@@ -23,7 +23,7 @@ export type FullProductType = {
     sectionsSite: SectionType[] | never[],
     variations: string[] | never[],
     productVariations: VariationProductType[] | never[];
-    stockQuantity?: number | undefined,
+    estoque?: number | undefined,
     sku?: string | undefined,
     barcode?: string | undefined,
     dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,

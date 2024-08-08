@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
 
 interface InputStandartPropertiesFormProps {
-    quantidade: number;
-    setQuantidade: Dispatch<SetStateAction<number>>;
+    estoque: number;
+    setEstoque: Dispatch<SetStateAction<number>>;
     peso: number;
     setPeso: Dispatch<SetStateAction<number>>;
     dimensions: {
@@ -18,19 +18,19 @@ interface InputStandartPropertiesFormProps {
 }
   
 
-export default function InputStandartProperties({ quantidade, setQuantidade, dimensions, peso, setDimensions, setPeso }: InputStandartPropertiesFormProps) {
+export default function InputStandartProperties({ estoque, setEstoque, dimensions, peso, setDimensions, setPeso }: InputStandartPropertiesFormProps) {
     const dimensionProperties = Object.keys(dimensions);
     return(
         <section className='flex flex-col gap-4 bg-gray-100 p-2 w-full rounded-lg'>
             <div className='flex flex-col gap-2 w-full py-2 justify-self-start border-t-2 border-gray-200'>
-                <label className="text-xs font-small" htmlFor="quantidade">Quantidade</label>
+                <label className="text-xs font-small" htmlFor="estoque">Estoque</label>
                 <input
                     className="text-xs justify-self-start px-3 py-2 border rounded-md w-5/12"
-                    id="quantidade"
-                    name="quantidade"
+                    id="estoque"
+                    name="estoque"
                     type="number"
-                    value={ quantidade }
-                    onChange={ (e) => setQuantidade(Number(e.target.value)) }
+                    value={ estoque }
+                    onChange={ (e) => setEstoque(Number(e.target.value)) }
                     placeholder=''
                 />
             </div>

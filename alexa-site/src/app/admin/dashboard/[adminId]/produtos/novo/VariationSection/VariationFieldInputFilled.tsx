@@ -38,13 +38,13 @@ export default function VariationFieldInputFilled({ productVariation }: Variatio
 
             <section className='flex flex-col gap-4 bg-green-300 p-2 w-full rounded-lg'>
                 <div className='flex flex-col gap-2 w-full py-2 justify-self-start border-t-2 border-green-400 bg-green-300'>
-                    <label className="text-xs font-small" htmlFor="quantidade">Quantidade</label>
+                    <label className="text-xs font-small" htmlFor="estoque">Estoque</label>
                     <input
                         className="text-xs justify-self-start px-3 py-2 border rounded-md w-5/12 bg-green-600 text-white"
-                        id="quantidade"
-                        name="quantidade"
+                        id="estoque"
+                        name="estoque"
                         type="number"
-                        value={ defaultProperties.quantidade }
+                        value={ defaultProperties.estoque }
                         placeholder=''
                         readOnly={ true }
 
