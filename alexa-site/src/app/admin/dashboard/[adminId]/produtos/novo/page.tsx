@@ -10,8 +10,8 @@ import CodesSection from './CodesSection';
 import DimensionsSection from './DimensionsSection';
 import CategoriesSection from './CategorieSection.tsx/CategoriesSection';
 import VariationsSection from './VariationSection/VariationsSection';
-import AssocietedProductsSection from './AssocietedProductsSection';
-import RecomendedProductsSection from './RecomendedProductsSection';
+import AssociatedProductsSection from './AssociatedProductsSection';
+import RecommendedProductsSection from './RecommendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
 import { StateNewProductType } from '@/app/utils/types';
@@ -94,8 +94,8 @@ export default function NewProductPage() {
                 handleAddSubSection={ handleAddSubSection }
             />
 
-            <AssocietedProductsSection />
-            <RecomendedProductsSection />
+            <AssociatedProductsSection />
+            <RecommendedProductsSection />
 
             <LargeButton color='blue'
                 loadingButton={ false }

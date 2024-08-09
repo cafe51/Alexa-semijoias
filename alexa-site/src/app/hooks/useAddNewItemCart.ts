@@ -7,7 +7,11 @@ import { useCollection } from './useCollection';
 import { useAuthContext } from './useAuthContext';
 import { Dispatch, SetStateAction } from 'react';
 
-export const useAddNewItemCart = (carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, productData: FullProductType & WithFieldValue<DocumentData> | null, setIsloadingButton: Dispatch<SetStateAction<boolean>>) => {
+export const useAddNewItemCart = (
+    carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null,
+    productData: FullProductType & WithFieldValue<DocumentData> | null,
+    setIsloadingButton: Dispatch<SetStateAction<boolean>>,
+) => {
     const { addItemToLocalStorageCart } = useLocalStorage();
     const { addDocument, updateDocumentField } = useCollection('carrinhos');
     const { user } = useAuthContext();

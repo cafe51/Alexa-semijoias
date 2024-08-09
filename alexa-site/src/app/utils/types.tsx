@@ -6,13 +6,6 @@ export type VariationProductType = {
     defaultProperties: { estoque: number, peso: number, dimensions: { largura: number, altura: number, comprimento: number }} 
 }
 
-export type SectionType = {
-    sectionName: string,
-    subsections?: string[] | null | undefined,
-}
-
-export type StateNewProductType = FullProductType & { sectionsSite: SectionType[] | never[] };
-
 export type FullProductType = {
     name: string;
     description: string;
@@ -23,7 +16,7 @@ export type FullProductType = {
         cost: number,
     }
     sections: string[],
-    subsections?: string[] | null | undefined,
+    subsections?: string[] | null | undefined, // do tipo 'sectionName:subsectionName'[]
     variations: string[] | never[],
     productVariations: VariationProductType[] | never[];
     estoque?: number | undefined,
@@ -31,6 +24,14 @@ export type FullProductType = {
     barcode?: string | undefined,
     dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,
 }
+
+export type SectionType = {
+    sectionName: string,
+    subsections?: string[] | null | undefined,
+}
+
+export type StateNewProductType = FullProductType & { sectionsSite: SectionType[] | never[] };
+
 
 
 export type UseCheckoutStateType = {

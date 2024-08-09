@@ -26,14 +26,6 @@ export default function Card({ productData, sectionName }: CardProps) {
             const cartItem = carrinho?.find((item) => item.productId === productData.id);
             return cartItem ? cartItem.quantidade >= productData.estoque : false;
         }
-        if(productData.productVariations) {
-            const cartItem = carrinho?.find((item) => item.productId === productData.id);
-            let sumOfProductVariationsStock = 0;
-            for (const pv of productData.productVariations) {
-                sumOfProductVariationsStock += pv.defaultProperties.estoque;
-            }
-            return cartItem ? cartItem.quantidade >= sumOfProductVariationsStock : false;
-        }
     };
 
     return (

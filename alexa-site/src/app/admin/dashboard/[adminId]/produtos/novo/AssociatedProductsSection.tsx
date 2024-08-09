@@ -1,6 +1,6 @@
-// app/admin/dashboard/[adminId]/produtos/novo/AssocietedProductsSection.tsx
+// app/admin/dashboard/[adminId]/produtos/novo/AssociatedProductsSection.tsx
 
-export default function AssocietedProductsSection() {
+export default function AssociatedProductsSection() {
     return (
         <section className="p-4 border rounded-md bg-white">
             <h2 className="text-lg font-bold">Produtos Associados</h2>
