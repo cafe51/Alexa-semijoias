@@ -6,8 +6,9 @@ import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import formatPrice from '../utils/formatPrice';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
-export default function CartItem({ produto }: { produto: ProductCartType }) {
+export default function CartItem({ produto }: { produto: ProductCartType & WithFieldValue<DocumentData> }) {
     const { user } = useAuthContext();
     const { addOneToLocalStorage, removeOneFromLocalStorage, removeItemFromLocalStorageCart } = useLocalStorage();
 
@@ -24,10 +25,8 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
     };
 
     const removeAll = () => {
-        return user ? deleteDocument(produto.id) : removeItemFromLocalStorageCart(produto.id);
+        return user ? deleteDocument(produto.id) : removeItemFromLocalStorageCart(produto.skuId);
     };
-
-    
 
     return (
         <div className='flex flex-col gap-4 w-full h-full p-4 bg-white shadow-lg rounded-lg shadowColor' >
@@ -41,7 +40,19 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
                     />
                 </div>
                 <div className='rounded-lg relative w-3/4 overflow-hidden text-sm' >
-                    <p >{ produto.nome }</p>
+                    <p >{ produto.name }</p>
+                </div>
+                <div className='rounded-lg relative w-3/4 overflow-hidden text-sm text-blue-400' >
+                    {
+                        Object.entries(produto.customProperties).map(([key, value]) => {
+                            return (
+                                <div key={ key } className="flex gap-2">
+                                    <span>{ key }</span>
+                                    <span>{ typeof value === 'string' ? value : 'Value not a string' }</span>
+                                </div>
+                            );
+                        })
+                    }
                 </div>
                 <FaRegTrashAlt
                     onClick={ removeAll }
@@ -69,7 +80,7 @@ export default function CartItem({ produto }: { produto: ProductCartType }) {
                     </button>
                 </div>
                 <div className="ml-4">
-                    <span className="font-semibold">{ formatPrice(produto.preco * produto.quantidade) }</span>
+                    <span className="font-semibold">{ formatPrice((produto.value.promotionalPrice ? produto.value.promotionalPrice : produto.value.price) * produto.quantidade) }</span>
                 </div>
             </div>
         </div>

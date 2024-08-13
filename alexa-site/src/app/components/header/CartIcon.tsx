@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 import { FiShoppingCart } from 'react-icons/fi';
-import { useUserInfo } from '../hooks/useUserInfo';
+import { useUserInfo } from '../../hooks/useUserInfo';
 import { useEffect, useState } from 'react';
 
 export default function CartIcon() {
@@ -13,6 +13,7 @@ export default function CartIcon() {
     useEffect(() => {
         if(carrinho) {
             setLoadingIcon(true);
+            console.log('CARRINHO NO CARTICON', carrinho);
             const quantity = carrinho.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0);
             setCartQuantity(quantity);
             setLoadingIcon(false);

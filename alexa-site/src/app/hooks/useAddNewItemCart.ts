@@ -1,26 +1,24 @@
 // app/hooks/useUpdateCard.ts
 import { User } from 'firebase/auth';
-import { CartInfoType, FullProductType } from '../utils/types';
+import { CartInfoType, ProductVariation } from '../utils/types';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useLocalStorage } from './useLocalStorage';
 import { useCollection } from './useCollection';
 import { useAuthContext } from './useAuthContext';
 import { Dispatch, SetStateAction } from 'react';
 
-export const useAddNewItemCart = (
-    carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null,
-    productData: FullProductType & WithFieldValue<DocumentData> | null,
-    setIsloadingButton: Dispatch<SetStateAction<boolean>>,
-) => {
+export const useAddNewItemCart = () => {
     const { addItemToLocalStorageCart } = useLocalStorage();
-    const { addDocument, updateDocumentField } = useCollection('carrinhos');
+    const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos');
     const { user } = useAuthContext();
 
-    const addItemToFirebaseCart = (user: User, carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, product: FullProductType & WithFieldValue<DocumentData>) => {
-        const cartItem = carrinho?.find((item) => item.productId === product.id);
+    const addItemToFirebaseCart = (user: User, carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, product: ProductVariation & WithFieldValue<DocumentData>) => {
+        const cartItem = carrinho?.find((item) => item.skuId === product.sku);
+        console.log('carrinho', carrinho);
         if (!cartItem) {
             addDocument({
-                productId: product.id,
+                skuId: product.sku,
+                productId: product.productId,
                 quantidade: 1,
                 userId: user.uid,
             });
@@ -29,7 +27,11 @@ export const useAddNewItemCart = (
         }
     };
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (
+        carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null,
+        productData: ProductVariation | null,
+        setIsloadingButton: Dispatch<SetStateAction<boolean>>,
+    ) => {
         try{
             setIsloadingButton(true);
             if(!productData) throw new Error('dados do produto não encontrados');

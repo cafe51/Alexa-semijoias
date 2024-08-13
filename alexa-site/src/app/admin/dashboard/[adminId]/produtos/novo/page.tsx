@@ -14,10 +14,10 @@ import AssociatedProductsSection from './AssociatedProductsSection';
 import RecommendedProductsSection from './RecommendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
-import { StateNewProductType } from '@/app/utils/types';
+import { ProductBundleType } from '@/app/utils/types';
 
 export default function NewProductPage() {
-    const { addDocument } = useCollection<StateNewProductType>('products');
+    const { addDocument } = useCollection<ProductBundleType>('products');
     const {
         state, handleNameChange, handleDescriptionChange, handleValueChange,
         handleStockQuantityChange, handleVariationsChange, handleBarcodeChange,
@@ -101,33 +101,141 @@ export default function NewProductPage() {
                 loadingButton={ false }
                 onClick={ () => {
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const { barcode, sku, estoque, dimensions, sectionsSite, ...rest } = state;
+                    // const { barcode, sku, estoque, dimensions, sectionsSite, ...rest } = state;
 
-                    let totalStock = 0;
-                    if(rest.productVariations && rest.productVariations.length > 0) {
-                        for (const pv of rest.productVariations) {
+                    // if(rest.productVariations && rest.productVariations.length > 0) {
+                        
+                    // }
+
+                    let newProduct: ProductBundleType;
+
+                    if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
+                        let totalStock = 0;
+
+                        for (const pv of state.productVariations) {
                             totalStock += pv.defaultProperties.estoque;
                         }
-                    } else {
+                        newProduct = {
+                            name: state.name,
+                            description: state.description,
+                            categories: state.categories,
+                            value: state.value,
+                            sections: state.sections,
+                            subsections: state.subsections, // do tipo 'sectionName:subsectionName'[]
+                            variations: state.variations,
+                            estoqueTotal: totalStock,
+    
+                            productVariations: state.productVariations.map((pv, index) => {
+
+                                // [{cor: amarelo, tamanho: 14}, {cor: amarelo, tamanho: 16}, {cor: verde, tamanho: 14}]
+                                // [coramtam14, coramtam16, corvertam14]
+                                const sectionsClone = [...state.sections];
+                                const sectionNamesForSku = sectionsClone.map((section) => section.slice(0,3)).join('');
+
+                                let skuString = sectionNamesForSku;
+                                for (const property in pv.customProperties) {
+                                    skuString += property.slice(0, 3) + pv.customProperties[property].slice(0, 3);
+                                }
+
+                                const numeroAleatorio = (Math.floor(Math.random() * 9000) + 1000).toString();
+                                const codigoDeBarra = (state.barcode && state.barcode.length > 0) ? state.barcode : '78902166' + numeroAleatorio + index.toString();
+
+                                const skuGenerated = state.sku ? state.sku + index.toString() : (skuString + 'cb' + codigoDeBarra);
+
+
+                                return {
+
+                                    customProperties: { ...pv.customProperties },
+                                    ...pv.defaultProperties, 
+
+                                    name: state.name,
+                                    value: state.value,
+
+                                    sku: skuGenerated,
+                                    barcode: codigoDeBarra,
+
+                                };
+                            }),
+                        };
+                        addDocument(newProduct);
+                    }
+
+                    if(!state.productVariations || state.productVariations.length === 0) {
+                        const sectionsClone = [...state.sections];
+                        const sectionNamesForSku = sectionsClone.map((section) => section.slice(0,3)).join('');
+                        const skuString = sectionNamesForSku;
+
+                        const numeroAleatorio = (Math.floor(Math.random() * 9000) + 1000).toString();
+                        const codigoDeBarra = (state.barcode && state.barcode.length > 0) ? state.barcode : '78902166' + numeroAleatorio + '1';
+
+                        const skuGenerated = state.sku ? state.sku : (skuString + 'cb' + codigoDeBarra);
+
+                        newProduct = {
+                            name: state.name,
+                            description: state.description,
+                            categories: state.categories,
+                            value: state.value,
+                            sections: state.sections,
+                            estoqueTotal: state.estoque ? state.estoque : 0,
+                            productVariations: [
+                                {
+                                    estoque: state.estoque ? state.estoque : 0,
+                                    peso: state.dimensions && state.dimensions.peso ? state.dimensions.peso : 0,
+                                    name: state.name,
+                                    value: state.value,
+                                    dimensions: state.dimensions
+                                        ? {
+                                            largura: state.dimensions.largura,
+                                            altura: state.dimensions.altura,
+                                            comprimento: state.dimensions.comprimento,
+                                        } : {
+                                            largura: 0,
+                                            altura: 0,
+                                            comprimento: 0,
+                                        },
+                                    sku: skuGenerated,
+                                    barcode: codigoDeBarra,
+                                },
+                            ],
+                        };
+
+                        addDocument(newProduct, skuGenerated);
                         handleVariationsChange([]);
                     }
 
-                    const newProduct = {
-                        ...rest,
-                        barcode: (barcode && (barcode.length > 0)) ? barcode : undefined,
-                        sku: (sku && (sku.length > 0)) ? sku : undefined,
-                        estoque: estoque ? estoque : totalStock,
-                        dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
-                        variations: (rest.productVariations && rest.productVariations.length > 0) ? rest.variations : [],
-                    };
+                    // const newProduct = {
+                    //     name: state.name,
+                    //     description: state.description,
+                    //     categories: state.categories,
+                    //     value: state.value,
+                    //     sections: state.sections,
+                    //     subsections: state.subsections, // do tipo 'sectionName:subsectionName'[]
+                    //     variations: state.variations,
+                    //     estoque: state.estoque,
 
-                    for (const property of Object.keys(newProduct)) {
-                        if(newProduct[ property as keyof typeof newProduct] === undefined) {
-                            delete newProduct[property as keyof typeof newProduct];
-                        }
-                    }
+                    //     sku: state.sku,
+                    //     barcode: state.barcode,
+                    //     dimensions: state.dimensions,
 
-                    console.log(newProduct);
+                    //     productVariations: state.productVariations,
+                    // };
+
+                    // const newProduct = {
+                    //     ...rest,
+                    //     barcode: (barcode && (barcode.length > 0)) ? barcode : undefined,
+                    //     sku: (sku && (sku.length > 0)) ? sku : undefined,
+                    //     estoque: estoque ? estoque : totalStock,
+                    //     dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
+                    //     variations: (rest.productVariations && rest.productVariations.length > 0) ? rest.variations : [],
+                    // };
+
+                    // for (const property of Object.keys(newProduct)) {
+                    //     if(newProduct[ property as keyof typeof newProduct] === undefined) {
+                    //         delete newProduct[property as keyof typeof newProduct];
+                    //     }
+                    // }
+
+                    // console.log(newProduct);
 
                     // newProduct.sku ? addDocument(newProduct, newProduct.sku) : addDocument(newProduct);
                 } }

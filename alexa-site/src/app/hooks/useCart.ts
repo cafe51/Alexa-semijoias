@@ -1,27 +1,31 @@
 // app/hooks/useCart.ts
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useCollection } from './useCollection';
-import { ProductCartType, CartInfoType, ProductType } from '../utils/types';
+import { ProductCartType, CartInfoType, ProductVariation } from '../utils/types';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useAuthContext } from './useAuthContext';
 // import { useLocalStorage } from './useLocalStorage';
 
-export const useCart = (cartInfos: (CartInfoType & WithFieldValue<DocumentData>)[] | null, products: (ProductType & WithFieldValue<DocumentData>)[] | null, setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>) => {
+export const useCart = (
+    cartInfos: (CartInfoType & WithFieldValue<DocumentData>)[] | null,
+    productVariations: (ProductVariation)[] | null,
+    setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>,
+) => {
     const { user } = useAuthContext();
     // const { fixQuantityByStockInLocalStorage } = useLocalStorage();
 
     const { updateDocumentField, deleteDocument } = useCollection(
         'carrinhos',
     );
-    const [mappedProducts, setProdutos] = useState<(ProductCartType & WithFieldValue<DocumentData>)[] | null>(null);
+    const [mappedProducts, setMappedProducts] = useState<(ProductCartType & WithFieldValue<DocumentData>)[] | null>(null);
 
-    const fixQuantityByStockInLocalStorage = (product: ProductType & WithFieldValue<DocumentData>) => {
+    const fixQuantityByStockInLocalStorage = (productVariation: ProductVariation) => {
         // eslint-disable-next-line prefer-const
         let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
-        const cartItem = localCart.find((item) => item.productId === product.id);
+        const cartItem = localCart.find((item) => item.skuId === productVariation.sku);
         
-        if (cartItem && cartItem.quantidade > product.estoque) {
-            cartItem.quantidade = product.estoque;
+        if (cartItem && cartItem.quantidade > productVariation.estoque) {
+            cartItem.quantidade = productVariation.estoque;
         }
 
         if (cartItem && cartItem.quantidade < 1) {
@@ -29,21 +33,12 @@ export const useCart = (cartInfos: (CartInfoType & WithFieldValue<DocumentData>)
         }
         
         localStorage.setItem('cart', JSON.stringify(localCart));
-        console.warn('Quantidade do produto do produto', product.id ,' do carrinho corrigida.');
+        console.warn('Quantidade do produto do produto', productVariation.sku ,' do carrinho corrigida.');
         setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
         return;
     };
 
-    const fixQuantityByStockInFirebase = (
-        cartInfo: CartInfoType & WithFieldValue<DocumentData>,
-        product: {
-            categoria: string;
-            exist: boolean;
-            nome: string;
-            image: string[];
-            preco: number;
-            estoque: number;
-    }) => {
+    const fixQuantityByStockInFirebase = (cartInfo: CartInfoType & WithFieldValue<DocumentData>, product: ProductVariation) => {
         if(cartInfo.quantidade > product.estoque) {
             updateDocumentField(cartInfo.id, 'quantidade', cartInfo.quantidade = product.estoque);
         }
@@ -55,38 +50,37 @@ export const useCart = (cartInfos: (CartInfoType & WithFieldValue<DocumentData>)
     useEffect(() => {
         const fetchProducts = async() => {
 
-            if (products && products.length > 0 && cartInfos) {
-                const productsCart = products
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    .map(({ desconto, descricao, lancamento, ...restProduct }) => {
-                        const cartInfo = cartInfos.find((cart) => restProduct.id === cart.productId); 
+            if (productVariations && productVariations.length > 0 && cartInfos) {
+                // console.log('productVariations', 'AAAAAAAAAAA', productVariations);
+                const productsCart = productVariations
+                    .map((productVariation) => {
+                        const cartInfo = cartInfos.find((cart) => productVariation.sku === cart.skuId); 
 
                         if(!cartInfo) return undefined;
                         if(cartInfo) {
-                            if ((cartInfo.quantidade > restProduct.estoque) || cartInfo.quantidade < 1) {
+                            if ((cartInfo.quantidade > productVariation.estoque) || cartInfo.quantidade < 1) {
                                 if(user) {
-                                    fixQuantityByStockInFirebase(cartInfo, restProduct);
+                                    fixQuantityByStockInFirebase(cartInfo, productVariation);
                                 }
                                 else {
-                                    const fullProduct = { desconto, descricao, lancamento, ...restProduct };
-                                    fixQuantityByStockInLocalStorage(fullProduct);
+                                    fixQuantityByStockInLocalStorage(productVariation);
                                 }
                             }
                             return {
-                                ...restProduct,
-                                image: restProduct.image[0],
+                                ...productVariation,
+                                image: '',
                                 ...cartInfo,
                             };}
                         
                     }).filter(Boolean) as ProductCartType[];
                         
-                setProdutos(productsCart);
+                setMappedProducts(productsCart);
             }
             // }
         };
 
         fetchProducts();
-    }, [cartInfos, products, user]); // Mantém as dependências para garantir que o efeito seja executado quando necessário
+    }, [cartInfos, productVariations, user]); // Mantém as dependências para garantir que o efeito seja executado quando necessário
 
     // console.log('AAAAA mappedProducts', mappedProducts);
 

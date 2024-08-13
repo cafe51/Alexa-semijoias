@@ -6,6 +6,32 @@ export type VariationProductType = {
     defaultProperties: { estoque: number, peso: number, dimensions: { largura: number, altura: number, comprimento: number }} 
 }
 
+export type ProductVariation = {
+    barcode: string, 
+    customProperties?: any,
+    dimensions: { largura: number, altura: number, comprimento: number }
+    estoque: number,
+    name: string,
+    peso: number,
+    sku: string,
+    value: { price: number, promotionalPrice: number, cost: number }
+    productId: string;
+}
+
+export type ProductBundleType = {
+    categories: string[],
+    description: string;
+    estoqueTotal: number,
+    name: string;
+    productVariations: ProductVariation[];
+
+    sections: string[],
+    subsections?: string[], // do tipo 'sectionName:subsectionName'[]
+    value: { price: number, promotionalPrice: number, cost: number }
+    variations?: string[],
+
+}
+
 export type FullProductType = {
     name: string;
     description: string;
@@ -65,43 +91,40 @@ export type DeliveryOptionType = {
 export type FilterOption = { field: string, operator: WhereFilterOp, value: string | number | string[] | number[] } ;
 
 export type ProductCartType = {
-    //o que vem de ProductType exceto desconto, lancamento e descrição
-    id: string,
-    categoria: string,
-    exist: boolean,
-    nome: string,
+    //o que vem de ProductVariation exceto desconto, lancamento e descrição
+    // id: string,
+    // exist: boolean,
+    
+    name: string,
     image: string,
-    preco: number,
+
+    value: { price: number, promotionalPrice: number, cost: number }
+
     estoque: number,
+
+    dimensions: { largura: number, altura: number, comprimento: number }
+    peso: number;
+    customProperties?: any,
+
 
     //o que vem de CartInfoType
     productId: string,
     quantidade: number,
     userId: string,
+
+    skuId: string,
 }
 
-export type AddressType = {
-    bairro: string,
-    cep: string,
-    complemento: string,
-    ddd: string,
-    gia: string,
-    ibge: string,
-    localidade: string,
-    logradouro: string,
-    numero: string,
-    siafi: string,
-    uf: string,
-    unidade: string,
-    referencia: string,
-}
+
 
 export type CartInfoType = {
     // exist: boolean,
     // id: string,
     productId: string,
     quantidade: number,
-    userId: string
+    userId: string,
+
+    skuId: string,
 }
 
 export type CartHistoryType = {
@@ -118,6 +141,22 @@ type ValueType = {
     soma: number,
     frete: number,
     total: number
+}
+
+export type AddressType = {
+    bairro: string,
+    cep: string,
+    complemento: string,
+    ddd: string,
+    gia: string,
+    ibge: string,
+    localidade: string,
+    logradouro: string,
+    numero: string,
+    siafi: string,
+    uf: string,
+    unidade: string,
+    referencia: string,
 }
 
 export type OrderType = {

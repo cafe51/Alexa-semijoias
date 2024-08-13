@@ -1,5 +1,5 @@
 // app/hooks/useLocalStorage.ts
-import { CartInfoType, ProductCartType, ProductType } from '../utils/types';
+import { CartInfoType, ProductCartType, ProductVariation } from '../utils/types';
 import { useUserInfo } from './useUserInfo';
 
 export const useLocalStorage = () => {
@@ -16,7 +16,7 @@ export const useLocalStorage = () => {
 
     const removeOneFromLocalStorage = (product: ProductCartType) => {
         const localCart = getLocalCart();
-        const cartItem = localCart.find(item => item.productId === product.id);
+        const cartItem = localCart.find(item => item.skuId === product.skuId);
         
         if (cartItem) {
             if (cartItem.quantidade > 1) {
@@ -31,21 +31,21 @@ export const useLocalStorage = () => {
         console.warn('Produto removido ou quantidade subtraída do carrinho localStorage.');
     };
 
-    const fixQuantityByStockInLocalStorage = (product: ProductType) => {
+    const fixQuantityByStockInLocalStorage = (productVariation: ProductVariation) => {
         const localCart = getLocalCart();
-        const cartItem = localCart.find(item => item.productId === product.id);
+        const cartItem = localCart.find(item => item.skuId === productVariation.sku);
         
-        if (cartItem && cartItem.quantidade > product.estoque) {
-            cartItem.quantidade = product.estoque;
+        if (cartItem && cartItem.quantidade > productVariation.estoque) {
+            cartItem.quantidade = productVariation.estoque;
         }
 
         setLocalCart(localCart);
-        console.warn(`Quantidade do produto ${product.id} no carrinho corrigida.`);
+        console.warn(`Quantidade do produto ${productVariation.sku} no carrinho corrigida.`);
     };
 
     const addOneToLocalStorage = (product: ProductCartType) => {
         const localCart = getLocalCart();
-        const cartItem = localCart.find(item => item.productId === product.id);
+        const cartItem = localCart.find(item => item.skuId === product.skuId);
         
         if (cartItem && cartItem.quantidade < product.estoque) {
             cartItem.quantidade += 1;
@@ -55,17 +55,18 @@ export const useLocalStorage = () => {
         console.warn('Produto somado ao carrinho localStorage.');
     };
 
-    const addItemToLocalStorageCart = (product: ProductType) => {
+    const addItemToLocalStorageCart = (productVariation: ProductVariation) => {
         const localCart = getLocalCart();
-        const cartItem = localCart.find(item => item.productId === product.id);
+        const cartItem = localCart.find(item => item.skuId === productVariation.sku);
         
         if (!cartItem) {
             localCart.push({
-                productId: product.id,
+                skuId: productVariation.sku,
+                productId: productVariation.productId,
                 quantidade: 1,
                 userId: 'guest',
             });
-        } else if (cartItem.quantidade < product.estoque) {
+        } else if (cartItem.quantidade < productVariation.estoque) {
             cartItem.quantidade += 1;
         }
 
@@ -73,9 +74,9 @@ export const useLocalStorage = () => {
         console.warn('Produto adicionado ao carrinho localStorage.');
     };
 
-    const removeItemFromLocalStorageCart = (productId: string) => {
+    const removeItemFromLocalStorageCart = (sku: string) => {
         const localCart = getLocalCart();
-        const updatedCart = localCart.filter(item => item.productId !== productId);
+        const updatedCart = localCart.filter(item => item.skuId !== sku);
 
         setLocalCart(updatedCart);
         console.warn('Produto removido do carrinho localStorage.');

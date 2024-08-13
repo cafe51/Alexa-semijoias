@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Card from './Card';
 import { useSnapshot } from '../hooks/useSnapshot';
-import { FilterOption, FullProductType } from '../utils/types';
+import { FilterOption, ProductBundleType } from '../utils/types';
 
 export default function ProductsList({ sectionName, subsection }: { sectionName: string, subsection?: string }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,7 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
     [sectionName, subsection], 
     );
 
-    const { documents } = useSnapshot<FullProductType>(
+    const { documents } = useSnapshot<ProductBundleType>(
         'products', 
         pedidosFiltrados, 
     );

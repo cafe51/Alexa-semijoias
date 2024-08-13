@@ -5,6 +5,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import formatPrice from '../utils/formatPrice';
 import { ProductCartType } from '../utils/types';
 import CartItem from './CartItem';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function Carrinho() {
     const { carrinho } = useUserInfo();
@@ -20,7 +21,7 @@ export default function Carrinho() {
 
             <section className='flex flex-col gap-1'>
                 {
-                    carrinho ? carrinho.map((produto: ProductCartType) => {
+                    carrinho ? carrinho.map((produto: ProductCartType & WithFieldValue<DocumentData>) => {
                         if(produto && produto.quantidade && produto.quantidade > 0) {
                             return <CartItem key={ produto.id } produto={ produto } />;
                         } else return false;
@@ -31,7 +32,7 @@ export default function Carrinho() {
                 <h2>Resumo</h2>
                 <div className='flex gap-2 w-full justify-between'>
                     <p>Subtotal</p>
-                    <p>{ formatPrice(carrinho?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0)) }</p>
+                    <p>{ formatPrice(carrinho?.map((item) => (Number(item.quantidade) * ((item.value.promotionalPrice ? item.value.promotionalPrice : item.value.price)))).reduce((a, b) => a + b, 0)) }</p>
                 </div>
                 <div className='flex gap-2 w-full justify-between'>
                     <p>Frete</p>

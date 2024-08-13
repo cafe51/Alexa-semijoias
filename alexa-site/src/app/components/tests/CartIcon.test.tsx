@@ -1,7 +1,7 @@
 // CartIcon.test.tsx
 
 import { act, render, screen } from '@testing-library/react';
-import CartIcon from '../CartIcon';
+import CartIcon from '../header/CartIcon';
 import { UserInfoProvider } from '@/app/context/UserInfoContext';
 
 jest.mock('../../hooks/useUserInfo', () => ({

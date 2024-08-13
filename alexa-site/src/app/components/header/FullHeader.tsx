@@ -6,7 +6,7 @@ import Navbar from '../navBar/Navbar';
 import { FaRegUser } from 'react-icons/fa';
 import SearchBar from '../SearchBar';
 import Link from 'next/link';
-import CartIcon from '../CartIcon';
+import CartIcon from './CartIcon';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
 
