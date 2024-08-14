@@ -24,6 +24,8 @@ type ActionType =
     | { type: 'SET_ADD_CATEGORIES', payload: string }
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
+    | { type: 'SET_IMAGES', payload: { file: File; localUrl: string; }[]}
+
 
 
 const initialState: StateNewProductType= {
@@ -44,6 +46,7 @@ const initialState: StateNewProductType= {
     sku: undefined,
     barcode: undefined,
     dimensions: undefined,
+    images: [],
 };
 
 function reducer(state: StateNewProductType, action: ActionType): StateNewProductType{
@@ -109,6 +112,8 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
         return { ...state, categories: state.categories.filter((c) => c !== action.payload) };
     case 'SET_REMOVE_ALL_CATEGORIES':
         return { ...state, categories: [] };
+    case 'SET_IMAGES':
+        return { ...state, images: action.payload };
     default:
         return state;
     }
@@ -197,6 +202,10 @@ export function useNewProductState() {
         dispatch({ type: 'SET_REMOVE_ALL_CATEGORIES' });
     }, []);
 
+    const handleSetImages = useCallback((images: { file: File; localUrl: string; }[]) => {
+        dispatch({ type: 'SET_IMAGES', payload: images });
+    }, []);
+
 
     return {
         state,
@@ -220,5 +229,6 @@ export function useNewProductState() {
         handleAddCategories,
         handleRemoveCategory,
         handleRemoveAllCategories,
+        handleSetImages,
     };
 }

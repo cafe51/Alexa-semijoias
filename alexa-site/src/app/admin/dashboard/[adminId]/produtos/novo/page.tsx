@@ -3,7 +3,7 @@
 import { useNewProductState } from '@/app/hooks/useNewProductState';
 import LargeButton from '@/app/components/LargeButton';
 import NameAndDescriptionSection from './NameAndDescriptionSection';
-import PhotosSection from './PhotosSection';
+import PhotosSection from './PhotoSection/PhotosSection';
 import PricesSection from './PricesSection';
 import StockSection from './StockSection';
 import CodesSection from './CodesSection';
@@ -15,8 +15,10 @@ import RecommendedProductsSection from './RecommendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
 import { ProductBundleType } from '@/app/utils/types';
+import useFirebaseUpload from '@/app/hooks/useFirebaseUpload';
 
 export default function NewProductPage() {
+    const { uploadImages, imageUrls } = useFirebaseUpload();
     const { addDocument } = useCollection<ProductBundleType>('products');
     const {
         state, handleNameChange, handleDescriptionChange, handleValueChange,
@@ -30,16 +32,21 @@ export default function NewProductPage() {
         handleRemoveCategory,
         handleAddSubSection,
         handleAddSectionsSite,
+        handleSetImages,
     } = useNewProductState();
 
     return (
         <main className='flex flex-col gap-2 w-full'>
+            <h1 className='font-bold'>Novo Produto</h1>
             <NameAndDescriptionSection
                 state={ state }
                 handleNameChange={ handleNameChange }
                 handleDescriptionChange={ handleDescriptionChange }
             />
-            <PhotosSection />
+            <PhotosSection
+                state={ state }
+                handleSetImages={ handleSetImages }
+            />
 
             <PricesSection
                 state={ state }
@@ -100,14 +107,8 @@ export default function NewProductPage() {
             <LargeButton color='blue'
                 loadingButton={ false }
                 onClick={ () => {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    // const { barcode, sku, estoque, dimensions, sectionsSite, ...rest } = state;
-
-                    // if(rest.productVariations && rest.productVariations.length > 0) {
-                        
-                    // }
-
                     let newProduct: ProductBundleType;
+                    const productId = '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
 
                     if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
                         let totalStock = 0;
@@ -115,6 +116,7 @@ export default function NewProductPage() {
                         for (const pv of state.productVariations) {
                             totalStock += pv.defaultProperties.estoque;
                         }
+
                         newProduct = {
                             name: state.name,
                             description: state.description,
@@ -124,6 +126,7 @@ export default function NewProductPage() {
                             subsections: state.subsections, // do tipo 'sectionName:subsectionName'[]
                             variations: state.variations,
                             estoqueTotal: totalStock,
+                            // images= state.images.map((image) => image.file),
     
                             productVariations: state.productVariations.map((pv, index) => {
 
@@ -147,7 +150,7 @@ export default function NewProductPage() {
 
                                     customProperties: { ...pv.customProperties },
                                     ...pv.defaultProperties, 
-
+                                    productId,
                                     name: state.name,
                                     value: state.value,
 
@@ -157,7 +160,7 @@ export default function NewProductPage() {
                                 };
                             }),
                         };
-                        addDocument(newProduct);
+                        addDocument(newProduct, productId);
                     }
 
                     if(!state.productVariations || state.productVariations.length === 0) {
@@ -178,7 +181,7 @@ export default function NewProductPage() {
                             sections: state.sections,
                             estoqueTotal: state.estoque ? state.estoque : 0,
                             productVariations: [
-                                {
+                                {   productId,
                                     estoque: state.estoque ? state.estoque : 0,
                                     peso: state.dimensions && state.dimensions.peso ? state.dimensions.peso : 0,
                                     name: state.name,
@@ -199,48 +202,20 @@ export default function NewProductPage() {
                             ],
                         };
 
-                        addDocument(newProduct, skuGenerated);
+                        addDocument(newProduct, productId);
                         handleVariationsChange([]);
                     }
-
-                    // const newProduct = {
-                    //     name: state.name,
-                    //     description: state.description,
-                    //     categories: state.categories,
-                    //     value: state.value,
-                    //     sections: state.sections,
-                    //     subsections: state.subsections, // do tipo 'sectionName:subsectionName'[]
-                    //     variations: state.variations,
-                    //     estoque: state.estoque,
-
-                    //     sku: state.sku,
-                    //     barcode: state.barcode,
-                    //     dimensions: state.dimensions,
-
-                    //     productVariations: state.productVariations,
-                    // };
-
-                    // const newProduct = {
-                    //     ...rest,
-                    //     barcode: (barcode && (barcode.length > 0)) ? barcode : undefined,
-                    //     sku: (sku && (sku.length > 0)) ? sku : undefined,
-                    //     estoque: estoque ? estoque : totalStock,
-                    //     dimensions: (dimensions && (Object.values(dimensions).every((v) => v))) ? dimensions : undefined,
-                    //     variations: (rest.productVariations && rest.productVariations.length > 0) ? rest.variations : [],
-                    // };
-
-                    // for (const property of Object.keys(newProduct)) {
-                    //     if(newProduct[ property as keyof typeof newProduct] === undefined) {
-                    //         delete newProduct[property as keyof typeof newProduct];
-                    //     }
-                    // }
-
-                    // console.log(newProduct);
-
-                    // newProduct.sku ? addDocument(newProduct, newProduct.sku) : addDocument(newProduct);
+                    uploadImages(state.images.map((image) => image.file), productId, 'products');
                 } }
             >
-            mostrar estado
+            Criar Produto
+            </LargeButton>
+            <LargeButton color='green'
+                loadingButton={ false }
+                onClick={ () => {
+                    console.log(state);
+                } }>
+                Mostrar estado
             </LargeButton>
         </main>
     );

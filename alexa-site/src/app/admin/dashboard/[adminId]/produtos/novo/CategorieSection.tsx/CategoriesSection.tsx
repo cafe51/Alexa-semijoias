@@ -11,7 +11,6 @@ interface CategoriesSectionmProps {
     handleRemoveCategory: (category: string) => void
     state: StateNewProductType;
   }
-  
 
 export default function CategoriesSection({
     state: { categories },

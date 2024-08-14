@@ -29,6 +29,7 @@ export type ProductBundleType = {
     subsections?: string[], // do tipo 'sectionName:subsectionName'[]
     value: { price: number, promotionalPrice: number, cost: number }
     variations?: string[],
+    images: { file: File; localUrl: string; }[],
 
 }
 
@@ -49,6 +50,8 @@ export type FullProductType = {
     sku?: string | undefined,
     barcode?: string | undefined,
     dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,
+    images: { file: File; localUrl: string; }[],
+
 }
 
 export type SectionType = {
