@@ -2,10 +2,11 @@
 
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { ProductType } from '../utils/types';
+import { ProductBundleType } from '../utils/types';
 import Image from 'next/image';
+import { DocumentData } from 'firebase/firestore';
 
-export default function ResponsiveCarousel({ productData }: { productData: ProductType }) {
+export default function ResponsiveCarousel({ productData }: { productData: ProductBundleType & DocumentData }) {
     return (
         <div className=''>
             <Carousel
@@ -17,7 +18,7 @@ export default function ResponsiveCarousel({ productData }: { productData: Produ
                 swipeable={ true }
                 showThumbs={ true }
             >
-                { productData.image.map((image: string, index) => (
+                { productData.images.map((image: string, index) => (
                     <div key={ productData.id + '(' + index + ')' } className='w-full rounded-lg relative h-[350px] '>
                         <Image
                             className='rounded-lg object-cover scale-110'

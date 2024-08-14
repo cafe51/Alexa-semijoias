@@ -29,7 +29,7 @@ export type ProductBundleType = {
     subsections?: string[], // do tipo 'sectionName:subsectionName'[]
     value: { price: number, promotionalPrice: number, cost: number }
     variations?: string[],
-    images: { file: File; localUrl: string; }[],
+    images: string[],
 
 }
 

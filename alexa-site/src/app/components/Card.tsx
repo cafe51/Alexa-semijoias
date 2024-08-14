@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { CartInfoType, ProductBundleType, ProductCartType, ProductVariation } from '../utils/types';
 import { useAddNewItemCart } from '../hooks/useAddNewItemCart';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
+import blankImage from '../../../public/blankImage.jpg';
 import ModalMaker from './ModalMaker';
 
 interface DynamicObjectCardsProps {
@@ -98,7 +99,10 @@ export default function Card({ productData, sectionName }: CardProps) {
                     <Image
                         data-testid="product-link"
                         className='rounded-lg object-cover scale-125'
-                        src={ 'https://cdn.dooca.store/69773/products/anel-organico-regulavel-folheado-em-ouro-18k1_1600x2000+fill_ffffff.jpg?v=1712695670' }
+                        src={ productData.images && productData.images[0] ? productData?.images[0] : blankImage }
+                        // src='/../../../public/blankImage.jpg'
+                        // src={ blankImage }
+
                         alt="Foto da peça"
                         fill
                     />

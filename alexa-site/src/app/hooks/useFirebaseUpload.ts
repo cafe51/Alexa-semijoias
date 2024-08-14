@@ -40,7 +40,7 @@ const useFirebaseUpload = () => {
 
     const saveImagesUrlsToFirestore = async(urls: string[], docId: string, collection: string) => {
         const docRef = doc(projectFirestoreDataBase, collection, docId);
-        await setDoc(docRef, { imageUrls: urls }, { merge: true });
+        await setDoc(docRef, { images: urls }, { merge: true });
     };
 
     return { uploadImages, progress, imageUrls };
