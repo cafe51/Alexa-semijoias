@@ -5,6 +5,7 @@ import { SectionType, StateNewProductType } from '@/app/utils/types';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import ChooseSection from './ChooseSection';
+import { useSectionManagement } from '@/app/hooks/useSectionManagement';
 
 interface SiteSectionSectionProps {
     state: StateNewProductType;
@@ -20,8 +21,26 @@ export default function SiteSectionSection({
 }: SiteSectionSectionProps) {
     const { getAllDocuments } = useCollection<SectionType>('siteSections');
     const [sections, setSections] = useState<(SectionType & WithFieldValue<DocumentData>)[] | never[]>([]);
+    const [newSections, setNewSections] = useState<(SectionType)[] | never[]>([]);
+    const [newSubSection, setNewSubSection] = useState<{sectionName: string, subsection: string} | undefined>(undefined);
 
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
+
+    const {
+        sectionList,
+        savedSections,
+        savedSubSections,
+        selectedSection,
+        selectedSubSection,
+        handleSectionClick,
+        handleSubSectionClick,
+        addSectionOrSubSection,
+        removeSectionOrSubSection,
+    } = useSectionManagement({ initialState: sectionsSite });
+
+    useEffect(() => console.log('selectedSection mudou', selectedSection), [selectedSection]);
+    // useEffect(() => console.log('newSubSection mudou', newSubSection), [newSubSection]);
+
 
     useEffect(() => {
         async function getSectionsFromFireBase() {
@@ -31,6 +50,29 @@ export default function SiteSectionSection({
         getSectionsFromFireBase();
     }, []);
 
+    useEffect(() => {
+        setSections((prevSections) => {
+            return [...prevSections, ...newSections];
+        });
+    }, [newSections]);
+
+    useEffect(() => {
+        if(newSubSection) {
+            setSections((prevSections) => {
+                const prevSectionsClone = [...prevSections];
+                const newSectionsMapped = prevSectionsClone.map((pvS) => {
+                    if(pvS.sectionName === newSubSection.sectionName) {
+                        return {
+                            ...pvS,
+                            subsections: pvS.subsections ? [...pvS.subsections, newSubSection.subsection] : [newSubSection.subsection],
+                        };
+                    } else return { ...pvS };
+                });
+                return newSectionsMapped;
+            });
+        }
+    }, [newSubSection]);
+
     return (
         <section className="p-4 border rounded-md bg-white">
             { (showSectionEditionModal) && (
@@ -39,11 +81,23 @@ export default function SiteSectionSection({
                     closeModelClick={ () => setShowSectionEditionModal(!showSectionEditionModal) }
                 >
                     <ChooseSection
+                        setNewSubSection={ setNewSubSection }
+                        setNewSections={ setNewSections }
                         firebaseSections={ sections }
                         handleAddSectionsSite={ handleAddSectionsSite }
                         handleAddSection={ handleAddSection }
                         handleAddSubSection={ handleAddSubSection }
-                        initialState={ sectionsSite }/>
+                        sectionList={ sectionList }
+                        savedSections={ savedSections }
+                        savedSubSections={ savedSubSections }
+                        selectedSection={ selectedSection }
+                        selectedSubSection={ selectedSubSection }
+                        handleSectionClick={ handleSectionClick }
+                        handleSubSectionClick={ handleSubSectionClick }
+                        addSectionOrSubSection={ addSectionOrSubSection }
+                        removeSectionOrSubSection={ removeSectionOrSubSection }
+                    />
+
                 </ModalMaker>
             ) }
             <div className='flex justify-between'>
