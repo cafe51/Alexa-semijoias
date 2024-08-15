@@ -60,7 +60,7 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
     case 'SET_VARIATIONS':
         return { ...state, variations: action.payload };
     case 'ADD_PRODUCT_VARIATION':
-        return { ...state, productVariations: [...state.productVariations, action.payload] };
+        return { ...state, productVariations: [action.payload, ...state.productVariations ] };
     case 'CLEAR_PRODUCT_VARIATIONS':
         return { ...state, productVariations: [] };
     case 'REMOVE_PRODUCT_VARIATION':
@@ -107,7 +107,7 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
     case 'SET_SUB_SECTIONS':
         return { ...state, subsections: action.payload };
     case 'SET_ADD_CATEGORIES':
-        return { ...state, categories: [...state.categories, action.payload] };
+        return { ...state, categories: [action.payload, ...state.categories ] };
     case 'SET_REMOVE_CATEGORY':
         return { ...state, categories: state.categories.filter((c) => c !== action.payload) };
     case 'SET_REMOVE_ALL_CATEGORIES':

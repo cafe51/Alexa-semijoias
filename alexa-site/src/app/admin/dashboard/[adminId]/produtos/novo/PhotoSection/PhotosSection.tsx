@@ -1,4 +1,3 @@
-// app/admin/dashboard/[adminId]/produtos/novo/PhotosSection.tsx
 import { StateNewProductType } from '@/app/utils/types';
 
 interface PhotosSectionProps {
@@ -6,29 +5,72 @@ interface PhotosSectionProps {
     handleSetImages: (images: {
         file: File;
         localUrl: string;
-    }[]) => void
+    }[]) => void;
 }
 
 export default function PhotosSection({ state, handleSetImages }: PhotosSectionProps) {
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files) {
-            const newImages = Array.from(files).map(file => ({
-                file,
-                localUrl: URL.createObjectURL(file),
-            }));
+            const newImages = await Promise.all(
+                Array.from(files).map(async(file) => {
+                    const croppedFile = await cropToSquare(file);
+                    return {
+                        file: croppedFile,
+                        localUrl: URL.createObjectURL(croppedFile),
+                    };
+                }),
+            );
             handleSetImages([...state.images, ...newImages]);
             e.target.value = ''; // Limpa o input para permitir o upload da mesma imagem novamente se necessário.
         }
     };
-    
+
+    const cropToSquare = (file: File): Promise<File> => {
+        return new Promise((resolve) => {
+            const img = document.createElement('img');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                const size = Math.min(img.width, img.height);
+                canvas.width = size;
+                canvas.height = size;
+
+                if (ctx) {
+                    ctx.drawImage(
+                        img,
+                        (img.width - size) / 2,
+                        (img.height - size) / 2,
+                        size,
+                        size,
+                        0,
+                        0,
+                        size,
+                        size,
+                    );
+
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            const croppedFile = new File([blob], file.name, {
+                                type: file.type,
+                                lastModified: Date.now(),
+                            });
+                            resolve(croppedFile);
+                        }
+                    }, file.type);
+                }
+            };
+        });
+    };
+
     const removeImage = (index: number) => {
         const imagesClone = [...state.images];
         const imagesFiltered = imagesClone.filter((_, i) => i !== index);
         handleSetImages(imagesFiltered);
-
     };
-    
+
     return (
         <section className="p-4 border rounded-md bg-white">
             <h2 className="text-xl font-bold mb-4">Fotos</h2>

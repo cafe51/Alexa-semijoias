@@ -41,6 +41,7 @@ export default function CreateNewProductVariationForm({
             handleAddProductVariation({
                 ...productVariationState,
                 defaultProperties: {
+                    imageIndex: 0,
                     estoque: estoque ? estoque : 0,
                     peso: peso ? peso : 0,
                     dimensions: dimensions ? dimensions : {
@@ -58,6 +59,7 @@ export default function CreateNewProductVariationForm({
                 return {
                     customProperties: newCustomProperties,
                     defaultProperties: {
+                        imageIndex: 0,
                         peso: 0,
                         estoque: 0,
                         dimensions: {

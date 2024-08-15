@@ -4,6 +4,7 @@ import UpdateProductVariationForm from './UpdateProductVariationForm';
 import { FaTrashAlt } from 'react-icons/fa';
 import { FiEdit } from 'react-icons/fi';
 import VariationFieldInputFilled from './VariationFieldInputFilled';
+import { VariationProductType } from '@/app/utils/types';
 
 
 interface ProductVariationFilledProps {
@@ -41,10 +42,10 @@ function ProductVariationFilled({ handleRemoveProductVariation, handleUpdateProd
 }
 
 interface ProductVariationFormFilledProps {
-    handleRemoveProductVariation: (productVariation: any) => void;
-    handleUpdateProductVariation: (oldVariation: any, newVariation: any) => void;
+    handleRemoveProductVariation: (productVariation: VariationProductType) => void;
+    handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void;
     variations: string[];
-    productVariations: any[];
+    productVariations: VariationProductType[];
     images: string[] | null;
 }
 
@@ -61,7 +62,7 @@ export default function ProductVariationFormFilled({
         <div className='w-full flex flex-col gap-2 mt-2'>
             <div className='w-full flex self-center gap-2 flex-wrap justify-center'>
                 {
-                    productVariations.reverse().map((productVariation, index) => (
+                    productVariations.map((productVariation, index) => (
                         editingIndex === index 
                             ?
                             <UpdateProductVariationForm
