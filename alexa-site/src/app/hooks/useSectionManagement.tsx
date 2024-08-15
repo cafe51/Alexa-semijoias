@@ -26,7 +26,7 @@ export function useSectionManagement({ initialState }: UseSectionManagementProps
                 subsections?.map((subsection) => ({ sectionName, subsection })),
             );
 
-        setSavedSubSections(savedSubSections);
+        setSavedSubSections(savedSubSections.filter(savedSubSection => savedSubSection !== undefined));
     }, [initialState]);
 
     const handleSectionClick = (section: SectionType) => {
