@@ -8,7 +8,7 @@ const useFirebaseUpload = () => {
     const [progress, setProgress] = useState<number[]>([]);
     const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-    const uploadImages = (files: File[], docId: string, collection: string) => {
+    const uploadImages = (files: File[], docId?: string, collection?: string) => {
         const urls: string[] = [];
         const progresses: number[] = new Array(files.length).fill(0);
 
@@ -30,8 +30,10 @@ const useFirebaseUpload = () => {
                     urls.push(downloadURL);
                     setImageUrls([...urls]);
 
-                    if (urls.length === files.length) {
-                        await saveImagesUrlsToFirestore(urls, docId, collection);
+                    if(docId && collection) {
+                        if (urls.length === files.length) {
+                            await saveImagesUrlsToFirestore(urls, docId, collection);
+                        }
                     }
                 },
             );
@@ -40,7 +42,7 @@ const useFirebaseUpload = () => {
 
     const saveImagesUrlsToFirestore = async(urls: string[], docId: string, collection: string) => {
         const docRef = doc(projectFirestoreDataBase, collection, docId);
-        await setDoc(docRef, { images: urls }, { merge: true });
+        await setDoc(docRef, { imageUrls: urls }, { merge: true });
     };
 
     return { uploadImages, progress, imageUrls };

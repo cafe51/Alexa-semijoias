@@ -78,9 +78,7 @@ export default function NewProductPage() {
                         handleDimensionsChange={ handleDimensionsChange }
                     />
                 </>
-
             }
-
 
             <VariationsSection
                 state={ state }
@@ -107,6 +105,7 @@ export default function NewProductPage() {
             <LargeButton color='blue'
                 loadingButton={ false }
                 onClick={ () => {
+                    uploadImages(state.images.map((image) => image.file));
                     let newProduct: ProductBundleType;
                     const productId = '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
 
@@ -119,6 +118,7 @@ export default function NewProductPage() {
 
                         newProduct = {
                             name: state.name,
+                            images: imageUrls,
                             description: state.description,
                             categories: state.categories,
                             value: state.value,
@@ -149,7 +149,8 @@ export default function NewProductPage() {
                                 return {
 
                                     customProperties: { ...pv.customProperties },
-                                    ...pv.defaultProperties, 
+                                    ...pv.defaultProperties,
+                                    image: imageUrls[pv.defaultProperties.imageIndex],
                                     productId,
                                     name: state.name,
                                     value: state.value,
@@ -175,6 +176,7 @@ export default function NewProductPage() {
 
                         newProduct = {
                             name: state.name,
+                            images: imageUrls,
                             description: state.description,
                             categories: state.categories,
                             value: state.value,
@@ -182,6 +184,7 @@ export default function NewProductPage() {
                             estoqueTotal: state.estoque ? state.estoque : 0,
                             productVariations: [
                                 {   productId,
+                                    image: imageUrls[state.productVariations[0].defaultProperties.imageIndex],
                                     estoque: state.estoque ? state.estoque : 0,
                                     peso: state.dimensions && state.dimensions.peso ? state.dimensions.peso : 0,
                                     name: state.name,
@@ -202,10 +205,12 @@ export default function NewProductPage() {
                             ],
                         };
 
+                        console.log('newProduct', newProduct);
+                        console.log('productId', productId);
+
                         addDocument(newProduct, productId);
                         handleVariationsChange([]);
                     }
-                    uploadImages(state.images.map((image) => image.file), productId, 'products');
                 } }
             >
             Criar Produto

@@ -3,7 +3,7 @@ import { WhereFilterOp } from 'firebase/firestore';
 
 export type VariationProductType = {
     customProperties: any,
-    defaultProperties: { estoque: number, peso: number, dimensions: { largura: number, altura: number, comprimento: number }} 
+    defaultProperties: { estoque: number, peso: number, imageIndex: number, dimensions: { largura: number, altura: number, comprimento: number }} 
 }
 
 export type ProductVariation = {
@@ -16,6 +16,7 @@ export type ProductVariation = {
     sku: string,
     value: { price: number, promotionalPrice: number, cost: number }
     productId: string;
+    image: string;
 }
 
 export type ProductBundleType = {

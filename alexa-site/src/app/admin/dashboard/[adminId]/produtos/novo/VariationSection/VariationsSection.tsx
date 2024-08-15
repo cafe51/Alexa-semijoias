@@ -18,8 +18,25 @@ interface VariationsSectionProps {
     handleStockQuantityChange: (estoque: number | undefined) => void
 }
 
+// const variations = [ 'tamanho', 'cor' ];
+
+// const productVariations = [
+//     {
+//         customProperties: { tamanho: 'P', cor: 'verde' },
+//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
+//     },
+//     {
+//         customProperties: { tamanho: 'G', cor: 'verde' },
+//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
+//     },
+//     {
+//         customProperties: { tamanho: 'M', cor: 'amarelo' },
+//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
+//     },
+// ];
+
 export default function VariationsSection({
-    state: { variations, productVariations },
+    state: { variations, productVariations, images },
     handleVariationsChange,
     handleAddProductVariation,
     handleRemoveProductVariation,
@@ -32,6 +49,7 @@ export default function VariationsSection({
     const [productVariationState, setProductVariationState] = useState<VariationProductType>({
         customProperties: { },
         defaultProperties: {
+            imageIndex: 0,
             peso: 0,
             estoque: 0,
             dimensions: {
@@ -98,6 +116,7 @@ export default function VariationsSection({
                     (productVariations && productVariations.length > 0 && variations && variations.length > 0)
                         &&
                         <ProductVariationFormFilled
+                            images={ images && images.length > 0 ? images.map((image) => image.localUrl) :  null }
                             productVariations={ productVariations }
                             variations={ variations }
                             handleRemoveProductVariation={ handleRemoveProductVariation }

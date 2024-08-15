@@ -7,10 +7,15 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import formatPrice from '../utils/formatPrice';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 export default function CartItem({ produto }: { produto: ProductCartType & WithFieldValue<DocumentData> }) {
     const { user } = useAuthContext();
     const { addOneToLocalStorage, removeOneFromLocalStorage, removeItemFromLocalStorageCart } = useLocalStorage();
+
+    useEffect(() => {
+        console.log('PRODUTOOOOO', produto);
+    }, [produto]);
 
     const { updateDocumentField, deleteDocument } = useCollection(
         'carrinhos',
