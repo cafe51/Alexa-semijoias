@@ -38,10 +38,6 @@ export default function SiteSectionSection({
         removeSectionOrSubSection,
     } = useSectionManagement({ initialState: sectionsSite });
 
-    useEffect(() => console.log('selectedSection mudou', selectedSection), [selectedSection]);
-    // useEffect(() => console.log('newSubSection mudou', newSubSection), [newSubSection]);
-
-
     useEffect(() => {
         async function getSectionsFromFireBase() {
             const res = await getAllDocuments();

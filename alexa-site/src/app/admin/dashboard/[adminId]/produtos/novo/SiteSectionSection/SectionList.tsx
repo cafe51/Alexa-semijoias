@@ -29,7 +29,6 @@ export default function SectionList({
                 >
                     <section className='flex flex-col gap-4'>
                         <div className="p-2">
-                            { /* <label className="flex flex-col p-2" htmlFor='name'>Nome</label> */ }
                             <input
                                 className="w-full px-3 py-2 border rounded-md"
                                 id='newSection'

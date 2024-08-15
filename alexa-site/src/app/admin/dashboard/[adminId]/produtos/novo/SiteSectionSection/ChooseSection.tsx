@@ -51,9 +51,6 @@ export default function ChooseSection({
         handleAddSubSection(savedSubSections.map(({ sectionName, subsection }) => `${sectionName}:${subsection}`));
     }, [sectionList, savedSubSections]);
 
-    // useEffect(() => console.log('sectionList mudou', sectionList), [sectionList]);
-    // useEffect(() => console.log('selectedSection mudou', selectedSection), [selectedSection]);
-
     return (
         <section className="flex flex-col h-full w-full gap-2">
             <div className="flex gap-2 h-full w-full">
