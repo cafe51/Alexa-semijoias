@@ -14,12 +14,18 @@ import AssociatedProductsSection from './AssociatedProductsSection';
 import RecommendedProductsSection from './RecommendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
-import { ProductBundleType } from '@/app/utils/types';
+import { CategoryType, CheckboxData, ProductBundleType } from '@/app/utils/types';
 import useFirebaseUpload from '@/app/hooks/useFirebaseUpload';
+import { useEffect, useState } from 'react';
+import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function NewProductPage() {
     const { uploadImages, imageUrls } = useFirebaseUpload();
     const { addDocument } = useCollection<ProductBundleType>('products');
+    const { getAllDocuments } = useCollection<CategoryType>('categories');
+    const [categoriesStateFromFirebase, setCategoriesStateFromFirebase] = useState<(CategoryType & WithFieldValue<DocumentData>)[] | never[]>([]);
+    const [options, setOptions] = useState<CheckboxData[]>([]);
+
     const {
         state, handleNameChange, handleDescriptionChange, handleValueChange,
         handleStockQuantityChange, handleVariationsChange, handleBarcodeChange,
@@ -33,7 +39,24 @@ export default function NewProductPage() {
         handleAddSubSection,
         handleAddSectionsSite,
         handleSetImages,
+        handleSetCategoriesFromFb,
     } = useNewProductState();
+
+    useEffect(() => {
+        async function getCategoriesFromFirebase() {
+            const res = await getAllDocuments();
+            console.log('categorias', res);
+            setCategoriesStateFromFirebase(res);
+        }
+        getCategoriesFromFirebase();
+    }, []);
+
+    useEffect(() => {
+        const initialOptions = categoriesStateFromFirebase
+            .map((c) => c.categoryName)
+            .map((label) => ({ label, isChecked: false }));
+        setOptions(initialOptions);
+    }, [categoriesStateFromFirebase]);
 
     return (
         <main className='flex flex-col gap-2 w-full'>
@@ -61,9 +84,12 @@ export default function NewProductPage() {
 
             <CategoriesSection
                 state={ state }
+                options={ options }
+                setOptions={ setOptions }
                 handleAddCategories={ handleAddCategories }
                 handleRemoveAllCategories={ handleRemoveAllCategories }
                 handleRemoveCategory={ handleRemoveCategory }
+                handleSetCategoriesFromFb={ handleSetCategoriesFromFb }
             />
 
             { 

@@ -1,24 +1,39 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CategoriesSection/CategoriesSection.tsx
 
 import ModalMaker from '@/app/components/ModalMaker';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import CreateCategoriesForm from './CreateCategories';
-import { StateNewProductType } from '@/app/utils/types';
+import { CheckboxData, StateNewProductType } from '@/app/utils/types';
+// import { useCollection } from '@/app/hooks/useCollection';
+// import { DocumentData, WithFieldValue } from 'firebase/firestore';
+
+
 
 interface CategoriesSectionmProps {
     handleAddCategories: (category: string) => void
     handleRemoveAllCategories: () => void
     handleRemoveCategory: (category: string) => void
+    handleSetCategoriesFromFb: (category: string[]) => void
     state: StateNewProductType;
+    options: CheckboxData[];
+    setOptions: Dispatch<SetStateAction<CheckboxData[]>>
   }
 
 export default function CategoriesSection({
-    state: { categories },
+    state: { categories, categoriesFromFirebase },
     handleAddCategories,
     handleRemoveAllCategories,
     handleRemoveCategory,
+    handleSetCategoriesFromFb,
+    setOptions,
+    options,
 }: CategoriesSectionmProps) {
+    // const [newPersonalizedCategoriesState, setNewPersonalizedCategoriesState] = useState<(CategoryType)[] | never[]>([]);
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
+
+
+
+
 
     return (
         <section className="p-4 border rounded-md bg-white">
@@ -28,16 +43,19 @@ export default function CategoriesSection({
                     closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
                 >
                     <CreateCategoriesForm
-                        categories={ categories }
+                        categories={ [...categories, ...categoriesFromFirebase] }
+                        options={ options }
+                        setOptions={ setOptions }
                         handleAddCategories={ handleAddCategories }
                         handleRemoveAllCategories={ handleRemoveAllCategories }
                         handleRemoveCategory={ handleRemoveCategory }
+                        handleSetCategoriesFromFb={ handleSetCategoriesFromFb }
                     />
                 </ModalMaker>
             ) }
             <div className='flex justify-between'>
                 <h2 className="text-lg font-bold">Categorias</h2>
-                { (categories && categories.length > 0) &&
+                { ((categories && categories.length > 0) || (categoriesFromFirebase && categoriesFromFirebase.length > 0)) &&
                 <button className='text-blue-500'
                     onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }>
                         Editar
@@ -46,11 +64,11 @@ export default function CategoriesSection({
 
             <div className=' border-t border-solid w-full p-4'>
                 {
-                    (categories && categories.length > 0)
+                    ((categories && categories.length > 0) || (categoriesFromFirebase && categoriesFromFirebase.length > 0))
                         ?
                         <div className='flex flex-wrap gap-2'>
                             {
-                                categories.map((category, index) => {
+                                [...categories, ...categoriesFromFirebase].map((category, index) => {
                                     return (
                                         <div key={ index } className='p-2 bg-green-700 text-white text-xs rounded-lg'>
                                             { category }
@@ -65,7 +83,7 @@ export default function CategoriesSection({
                                 className="text-blue-500"
                                 onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
                             >
-                                Adicionar variações
+                                Adicionar categorias
                             </button>
                         </div>)
                 }

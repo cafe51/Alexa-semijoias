@@ -21,7 +21,7 @@ type ActionType =
     | { type: 'SET_SECTIONS', payload: string[] }
     | { type: 'SET_SUB_SECTIONS', payload: string[] | undefined }
     | { type: 'SET_ADD_CATEGORIES', payload: string }
-    | { type: 'SET_ADD_CATEGORIES', payload: string }
+    | { type: 'SET_FB_CATEGORIES', payload: string[]}
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
     | { type: 'SET_IMAGES', payload: { file: File; localUrl: string; }[]}
@@ -31,6 +31,7 @@ type ActionType =
 const initialState: StateNewProductType= {
     name: '',
     categories: [],
+    categoriesFromFirebase: [],
     description: '',
     value: {
         price: 0,
@@ -108,6 +109,8 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
         return { ...state, subsections: action.payload };
     case 'SET_ADD_CATEGORIES':
         return { ...state, categories: [action.payload, ...state.categories ] };
+    case 'SET_FB_CATEGORIES':
+        return { ...state, categoriesFromFirebase: action.payload };
     case 'SET_REMOVE_CATEGORY':
         return { ...state, categories: state.categories.filter((c) => c !== action.payload) };
     case 'SET_REMOVE_ALL_CATEGORIES':
@@ -194,6 +197,10 @@ export function useNewProductState() {
         dispatch({ type: 'SET_ADD_CATEGORIES', payload: category });
     }, []);
 
+    const handleSetCategoriesFromFb = useCallback((categories: string[]) => {
+        dispatch({ type: 'SET_FB_CATEGORIES', payload: categories });
+    }, []);
+
     const handleRemoveCategory = useCallback((category: string) => {
         dispatch({ type: 'SET_REMOVE_CATEGORY', payload: category });
     }, []);
@@ -227,6 +234,7 @@ export function useNewProductState() {
         handleAddSection,
         handleAddSubSection,
         handleAddCategories,
+        handleSetCategoriesFromFb,
         handleRemoveCategory,
         handleRemoveAllCategories,
         handleSetImages,

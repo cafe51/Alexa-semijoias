@@ -1,6 +1,15 @@
 //app/utils/types.tsx
 import { WhereFilterOp } from 'firebase/firestore';
 
+export type CheckboxData = {
+    label: string;
+    isChecked: boolean;
+  }
+
+export type CategoryType = {
+    categoryName: string;
+}
+
 export type VariationProductType = {
     customProperties: any,
     defaultProperties: { estoque: number, peso: number, imageIndex: number, dimensions: { largura: number, altura: number, comprimento: number }} 
@@ -38,6 +47,7 @@ export type FullProductType = {
     name: string;
     description: string;
     categories: string[],
+    categoriesFromFirebase: string[],
     value: {
         price: number,
         promotionalPrice: number,
