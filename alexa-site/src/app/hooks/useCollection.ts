@@ -6,13 +6,17 @@ import { FilterOption } from '../utils/types';
 
 export const useCollection = <T>(collectionName: string) => {
     const addDocument = async(dataObj: T & WithFieldValue<DocumentData>, id?: string) => {
-        if (id) {
-            // Define o ID específico
-            const docRef = doc(projectFirestoreDataBase, collectionName, id);
-            await setDoc(docRef, dataObj);
-        } else {
-            // Gera um ID automaticamente
-            await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
+        try {
+            if (id) {
+                // Define o ID específico
+                const docRef = doc(projectFirestoreDataBase, collectionName, id);
+                await setDoc(docRef, dataObj);
+            } else {
+                // Gera um ID automaticamente
+                await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
+            }
+        } catch(error) {
+            console.error(error);
         }
     };
 

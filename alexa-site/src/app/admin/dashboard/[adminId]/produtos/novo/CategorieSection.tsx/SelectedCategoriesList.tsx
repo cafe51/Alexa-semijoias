@@ -1,10 +1,10 @@
 import { FaRegTrashAlt } from 'react-icons/fa';
 
 interface SelectedCategoriesListProps {
-selectedOptions: string[];
-  handleCheckboxChange(label: string): void;
-  handleRemoveCategory: (category: string) => void;
-  handleAddCategories: (category: string) => void
+    selectedOptions: string[];
+    handleCheckboxChange(label: string): void;
+    handleRemoveCategory: (category: string) => void;
+    handleAddCategories: (category: string) => void
 }
 
 export default function SelectedCategoriesList({ selectedOptions, handleCheckboxChange, handleRemoveCategory  }: SelectedCategoriesListProps) {

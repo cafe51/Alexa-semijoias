@@ -10,8 +10,8 @@ import CodesSection from './CodesSection';
 import DimensionsSection from './DimensionsSection';
 import CategoriesSection from './CategorieSection.tsx/CategoriesSection';
 import VariationsSection from './VariationSection/VariationsSection';
-import AssociatedProductsSection from './AssociatedProductsSection';
-import RecommendedProductsSection from './RecommendedProductsSection';
+// import AssociatedProductsSection from './AssociatedProductsSection';
+// import RecommendedProductsSection from './RecommendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
 import { CategoryType, CheckboxData, ProductBundleType } from '@/app/utils/types';
@@ -20,9 +20,9 @@ import { useEffect, useState } from 'react';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function NewProductPage() {
-    const { uploadImages, imageUrls } = useFirebaseUpload();
+    const { uploadImages } = useFirebaseUpload();
     const { addDocument } = useCollection<ProductBundleType>('products');
-    const { getAllDocuments } = useCollection<CategoryType>('categories');
+    const { getAllDocuments, addDocument: createNewCategoryDocument } = useCollection<CategoryType>('categories');
     const [categoriesStateFromFirebase, setCategoriesStateFromFirebase] = useState<(CategoryType & WithFieldValue<DocumentData>)[] | never[]>([]);
     const [options, setOptions] = useState<CheckboxData[]>([]);
 
@@ -125,13 +125,18 @@ export default function NewProductPage() {
                 handleAddSubSection={ handleAddSubSection }
             />
 
-            <AssociatedProductsSection />
-            <RecommendedProductsSection />
+            { /* <AssociatedProductsSection />
+            <RecommendedProductsSection /> */ }
 
             <LargeButton color='blue'
                 loadingButton={ false }
-                onClick={ () => {
-                    uploadImages(state.images.map((image) => image.file));
+                onClick={ async() => {
+                    const imageUrls = await uploadImages(state.images.map((image) => image.file));
+                    if(state && state.categories && state.categories.length > 0) {
+                        for(const category of state.categories) {
+                            createNewCategoryDocument({ categoryName: category });
+                        }
+                    }
                     let newProduct: ProductBundleType;
                     const productId = '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
 
@@ -146,7 +151,7 @@ export default function NewProductPage() {
                             name: state.name,
                             images: imageUrls,
                             description: state.description,
-                            categories: state.categories,
+                            categories: [...state.categories, ...state.categoriesFromFirebase],
                             value: state.value,
                             sections: state.sections,
                             subsections: state.subsections, // do tipo 'sectionName:subsectionName'[]
@@ -187,7 +192,7 @@ export default function NewProductPage() {
                                 };
                             }),
                         };
-                        addDocument(newProduct, productId);
+                        await addDocument(newProduct, productId);
                     }
 
                     if(!state.productVariations || state.productVariations.length === 0) {
@@ -204,13 +209,13 @@ export default function NewProductPage() {
                             name: state.name,
                             images: imageUrls,
                             description: state.description,
-                            categories: state.categories,
+                            categories: [...state.categories, ...state.categoriesFromFirebase],
                             value: state.value,
                             sections: state.sections,
                             estoqueTotal: state.estoque ? state.estoque : 0,
                             productVariations: [
                                 {   productId,
-                                    image: imageUrls[state.productVariations[0].defaultProperties.imageIndex],
+                                    image: imageUrls && imageUrls[0] ? imageUrls[0] : '',
                                     estoque: state.estoque ? state.estoque : 0,
                                     peso: state.dimensions && state.dimensions.peso ? state.dimensions.peso : 0,
                                     name: state.name,
@@ -230,11 +235,7 @@ export default function NewProductPage() {
                                 },
                             ],
                         };
-
-                        console.log('newProduct', newProduct);
-                        console.log('productId', productId);
-
-                        addDocument(newProduct, productId);
+                        await addDocument(newProduct, productId);
                         handleVariationsChange([]);
                     }
                 } }

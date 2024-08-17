@@ -141,7 +141,7 @@ export function useNewProductState() {
         dispatch({ type: 'SET_STOCK_QUANTITY', payload: estoque });
     }, []);
     
-    const handleAddProductVariation = useCallback((productVariation: any) => {
+    const handleAddProductVariation = useCallback((productVariation: VariationProductType) => {
         dispatch({ type: 'ADD_PRODUCT_VARIATION', payload: productVariation });
     }, []);
 
@@ -149,11 +149,11 @@ export function useNewProductState() {
         dispatch({ type: 'CLEAR_PRODUCT_VARIATIONS' });
     }, []);
 
-    const handleRemoveProductVariation = useCallback((productVariation: any) => {
+    const handleRemoveProductVariation = useCallback((productVariation: VariationProductType) => {
         dispatch({ type: 'REMOVE_PRODUCT_VARIATION', payload: productVariation });
     }, []);
     
-    const handleUpdateProductVariation = useCallback((oldVariation: any, newVariation: any) => {
+    const handleUpdateProductVariation = useCallback((oldVariation: VariationProductType, newVariation: VariationProductType) => {
         dispatch({ type: 'UPDATE_PRODUCT_VARIATION', payload: { oldVariation, newVariation } });
     }, []);
     

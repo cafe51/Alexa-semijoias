@@ -9,9 +9,10 @@ interface CategoriesListFromFbProps {
     options: CheckboxData[];
     handleCheckboxChange(label: string): void;
     handleAddCategories: (category: string) => void
+    selectedOptions: string[];
 }
 
-export default function CategoriesListFromFb({ options, handleCheckboxChange, handleAddCategories }: CategoriesListFromFbProps) {
+export default function CategoriesListFromFb({ options, selectedOptions, handleCheckboxChange, handleAddCategories }: CategoriesListFromFbProps) {
     const [filteredOptions, setFilteredOptions] = useState<CheckboxData[] | never[]>([]);
     const [newSearch, setNewSearch] = useState('');
 
@@ -70,7 +71,10 @@ export default function CategoriesListFromFb({ options, handleCheckboxChange, ha
                         );
                     })
                 }
-                { !filteredOptions.some((op) => op.label === newSearch) && (newSearch.length > 0) && <li>
+                { !filteredOptions.some((op) => op.label === newSearch) &&
+                (newSearch.length > 0) &&
+                !selectedOptions.includes(newSearch) &&
+                <li>
                     {
                         <div
                             className={ 'bg-green-200 text-green-600 rounded p-2 hover:bg-pink-200 w-full full ms-2 text-sm font-medium' }
