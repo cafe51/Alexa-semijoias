@@ -43,7 +43,7 @@ export type ProductBundleType = {
 
 }
 
-export type FullProductType = {
+export type StateNewProductType = {
     name: string;
     description: string;
     categories: string[],
@@ -55,6 +55,7 @@ export type FullProductType = {
     }
     sections: string[],
     subsections?: string[] | null | undefined, // do tipo 'sectionName:subsectionName'[]
+    sectionsSite: ((SectionType & { exist?: boolean, id?: string })[] | never[]) 
     variations: string[] | never[],
     productVariations: VariationProductType[] | never[];
     estoque?: number | undefined,
@@ -70,7 +71,7 @@ export type SectionType = {
     subsections?: string[] | null | undefined,
 }
 
-export type StateNewProductType = FullProductType & { sectionsSite: SectionType[] | never[] };
+// export type StateNewProductType = FullProductType & { sectionsSite: SectionType[] | never[] };
 
 
 

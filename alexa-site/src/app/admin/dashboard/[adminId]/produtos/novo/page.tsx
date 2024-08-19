@@ -14,7 +14,7 @@ import VariationsSection from './VariationSection/VariationsSection';
 // import RecommendedProductsSection from './RecommendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
-import { CategoryType, CheckboxData, ProductBundleType } from '@/app/utils/types';
+import { CategoryType, CheckboxData, ProductBundleType, SectionType } from '@/app/utils/types';
 import useFirebaseUpload from '@/app/hooks/useFirebaseUpload';
 import { useEffect, useState } from 'react';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
@@ -23,6 +23,12 @@ export default function NewProductPage() {
     const { uploadImages } = useFirebaseUpload();
     const { addDocument } = useCollection<ProductBundleType>('products');
     const { getAllDocuments, addDocument: createNewCategoryDocument } = useCollection<CategoryType>('categories');
+    const {
+        addDocument: createNewSiteSectionDocument,
+        updateDocumentField: updateSiteSectionDocumentField,
+        getDocumentById: getSiteSectionDocumentById,
+    } = useCollection<SectionType>('siteSections');
+
     const [categoriesStateFromFirebase, setCategoriesStateFromFirebase] = useState<(CategoryType & WithFieldValue<DocumentData>)[] | never[]>([]);
     const [options, setOptions] = useState<CheckboxData[]>([]);
 
@@ -140,6 +146,28 @@ export default function NewProductPage() {
                     let newProduct: ProductBundleType;
                     const productId = '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
 
+                    if(state.sectionsSite && state.sectionsSite.length > 0) {
+                        for(const siteSection of state.sectionsSite) {
+                            if(siteSection.exist && siteSection.id) { // caso a siteSection contenha exist e id (exista no firebase)
+                                if(siteSection.subsections) { // caso o siteSection possua subsections
+                                    const siteSectionDocument = await getSiteSectionDocumentById(siteSection.id); // procura o siteSection equivalente no firebase
+                                    if(siteSectionDocument.exist) { // caso seja achado o siteSection equivalente no firebase
+                                        if(siteSectionDocument.subsections) { // caso o siteSection do firebase possua subsections
+                                            const subSectionsSet = new Set(siteSectionDocument.subsections);
+                                            siteSection.subsections.forEach((ss) => subSectionsSet.add(ss)); // add todas as subsections exceto as repetidas
+                                            const subSectionsUpdated = Array.from(subSectionsSet);
+                                            updateSiteSectionDocumentField(siteSection.id, 'subsections', subSectionsUpdated);
+                                        } else { // caso o siteSection do firebase não possua subsections
+                                            updateSiteSectionDocumentField(siteSection.id, 'subsections', siteSection.subsections);
+                                        }
+                                    }
+                                }
+                            } else { // caso a siteSection não contenha exist (não exista no firebase)
+                                createNewSiteSectionDocument(siteSection);
+                            }
+                        }
+                    }
+
                     if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
                         let totalStock = 0;
 
@@ -235,9 +263,13 @@ export default function NewProductPage() {
                                 },
                             ],
                         };
+                        
                         await addDocument(newProduct, productId);
+
                         handleVariationsChange([]);
                     }
+                    
+
                 } }
             >
             Criar Produto
