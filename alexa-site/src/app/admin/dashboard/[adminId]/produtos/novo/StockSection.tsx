@@ -1,4 +1,5 @@
 // app/admin/dashboard/[adminId]/produtos/novo/StockSection.tsx
+import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { StateNewProductType } from '@/app/utils/types';
 import React from 'react';
 
@@ -17,9 +18,9 @@ export default function StockSection({
             <input
                 id='estoque'
                 name="estoque"
-                type="number"
+                type="text"
                 value={ state.estoque ? state.estoque : 0 }
-                onChange={ (e) => handleStockQuantityChange(Number(e.target.value)) }
+                onChange={ (e) => transformTextInputInNumber(e.target.value, handleStockQuantityChange) }
                 className="mt-1 block w-full px-3 py-2 border rounded-md"
                 placeholder="Estoque"
             />

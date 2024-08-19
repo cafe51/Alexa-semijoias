@@ -1,3 +1,4 @@
+import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { Dispatch, SetStateAction } from 'react';
 
 interface InputStandartPropertiesFormProps {
@@ -28,9 +29,9 @@ export default function InputStandartProperties({ estoque, setEstoque, dimension
                     className="text-xs justify-self-start px-3 py-2 border rounded-md w-5/12"
                     id="estoque"
                     name="estoque"
-                    type="number"
+                    type="text"
                     value={ estoque }
-                    onChange={ (e) => setEstoque(Number(e.target.value)) }
+                    onChange={ (e) => transformTextInputInNumber(e.target.value, setEstoque) }
                     placeholder=''
                 />
             </div>
@@ -45,9 +46,9 @@ export default function InputStandartProperties({ estoque, setEstoque, dimension
                                     className="text-xs px-3 py-2 border rounded-md "
                                     id={ property }
                                     name={ property }
-                                    type="number"
+                                    type="text"
                                     value={ dimensions[property as keyof typeof dimensions] }
-                                    onChange={ (e) => setDimensions({ ...dimensions, [property]: Number(e.target.value)  }) }
+                                    onChange={ (e) => transformTextInputInNumber(e.target.value, (input) => setDimensions({ ...dimensions, [property]: Number(input)  })) }
                                     placeholder=''
                                 />
                             </div>
@@ -63,9 +64,9 @@ export default function InputStandartProperties({ estoque, setEstoque, dimension
 
                     id="peso"
                     name="peso"
-                    type="peso"
+                    type="text"
                     value={ peso }
-                    onChange={ (e) => setPeso(Number(e.target.value)) }
+                    onChange={ (e) => transformTextInputInNumber(e.target.value, setPeso) }
                     placeholder=''
                 />
             </div>

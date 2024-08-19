@@ -1,5 +1,6 @@
 // app/admin/dashboard/[adminId]/produtos/novo/PricesSection.tsx
 
+import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { StateNewProductType } from '@/app/utils/types';
 
 interface PricesSectionProps {
@@ -30,9 +31,9 @@ export default function PricesSection({
                     <input
                         id='price'
                         name='price'
-                        type="number"
+                        type="text"
                         value={ value.price }
-                        onChange={ (e) => handleValueChange({ ...value, price: Number(e.target.value) }) }
+                        onChange={ (e) => transformTextInputInNumber(e.target.value, (input) => handleValueChange({ ...value, price: input })) }
                         className="mt-1 w-full px-3 py-2 border rounded-md"
                         placeholder="R$ 0,00"
                     />
@@ -42,9 +43,9 @@ export default function PricesSection({
                     <input
                         id='promotionalPrice'
                         name='promotionalPrice'
-                        type="number"
+                        type="text"
                         value={ value.promotionalPrice }
-                        onChange={ (e) => handleValueChange({ ...value, promotionalPrice: Number(e.target.value) }) }
+                        onChange={ (e) => transformTextInputInNumber(e.target.value, (input) => handleValueChange({ ...value, promotionalPrice: input })) }
                         className="mt-1 w-full px-3 py-2 border rounded-md"
                         placeholder="R$ 0,00"
                     />
@@ -54,9 +55,9 @@ export default function PricesSection({
                     <input
                         id='cost'
                         name='cost'
-                        type="number"
+                        type="text"
                         value={ value.cost }
-                        onChange={ (e) => handleValueChange({ ...value, cost: Number(e.target.value) }) }
+                        onChange={ (e) => transformTextInputInNumber(e.target.value, (input) => handleValueChange({ ...value, cost: input })) }
                         className="mt-1 w-full px-3 py-2 border rounded-md"
                         placeholder="R$ 0,00"
                     />
@@ -66,8 +67,8 @@ export default function PricesSection({
                     <input
                         id='profitMargin'
                         name='profitMargin'
-                        type="number"
-                        value={ marginProfitValue(value) ? marginProfitValue(value) : 0 }
+                        type="text"
+                        value={ marginProfitValue(value) ? marginProfitValue(value).toFixed(2) + ' %' : 0 + ' %' }
                         className="mt-1 w-full px-3 py-2 border rounded-md bg-gray-100"
                         readOnly
                     />

@@ -1,5 +1,6 @@
 // app/admin/dashboard/[adminId]/produtos/novo/DimensionsSection.tsx
 
+import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { StateNewProductType } from '@/app/utils/types';
 import React from 'react';
 
@@ -13,11 +14,11 @@ export default function DimensionsSection({
     handleDimensionsChange,
 }: DimensionsSectionProps) {
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>, state: StateNewProductType, property: string) {
+    function handleChange(input: number, state: StateNewProductType, property: string) {
         if(state && state.dimensions){
             handleDimensionsChange({
                 ...state.dimensions,
-                [property]: Number(e.target.value),
+                [property]: input,
             });
         }
         if(state && !state.dimensions) {
@@ -26,7 +27,7 @@ export default function DimensionsSection({
                 comprimento: 0,
                 largura: 0,
                 peso: 0,
-                [property]: Number(e.target.value),
+                [property]: (input),
             });
         }
     }
@@ -45,9 +46,9 @@ export default function DimensionsSection({
                                 <input
                                     id={ property }
                                     name={ property }                                
-                                    type="number"
+                                    type="text"
                                     value={ state && state.dimensions ? state.dimensions[property] : 0 }
-                                    onChange={ (e) =>handleChange(e, state, property) }
+                                    onChange={ (e) => transformTextInputInNumber(e.target.value, (input) => handleChange(input, state, property)) }
                                     className="mt-1 w-full px-3 py-2 border rounded-md"
                                     placeholder={ property }
                                 />
