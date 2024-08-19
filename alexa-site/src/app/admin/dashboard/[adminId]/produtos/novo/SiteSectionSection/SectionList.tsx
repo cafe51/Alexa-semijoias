@@ -40,10 +40,11 @@ export default function SectionList({
                             />
                         </div>
                         <button
-                            className='p-2 bg-green-500 disabled:bg-gray-300 '
+                            className='p-2 bg-green-600 text-white disabled:bg-gray-300 '
                             disabled={ !(!!newSectionName && newSectionName.length > 0)  }
                             onClick={ () => {
                                 setNewSections([{ sectionName: newSectionName }]);
+                                setNewSectionName('');
                                 setShowSectionEditionModal(!showSectionEditionModal);
                             } }
                         >

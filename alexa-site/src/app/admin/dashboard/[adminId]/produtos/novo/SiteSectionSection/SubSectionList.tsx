@@ -56,8 +56,6 @@ export default function SubSectionList({
                             className='p-2 bg-green-500 disabled:bg-gray-300 '
                             disabled={ !(!!newSubSectionName && newSubSectionName.length > 0)  }
                             onClick={ () => {
-                                // setNewSubSectionName(newSubSectionName);
-                                setShowSectionEditionModal(!showSectionEditionModal);
                                 selectedSection?.sectionName && setNewSubSection({ sectionName: selectedSection?.sectionName, subsection: newSubSectionName });
                                 selectedSection && onSelectSection(
                                     {
@@ -65,6 +63,8 @@ export default function SubSectionList({
                                         subsections: selectedSection.subsections ? [...selectedSection.subsections, newSubSectionName ] : [newSubSectionName],
                                     },
                                 );
+                                setNewSubSectionName('');
+                                setShowSectionEditionModal(!showSectionEditionModal);
                             } }
                         >
                             Criar

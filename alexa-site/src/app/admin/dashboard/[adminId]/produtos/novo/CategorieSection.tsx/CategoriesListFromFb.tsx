@@ -44,6 +44,7 @@ export default function CategoriesListFromFb({ options, selectedOptions, handleC
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
                         type="text"
                         placeholder="Procurar Categoria"
+                        value={ newSearch }
                         onChange={ (e) => setNewSearch(e.target.value) }
 
                     />
@@ -80,6 +81,7 @@ export default function CategoriesListFromFb({ options, selectedOptions, handleC
                             className={ 'bg-green-200 text-green-600 rounded p-2 hover:bg-pink-200 w-full full ms-2 text-sm font-medium' }
                             onClick={ () => {
                                 handleAddCategories(newSearch);
+                                setNewSearch('');
                             } }
                         >
                             Criar { newSearch }
