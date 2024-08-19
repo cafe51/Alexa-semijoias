@@ -8,6 +8,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import formatPrice from '../utils/formatPrice';
 import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useEffect } from 'react';
+import blankImage from '../../../public/blankImage.jpg';
 
 export default function CartItem({ produto }: { produto: ProductCartType & WithFieldValue<DocumentData> }) {
     const { user } = useAuthContext();
@@ -39,7 +40,7 @@ export default function CartItem({ produto }: { produto: ProductCartType & WithF
                 <div className='rounded-lg relative h-[75px] w-[75px] overflow-hidden'>
                     <Image
                         className='rounded-lg object-cover scale-125'
-                        src={ produto.image }
+                        src={ produto.image ? produto.image : blankImage }
                         alt="Foto da peça"
                         fill
                     />
