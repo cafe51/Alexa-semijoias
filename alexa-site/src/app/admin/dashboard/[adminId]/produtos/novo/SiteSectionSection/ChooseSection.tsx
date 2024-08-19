@@ -1,12 +1,11 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import SectionList from './SectionList';
 import SubSectionList from './SubSectionList';
-import { SectionType } from '@/app/utils/types';
+import { FireBaseDocument, SectionType } from '@/app/utils/types';
 import { SavedSubSectionType } from '@/app/hooks/useSectionManagement';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 interface ChooseSectionProps {
-  firebaseSections: never[] | (SectionType & WithFieldValue<DocumentData>)[];
+  firebaseSections: never[] | (SectionType & FireBaseDocument)[] | SectionType[];
   handleAddSection: (sections: string[]) => void;
   handleAddSubSection: (sections: string[] | undefined) => void;
   handleAddSectionsSite: (sections: SectionType[] | never[]) => void;

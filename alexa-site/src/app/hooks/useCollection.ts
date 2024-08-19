@@ -1,11 +1,11 @@
 // app/hooks/useCollection.ts
 
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, WithFieldValue, setDoc  } from 'firebase/firestore';
-import { FilterOption } from '../utils/types';
+import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc  } from 'firebase/firestore';
+import { FilterOption, FireBaseDocument } from '../utils/types';
 
 export const useCollection = <T>(collectionName: string) => {
-    const addDocument = async(dataObj: T & WithFieldValue<DocumentData>, id?: string) => {
+    const addDocument = async(dataObj: T & { id?: string }, id?: string) => {
         try {
             if (id) {
                 // Define o ID específico
@@ -30,7 +30,7 @@ export const useCollection = <T>(collectionName: string) => {
     };
 
 
-    const getDocumentById = async(id: string): Promise<T & WithFieldValue<DocumentData>> => {
+    const getDocumentById = async(id: string): Promise<T & FireBaseDocument> => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id); // Referência ao documento com ID '12345'
         const docSnap = await getDoc(docRef); // Obtém o documento
 
@@ -41,7 +41,7 @@ export const useCollection = <T>(collectionName: string) => {
         };
     };
 
-    const getAllDocuments = async(filterOptions?: FilterOption[] | null): Promise<(T & WithFieldValue<DocumentData>)[]> => {
+    const getAllDocuments = async(filterOptions?: FilterOption[] | null): Promise<(T & FireBaseDocument)[]> => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
         if(filterOptions) {

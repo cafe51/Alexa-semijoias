@@ -1,8 +1,7 @@
 // app/admin/dashboard/[adminId]/produtos/novo/SiteSectionSection.tsx
 import ModalMaker from '@/app/components/ModalMaker';
 import { useCollection } from '@/app/hooks/useCollection';
-import { SectionType, StateNewProductType } from '@/app/utils/types';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
+import { FireBaseDocument, SectionType, StateNewProductType } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
 import ChooseSection from './ChooseSection';
 import { useSectionManagement } from '@/app/hooks/useSectionManagement';
@@ -20,7 +19,7 @@ export default function SiteSectionSection({
     handleAddSection,
 }: SiteSectionSectionProps) {
     const { getAllDocuments } = useCollection<SectionType>('siteSections');
-    const [sections, setSections] = useState<(SectionType & WithFieldValue<DocumentData>)[] | never[]>([]);
+    const [sections, setSections] = useState<((SectionType & FireBaseDocument)[]) | (SectionType[])| never[]>([]);
     const [newSections, setNewSections] = useState<(SectionType)[] | never[]>([]);
     const [newSubSection, setNewSubSection] = useState<{sectionName: string, subsection: string} | undefined>(undefined);
 

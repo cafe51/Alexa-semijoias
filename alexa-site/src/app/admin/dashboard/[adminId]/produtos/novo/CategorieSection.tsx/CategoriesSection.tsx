@@ -4,10 +4,6 @@ import ModalMaker from '@/app/components/ModalMaker';
 import { Dispatch, SetStateAction, useState } from 'react';
 import CreateCategoriesForm from './CreateCategories';
 import { CheckboxData, StateNewProductType } from '@/app/utils/types';
-// import { useCollection } from '@/app/hooks/useCollection';
-// import { DocumentData, WithFieldValue } from 'firebase/firestore';
-
-
 
 interface CategoriesSectionmProps {
     handleAddCategories: (category: string) => void
@@ -28,7 +24,6 @@ export default function CategoriesSection({
     setOptions,
     options,
 }: CategoriesSectionmProps) {
-    // const [newPersonalizedCategoriesState, setNewPersonalizedCategoriesState] = useState<(CategoryType)[] | never[]>([]);
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
 
 

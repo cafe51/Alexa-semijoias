@@ -1,6 +1,11 @@
 //app/utils/types.tsx
 import { WhereFilterOp } from 'firebase/firestore';
 
+export type FireBaseDocument = {
+    exist: boolean,
+    id: string,
+}
+
 export type CheckboxData = {
     label: string;
     isChecked: boolean;

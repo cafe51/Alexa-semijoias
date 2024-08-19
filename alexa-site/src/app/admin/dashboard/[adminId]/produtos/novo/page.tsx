@@ -14,10 +14,9 @@ import VariationsSection from './VariationSection/VariationsSection';
 // import RecommendedProductsSection from './RecommendedProductsSection';
 import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
 import { useCollection } from '@/app/hooks/useCollection';
-import { CategoryType, CheckboxData, ProductBundleType, SectionType } from '@/app/utils/types';
+import { CategoryType, CheckboxData, FireBaseDocument, ProductBundleType, SectionType } from '@/app/utils/types';
 import useFirebaseUpload from '@/app/hooks/useFirebaseUpload';
 import { useEffect, useState } from 'react';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function NewProductPage() {
     const { uploadImages } = useFirebaseUpload();
@@ -29,7 +28,7 @@ export default function NewProductPage() {
         getDocumentById: getSiteSectionDocumentById,
     } = useCollection<SectionType>('siteSections');
 
-    const [categoriesStateFromFirebase, setCategoriesStateFromFirebase] = useState<(CategoryType & WithFieldValue<DocumentData>)[] | never[]>([]);
+    const [categoriesStateFromFirebase, setCategoriesStateFromFirebase] = useState<(CategoryType & FireBaseDocument)[] | never[]>([]);
     const [options, setOptions] = useState<CheckboxData[]>([]);
 
     const {

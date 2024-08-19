@@ -1,7 +1,7 @@
 //app/components/Product.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { ProductBundleType } from '../utils/types';
+import { FireBaseDocument, ProductBundleType } from '../utils/types';
 import ResponsiveCarousel from './ResponsiveCarousel';
 import Link from 'next/link';
 import { useUserInfo } from '../hooks/useUserInfo';
@@ -9,12 +9,11 @@ import formatPrice from '../utils/formatPrice';
 import { useAddNewItemCart } from '../hooks/useAddNewItemCart';
 import { useCollection } from '../hooks/useCollection';
 import LargeButton from './LargeButton';
-import { DocumentData } from 'firebase/firestore';
 
 export default function Product({ id, productType }: {id: string, productType: string}) {
     const { carrinho } = useUserInfo();
     const { getDocumentById } = useCollection<ProductBundleType>('products');
-    const [product, setProduct] = useState<ProductBundleType & DocumentData | null>(null);
+    const [product, setProduct] = useState<ProductBundleType & FireBaseDocument | null>(null);
     const [isLoadingButton, setIsloadingButton] = useState(true);
     const { handleAddToCart } = useAddNewItemCart();
     const [isLoading, setIsLoading] = useState(true);
@@ -59,7 +58,7 @@ export default function Product({ id, productType }: {id: string, productType: s
             { isLoading || !product ? 'carregando' : (
                 <>  
                     <p>
-                        <Link href={ '/' }>Início/</Link> <Link href={ `/${productType}` }>{ productType.charAt(0).toUpperCase() + productType.slice(1) }/ </Link> <span className='font-bold'>{ product.nome }</span>
+                        <Link href={ '/' }>Início/</Link> <Link href={ `/${productType}` }>{ productType.charAt(0).toUpperCase() + productType.slice(1) }/ </Link> <span className='font-bold'>{ product.name }</span>
                     </p>
                         
                     <ResponsiveCarousel productData={ product }/>
@@ -73,7 +72,12 @@ export default function Product({ id, productType }: {id: string, productType: s
 
                         <p> Formas de pagamento </p>
                     </div>
-                    <LargeButton color='green' loadingButton={ isLoadingButton } onClick={ () => handleAddToCart(carrinho, productVariation, setIsloadingButton) } disabled={ isDisabled() }>
+                    <LargeButton
+                        color='green'
+                        loadingButton={ isLoadingButton }
+                        // onClick={ () => handleAddToCart(carrinho, productVariation, setIsloadingButton) }
+                        disabled={ isDisabled() }
+                    >
                         COMPRE JÁ
                     </LargeButton>
                     <div className='py-4 gap-4 border-solid border-2 border-x-0 borderColor'>

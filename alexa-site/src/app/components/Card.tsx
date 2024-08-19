@@ -5,19 +5,17 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import formatPrice from '../utils/formatPrice';
 import SmallButton from './SmallButton';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { CartInfoType, ProductBundleType, ProductCartType, ProductVariation } from '../utils/types';
+import { FireBaseDocument, ProductBundleType, ProductCartType, ProductVariation } from '../utils/types';
 import { useAddNewItemCart } from '../hooks/useAddNewItemCart';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import blankImage from '../../../public/blankImage.jpg';
 import ModalMaker from './ModalMaker';
 
 interface DynamicObjectCardsProps {
     object: ProductBundleType,
-    handleAddToCart: (carrinho: (CartInfoType & WithFieldValue<DocumentData>)[] | null, productData: (ProductVariation & WithFieldValue<DocumentData>) | null, setIsloadingButton: Dispatch<SetStateAction<boolean>>) => void
-    carrinho: ProductCartType[] | null;
+    handleAddToCart: (carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null, productData: (ProductVariation) | null, setIsloadingButton: Dispatch<SetStateAction<boolean>>) => void
+    carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null;
     setIsloadingButton: () => void;
 }
-
 
 function DynamicObjectCards({ object, handleAddToCart, carrinho, setIsloadingButton }: DynamicObjectCardsProps) {
     function isString(value: unknown): value is string {
@@ -49,7 +47,7 @@ function DynamicObjectCards({ object, handleAddToCart, carrinho, setIsloadingBut
 
 
 interface CardProps {
-    productData: ProductBundleType & DocumentData | null;
+    productData: ProductBundleType & FireBaseDocument | null;
     sectionName: string;
 }
 

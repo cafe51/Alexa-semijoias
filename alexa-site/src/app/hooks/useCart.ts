@@ -1,13 +1,12 @@
 // app/hooks/useCart.ts
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useCollection } from './useCollection';
-import { ProductCartType, CartInfoType, ProductVariation } from '../utils/types';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
+import { ProductCartType, CartInfoType, ProductVariation, FireBaseDocument } from '../utils/types';
 import { useAuthContext } from './useAuthContext';
 // import { useLocalStorage } from './useLocalStorage';
 
 export const useCart = (
-    cartInfos: (CartInfoType & WithFieldValue<DocumentData>)[] | null,
+    cartInfos: ((CartInfoType & FireBaseDocument)[]) | ((CartInfoType)[]) | null,
     productVariations: (ProductVariation)[] | null,
     setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>,
 ) => {
@@ -17,7 +16,7 @@ export const useCart = (
     const { updateDocumentField, deleteDocument } = useCollection(
         'carrinhos',
     );
-    const [mappedProducts, setMappedProducts] = useState<(ProductCartType & WithFieldValue<DocumentData>)[] | null>(null);
+    const [mappedProducts, setMappedProducts] = useState<(ProductCartType)[] | null>(null);
 
     const fixQuantityByStockInLocalStorage = (productVariation: ProductVariation) => {
         // eslint-disable-next-line prefer-const
@@ -38,7 +37,7 @@ export const useCart = (
         return;
     };
 
-    const fixQuantityByStockInFirebase = (cartInfo: CartInfoType & WithFieldValue<DocumentData>, product: ProductVariation) => {
+    const fixQuantityByStockInFirebase = (cartInfo: CartInfoType & FireBaseDocument, product: ProductVariation) => {
         if(cartInfo.quantidade > product.estoque) {
             updateDocumentField(cartInfo.id, 'quantidade', cartInfo.quantidade = product.estoque);
         }
@@ -60,19 +59,22 @@ export const useCart = (
                         if(cartInfo) {
                             if ((cartInfo.quantidade > productVariation.estoque) || cartInfo.quantidade < 1) {
                                 if(user) {
-                                    fixQuantityByStockInFirebase(cartInfo, productVariation);
+                                    fixQuantityByStockInFirebase(cartInfo as CartInfoType & FireBaseDocument, productVariation);
                                 }
                                 else {
                                     fixQuantityByStockInLocalStorage(productVariation);
                                 }
                             }
-                            return {
-                                ...productVariation,
-                                ...cartInfo,
-                            };}
-                        
-                    }).filter(Boolean) as ProductCartType[];
-                        
+                            if(user) {
+                                return {
+                                    ...productVariation,
+                                    ...cartInfo,
+                                };
+                            }
+                        }
+
+                    }).filter(Boolean) as ((ProductCartType & FireBaseDocument)[]) | ProductCartType[];
+
                 setMappedProducts(productsCart);
             }
             // }

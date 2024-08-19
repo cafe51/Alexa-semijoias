@@ -2,15 +2,14 @@
 'use client';
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { CartInfoType, FilterOption, OrderType, ProductBundleType, ProductCartType, ProductVariation, UserType } from '../utils/types';
+import { CartInfoType, FilterOption, FireBaseDocument, OrderType, ProductBundleType, ProductCartType, ProductVariation, UserType } from '../utils/types';
 import { useSnapshot } from '../hooks/useSnapshot';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useCart } from '../hooks/useCart';
 
 interface IUserInfoContext {
-    carrinho: (ProductCartType)[] | null;
-    userInfo: (UserType & WithFieldValue<DocumentData>) | null;
-    pedidos: (OrderType & WithFieldValue<DocumentData>)[] | null;
+    carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null;
+    userInfo: (UserType & FireBaseDocument) | null;
+    pedidos: (OrderType & FireBaseDocument)[] | null;
     setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>;
 }
 export const UserInfoContext = createContext<IUserInfoContext | null>(null);
@@ -22,7 +21,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     
     const [productIds, setProductIds] = useState<string[] | null>(null);
     const [skuList, setSkuList] = useState<string[]>(['']);
-    const [productVariationsState, setProductVariationsState] = useState<(ProductVariation & WithFieldValue<DocumentData>)[] | never[]>([]);
+    const [productVariationsState, setProductVariationsState] = useState<(ProductVariation)[] | never[]>([]);
 
     const { user } = useAuthContext();
     

@@ -1,23 +1,22 @@
 // UserCard.tsx
 import { FaWhatsapp } from 'react-icons/fa';
 import { CiMail } from 'react-icons/ci';
-import { FilterOption, OrderType, UserType } from '@/app/utils/types';
+import { FilterOption, FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import { useEffect, useMemo, useState } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 import formatPrice from '@/app/utils/formatPrice';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 interface UserCardProps {
-    user?: UserType & WithFieldValue<DocumentData>;
+    user?: UserType & FireBaseDocument;
     onEmailClick: () => void;
     onWhatsAppClick: () => void;
 }
 
 export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCardProps){
     const pathname = usePathname();
-    const [pedidos, setPedidos] = useState<(OrderType & WithFieldValue<DocumentData>)[] | null>(null);
+    const [pedidos, setPedidos] = useState<(OrderType & FireBaseDocument)[] | null>(null);
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
     const { updateDocumentField } = useCollection<UserType>('usuarios');
 

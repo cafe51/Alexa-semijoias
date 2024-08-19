@@ -2,21 +2,20 @@
 import { useCollection } from '@/app/hooks/useCollection';
 import CardOrder from '@/app/minha-conta/CardOrder';
 import FullOrderModal from '@/app/minha-conta/FullOrderModal';
-import { OrderType, UserType } from '@/app/utils/types';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
+import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ClientProfile({ params }: { params: { id: string } }) {
     const pathname = usePathname();
-    const [userData, setUserData ] = useState<(UserType & WithFieldValue<DocumentData>) | null>(null);
-    const [userOrders, setUserOrders] = useState<OrderType[] | null>(null);
+    const [userData, setUserData ] = useState<(UserType & FireBaseDocument) | null>(null);
+    const [userOrders, setUserOrders] = useState<(OrderType & FireBaseDocument)[] | null>(null);
     const [loadingOrders, setLoadingOrders] = useState(true);
     const { getDocumentById } = useCollection<UserType>('usuarios');
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
 
-    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: OrderType & WithFieldValue<DocumentData> }>({
+    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: OrderType & FireBaseDocument }>({
         pedido: undefined,
     });
 
@@ -65,7 +64,7 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
     }
     
     const listaDeCompras = (
-        userOrders?.map((pedido: OrderType, index: number) => {
+        userOrders?.map((pedido, index: number) => {
             return (<CardOrder pedido={ pedido } key={ index } setShowFullOrderModal={ setShowFullOrderModal } />);
         })
     );

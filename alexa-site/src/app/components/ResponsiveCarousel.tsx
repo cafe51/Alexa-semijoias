@@ -2,11 +2,10 @@
 
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { ProductBundleType } from '../utils/types';
+import { FireBaseDocument, ProductBundleType } from '../utils/types';
 import Image from 'next/image';
-import { DocumentData } from 'firebase/firestore';
 
-export default function ResponsiveCarousel({ productData }: { productData: ProductBundleType & DocumentData }) {
+export default function ResponsiveCarousel({ productData }: { productData: ProductBundleType & FireBaseDocument }) {
     return (
         <div className=''>
             <Carousel

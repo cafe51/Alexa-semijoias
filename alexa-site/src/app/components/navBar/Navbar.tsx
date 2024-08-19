@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import NavBarUserSection from './NavBarUserSection';
 import { useCollection } from '@/app/hooks/useCollection';
-import { SectionType } from '@/app/utils/types';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
+import { FireBaseDocument, SectionType } from '@/app/utils/types';
 import NavBarSection from './NavBarSection';
 
 interface NavbarProps {
@@ -18,7 +17,7 @@ const navItemsStyle = 'hover:text-gray-800 hover:bg-gray-200 transition-colors d
 
 const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
     const { getAllDocuments } = useCollection<SectionType>('siteSections');
-    const [sections, setSections] = useState<(SectionType & WithFieldValue<DocumentData>)[] | never[]>([]);
+    const [sections, setSections] = useState<(SectionType & FireBaseDocument)[] | never[]>([]);
 
     useEffect(() => {
         async function getSectionsFromFireBase() {

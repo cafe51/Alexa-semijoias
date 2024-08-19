@@ -1,15 +1,15 @@
 //app/minha-conta/FullOrderModal.tsx
 import { PiXBold } from 'react-icons/pi';
 import { Dispatch, SetStateAction } from 'react';
-import { OrderType } from '../utils/types';
+import { FireBaseDocument, OrderType } from '../utils/types';
 import SummaryCard from '../checkout/OrderSummarySection/SummaryCard';
 import PriceSummarySection from '../checkout/OrderSummarySection/PriceSummarySection';
 import AddressSectionFilled from '../checkout/AddressSection/AddressSectionFilled';
 
 interface FullOrderModalProps {
-    pedido: OrderType;
+    pedido: OrderType & FireBaseDocument;
     setShowFullOrderModal: Dispatch<SetStateAction<{
-        pedido?: OrderType;
+        pedido?: OrderType & FireBaseDocument;
     }>>
 }
 

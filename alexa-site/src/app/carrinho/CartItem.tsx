@@ -1,16 +1,15 @@
 // app/carrinho/CartItem.ts
 import Image from 'next/image';
-import { ProductCartType } from '../utils/types';
+import { FireBaseDocument, ProductCartType } from '../utils/types';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import formatPrice from '../utils/formatPrice';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 import { useEffect } from 'react';
 import blankImage from '../../../public/blankImage.jpg';
 
-export default function CartItem({ produto }: { produto: ProductCartType & WithFieldValue<DocumentData> }) {
+export default function CartItem({ produto }: { produto: ProductCartType & FireBaseDocument }) {
     const { user } = useAuthContext();
     const { addOneToLocalStorage, removeOneFromLocalStorage, removeItemFromLocalStorageCart } = useLocalStorage();
 

@@ -7,18 +7,17 @@ import CardOrder from './CardOrder';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
-import { OrderType } from '../utils/types';
+import { FireBaseDocument, OrderType } from '../utils/types';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import DeleteMySelfForm from './DeleteMySelfForm';
 import FullOrderModal from './FullOrderModal';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function MyProfile() {
     const{ user } = useAuthContext();
     const [deleteUseForm, setDeleteUseForm] = useState(false);
     const  { userInfo, pedidos } = useUserInfo();
     const router = useRouter();
-    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: (OrderType & WithFieldValue<DocumentData>) }>({
+    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: (OrderType & FireBaseDocument) }>({
         pedido: undefined,
     });
     const { error: deleteUserError } = useDeleteUser();
@@ -52,7 +51,7 @@ export default function MyProfile() {
     );
 
     const listaDeCompras = (
-        pedidos?.map((pedido: OrderType & WithFieldValue<DocumentData>) => {
+        pedidos?.map((pedido) => {
             return (<CardOrder pedido={ pedido } key={ pedido.id } setShowFullOrderModal={ setShowFullOrderModal } />);
         })
     );

@@ -2,10 +2,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, collection, query, where, onSnapshot } from 'firebase/firestore';
-import { FilterOption } from '../utils/types';
+import { FilterOption, FireBaseDocument } from '../utils/types';
 
 export const useSnapshot = <T>(collectionName: string, filterOptions: FilterOption[] | null) => {
-    const [documents, setDocuments] = useState<(T & DocumentData)[] | null>(null);
+    const [documents, setDocuments] = useState<(T & FireBaseDocument)[] | null>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {

@@ -1,10 +1,10 @@
 //app/minha-conta/CardOrder.tsx
 import Image from 'next/image';
-import {  OrderType } from '../utils/types';
+import {  FireBaseDocument, OrderType } from '../utils/types';
 import formatPrice from '../utils/formatPrice';
 import { Dispatch, SetStateAction } from 'react';
 
-function CardImages({ pedido }: { pedido: OrderType }) {
+function CardImages({ pedido }: { pedido: OrderType & FireBaseDocument }) {
     return(
         <div className='relative h-24 flex self-start'>
             { pedido.cartSnapShot.map((item, index) => {
@@ -31,9 +31,9 @@ function CardImages({ pedido }: { pedido: OrderType }) {
 }
 
 interface CardOrderProps {
-    pedido: OrderType
+    pedido: OrderType & FireBaseDocument
     setShowFullOrderModal: Dispatch<SetStateAction<{
-        pedido?: OrderType;
+        pedido?: OrderType & FireBaseDocument;
     }>>
 }
 

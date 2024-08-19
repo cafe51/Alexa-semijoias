@@ -1,10 +1,9 @@
 // OrderList.tsx
-import { OrderType } from '@/app/utils/types';
+import { FireBaseDocument, OrderType } from '@/app/utils/types';
 import OrderCard from './OrderCard';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 interface OrderListProps {
-    pedidos?: (OrderType & WithFieldValue<DocumentData>)[] | null;
+    pedidos?: (OrderType  & FireBaseDocument)[] | null;
 }
 
 export default function OrderList({ pedidos }: OrderListProps) {

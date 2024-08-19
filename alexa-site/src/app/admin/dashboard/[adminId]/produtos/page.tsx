@@ -1,13 +1,12 @@
 'use client';
 import { useCollection } from '@/app/hooks/useCollection';
-import { ProductBundleType } from '@/app/utils/types';
-import { DocumentData } from 'firebase/firestore';
+import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import blankImage from '../../../../../../public/blankImage.jpg';
 
 export default function ProductsDashboard() {
-    const [products, setProducts] = useState<(ProductBundleType & DocumentData)[]>([]);
+    const [products, setProducts] = useState<(ProductBundleType & FireBaseDocument)[]>([]);
     const { getAllDocuments } = useCollection<ProductBundleType>('products');
 
     useEffect(() => {
