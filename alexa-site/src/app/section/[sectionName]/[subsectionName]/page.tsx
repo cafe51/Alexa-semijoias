@@ -1,6 +1,6 @@
 //app/section/[subsectionName]/page.tsx
 
-import ProductsList from '../../../components/ProductsList';
+import ProductsList from '../../../components/ProductList/ProductsList';
 
 export default function SubSection({ params: { sectionName, subsectionName } }: { params: { subsectionName: string, sectionName: string } }) {
 

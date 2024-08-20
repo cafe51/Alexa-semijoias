@@ -2,8 +2,8 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import Card from './Card';
-import { useSnapshot } from '../hooks/useSnapshot';
-import { FilterOption, ProductBundleType } from '../utils/types';
+import { useSnapshot } from '../../hooks/useSnapshot';
+import { FilterOption, ProductBundleType } from '../../utils/types';
 
 export default function ProductsList({ sectionName, subsection }: { sectionName: string, subsection?: string }) {
     const [isLoading, setIsLoading] = useState(true);

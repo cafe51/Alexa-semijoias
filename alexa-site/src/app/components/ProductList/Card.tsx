@@ -1,14 +1,14 @@
 //app/components/Card.tsx
 import Image from 'next/image';
 import Link from 'next/link';
-import { useUserInfo } from '../hooks/useUserInfo';
-import formatPrice from '../utils/formatPrice';
-import SmallButton from './SmallButton';
+import { useUserInfo } from '../../hooks/useUserInfo';
+import formatPrice from '../../utils/formatPrice';
+import SmallButton from '.././SmallButton';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { FireBaseDocument, ProductBundleType, ProductCartType, ProductVariation } from '../utils/types';
-import { useAddNewItemCart } from '../hooks/useAddNewItemCart';
-import blankImage from '../../../public/blankImage.jpg';
-import ModalMaker from './ModalMaker';
+import { FireBaseDocument, ProductBundleType, ProductCartType, ProductVariation } from '../../utils/types';
+import { useAddNewItemCart } from '../../hooks/useAddNewItemCart';
+import blankImage from '../../../../public/blankImage.jpg';
+import ModalMaker from '.././ModalMaker';
 
 interface DynamicObjectCardsProps {
     object: ProductBundleType,

@@ -1,7 +1,7 @@
 // ProductsList.test.test.tsx
 
 import { act, render, screen } from '@testing-library/react';
-import ProductsList from '../ProductsList';
+import ProductsList from '../ProductList/ProductsList';
 import { ProductType } from '@/app/utils/types';
 import { useSnapshot } from '../../hooks/useSnapshot';
 import { AuthContextProvider } from '@/app/context/AuthContext';

@@ -36,7 +36,7 @@ export default function CartItem({ produto }: { produto: ProductCartType & FireB
     return (
         <div className='flex flex-col gap-4 w-full h-full p-4 bg-white shadow-lg rounded-lg shadowColor' >
             <div className='flex gap-4 w-full h-[90px] '>
-                <div className='rounded-lg relative h-[75px] w-[75px] overflow-hidden'>
+                <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0'>
                     <Image
                         className='rounded-lg object-cover scale-125'
                         src={ produto.image ? produto.image : blankImage }
@@ -44,10 +44,12 @@ export default function CartItem({ produto }: { produto: ProductCartType & FireB
                         fill
                     />
                 </div>
-                <div className='rounded-lg relative w-3/4 overflow-hidden text-sm' >
-                    <p >{ produto.name }</p>
+                <div className='flex-grow text-xs'>
+
+                    { /* <div className='rounded-lg relative w-3/4 overflow-hidden text-sm' > */ }
+                    <p>{ produto.name }</p>
                 </div>
-                <div className='rounded-lg relative w-3/4 overflow-hidden text-sm text-blue-400' >
+                <div className='flex flex-col rounded-lg relative overflow-hidden text-sm text-blue-400 flex-grow' >
                     {
                         Object.entries(produto.customProperties).map(([key, value]) => {
                             return (
