@@ -42,7 +42,7 @@ export default function OrderSummary({ handleShowFullOrderSummary, carrinho, sub
                         </div>
                         { carrinho ? carrinho.map((produto: ProductCartType) => {
                             if (produto && produto.quantidade && produto.quantidade > 0) {
-                                return <SummaryCard key={ produto.id } produto={ produto } />;
+                                return <SummaryCard key={ produto.skuId } produto={ produto } />;
                             } else return false;
                         }) : <span>Loading...</span> }
                     </section>
