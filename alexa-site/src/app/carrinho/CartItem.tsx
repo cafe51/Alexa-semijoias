@@ -51,7 +51,7 @@ export default function CartItem({ produto }: { produto: ProductCartType & FireB
                 </div>
                 <div className='flex flex-col rounded-lg relative overflow-hidden text-sm text-blue-400 flex-grow' >
                     {
-                        Object.entries(produto.customProperties).map(([key, value]) => {
+                        produto.customProperties && Object.entries(produto.customProperties).sort().map(([key, value]) => {
                             return (
                                 <div key={ key } className="flex gap-2">
                                     <span>{ key }</span>
