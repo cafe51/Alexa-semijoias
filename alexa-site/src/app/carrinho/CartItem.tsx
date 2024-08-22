@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import blankImage from '../../../public/blankImage.jpg';
 import SelectingQuantityBox from '../components/SelectingQuantityBox';
 
-export default function CartItem({ produto }: { produto: ProductCartType & FireBaseDocument }) {
+export default function CartItem({ produto }: { produto: ProductCartType | (ProductCartType & FireBaseDocument) }) {
     const { user } = useAuthContext();
     const { addOneToLocalStorage, removeOneFromLocalStorage, removeItemFromLocalStorageCart } = useLocalStorage();
 
@@ -22,16 +22,23 @@ export default function CartItem({ produto }: { produto: ProductCartType & FireB
         'carrinhos',
     );
 
+    let cartId: string;
+
+    if(user) {
+        const { id } = produto as (ProductCartType & FireBaseDocument);
+        cartId = id;
+    }
+
     const addOne = () => {
-        return user ? updateDocumentField(produto.id, 'quantidade', produto.quantidade +=1) : addOneToLocalStorage(produto);
+        return user ? updateDocumentField(cartId, 'quantidade', produto.quantidade +=1) : addOneToLocalStorage(produto);
     };
 
     const removeOne = () => {
-        return user ? updateDocumentField(produto.id, 'quantidade', produto.quantidade -=1) : removeOneFromLocalStorage(produto);
+        return user ? updateDocumentField(cartId, 'quantidade', produto.quantidade -=1) : removeOneFromLocalStorage(produto);
     };
 
     const removeAll = () => {
-        return user ? deleteDocument(produto.id) : removeItemFromLocalStorageCart(produto.skuId);
+        return user ? deleteDocument(cartId) : removeItemFromLocalStorageCart(produto.skuId);
     };
 
     return (

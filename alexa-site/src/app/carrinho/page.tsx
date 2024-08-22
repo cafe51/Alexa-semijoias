@@ -3,9 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import formatPrice from '../utils/formatPrice';
-import { ProductCartType } from '../utils/types';
 import CartItem from './CartItem';
-import { DocumentData, WithFieldValue } from 'firebase/firestore';
 
 export default function Carrinho() {
     const { carrinho } = useUserInfo();
@@ -21,9 +19,9 @@ export default function Carrinho() {
 
             <section className='flex flex-col gap-1'>
                 {
-                    carrinho ? carrinho.map((produto: ProductCartType & WithFieldValue<DocumentData>) => {
+                    carrinho ? carrinho.map((produto) => {
                         if(produto && produto.quantidade && produto.quantidade > 0) {
-                            return <CartItem key={ produto.id } produto={ produto } />;
+                            return <CartItem key={ produto.skuId } produto={ produto } />;
                         } else return false;
                     }) : <span>Loading...</span>
                 }

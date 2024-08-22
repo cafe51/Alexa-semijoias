@@ -62,7 +62,11 @@ export default function Checkout() {
 
     useEffect(() => {
         if (carrinho) {
-            setCartPrice(Number(carrinho?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0)));
+            setCartPrice(
+                Number(carrinho
+                    ?.map((items) => (Number(items.quantidade) * (items.value.promotionalPrice ? items.value.promotionalPrice : items.value.price)))
+                    .reduce((a, b) => a + b, 0)),
+            );
         }
     }, [carrinho]);
 
