@@ -16,13 +16,13 @@ export type CategoryType = {
 }
 
 export type VariationProductType = {
-    customProperties: any,
+    customProperties: { [key: string]: string },
     defaultProperties: { estoque: number, peso: number, imageIndex: number, dimensions: { largura: number, altura: number, comprimento: number }} 
 }
 
 export type ProductVariation = {
     barcode: string, 
-    customProperties?: any,
+    customProperties?: { [key: string]: string },
     dimensions: { largura: number, altura: number, comprimento: number }
     estoque: number,
     name: string,

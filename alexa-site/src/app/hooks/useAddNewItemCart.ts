@@ -11,18 +11,17 @@ export const useAddNewItemCart = () => {
     const { addDocument, updateDocumentField } = useCollection<CartInfoType>('carrinhos');
     const { user } = useAuthContext();
 
-    const addItemToFirebaseCart = (user: User, carrinho: (ProductCartType & FireBaseDocument)[] | null, product: ProductVariation) => {
+    const addItemToFirebaseCart = (user: User, carrinho: (ProductCartType & FireBaseDocument)[] | null, product: ProductVariation, quantity: number) => {
         const cartItem = carrinho?.find((item) => item.skuId === product.sku);
-        console.log('carrinho', carrinho);
         if (!cartItem) {
             addDocument({
                 skuId: product.sku,
                 productId: product.productId,
-                quantidade: 1,
+                quantidade: quantity,
                 userId: user.uid,
             });
         } else if (cartItem.quantidade < product.estoque) {
-            updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade += 1);
+            updateDocumentField(cartItem.id, 'quantidade', cartItem.quantidade += quantity);
         }
     };
 
@@ -30,6 +29,7 @@ export const useAddNewItemCart = () => {
         carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null,
         productData: ProductVariation | null,
         setIsloadingButton: Dispatch<SetStateAction<boolean>>,
+        quantity: number = 1,
     ) => {
         try{
             setIsloadingButton(true);
@@ -40,7 +40,7 @@ export const useAddNewItemCart = () => {
                 console.warn('user está deslogado!');
             } else {
                 // Usuário está logado, salva no firebase
-                addItemToFirebaseCart(user, carrinho as (ProductCartType & FireBaseDocument)[], productData);
+                addItemToFirebaseCart(user, carrinho as (ProductCartType & FireBaseDocument)[], productData, quantity);
             }
         } catch(error){
             console.log('erro ao tentar adicionar ao carrinho', error);

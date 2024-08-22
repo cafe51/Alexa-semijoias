@@ -3,20 +3,21 @@ import { ImSpinner9 } from 'react-icons/im';
 
 interface LargeButtonProps {
     disabled?: boolean;
-    loadingButton: boolean;
+    loadingButton?: boolean;
     color: string;
     children: React.ReactNode;
     onClick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
 }
 
-export default function LargeButton({ disabled, loadingButton, color, children, onClick }: LargeButtonProps) {
+export default function LargeButton({ disabled, loadingButton=false, color, children, onClick, type='button' }: LargeButtonProps) {
     const bgColorClass = disabled || loadingButton ? 'bg-gray-300' : `bg-${color}-500`;
 
     
     return (
         <button
             className={ `${bgColorClass} p-3 text-white flex justify-center items-center rounded w-full shadow-sm` }
-            type="submit"
+            type={ type }
             disabled={ disabled || loadingButton }
             onClick={ onClick }
         >
