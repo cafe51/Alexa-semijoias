@@ -4,6 +4,11 @@ import OptionButton from './OptionButton';
 import ErrorMessage from './ErrorMessage';
 import ProductSummary from './ProductSummary';
 import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
+import { MdOutlineArrowBackIos } from 'react-icons/md';
+import LargeButton from '../LargeButton';
+import Image from 'next/image';
+import blankImage from '../../../../public/blankImage.jpg';
+import SelectingQuantityBox from '../SelectingQuantityBox';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;
@@ -17,9 +22,17 @@ interface DynamicObjectCardsProps {
     setIsloadingButton: React.Dispatch<React.SetStateAction<boolean>>,
     quantity?: number) => void
     );
+    isLoadingButton: boolean;
 }
 
-const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({ object, handleAddToCart, carrinho, setIsloadingButton, closeModelClick, closeModalFinishBuyClick }) => {
+const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
+    object,
+    handleAddToCart,
+    carrinho,
+    setIsloadingButton,
+    closeModelClick,
+    closeModalFinishBuyClick,
+    isLoadingButton }) => {
     const {
         currentPhase, setCurrentPhase,
         selectedOptions, setSelectedOptions,
@@ -76,7 +89,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({ object, handleA
         <div className="p-4">
             <ErrorMessage message={ errorMessage } />
             { currentPhase < keys.length ? (
-                <>
+                <div className='flex flex-col gap-4 items-center justify-center'>
                     <h2>{ keys[currentPhase] }</h2>
                     <div className="flex flex-wrap gap-2">
                         { allOptions.map((option, index) => (
@@ -85,48 +98,49 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({ object, handleA
                     </div>
                     { currentPhase > 0 && (
                         <button onClick={ handleBackButtonClick } className="absolute top-4 left-4">
-              &#8592; Voltar
+                            <MdOutlineArrowBackIos size={ 24 }/>
                         </button>
                     ) }
-                </>
+                </div>
             ) : (
-                <>
+                <div className='flex flex-col gap-4 items-center justify-center'>
                     <h2>Quantidade</h2>
-                    <ProductSummary selectedOptions={ selectedOptions } />
-                    <div className="flex items-center secColor rounded">
-                        <button
-                            className="px-4 py-1 text-white text-lg primColor rounded hover:bg-pink-400 border-solid border-2 borderColor disabled:bg-pink-200"
-                            onClick={ (quantity <= 1) ? (() => null) : () => setQuantity((prevQuantity) => prevQuantity -= 1) }
-                            disabled={ quantity <= 1 }
-                        >
-                        -
-                        </button>
-                        <span className="px-4 p-1 bg-white gray-300 border-solid border-2 borderColor border-x-0" >
-                            { quantity }
-                        </span>
-                        <button
-                            className="px-4 py-1  text-white text-lg primColor rounded hover:bg-pink-400 border-solid border-2 borderColor disabled:bg-pink-200"
-                            onClick={ (quantity >= productVariationsSelected[0].estoque) ? (() => null) : () => setQuantity((prevQuantity) => prevQuantity += 1) }
-                            disabled={ quantity >= productVariationsSelected[0].estoque }
-                        >
-                        +
-                        </button>
-                    </div>
-                    <button
-                        className="bg-blue-500 p-2 mt-4 text-white disabled:bg-gray-300 disabled:text-gray-500"
+                    <div className='flex gap-4 w-full h-[90px] '>
+                        <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0'>
+                            <Image
+                                className='rounded-lg object-cover scale-125'
+                                src={ productVariationsSelected[0].image ? productVariationsSelected[0].image : blankImage }
+                                alt="Foto da peça"
+                                fill
+                            />
+                        </div>
+                        <ProductSummary selectedOptions={ selectedOptions } />
+                    </div>  
+
+                    <SelectingQuantityBox
+                        quantity={ quantity }
+                        removeOne={ () =>  setQuantity((prevQuantity) => prevQuantity -= 1) }
+                        addOne={ () => setQuantity((prevQuantity) => prevQuantity += 1) }
+                        stock={ productVariationsSelected[0].estoque }
+                    />
+                    
+                    <LargeButton
+                        color='green'
                         onClick={ () => {
                             productVariationsSelected.length === 1 && handleAddToCart(carrinho, productVariationsSelected[0], setIsloadingButton, quantity);
                             closeModelClick();
                             closeModalFinishBuyClick();
                         } }
+                        loadingButton={ isLoadingButton }
                         disabled={ isDisabled() }
                     >
-            Comprar
-                    </button>
+                        Comprar
+                    </LargeButton>
+
                     <button onClick={ handleBackButtonClick } className="absolute top-4 left-4">
-            &#8592; Voltar
+                        <MdOutlineArrowBackIos size={ 24 }/>
                     </button>
-                </>
+                </div>
             ) }
         </div>
     );
