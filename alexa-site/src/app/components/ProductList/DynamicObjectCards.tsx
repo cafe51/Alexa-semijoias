@@ -5,10 +5,10 @@ import ErrorMessage from './ErrorMessage';
 import ProductSummary from './ProductSummary';
 import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
-import LargeButton from '../LargeButton';
 import Image from 'next/image';
 import blankImage from '../../../../public/blankImage.jpg';
 import SelectingQuantityBox from '../SelectingQuantityBox';
+import PriceSection from '../PriceSection';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;
@@ -82,7 +82,13 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
 
     const isDisabled = () => {
         const cartItem = carrinho?.find(item => item.skuId === productVariationsSelected[0]?.sku);
-        return productVariationsSelected.length !== 1 || (cartItem && productVariationsSelected[0].estoque <= cartItem.quantidade);
+        if(!cartItem) {
+            return (productVariationsSelected.length !== 1);
+        } else {
+            return (
+                (cartItem && productVariationsSelected[0].estoque <= cartItem.quantidade)
+            );
+        }
     };
 
     return (
@@ -97,7 +103,10 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                         )) }
                     </div>
                     { currentPhase > 0 && (
-                        <button onClick={ handleBackButtonClick } className="absolute top-4 left-4">
+                        <button onClick={ () => {
+                            setQuantity(1);
+                            handleBackButtonClick();
+                        } } className="absolute top-4 left-4">
                             <MdOutlineArrowBackIos size={ 24 }/>
                         </button>
                     ) }
@@ -123,21 +132,25 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                         addOne={ () => setQuantity((prevQuantity) => prevQuantity += 1) }
                         stock={ productVariationsSelected[0].estoque }
                     />
-                    
-                    <LargeButton
-                        color='green'
-                        onClick={ () => {
-                            productVariationsSelected.length === 1 && handleAddToCart(carrinho, productVariationsSelected[0], setIsloadingButton, quantity);
-                            closeModelClick();
-                            closeModalFinishBuyClick();
-                        } }
-                        loadingButton={ isLoadingButton }
-                        disabled={ isDisabled() }
-                    >
-                        Comprar
-                    </LargeButton>
 
-                    <button onClick={ handleBackButtonClick } className="absolute top-4 left-4">
+                    <PriceSection
+                        product={ object }
+                        isLoadingButton={ isLoadingButton }
+                        isDisabled={ () => isDisabled() }
+                        quantity={ quantity }
+                        handleClick={
+                            () => {
+                                productVariationsSelected.length === 1 && handleAddToCart(carrinho, productVariationsSelected[0], setIsloadingButton, quantity);
+                                closeModelClick();
+                                closeModalFinishBuyClick();
+                            }
+                        }
+                    />
+
+                    <button onClick={ () => {
+                        setQuantity(1);
+                        handleBackButtonClick();
+                    } } className="absolute top-4 left-4">
                         <MdOutlineArrowBackIos size={ 24 }/>
                     </button>
                 </div>

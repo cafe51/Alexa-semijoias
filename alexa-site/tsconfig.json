@@ -44,7 +44,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/app/checkout/DeliveryPriceSection", "src/app/admin/dashboard/[adminId]/produtos/novo/page.tsx"  ],
+, "src/app/checkout/DeliveryPriceSection", "src/app/admin/dashboard/[adminId]/produtos/novo/page.tsx", "src/app/components/ProductPage"  ],
   "exclude": [
     "node_modules"
   ]

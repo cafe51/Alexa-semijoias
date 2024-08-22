@@ -10,7 +10,7 @@ function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument
     const [productVariationsSelected, setProductVariationsSelected] = useState<ProductVariation[]>([]);
     const [quantity, setQuantity] = useState(1);
 
-    const keys = object.productVariations[0].customProperties ? Object.keys(object.productVariations[0].customProperties).sort() : [''];
+    const keys = object && object.productVariations[0].customProperties ? Object.keys(object.productVariations[0].customProperties).sort() : [''];
 
     useEffect(() => {
         const pv = filterProductVariations(object, selectedOptions);
@@ -22,6 +22,7 @@ function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument
     }, [currentPhase, selectedOptions, object]);
 
     function updateAvailableOptions() {
+        if(!object) return '';
             
         const currentKey = keys[currentPhase] as string;
         const options = object.productVariations.map((variation) => {
@@ -49,6 +50,30 @@ function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument
     }
 
     function filterProductVariations(productBundle: ProductBundleType, selectedProperties: { [key: string]: string }): ProductVariation[] {
+        if(!productBundle) {
+            return [{
+                barcode: 'string',
+                customProperties: {
+                    a: 'string',
+                },
+                dimensions: {
+                    largura: 1,
+                    altura: 1,
+                    comprimento: 1,
+                },
+                estoque: 1,
+                name: 'string',
+                peso: 1,
+                sku: 'string',
+                value: {
+                    price: 1,
+                    promotionalPrice: 1,
+                    cost: 1,
+                },
+                productId: 'string',
+                image: 'string',
+            }];
+        }
         return productBundle.productVariations
             .filter(variation =>{
                 return Object.keys(selectedProperties)

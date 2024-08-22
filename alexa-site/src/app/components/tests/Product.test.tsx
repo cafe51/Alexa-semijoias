@@ -1,7 +1,7 @@
 // Product.test.test.tsx
 
 import { act, render, screen } from '@testing-library/react';
-import Product from '../Product';
+import Product from '../ProductPage/Product';
 import { ProductType } from '@/app/utils/types';
 import { useCollection } from '../../hooks/useCollection';
 import { AuthContextProvider } from '@/app/context/AuthContext';

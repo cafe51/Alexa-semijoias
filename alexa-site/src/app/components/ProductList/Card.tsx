@@ -14,10 +14,9 @@ import LargeButton from '../LargeButton';
 
 interface CardProps {
     productData: ProductBundleType & FireBaseDocument | null;
-    sectionName: string;
 }
 
-export default function Card({ productData, sectionName }: CardProps) {
+export default function Card({ productData }: CardProps) {
     const  [isLoadingButton, setIsloadingButton ] = useState(false);
     const { carrinho } = useUserInfo();
     const { handleAddToCart } = useAddNewItemCart();
@@ -102,6 +101,7 @@ export default function Card({ productData, sectionName }: CardProps) {
                                     setIsloadingButton={ setIsloadingButton }
                                     closeModelClick={ () => setShowModalOptionsVariation(!showModalOptionsVariation) }
                                     closeModalFinishBuyClick={ () => setShowModalFinishBuy(!showModalFinishBuy) }
+                                    isLoadingButton={ isLoadingButton }
                                 />
                             }
                         </div>
@@ -109,7 +109,7 @@ export default function Card({ productData, sectionName }: CardProps) {
                 </ModalMaker>
             }
             <section className='flex flex-col w-full'>
-                <Link href={ `/${sectionName}/${productData.id}` } className='w-full rounded-lg relative h-[200px] overflow-hidden'>
+                <Link href={ `/product/${productData.id}` } className='w-full rounded-lg relative h-[200px] overflow-hidden'>
                     <Image
                         data-testid="product-link"
                         className='rounded-lg object-cover scale-125'
