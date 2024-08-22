@@ -8,6 +8,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import formatPrice from '../utils/formatPrice';
 import { useEffect } from 'react';
 import blankImage from '../../../public/blankImage.jpg';
+import SelectingQuantityBox from '../components/SelectingQuantityBox';
 
 export default function CartItem({ produto }: { produto: ProductCartType & FireBaseDocument }) {
     const { user } = useAuthContext();
@@ -66,26 +67,12 @@ export default function CartItem({ produto }: { produto: ProductCartType & FireB
                     data-testid={ 'trashButton' }/>
             </div>
             <div className="flex justify-between items-center w-full">
-                
-                <div className="flex items-center secColor rounded">
-                    <button
-                        className="px-4 py-1 text-white text-lg primColor rounded hover:bg-pink-400 border-solid border-2 borderColor disabled:bg-pink-200"
-                        onClick={ (produto.quantidade <= 1) ? (() => null) : removeOne }
-                        disabled={ produto.quantidade <= 1 }
-                    >
-                        -
-                    </button>
-                    <span className="px-4 p-1 bg-white gray-300 border-solid border-2 borderColor border-x-0" >
-                        { produto.quantidade }
-                    </span>
-                    <button
-                        className="px-4 py-1  text-white text-lg primColor rounded hover:bg-pink-400 border-solid border-2 borderColor disabled:bg-pink-200"
-                        onClick={ (produto.quantidade >= produto.estoque) ? (() => null) : addOne }
-                        disabled={ produto.quantidade >= produto.estoque }
-                    >
-                        +
-                    </button>
-                </div>
+                <SelectingQuantityBox
+                    quantity={ produto.quantidade }
+                    removeOne={ removeOne }
+                    addOne={ addOne }
+                    stock={ produto.estoque }
+                />
                 <div className="ml-4">
                     <span className="font-semibold">{ formatPrice((produto.value.promotionalPrice ? produto.value.promotionalPrice : produto.value.price) * produto.quantidade) }</span>
                 </div>
