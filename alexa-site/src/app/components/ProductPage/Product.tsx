@@ -11,6 +11,7 @@ import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import PropertiesSelectionSection from './PropertiesSelectionSection';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
+import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
 
 export default function Product({ id }: { id: string }) {
     const { carrinho } = useUserInfo();
@@ -19,6 +20,8 @@ export default function Product({ id }: { id: string }) {
     const [isLoadingButton, setIsloadingButton] = useState(true);
     const { handleAddToCart } = useAddNewItemCart();
     const [isLoading, setIsLoading] = useState(true);
+    const [showModalFinishBuy, setShowModalFinishBuy] = useState(false);
+
     const {
         currentPhase, setCurrentPhase,
         selectedOptions, setSelectedOptions,
@@ -30,18 +33,18 @@ export default function Product({ id }: { id: string }) {
         keys,
     } = useDynamicObjectCardsLogic(product!, carrinho);
 
-    const updateProductsState = async() => {
-        const productData = await getDocumentById(id);
-        if (productData.exist) {
-            setProduct(productData);
-            setIsLoading(false);
-
-        } else {
-            console.log('Produto Não encontrado', productData);
-        }
-    };
-
     useEffect(() => {
+        const updateProductsState = async() => {
+            const productData = await getDocumentById(id);
+            if (productData.exist) {
+                setProduct(productData);
+                setIsLoading(false);
+    
+            } else {
+                console.log('Produto Não encontrado', productData);
+            }
+        };
+
         updateProductsState();
     }, []);
 
@@ -78,9 +81,7 @@ export default function Product({ id }: { id: string }) {
 
     return (
         <main className='flex flex-col gap-4'>
-            { /* <p>
-                        <Link href={ '/' }>Início/</Link> <Link href={ `/${productType}` }>{ productType.charAt(0).toUpperCase() + productType.slice(1) }/ </Link> <span className='font-bold'>{ product.name }</span>
-                    </p> */ }
+            { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(!showModalFinishBuy) } /> }
                         
             <ResponsiveCarousel productData={ product }/>
 
@@ -95,8 +96,6 @@ export default function Product({ id }: { id: string }) {
                 handleAddToCart={ handleAddToCart }
                 setIsloadingButton={ setIsloadingButton }
                 selectedOptions={ selectedOptions }
-                closeModelClick={ () => () => null }
-                closeModalFinishBuyClick={ () => () => null }
                 currentPhase={ currentPhase }
                 setCurrentPhase={ setCurrentPhase }
                 setSelectedOptions={ setSelectedOptions }
@@ -117,6 +116,7 @@ export default function Product({ id }: { id: string }) {
                 quantity={ quantity }
                 handleClick={ () => {
                     productVariationsSelected.length === 1 && handleAddToCart(carrinho, productVariationsSelected[0], setIsloadingButton, quantity);
+                    setShowModalFinishBuy(!showModalFinishBuy);
                 } }
             />
 

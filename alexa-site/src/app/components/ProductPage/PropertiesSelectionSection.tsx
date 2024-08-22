@@ -10,8 +10,6 @@ import SelectingQuantityBox from '../SelectingQuantityBox';
 interface PropertiesSelectionSectionProps {
   object: ProductBundleType & FireBaseDocument;
   carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
-  closeModelClick: () => void;
-  closeModalFinishBuyClick: () => void;
   setIsloadingButton: React.Dispatch<React.SetStateAction<boolean>>;
   handleAddToCart: (
     (carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null,

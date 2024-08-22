@@ -10,7 +10,7 @@ import { useAddNewItemCart } from '../../hooks/useAddNewItemCart';
 import blankImage from '../../../../public/blankImage.jpg';
 import ModalMaker from '.././ModalMaker';
 import DynamicObjectCards from './DynamicObjectCards';
-import LargeButton from '../LargeButton';
+import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
 
 interface CardProps {
     productData: ProductBundleType & FireBaseDocument | null;
@@ -48,63 +48,31 @@ export default function Card({ productData }: CardProps) {
 
     const handleClickButtonBuyNow = () => {
         if(productData.productVariations.length > 1){
-            // if(productData) {
-            //     const cartItems = carrinho?.filter((item) => item.productId === productData.id);
-            //     let totalQuantityCart = 0;
-            //     if(cartItems) {
-            //         for (const cartItem of cartItems) totalQuantityCart += cartItem.quantidade;
-            //     }
-            //     console.log('AAAAAAAAAAAAAA totalQuantityCart', totalQuantityCart);
-            //     console.log('AAAAAAAAAAAAAA productData.estoqueTotal', productData.estoqueTotal);
-            // }
-
             setShowModalOptionsVariation(!showModalOptionsVariation);
         } else {
-            // if(productData) {
-            //     const cartItems = carrinho?.filter((item) => item.productId === productData.id);
-            //     let totalQuantityCart = 0;
-            //     if(cartItems) {
-            //         for (const cartItem of cartItems) totalQuantityCart += cartItem.quantidade;
-            //     }
-            //     console.log('AAAAAAAAAAAAAA totalQuantityCart', totalQuantityCart);
-            //     console.log('AAAAAAAAAAAAAA productData.estoqueTotal', productData.estoqueTotal);
-            // }
             handleAddToCart(carrinho, productData.productVariations[0], setIsloadingButton);
         }
     };
 
     return (
         <div className='flex flex-col text-center w-[160px] justify-between content-between place-content-between gap-2 shadowColor shadow-lg text-[12px] rounded-lg bg-white'>
-            {
-                showModalFinishBuy && <ModalMaker closeModelClick={ () => setShowModalFinishBuy(!showModalFinishBuy) } title='Produto Adicionado ao carrinho'>
-                    <section className='flex flex-col gap-4 p-4'>
-                        <h3>O que você deseja fazer agora?</h3>
-                        <LargeButton color='green'>
-                        Ir para o carrinho
-                        </LargeButton>
-                        <LargeButton color='green' onClick={ () =>  setShowModalFinishBuy(!showModalFinishBuy) }>
-                        Continuar comprando
-                        </LargeButton>
-                    </section>
-                </ModalMaker>
-            }
+            { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(!showModalFinishBuy) } /> }
+            
             {
                 showModalOptionsVariation && <ModalMaker closeModelClick={ () => setShowModalOptionsVariation(!showModalOptionsVariation) } title='Escolha a variação'>
                     <section>
-                        <div>
-                            {
-                                <DynamicObjectCards
+                        {
+                            <DynamicObjectCards
                                 // objects={ productData.productVariations.map((productVariation) => productVariation.customProperties) }
-                                    object={ productData }
-                                    carrinho={ carrinho }
-                                    handleAddToCart={ handleAddToCart }
-                                    setIsloadingButton={ setIsloadingButton }
-                                    closeModelClick={ () => setShowModalOptionsVariation(!showModalOptionsVariation) }
-                                    closeModalFinishBuyClick={ () => setShowModalFinishBuy(!showModalFinishBuy) }
-                                    isLoadingButton={ isLoadingButton }
-                                />
-                            }
-                        </div>
+                                object={ productData }
+                                carrinho={ carrinho }
+                                handleAddToCart={ handleAddToCart }
+                                setIsloadingButton={ setIsloadingButton }
+                                closeModelClick={ () => setShowModalOptionsVariation(!showModalOptionsVariation) }
+                                closeModalFinishBuyClick={ () => setShowModalFinishBuy(!showModalFinishBuy) }
+                                isLoadingButton={ isLoadingButton }
+                            />
+                        }
                     </section>
                 </ModalMaker>
             }
@@ -114,9 +82,6 @@ export default function Card({ productData }: CardProps) {
                         data-testid="product-link"
                         className='rounded-lg object-cover scale-125'
                         src={ productData.images && productData.images[0] ? productData?.images[0] : blankImage }
-                        // src='/../../../public/blankImage.jpg'
-                        // src={ blankImage }
-
                         alt="Foto da peça"
                         fill
                     />
@@ -129,9 +94,6 @@ export default function Card({ productData }: CardProps) {
             </section>
 
             <section className="flex flex-col w-full p-4 ">
-                { /* <div className='p-2 w-full bg-yellow-200'>
-                    <h3 >{ productData.id }</h3>
-                </div> */ }
                 {
                     productData.value.promotionalPrice > 0 &&
                         <p className='font-bold text-lg text-gray-400 text-decoration: line-through'>{ formatPrice(productData.value.price) }</p>
