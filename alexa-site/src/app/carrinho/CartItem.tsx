@@ -1,7 +1,6 @@
 // app/carrinho/CartItem.ts
 import Image from 'next/image';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
-import { FaRegTrashAlt } from 'react-icons/fa';
 import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -9,6 +8,8 @@ import formatPrice from '../utils/formatPrice';
 import { useEffect } from 'react';
 import blankImage from '../../../public/blankImage.jpg';
 import SelectingQuantityBox from '../components/SelectingQuantityBox';
+// import { FaRegTrashAlt } from 'react-icons/fa';
+import { PiTrashSimpleBold } from 'react-icons/pi';
 
 export default function CartItem({ produto }: { produto: ProductCartType | (ProductCartType & FireBaseDocument) }) {
     const { user } = useAuthContext();
@@ -71,7 +72,7 @@ export default function CartItem({ produto }: { produto: ProductCartType | (Prod
                 </div>
 
                 <div className='flex-shrink-0'>
-                    <FaRegTrashAlt
+                    <PiTrashSimpleBold
                         onClick={ removeAll }
                         data-testid={ 'trashButton' }
                     />
