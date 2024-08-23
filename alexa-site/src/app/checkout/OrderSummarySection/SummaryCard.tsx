@@ -1,11 +1,11 @@
 // app/checkout/OrderSummarySection/SummaryCard.tsx
-import { ProductCartType } from '@/app/utils/types';
+import { CartHistoryType } from '@/app/utils/types';
 import Image from 'next/image';
 import blankImage from '../../../../public/blankImage.jpg';
 import formatPrice from '@/app/utils/formatPrice';
 
 
-export default function SummaryCard({ produto }: { produto: ProductCartType }) {
+export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
 
     const { quantidade, name, image, value: { price, promotionalPrice } } = produto;
 

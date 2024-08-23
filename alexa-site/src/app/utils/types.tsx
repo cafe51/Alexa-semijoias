@@ -152,15 +152,18 @@ export type CartInfoType = {
 }
 
 export type CartHistoryType = {
-    customProperties?: { [key: string]: string },
-    skuId: string,
-    barcode: string,
-    categories: string[],
-    productId: string,
-    quantidade: number,
     name: string,
     image: string,
-    price: number
+
+    categories: string[],
+    barcode: string,
+
+    value: { price: number, promotionalPrice: number, cost: number }
+    
+    customProperties?: { [key: string]: string },
+    productId: string,
+    quantidade: number,
+    skuId: string,
 }
 
 type ValueType = {
