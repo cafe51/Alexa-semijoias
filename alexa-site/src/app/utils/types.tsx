@@ -21,6 +21,7 @@ export type VariationProductType = {
 }
 
 export type ProductVariation = {
+    categories: string[],
     barcode: string, 
     customProperties?: { [key: string]: string },
     dimensions: { largura: number, altura: number, comprimento: number }
@@ -118,13 +119,16 @@ export type ProductCartType = {
     name: string,
     image: string,
 
+    categories: string[]
+    barcode: string,
+
     value: { price: number, promotionalPrice: number, cost: number }
 
     estoque: number,
 
     dimensions: { largura: number, altura: number, comprimento: number }
     peso: number;
-    customProperties?: any,
+    customProperties?: { [key: string]: string },
 
 
     //o que vem de CartInfoType
@@ -148,13 +152,15 @@ export type CartInfoType = {
 }
 
 export type CartHistoryType = {
-    id: string;
-    categoria: string,
+    customProperties?: { [key: string]: string },
+    skuId: string,
+    barcode: string,
+    categories: string[],
     productId: string,
     quantidade: number,
-    nome: string,
+    name: string,
     image: string,
-    preco: number
+    price: number
 }
 
 type ValueType = {
