@@ -176,6 +176,7 @@ export default function NewProductPage() {
 
                         newProduct = {
                             name: state.name,
+                            showProduct: true,
                             images: imageUrls,
                             description: state.description,
                             categories: [...state.categories, ...state.categoriesFromFirebase],
@@ -234,6 +235,7 @@ export default function NewProductPage() {
 
                         newProduct = {
                             name: state.name,
+                            showProduct: true,
                             images: imageUrls,
                             description: state.description,
                             categories: [...state.categories, ...state.categoriesFromFirebase],

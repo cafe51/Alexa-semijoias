@@ -36,6 +36,7 @@ export type ProductVariation = {
 
 export type ProductBundleType = {
     categories: string[],
+    showProduct: boolean,
     description: string;
     estoqueTotal: number,
     name: string;
