@@ -212,7 +212,7 @@ export default function NewProductPage() {
                                     productId,
                                     name: state.name,
                                     value: state.value,
-
+                                    categories: [...state.categories, ...state.categoriesFromFirebase],
                                     sku: skuGenerated,
                                     barcode: codigoDeBarra,
 
@@ -259,6 +259,7 @@ export default function NewProductPage() {
                                         },
                                     sku: skuGenerated,
                                     barcode: codigoDeBarra,
+                                    categories: [...state.categories, ...state.categoriesFromFirebase],
                                 },
                             ],
                         };
