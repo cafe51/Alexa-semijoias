@@ -1,5 +1,5 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/VariationsSection.tsx
-import ModalMaker from '@/app/components/ModalMaker';
+import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { StateNewProductType, VariationProductType } from '@/app/utils/types';
 import { useState } from 'react';
 import CreateVariationsForm from './CreateVariationsForm';

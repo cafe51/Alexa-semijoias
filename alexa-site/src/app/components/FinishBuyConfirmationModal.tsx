@@ -1,5 +1,5 @@
 import LargeButton from './LargeButton';
-import ModalMaker from './ModalMaker';
+import ModalMaker from './ModalMakers/ModalMaker';
 import Link from 'next/link';
 
 

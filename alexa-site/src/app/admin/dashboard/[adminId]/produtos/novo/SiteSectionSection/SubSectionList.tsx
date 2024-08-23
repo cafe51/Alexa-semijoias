@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { SavedSubSectionType } from '@/app/hooks/useSectionManagement';
 import { SectionType } from '@/app/utils/types';
-import ModalMaker from '@/app/components/ModalMaker';
+import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 
 interface SubSectionListProps {
   selectedSection: SectionType | undefined;

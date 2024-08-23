@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { FireBaseDocument, ProductBundleType } from '../../utils/types';
 import { useAddNewItemCart } from '../../hooks/useAddNewItemCart';
 import blankImage from '../../../../public/blankImage.jpg';
-import ModalMaker from '.././ModalMaker';
+import ModalMaker from '../ModalMakers/ModalMaker';
 import DynamicObjectCards from './DynamicObjectCards';
 import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
 

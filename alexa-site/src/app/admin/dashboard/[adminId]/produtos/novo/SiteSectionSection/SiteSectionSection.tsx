@@ -1,5 +1,5 @@
 // app/admin/dashboard/[adminId]/produtos/novo/SiteSectionSection.tsx
-import ModalMaker from '@/app/components/ModalMaker';
+import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { useCollection } from '@/app/hooks/useCollection';
 import { FireBaseDocument, SectionType, StateNewProductType } from '@/app/utils/types';
 import { useEffect, useState } from 'react';

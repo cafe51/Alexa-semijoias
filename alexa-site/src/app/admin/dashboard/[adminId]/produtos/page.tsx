@@ -5,11 +5,39 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import blankImage from '../../../../../../public/blankImage.jpg';
 import formatPrice from '@/app/utils/formatPrice';
-import ModalMaker from '@/app/components/ModalMaker';
+import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
+import DashboardProductDetails from './productPage/DashboardProductDetails';
 
 export default function ProductsDashboard() {
     const [products, setProducts] = useState<(ProductBundleType & FireBaseDocument)[]>([]);
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState< ProductBundleType & FireBaseDocument>({
+        exist: true,
+        id: '',
+        categories: [''],
+        description: '',
+        estoqueTotal: 0,
+        images: [''],
+        name: '',
+        productVariations: [
+            {
+                barcode: '',
+                categories: [''],
+                dimensions: { altura: 0, comprimento: 0, largura: 0 },
+                estoque: 0,
+                image: '',
+                name: '',
+                peso: 0,
+                productId: '',
+                sku: '',
+                value: { cost: 0, price: 0, promotionalPrice: 0 },
+            },
+        ],
+        sections: [''],
+        subsections: [''],
+        showProduct: false,
+        value: { cost: 0, price: 0, promotionalPrice: 0 },
+    });
 
     const { getAllDocuments } = useCollection<ProductBundleType>('products');
 
@@ -23,14 +51,15 @@ export default function ProductsDashboard() {
 
     return (
         <main className='w-full'>
-            { showVariationEditionModal && <ModalMaker
-                title='Detalhes do produto'
+            <SlideInModal
+                isOpen={ showVariationEditionModal }
                 closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
+                title="Detalhes do produto"
+                fullWidth
             >
-                <div>
-                        Olá, mundo
-                </div>
-            </ModalMaker> }
+                { <DashboardProductDetails product={ selectedProduct }/> }
+
+            </SlideInModal>
             <section className='w-full'>
                 {
                     products.length > 0 && products.map((product, index) => {
@@ -38,7 +67,11 @@ export default function ProductsDashboard() {
                             <div
                                 key={ product.id }
                                 className={ `flex text-xs gap-2 w-full p-2 ${ index % 2 == 0 ? 'bg-gray-100' : 'bg-white'}` }
-                                onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
+                                onClick={ () => {
+                                    console.log(product);
+                                    setSelectedProduct(product);
+                                    setShowVariationEditionModal(!showVariationEditionModal);
+                                } }
                             >
                                 <div className='rounded-lg h-20 w-20 relative overflow-hidden flex-shrink-0'>
                                     <Image

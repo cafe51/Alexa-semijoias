@@ -1,6 +1,6 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CategoriesSection/CategoriesSection.tsx
 
-import ModalMaker from '@/app/components/ModalMaker';
+import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { Dispatch, SetStateAction, useState } from 'react';
 import CreateCategoriesForm from './CreateCategories';
 import { CheckboxData, StateNewProductType } from '@/app/utils/types';

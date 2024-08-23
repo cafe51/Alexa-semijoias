@@ -2,7 +2,7 @@ import { VariationProductType } from '@/app/utils/types';
 import Image from 'next/image';
 import blankImage from '../../../../../../../../public/blankImage.jpg';
 import { useState } from 'react';
-import ModalMaker from '@/app/components/ModalMaker';
+import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 
 interface VariationFieldInputFilledProps {
     productVariation: VariationProductType;
