@@ -1,5 +1,6 @@
 // app/admin/dashboard/[adminId]/produtos/novo/PricesSection.tsx
 
+import marginProfitValue from '@/app/utils/marginProfitValue';
 import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { StateNewProductType } from '@/app/utils/types';
 
@@ -15,12 +16,7 @@ export default function PricesSection({
     handleValueChange,
 } : PricesSectionProps){
 
-    const marginProfitValue = (v: typeof value) => {
-        const finalPrice = v.promotionalPrice && v.promotionalPrice > 0 ? v.promotionalPrice : v.price;
-        const profit = (finalPrice - v.cost);
-        const margin = profit/finalPrice;
-        return margin * 100;
-    };
+
 
     return (
         <section className="flex flex-col gap-2 p-2 py-4 border rounded-md bg-white w-full">
