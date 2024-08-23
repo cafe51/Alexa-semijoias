@@ -7,6 +7,9 @@ import blankImage from '../../../../../../public/blankImage.jpg';
 import formatPrice from '@/app/utils/formatPrice';
 import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
 import DashboardProductDetails from './productPage/DashboardProductDetails';
+import { PiTrashSimpleBold } from 'react-icons/pi';
+import { FiEdit } from 'react-icons/fi';
+
 
 export default function ProductsDashboard() {
     const [products, setProducts] = useState<(ProductBundleType & FireBaseDocument)[]>([]);
@@ -50,7 +53,7 @@ export default function ProductsDashboard() {
     }, []);
 
     return (
-        <main className='w-full'>
+        <main className='w-full h-full'>
             <SlideInModal
                 isOpen={ showVariationEditionModal }
                 closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
@@ -60,13 +63,13 @@ export default function ProductsDashboard() {
                 { <DashboardProductDetails product={ selectedProduct }/> }
 
             </SlideInModal>
-            <section className='w-full'>
+            <section className='flex flex-col gap-2 w-full h-full'>
                 {
                     products.length > 0 && products.map((product, index) => {
                         return (
                             <div
                                 key={ product.id }
-                                className={ `flex text-xs gap-2 w-full p-2 ${ index % 2 == 0 ? 'bg-gray-100' : 'bg-white'}` }
+                                className={ `flex text-xs gap-2 w-full h-32 p-2 ${ index % 2 == 0 ? 'bg-gray-100' : 'bg-white'}` }
                                 onClick={ () => {
                                     console.log(product);
                                     setSelectedProduct(product);
@@ -81,6 +84,7 @@ export default function ProductsDashboard() {
                                         fill
                                     />
                                 </div>
+
                                 <div className='flex flex-col justify-between flex-grow'>
                                     <div>
                                         <p className='font-bold'>{ product.name }</p>
@@ -90,6 +94,16 @@ export default function ProductsDashboard() {
                                         <p>{ formatPrice(product.value.price) }</p>
                                     </div>
                                 </div>
+
+                                <div className='flex flex-col items-center justify-between min-w-7 h-full flex-shrink-0'>
+                                    <div>
+                                        <FiEdit size={ 20 }/>
+                                    </div>
+                                    <div className='flex-shrink-0'>
+                                        <PiTrashSimpleBold size={ 20 }/>
+                                    </div>
+                                </div>
+
                             </div>
                         );
                     })
