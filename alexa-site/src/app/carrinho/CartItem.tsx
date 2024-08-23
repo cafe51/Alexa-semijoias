@@ -42,7 +42,7 @@ export default function CartItem({ produto }: { produto: ProductCartType | (Prod
     };
 
     return (
-        <div className='flex flex-col gap-4 w-full h-full p-4 bg-white shadow-lg rounded-lg shadowColor' >
+        <div className='flex flex-col gap-4 w-full h-52 justify-between p-4 bg-white shadow-lg rounded-lg shadowColor' >
             <div className='flex gap-4 w-full h-[90px] '>
                 <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0'>
                     <Image
@@ -52,26 +52,30 @@ export default function CartItem({ produto }: { produto: ProductCartType | (Prod
                         fill
                     />
                 </div>
-                <div className='flex-grow text-xs'>
+                <div className='flex flex-col justify-between h-full text-xs flex-grow'>
+                    <div className='flex-grow'>
+                        <p>{ produto.name }</p>
+                    </div>
+                    <div className='flex flex-col rounded-lg text-xs ' >
+                        {
+                            produto.customProperties && Object.entries(produto.customProperties).sort().map(([key, value]) => {
+                                return (
+                                    <div key={ key } className="flex gap-2">
+                                        <span >{ key }:</span>
+                                        <span className='font-bold'>{ typeof value === 'string' ? value : 'Value not a string' }</span>
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                </div>
 
-                    { /* <div className='rounded-lg relative w-3/4 overflow-hidden text-sm' > */ }
-                    <p>{ produto.name }</p>
+                <div className='flex-shrink-0'>
+                    <FaRegTrashAlt
+                        onClick={ removeAll }
+                        data-testid={ 'trashButton' }
+                    />
                 </div>
-                <div className='flex flex-col rounded-lg relative overflow-hidden text-sm text-blue-400 flex-grow' >
-                    {
-                        produto.customProperties && Object.entries(produto.customProperties).sort().map(([key, value]) => {
-                            return (
-                                <div key={ key } className="flex gap-2">
-                                    <span>{ key }</span>
-                                    <span>{ typeof value === 'string' ? value : 'Value not a string' }</span>
-                                </div>
-                            );
-                        })
-                    }
-                </div>
-                <FaRegTrashAlt
-                    onClick={ removeAll }
-                    data-testid={ 'trashButton' }/>
             </div>
             <div className="flex justify-between items-center w-full">
                 <SelectingQuantityBox
