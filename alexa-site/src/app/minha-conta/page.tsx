@@ -87,11 +87,7 @@ export default function MyProfile() {
                     <div className='w-full border-2 border-solid border-pink-100'></div>
                     <div className='flex flex-col gap-4 w-full'>
                         <div className='flex flex-col gap-4 justify-between w-full '>
-
                             { pedidos && pedidos?.length > 0 ? listaDeCompras : realizeSuaCompra }
-                            
-                            
-
                         </div>
                         <button className='primColor rounded-full p-2 '>Ir para a loja</button>
                     </div>
