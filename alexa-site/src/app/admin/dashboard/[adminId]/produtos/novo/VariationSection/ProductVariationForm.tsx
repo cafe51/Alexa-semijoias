@@ -40,11 +40,6 @@ export default function ProductVariationForm({
 }: ProductVariationFormProps) {
 
     useEffect(() => {
-        console.log('dados de productVariationForm', {
-            productVariationState,
-            estoque,
-            variations,
-        });
         const isValid = validateForm();
         setIsFormValid(isValid);
     }, [productVariationState, estoque, variations]);
@@ -53,9 +48,6 @@ export default function ProductVariationForm({
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { customProperties, defaultProperties } = productVariationState;
 
-        console.log('JSON.stringify(variations)', JSON.stringify(variations));
-        console.log('JSON.stringify(Object.keys(rest))', JSON.stringify(Object.keys(customProperties)));
-        
         if (JSON.stringify(variations) !== JSON.stringify(Object.keys(customProperties))) {
             return false;
         }
