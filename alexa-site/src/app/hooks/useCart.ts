@@ -22,6 +22,7 @@ export const useCart = (
         // eslint-disable-next-line prefer-const
         let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
         const cartItem = localCart.find((item) => item.skuId === productVariation.sku);
+        console.log('LOCAL CART AAAAAAAAAAAAAAAAAAAAaa', localCart);
         
         if (cartItem && cartItem.quantidade > productVariation.estoque) {
             cartItem.quantidade = productVariation.estoque;
@@ -65,12 +66,10 @@ export const useCart = (
                                     fixQuantityByStockInLocalStorage(productVariation);
                                 }
                             }
-                            if(user) {
-                                return {
-                                    ...productVariation,
-                                    ...cartInfo,
-                                };
-                            }
+                            return {
+                                ...productVariation,
+                                ...cartInfo,
+                            };
                         }
 
                     }).filter(Boolean) as ((ProductCartType & FireBaseDocument)[]) | ProductCartType[];
