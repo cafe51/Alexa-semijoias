@@ -103,7 +103,7 @@ export default function LoginForm({ loadingButton, setLoadingButton, onClick } :
                     { loginErrorMessage }
                 </p>
             ) }
-            <LargeButton color='green' disabled={ isButtonDisabled() } loadingButton={ loadingButton } onClick={ onClick }>
+            <LargeButton color='green' disabled={ isButtonDisabled() } loadingButton={ loadingButton } onClick={ onClick } type='submit'>
                 Continuar
             </LargeButton>
             { error && <p className='text-red-500'>{ error }</p> }

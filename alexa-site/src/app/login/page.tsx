@@ -37,7 +37,7 @@ export default function Login() {
     return (
         <section className='flex flex-col gap-10 items-center self-center justify-center w-full h-full secColor md:w-2/5'>
             <h1>Entre na sua conta</h1>
-            <LoginForm loadingButton={ loadingButton } setLoadingButton={ setLoadingButton }/>
+            <LoginForm loadingButton={ loadingButton } setLoadingButton={ setLoadingButton } onClick={ () => null }/>
             <div>
                 <p>Não tem uma conta? <a className='text-blue-500' href="/cadastro">Cadastre-se</a></p>
             </div>
