@@ -13,7 +13,6 @@ export default function CartIcon() {
     useEffect(() => {
         if(carrinho) {
             setLoadingIcon(true);
-            console.log('CARRINHO NO CARTICON', carrinho);
             const quantity = carrinho.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0);
             setCartQuantity(quantity);
             setLoadingIcon(false);
