@@ -55,7 +55,7 @@ export const useLocalStorage = () => {
         console.warn('Produto somado ao carrinho localStorage.');
     };
 
-    const addItemToLocalStorageCart = (productVariation: ProductVariation) => {
+    const addItemToLocalStorageCart = (productVariation: ProductVariation, quantity: number) => {
         const localCart = getLocalCart();
         const cartItem = localCart.find(item => item.skuId === productVariation.sku);
         
@@ -63,11 +63,11 @@ export const useLocalStorage = () => {
             localCart.push({
                 skuId: productVariation.sku,
                 productId: productVariation.productId,
-                quantidade: 1,
+                quantidade: quantity,
                 userId: 'guest',
             });
         } else if (cartItem.quantidade < productVariation.estoque) {
-            cartItem.quantidade += 1;
+            cartItem.quantidade += quantity;
         }
 
         setLocalCart(localCart);

@@ -36,7 +36,7 @@ export const useAddNewItemCart = () => {
             if(!productData) throw new Error('dados do produto não encontrados');
             if (!user) {
                 // Usuário não está logado, salva no localStorage
-                addItemToLocalStorageCart(productData);
+                addItemToLocalStorageCart(productData, quantity);
                 console.warn('user está deslogado!');
             } else {
                 // Usuário está logado, salva no firebase
