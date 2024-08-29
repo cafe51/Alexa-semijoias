@@ -1,22 +1,14 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { SectionType } from '@/app/utils/types';
+import { SectionType, SiteSectionManagementType } from '@/app/utils/types';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 
 interface SectionListProps {
   sections: SectionType[];
-  savedSections: string[];
-  selectedSection: SectionType | undefined;
-  onSelectSection: (section: SectionType) => void;
   setNewSections: Dispatch<SetStateAction<SectionType[] | never[]>>
+  siteSectionManagement: SiteSectionManagementType;
 }
 
-export default function SectionList({
-    sections,
-    savedSections,
-    selectedSection,
-    onSelectSection,
-    setNewSections,
-}: SectionListProps){
+export default function SectionList({ sections, setNewSections, siteSectionManagement }: SectionListProps){
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
     const [newSectionName, setNewSectionName] = useState('');
 
@@ -57,9 +49,9 @@ export default function SectionList({
                 <p
                     key={ index }
                     className={ `p-2 rounded-lg text-sm min-w-20
-            ${selectedSection?.sectionName === section.sectionName ? 'border-solid border-blue-500 border-4' : ''}
-            ${savedSections.includes(section.sectionName) ? 'bg-green-500 text-white' : 'bg-gray-100'}` }
-                    onClick={ () => onSelectSection(section) }
+            ${siteSectionManagement.selectedSection?.sectionName === section.sectionName ? 'border-solid border-blue-500 border-4' : ''}
+            ${siteSectionManagement.savedSections.includes(section.sectionName) ? 'bg-green-500 text-white' : 'bg-gray-100'}` }
+                    onClick={ () => siteSectionManagement.handleSectionClick(section) }
                 >
                     { section.sectionName }
                 </p>

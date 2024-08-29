@@ -1,7 +1,7 @@
 
 import { useNewProductState } from '@/app/hooks/useNewProductState';
 import NameAndDescriptionSection from './novo/NameAndDescriptionSection';
-import { CategoryType, FireBaseDocument, ProductBundleType, SectionType, StateNewProductType } from '@/app/utils/types';
+import { CategoryType, FireBaseDocument, ProductBundleType, StateNewProductType, UseProductDataHandlers } from '@/app/utils/types';
 import PhotosSection from './novo/PhotoSection/PhotosSection';
 import PricesSection from './novo/PricesSection';
 import CodesSection from './novo/CodesSection';
@@ -15,18 +15,7 @@ import { useCollection } from '@/app/hooks/useCollection';
 
 interface ProductEditionFormProps {
     product?:  StateNewProductType,
-    useProductDataHandlers: {
-        hasNoProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
-        hasProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
-        uploadAndGetAllImagesUrl: (images: {
-            file?: File;
-            localUrl: string;
-        }[]) => Promise<string[]>;
-        createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
-            exist?: boolean;
-            id?: string;
-        })[]) => Promise<void>;
-    }
+    useProductDataHandlers: UseProductDataHandlers;
     productFromFirebase?: ProductBundleType & FireBaseDocument;
 }
 
@@ -87,22 +76,11 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                 handleNameChange={ handlers.handleNameChange }
                 handleDescriptionChange={ handlers.handleDescriptionChange }
             />
-            <PhotosSection
-                state={ state }
-                handleSetImages={ handlers.handleSetImages }
-            />
+            <PhotosSection state={ state } handleSetImages={ handlers.handleSetImages } />
 
-            <PricesSection
-                state={ state }
-                handleValueChange={ handlers.handleValueChange }
-            />
+            <PricesSection state={ state } handleValueChange={ handlers.handleValueChange } />
 
-            <SiteSectionSection
-                state={ state }
-                handleAddSectionsSite={ handlers.handleAddSectionsSite }
-                handleAddSection={ handlers.handleAddSection }
-                handleAddSubSection={ handlers.handleAddSubSection }
-            />
+            <SiteSectionSection state={ state }  handlers={ handlers } />
 
             <CategoriesSection
                 state={ state }

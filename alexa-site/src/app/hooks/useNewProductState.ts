@@ -1,6 +1,6 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { SectionType, StateNewProductType, VariationProductType } from '../utils/types';
+import { SectionType, StateNewProductType, UseNewProductState, VariationProductType } from '../utils/types';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
@@ -213,33 +213,33 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         dispatch({ type: 'SET_IMAGES', payload: images });
     }, []);
 
+    const handlers: UseNewProductState = {
+        handleNameChange,
+        handleDescriptionChange,
+        handleValueChange,
+        handleStockQuantityChange,
+        handleVariationsChange,
+        handleSkuChange,
+        handleBarcodeChange,
+        handleDimensionsChange,
+        handleAddProductVariation,
+        handleClearProductVariations,
+        handleRemoveProductVariation,
+        handleUpdateProductVariation,
+        handleAddNewVariationInAllProductVariations,
+        handleRemoveVariationInAllProductVariations,
+        handleAddSectionsSite,
+        handleAddSection,
+        handleAddSubSection,
+        handleAddCategories,
+        handleSetCategoriesFromFb,
+        handleRemoveCategory,
+        handleRemoveAllCategories,
+        handleSetImages,
+    };
 
     return {
         state,
-        handlers: {
-            handleNameChange,
-            handleDescriptionChange,
-            handleValueChange,
-            handleStockQuantityChange,
-            handleVariationsChange,
-            handleSkuChange,
-            handleBarcodeChange,
-            handleDimensionsChange,
-            handleAddProductVariation,
-            handleClearProductVariations,
-            handleRemoveProductVariation,
-            handleUpdateProductVariation,
-            handleAddNewVariationInAllProductVariations,
-            handleRemoveVariationInAllProductVariations,
-            handleAddSectionsSite,
-            handleAddSection,
-            handleAddSubSection,
-            handleAddCategories,
-            handleSetCategoriesFromFb,
-            handleRemoveCategory,
-            handleRemoveAllCategories,
-            handleSetImages,
-        },
-
+        handlers,
     };
 }

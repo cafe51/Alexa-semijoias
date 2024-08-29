@@ -1,24 +1,16 @@
 // app/admin/dashboard/[adminId]/produtos/novo/SiteSectionSection.tsx
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { useCollection } from '@/app/hooks/useCollection';
-import { FireBaseDocument, SectionType, StateNewProductType } from '@/app/utils/types';
+import { FireBaseDocument, SectionType, StateNewProductType, UseNewProductState } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
 import ChooseSection from './ChooseSection';
-import { useSectionManagement } from '@/app/hooks/useSectionManagement';
 import ProductSections from '../../productPage/ProductSections';
 
 interface SiteSectionSectionProps {
     state: StateNewProductType;
-    handleAddSection: (sections: string[]) => void
-    handleAddSubSection: (sections: string[] | undefined) => void
-    handleAddSectionsSite: (sections: SectionType[] | never[]) => void
+    handlers: UseNewProductState;
 }
-export default function SiteSectionSection({
-    state,
-    handleAddSectionsSite,
-    handleAddSubSection,
-    handleAddSection,
-}: SiteSectionSectionProps) {
+export default function SiteSectionSection({ state, handlers }: SiteSectionSectionProps) {
     const { getAllDocuments } = useCollection<SectionType>('siteSections');
     const [sections, setSections] = useState<((SectionType & FireBaseDocument)[]) | (SectionType[])| never[]>([]);
     const [newSections, setNewSections] = useState<(SectionType)[] | never[]>([]);
@@ -26,7 +18,6 @@ export default function SiteSectionSection({
 
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
 
-    const { siteSectionManagement } = useSectionManagement({ initialState: state.sectionsSite });
 
     useEffect(() => {
         async function getSectionsFromFireBase() {
@@ -67,21 +58,11 @@ export default function SiteSectionSection({
                     closeModelClick={ () => setShowSectionEditionModal(!showSectionEditionModal) }
                 >
                     <ChooseSection
+                        state={ state }
+                        handlers={ handlers }
                         setNewSubSection={ setNewSubSection }
                         setNewSections={ setNewSections }
                         firebaseSections={ sections }
-                        handleAddSectionsSite={ handleAddSectionsSite }
-                        handleAddSection={ handleAddSection }
-                        handleAddSubSection={ handleAddSubSection }
-                        sectionList={ siteSectionManagement.sectionList }
-                        savedSections={ siteSectionManagement.savedSections }
-                        savedSubSections={ siteSectionManagement.savedSubSections }
-                        selectedSection={ siteSectionManagement.selectedSection }
-                        selectedSubSection={ siteSectionManagement.selectedSubSection }
-                        handleSectionClick={ siteSectionManagement.handleSectionClick }
-                        handleSubSectionClick={ siteSectionManagement.handleSubSectionClick }
-                        addSectionOrSubSection={ siteSectionManagement.addSectionOrSubSection }
-                        removeSectionOrSubSection={ siteSectionManagement.removeSectionOrSubSection }
                     />
 
                 </ModalMaker>
@@ -100,9 +81,9 @@ export default function SiteSectionSection({
                     (<div className="mt-2 flex flex-col justify-between border-t border-solid text-center w-full text-xs">
                         { <ProductSections sections={ state.sections } subsections={ state.subsections }/> }
                         <button onClick={ () => {
-                            handleAddSectionsSite([]);
-                            handleAddSubSection([]);
-                            handleAddSection([]);
+                            handlers.handleAddSectionsSite([]);
+                            handlers.handleAddSubSection([]);
+                            handlers.handleAddSection([]);
                         } }>X</button>
                     </div>)
         

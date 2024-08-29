@@ -1,5 +1,6 @@
 //app/utils/types.tsx
 import { WhereFilterOp } from 'firebase/firestore';
+import { SavedSubSectionType } from '../hooks/useSectionManagement';
 
 export type FireBaseDocument = {
     exist: boolean,
@@ -226,4 +227,54 @@ export type RegisterFormInputType = {
     nome: string,
     email: string,
     tel: string
+}
+
+export type SiteSectionManagementType = {
+    sectionList: SectionType[];
+    savedSections: string[];
+    savedSubSections: SavedSubSectionType[];
+    selectedSection: SectionType | undefined;
+    selectedSubSection: string | undefined;
+    handleSectionClick: (section: SectionType) => void;
+    handleSubSectionClick: (subsection: string) => void;
+    addSectionOrSubSection: () => void;
+    removeSectionOrSubSection: () => void;
+}
+
+export type UseProductDataHandlers = {
+    hasNoProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
+    hasProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
+    uploadAndGetAllImagesUrl: (images: {
+        file?: File;
+        localUrl: string;
+    }[]) => Promise<string[]>;
+    createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
+        exist?: boolean;
+        id?: string;
+    })[]) => Promise<void>;
+}
+
+export type UseNewProductState = {
+    handleNameChange: (name: string) => void;
+    handleDescriptionChange: (description: string) => void;
+    handleValueChange: (value: { price: number, promotionalPrice: number, cost: number, }) => void;
+    handleStockQuantityChange: (estoque: number | undefined) => void;
+    handleVariationsChange: (variations: string[] | never[]) => void;
+    handleSkuChange: (sku: string) => void;
+    handleBarcodeChange: (barcode: string) => void;
+    handleDimensionsChange: (dimensions: { largura: number, altura: number, comprimento: number, peso: number }) => void;
+    handleAddProductVariation: (productVariation: VariationProductType) => void;
+    handleClearProductVariations: () => void;
+    handleRemoveProductVariation: (productVariation: VariationProductType) => void;
+    handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void;
+    handleAddNewVariationInAllProductVariations: (newVariation: string) => void;
+    handleRemoveVariationInAllProductVariations: (variationToBeRemoved: string) => void;
+    handleAddSectionsSite: (sections: SectionType[] | never[]) => void;
+    handleAddSection: (sections: string[]) => void;
+    handleAddSubSection: (sections: string[] | undefined) => void;
+    handleAddCategories: (category: string) => void;
+    handleSetCategoriesFromFb: (categories: string[]) => void;
+    handleRemoveCategory: (category: string) => void;
+    handleRemoveAllCategories: () => void;
+    handleSetImages: (images: { file?: File; localUrl: string; }[]) => void;
 }

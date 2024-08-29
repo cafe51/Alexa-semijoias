@@ -1,33 +1,15 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { SavedSubSectionType } from '@/app/hooks/useSectionManagement';
-import { SectionType } from '@/app/utils/types';
+import { SiteSectionManagementType } from '@/app/utils/types';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 
 interface SubSectionListProps {
-  selectedSection: SectionType | undefined;
-  subsections: string[] | undefined | null;
-  savedSubSections: SavedSubSectionType[];
-  selectedSubSection: string | undefined;
-  onSelectSubSection: (subsection: string) => void;
-  onSelectSection: (section: SectionType) => void;
-  setNewSubSection: Dispatch<SetStateAction<{
-    sectionName: string;
-    subsection: string;
-} | undefined>>
-
+    siteSectionManagement: SiteSectionManagementType;
+    setNewSubSection: Dispatch<SetStateAction<{ sectionName: string; subsection: string; } | undefined>>
 }
 
-export default function SubSectionList({
-    selectedSection,
-    subsections,
-    savedSubSections,
-    selectedSubSection,
-    onSelectSubSection,
-    onSelectSection,
-    setNewSubSection,
-}: SubSectionListProps) {
+export default function SubSectionList({ siteSectionManagement, setNewSubSection }: SubSectionListProps) {
     const isSubSectionSaved = (sectionName: string, subsection: string) => {
-        return savedSubSections.some(saved => saved.sectionName === sectionName && saved.subsection === subsection);
+        return siteSectionManagement.savedSubSections.some(saved => saved.sectionName === sectionName && saved.subsection === subsection);
     };
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
     const [newSubSectionName, setNewSubSectionName] = useState('');
@@ -56,11 +38,16 @@ export default function SubSectionList({
                             className='p-2 bg-green-500 disabled:bg-gray-300 '
                             disabled={ !(!!newSubSectionName && newSubSectionName.length > 0)  }
                             onClick={ () => {
-                                selectedSection?.sectionName && setNewSubSection({ sectionName: selectedSection?.sectionName, subsection: newSubSectionName });
-                                selectedSection && onSelectSection(
+                                siteSectionManagement.selectedSection?.sectionName
+                                && setNewSubSection({ sectionName: siteSectionManagement.selectedSection?.sectionName, subsection: newSubSectionName });
+
+                                siteSectionManagement.selectedSection
+                                && siteSectionManagement.handleSectionClick(
                                     {
-                                        ...selectedSection,
-                                        subsections: selectedSection.subsections ? [...selectedSection.subsections, newSubSectionName ] : [newSubSectionName],
+                                        ...siteSectionManagement.selectedSection,
+                                        subsections: siteSectionManagement.selectedSection.subsections
+                                            ? [...siteSectionManagement.selectedSection.subsections, newSubSectionName ]
+                                            : [newSubSectionName],
                                     },
                                 );
                                 setNewSubSectionName('');
@@ -72,18 +59,22 @@ export default function SubSectionList({
                     </section>
                     
                 </ModalMaker>) }
-            { subsections?.map((subsection, index) => (
+            { siteSectionManagement.selectedSection?.subsections?.map((subsection, index) => (
                 <p
                     key={ index }
                     className={ `p-2 rounded-lg text-xs min-w-20
-            ${selectedSubSection === subsection ? 'border-solid border-blue-500 border-4' : ''}
-            ${selectedSection && selectedSection.sectionName && isSubSectionSaved(selectedSection.sectionName!, subsection) ? 'bg-green-500 text-white' : 'bg-gray-200'}` }
-                    onClick={ () => onSelectSubSection(subsection) }
+            ${siteSectionManagement.selectedSubSection === subsection ? 'border-solid border-blue-500 border-4' : ''}
+            ${siteSectionManagement.selectedSection
+                && siteSectionManagement.selectedSection.sectionName
+                && isSubSectionSaved(siteSectionManagement.selectedSection.sectionName!, subsection)
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200'}` }
+                    onClick={ () => siteSectionManagement.handleSubSectionClick(subsection) }
                 >
                     { subsection }
                 </p>
             )) }
-            { selectedSection && <p
+            { siteSectionManagement.selectedSection && <p
                 className={ 'p-2 rounded-lg text-sm min-w-20 bg-gray-100 border-dashed border-2 border-green-500 text-center text-green-500' }
                 onClick={ () =>  setShowSectionEditionModal(!showSectionEditionModal) }
             >
