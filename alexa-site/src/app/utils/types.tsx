@@ -69,7 +69,7 @@ export type StateNewProductType = {
         cost: number,
     }
     sections: string[],
-    subsections?: string[] | null | undefined, // do tipo 'sectionName:subsectionName'[]
+    subsections?: string[] | undefined, // do tipo 'sectionName:subsectionName'[]
     sectionsSite: ((SectionType & { exist?: boolean, id?: string })[] | never[]) 
     variations: string[] | never[],
     productVariations: VariationProductType[] | never[];

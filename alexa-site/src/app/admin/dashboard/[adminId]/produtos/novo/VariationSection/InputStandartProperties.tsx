@@ -1,3 +1,5 @@
+import { getRandomBarCode } from '@/app/utils/getRandomBarCode';
+import { getRandomSku } from '@/app/utils/getRandomSku';
 import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { VariationProductType } from '@/app/utils/types';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -52,11 +54,6 @@ export default function InputStandartProperties({
 
     }, [productVariationState.customProperties, sections]);
 
-    const setRandomBarCode = () => {
-        const numeroAleatorio = (Math.floor(Math.random() * 9000) + 1000).toString();
-        setBarCode('78902166' + numeroAleatorio + totalProductVariationsCreated);
-    };
-
     const setRandomSku = () => {
         // verificar se há sessão vazia
         if(sections.length < 1) {
@@ -78,14 +75,7 @@ export default function InputStandartProperties({
             return;
         }
 
-        const sectionsClone = [...sections];
-        const sectionNamesForSku = sectionsClone.map((section) => section.slice(0,3)).join('');
-        let skuString = sectionNamesForSku;
-        for (const property in productVariationState.customProperties) {
-            skuString += property.slice(0, 3) + productVariationState.customProperties[property].slice(0, 3);
-        }
-        
-        const skuGenerated = (skuString + barCode.split('78902166')[1]);
+        const skuGenerated = getRandomSku(sections, productVariationState.customProperties, barCode);
 
         setSku(skuGenerated);
         setSkuGenerateErrorMessage(undefined);
@@ -100,7 +90,8 @@ export default function InputStandartProperties({
     const barCodeAndSku = [
         { propertyName: 'código de barras', propertyValue: barCode, setProperty: setBarCode, setRandom: () => {
             setSkuGenerateErrorMessage(undefined);
-            setRandomBarCode();
+            const randomBarcode = getRandomBarCode(totalProductVariationsCreated);
+            setBarCode(randomBarcode);
         } },
         { propertyName: 'sku', propertyValue: sku, setProperty: setSku, setRandom: setRandomSku },
     ];

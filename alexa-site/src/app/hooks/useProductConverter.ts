@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { FireBaseDocument, ProductBundleType, SectionType, StateNewProductType } from '../utils/types';
 import { useCollection } from './useCollection';
 import useFirebaseUpload from './useFirebaseUpload';
+import { getRandomBarCode } from '../utils/getRandomBarCode';
+import { getRandomSku } from '../utils/getRandomSku';
 
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
@@ -34,34 +36,18 @@ export function useProductConverter() {
         }
 
         return {
+            ...editableProduct,
             name: editableProduct.name,
             showProduct: true,
             images: imageUrls,
-            description: editableProduct.description,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
-            value: editableProduct.value,
-            sections: editableProduct.sections,
-            subsections: editableProduct.subsections!, // do tipo 'sectionName:subsectionName'[]
-            variations: editableProduct.variations,
             estoqueTotal: totalStock,
             // images= editableProduct.images.map((image) => image.file),
     
             productVariations: editableProduct.productVariations.map((pv, index) => {
+                const codigoDeBarra = (pv.defaultProperties.barcode && pv.defaultProperties.barcode.length > 0) ? pv.defaultProperties.barcode : getRandomBarCode(index);
 
-                // [{cor: amarelo, tamanho: 14}, {cor: amarelo, tamanho: 16}, {cor: verde, tamanho: 14}]
-                // [coramtam14, coramtam16, corvertam14]
-                const sectionsClone = [...editableProduct.sections];
-                const sectionNamesForSku = sectionsClone.map((section) => section.slice(0,3)).join('');
-
-                let skuString = sectionNamesForSku;
-                for (const property in pv.customProperties) {
-                    skuString += property.slice(0, 3) + pv.customProperties[property].slice(0, 3);
-                }
-                
-                const numeroAleatorio = (Math.floor(Math.random() * 9000) + 1000).toString();
-                const codigoDeBarra = (pv.defaultProperties.barcode && pv.defaultProperties.barcode.length > 0) ? pv.defaultProperties.barcode : '78902166' + numeroAleatorio + index.toString();
-                
-                const skuGenerated = pv.defaultProperties.sku ? pv.defaultProperties.sku + index.toString() : (skuString + codigoDeBarra.split('78902166')[1]);
+                const skuGenerated = pv.defaultProperties.sku ? pv.defaultProperties.sku : getRandomSku(editableProduct.sections, pv.customProperties, codigoDeBarra);
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { imageIndex, ...restOfDefaultProperties } = pv.defaultProperties;
@@ -69,7 +55,7 @@ export function useProductConverter() {
 
                     customProperties: { ...pv.customProperties },
                     ...restOfDefaultProperties,
-                    image: imageUrls[pv.defaultProperties.imageIndex],
+                    image: imageUrls[imageIndex],
                     productId,
                     name: editableProduct.name,
                     value: editableProduct.value,
@@ -83,24 +69,15 @@ export function useProductConverter() {
     };
 
     const hasNoProductVariations = (editableProduct: StateNewProductType, imageUrls: string[], productId: string): ProductBundleType => {
-        const sectionsClone = [...editableProduct.sections];
-        const sectionNamesForSku = sectionsClone.map((section) => section.slice(0,3)).join('');
-        const skuString = sectionNamesForSku;
+        const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
 
-        const numeroAleatorio = (Math.floor(Math.random() * 9000) + 1000).toString();
-        const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : '78902166' + numeroAleatorio + '1';
-
-        const skuGenerated = editableProduct.sku ? editableProduct.sku : (skuString + codigoDeBarra.split('78902166')[1]);
+        const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, editableProduct.productVariations[0].customProperties, codigoDeBarra);
 
         return {
-            name: editableProduct.name,
+            ...editableProduct,
             showProduct: true,
             images: imageUrls,
-            description: editableProduct.description,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
-            value: editableProduct.value,
-            sections: editableProduct.sections,
-            subsections: editableProduct.subsections ? editableProduct.subsections : undefined,
             estoqueTotal: editableProduct.estoque ? editableProduct.estoque : 0,
             productVariations: [
                 {   productId,
@@ -131,15 +108,13 @@ export function useProductConverter() {
         const hasMoreThanOneVariation = finalProduct.productVariations.length > 1;
         const theOnlyVariation = finalProduct.productVariations[0];
         return {
-            id: finalProduct.id,
+            ...finalProduct,
+            categoriesFromFirebase: finalProduct.categories,
             barcode: hasMoreThanOneVariation ? undefined : theOnlyVariation.barcode,
             categories: [],
-            categoriesFromFirebase: finalProduct.categories,
-            description: finalProduct.description,
             dimensions: hasMoreThanOneVariation ? undefined: { ...theOnlyVariation.dimensions, peso: theOnlyVariation.peso },
             estoque: finalProduct.estoqueTotal,
             images: finalProduct.images.map((img) => ({ localUrl: img })), //////////////////
-            name: finalProduct.name,
             productVariations: hasMoreThanOneVariation ? finalProduct.productVariations.map((pv) => ({
                 customProperties: pv.customProperties!,
                 defaultProperties: {
@@ -151,7 +126,6 @@ export function useProductConverter() {
                     sku: pv.sku,
                 },
             })) : [], 
-            sections: finalProduct.sections,
             sectionsSite: siteSectionsFromFirebase
                 .filter((ssfb) => finalProduct.sections.includes(ssfb.sectionName))
                 .map(({ exist, id, sectionName }) => {
@@ -168,8 +142,6 @@ export function useProductConverter() {
                 }),
                 
             sku: hasMoreThanOneVariation ? undefined : theOnlyVariation.sku,
-            subsections: finalProduct.subsections ? finalProduct.subsections : [],
-            value: finalProduct.value,
             variations: finalProduct.variations ? finalProduct.variations : [],
         };
     };
