@@ -5,6 +5,7 @@ import { FireBaseDocument, SectionType, StateNewProductType } from '@/app/utils/
 import { useEffect, useState } from 'react';
 import ChooseSection from './ChooseSection';
 import { useSectionManagement } from '@/app/hooks/useSectionManagement';
+import ProductSections from '../../productPage/ProductSections';
 
 interface SiteSectionSectionProps {
     state: StateNewProductType;
@@ -13,7 +14,7 @@ interface SiteSectionSectionProps {
     handleAddSectionsSite: (sections: SectionType[] | never[]) => void
 }
 export default function SiteSectionSection({
-    state: { sectionsSite },
+    state,
     handleAddSectionsSite,
     handleAddSubSection,
     handleAddSection,
@@ -25,17 +26,7 @@ export default function SiteSectionSection({
 
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
 
-    const {
-        sectionList,
-        savedSections,
-        savedSubSections,
-        selectedSection,
-        selectedSubSection,
-        handleSectionClick,
-        handleSubSectionClick,
-        addSectionOrSubSection,
-        removeSectionOrSubSection,
-    } = useSectionManagement({ initialState: sectionsSite });
+    const { siteSectionManagement } = useSectionManagement({ initialState: state.sectionsSite });
 
     useEffect(() => {
         async function getSectionsFromFireBase() {
@@ -82,55 +73,32 @@ export default function SiteSectionSection({
                         handleAddSectionsSite={ handleAddSectionsSite }
                         handleAddSection={ handleAddSection }
                         handleAddSubSection={ handleAddSubSection }
-                        sectionList={ sectionList }
-                        savedSections={ savedSections }
-                        savedSubSections={ savedSubSections }
-                        selectedSection={ selectedSection }
-                        selectedSubSection={ selectedSubSection }
-                        handleSectionClick={ handleSectionClick }
-                        handleSubSectionClick={ handleSubSectionClick }
-                        addSectionOrSubSection={ addSectionOrSubSection }
-                        removeSectionOrSubSection={ removeSectionOrSubSection }
+                        sectionList={ siteSectionManagement.sectionList }
+                        savedSections={ siteSectionManagement.savedSections }
+                        savedSubSections={ siteSectionManagement.savedSubSections }
+                        selectedSection={ siteSectionManagement.selectedSection }
+                        selectedSubSection={ siteSectionManagement.selectedSubSection }
+                        handleSectionClick={ siteSectionManagement.handleSectionClick }
+                        handleSubSectionClick={ siteSectionManagement.handleSubSectionClick }
+                        addSectionOrSubSection={ siteSectionManagement.addSectionOrSubSection }
+                        removeSectionOrSubSection={ siteSectionManagement.removeSectionOrSubSection }
                     />
 
                 </ModalMaker>
             ) }
             <div className='flex justify-between'>
                 <h2 className="text-lg font-bold">Seção</h2>
-                { (sectionsSite && sectionsSite.length > 0) &&
+                { (state.sectionsSite && state.sectionsSite.length > 0) &&
                 <button className='text-blue-500'
                     onClick={ () => setShowSectionEditionModal(!showSectionEditionModal) }>
                         Editar
                 </button> }
             </div>
             {
-                (sectionsSite && sectionsSite.length > 0)
+                (state.sectionsSite && state.sectionsSite.length > 0)
                     ?
                     (<div className="mt-2 flex flex-col justify-between border-t border-solid text-center w-full text-xs">
-                        {
-                            sectionsSite.map((section, index) => {
-                                return (
-                                    <div key={ index } className='flex gap-1'>
-                                        <div className='p-2 bg-blue-500 text-white rounded-lg'>
-                                            { section.sectionName }
-                                        </div>
-                                        {
-                                            section.subsections && section.subsections.length > 0
-                                            &&
-                                        <div className='p-2 bg-blue-500 text-white rounded-lg'>
-                                            { section.subsections.map((subsection, index) => {
-                                                return (<p key={ index }>
-                                                    { subsection }
-                                                </p>);
-                                            }) }
-                                        </div>
-                                        }
-                                        
-                                    </div>
-                                );
-                            })
-                        }
-
+                        { <ProductSections sections={ state.sections } subsections={ state.subsections }/> }
                         <button onClick={ () => {
                             handleAddSectionsSite([]);
                             handleAddSubSection([]);

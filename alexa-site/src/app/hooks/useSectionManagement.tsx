@@ -100,14 +100,16 @@ export function useSectionManagement({ initialState }: UseSectionManagementProps
     };
 
     return {
-        sectionList,
-        savedSections,
-        savedSubSections,
-        selectedSection,
-        selectedSubSection,
-        handleSectionClick,
-        handleSubSectionClick,
-        addSectionOrSubSection,
-        removeSectionOrSubSection,
+        siteSectionManagement: {
+            sectionList,
+            savedSections,
+            savedSubSections,
+            selectedSection,
+            selectedSubSection,
+            handleSectionClick,
+            handleSubSectionClick,
+            addSectionOrSubSection,
+            removeSectionOrSubSection,
+        },
     };
 }
