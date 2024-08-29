@@ -1,8 +1,7 @@
-import { getRandomBarCode } from '@/app/utils/getRandomBarCode';
-import { getRandomSku } from '@/app/utils/getRandomSku';
 import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { VariationProductType } from '@/app/utils/types';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
+import CodesSection from '../CodesSection';
 
 interface InputStandartPropertiesFormProps {
     sections: string[];
@@ -45,55 +44,12 @@ export default function InputStandartProperties({
     setBarCode,
 }: InputStandartPropertiesFormProps) {
     const dimensionProperties = Object.keys(dimensions);
-    const [skuGenerateErrorMessage, setSkuGenerateErrorMessage] = useState<string>();
 
-    useEffect(() => {
-        if(sections.length > 0 || Object.values(productVariationState.customProperties).some(pvcp => pvcp === '')) {
-            setSkuGenerateErrorMessage(undefined);
-        }
 
-    }, [productVariationState.customProperties, sections]);
-
-    const setRandomSku = () => {
-        // verificar se há sessão vazia
-        if(sections.length < 1) {
-            setSkuGenerateErrorMessage('Escolha a sessão antes de gerar o sku');
-            return;
-        }
-
-        // verificar se alguma propriedade está vazia
-        for (const property in productVariationState.customProperties) {
-            if(productVariationState.customProperties[property] === '') {
-                setSkuGenerateErrorMessage(`Preencha ${ property } antes de gerar o sku`);
-                return;
-            }
-        }
-
-        // verificar se código de barras está vazio
-        if(barCode.length < 1) {
-            setSkuGenerateErrorMessage('Preencha o código de barras antes de gerar o sku');
-            return;
-        }
-
-        const skuGenerated = getRandomSku(sections, productVariationState.customProperties, barCode);
-
-        setSku(skuGenerated);
-        setSkuGenerateErrorMessage(undefined);
-
-    };
 
     const estoqueAndPeso = [
         { propertyName: 'estoque', propertyValue: estoque, setProperty: setEstoque },
         { propertyName: 'peso',propertyValue: peso, setProperty: setPeso },
-    ];
-
-    const barCodeAndSku = [
-        { propertyName: 'código de barras', propertyValue: barCode, setProperty: setBarCode, setRandom: () => {
-            setSkuGenerateErrorMessage(undefined);
-            const randomBarcode = getRandomBarCode(totalProductVariationsCreated);
-            setBarCode(randomBarcode);
-        } },
-        { propertyName: 'sku', propertyValue: sku, setProperty: setSku, setRandom: setRandomSku },
     ];
 
     return(
@@ -139,29 +95,15 @@ export default function InputStandartProperties({
                 }) }
             </div>
 
-            <div className='flex flex-col gap-2 w-full py-2 justify-self-start border-t-2 border-gray-200'>
-                { barCodeAndSku.map(({ propertyName, propertyValue, setProperty, setRandom }, index) => {
-                    return (
-                        <div key={ index } className='flex flex-col gap-2 w-full'>
-                            <label className="text-xs" htmlFor={ propertyName }>{ propertyName.charAt(0).toUpperCase() + propertyName.slice(1) }</label>
-                            <input
-                                className="text-xs px-3 py-2 border rounded-md "
-                                id={ propertyName }
-                                name={ propertyName }
-                                type="text"
-                                value={ propertyValue }
-                                onChange={ (e) => {
-                                    setSkuGenerateErrorMessage(undefined);
-                                    setProperty(e.target.value);
-                                } }
-                                placeholder=''
-                            />
-                            <span className='text-xs text-red-500'>{ propertyName === 'sku' && skuGenerateErrorMessage }</span>
-                            <button onClick={ () => setRandom() }>Criar { propertyName.charAt(0).toUpperCase() + propertyName.slice(1) }</button>
-                        </div>
-                    );
-                }) }
-            </div>
+            <CodesSection
+                handleBarcodeChange={ setBarCode }
+                handleSkuChange={ setSku }
+                sections={ sections }
+                barCode={ barCode }
+                sku={ sku }
+                customProperties={ productVariationState.customProperties }
+                totalProductVariationsCreated={ totalProductVariationsCreated }
+            />
         </section>
     );
 }

@@ -47,7 +47,7 @@ export function useProductConverter() {
             productVariations: editableProduct.productVariations.map((pv, index) => {
                 const codigoDeBarra = (pv.defaultProperties.barcode && pv.defaultProperties.barcode.length > 0) ? pv.defaultProperties.barcode : getRandomBarCode(index);
 
-                const skuGenerated = pv.defaultProperties.sku ? pv.defaultProperties.sku : getRandomSku(editableProduct.sections, pv.customProperties, codigoDeBarra);
+                const skuGenerated = pv.defaultProperties.sku ? pv.defaultProperties.sku : getRandomSku(editableProduct.sections, codigoDeBarra, pv.customProperties);
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { imageIndex, ...restOfDefaultProperties } = pv.defaultProperties;
@@ -70,8 +70,8 @@ export function useProductConverter() {
 
     const hasNoProductVariations = (editableProduct: StateNewProductType, imageUrls: string[], productId: string): ProductBundleType => {
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
-
-        const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, editableProduct.productVariations[0].customProperties, codigoDeBarra);
+        const customProperties = editableProduct.productVariations[0].customProperties;
+        const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, customProperties);
 
         return {
             ...editableProduct,

@@ -123,7 +123,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                 handleClearProductVariations={ handlers.handleClearProductVariations }
                 handleStockQuantityChange={ handlers.handleStockQuantityChange }
             />
-            
+
             { 
                 (!state.productVariations || state.productVariations.length == 0) &&
                 <>
@@ -137,7 +137,9 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                     />
 
                     <CodesSection
-                        state={ state }
+                        barCode={ state.barcode }
+                        sections={ state.sections }
+                        sku={ state.sku }
                         handleBarcodeChange={ handlers.handleBarcodeChange }
                         handleSkuChange={ handlers.handleSkuChange }
                     />
