@@ -8,6 +8,8 @@ import { VariationProductType } from '@/app/utils/types';
 
 interface CreateNewProductVariationFormProps {
   variations: string[];
+  sections: string[]
+  totalProductVariationsCreated: number;
   setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
   productVariationState: VariationProductType;
   handleAddProductVariation: (productVariation: VariationProductType) => void;
@@ -16,7 +18,9 @@ interface CreateNewProductVariationFormProps {
 
 export default function CreateNewProductVariationForm({
     variations,
+    sections,
     productVariationState, 
+    totalProductVariationsCreated,
     setProductVariationState,
     handleAddProductVariation,
     handleStockQuantityChange,
@@ -28,6 +32,9 @@ export default function CreateNewProductVariationForm({
         largura: 0,
         comprimento: 0,
     });
+    const [sku, setSku] = useState('');
+    const [barCode, setBarCode] = useState('');
+
 
     const [isFormValid, setIsFormValid] = useState(false);
 
@@ -44,11 +51,14 @@ export default function CreateNewProductVariationForm({
                     imageIndex: 0,
                     estoque: estoque ? estoque : 0,
                     peso: peso ? peso : 0,
+                    sku: sku ? sku : '',
+                    barcode: barCode ? barCode : '',
                     dimensions: dimensions ? dimensions : {
                         altura: 0,
                         largura: 0,
                         comprimento: 0,
                     },
+
                 },
             });
             setProductVariationState((prevState) => {
@@ -62,6 +72,8 @@ export default function CreateNewProductVariationForm({
                         imageIndex: 0,
                         peso: 0,
                         estoque: 0,
+                        sku: '',
+                        barcode: '',
                         dimensions: {
                             largura: 0,
                             altura: 0,
@@ -72,6 +84,8 @@ export default function CreateNewProductVariationForm({
             handleStockQuantityChange(undefined);
             setEstoque(0);
             setPeso(0);
+            setSku('');
+            setBarCode('');
             setDimensions({
                 altura: 0,
                 largura: 0,
@@ -88,6 +102,7 @@ export default function CreateNewProductVariationForm({
             <ProductVariationForm
                 setIsFormValid={ setIsFormValid }
                 variations={ variations }
+                sections={ sections }
                 productVariationState={ productVariationState }
                 setProductVariationState={ setProductVariationState }
                 estoque={ estoque }
@@ -96,6 +111,11 @@ export default function CreateNewProductVariationForm({
                 setPeso={ setPeso }
                 dimensions={ dimensions }
                 setDimensions={ setDimensions }
+                barCode={ barCode }
+                setBarCode={ setBarCode }
+                sku={ sku }
+                setSku={ setSku }
+                totalProductVariationsCreated={ totalProductVariationsCreated }
             />
 
             <LargeButton

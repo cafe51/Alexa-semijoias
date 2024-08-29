@@ -42,6 +42,8 @@ function ProductVariationFilled({ handleRemoveProductVariation, handleUpdateProd
 }
 
 interface ProductVariationFormFilledProps {
+    sections: string[]
+    totalProductVariationsCreated: number;
     handleRemoveProductVariation: (productVariation: VariationProductType) => void;
     handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void;
     variations: string[];
@@ -50,6 +52,8 @@ interface ProductVariationFormFilledProps {
 }
 
 export default function ProductVariationFormFilled({
+    sections,
+    totalProductVariationsCreated,
     images,
     variations,
     productVariations,
@@ -71,6 +75,8 @@ export default function ProductVariationFormFilled({
                                 productVariation={ productVariation }
                                 variations={ variations }
                                 setEditionProductVariationMode={ () => setEditingIndex(null) }
+                                totalProductVariationsCreated={ totalProductVariationsCreated }
+                                sections={ sections }
                             />
                             :
 

@@ -3,7 +3,7 @@ import { StateNewProductType } from '@/app/utils/types';
 interface PhotosSectionProps {
     state: StateNewProductType;
     handleSetImages: (images: {
-        file: File;
+        file?: File;
         localUrl: string;
     }[]) => void;
 }

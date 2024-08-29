@@ -1,28 +1,40 @@
-// app/admin/dashboard/[adminId]/produtos/novo/page.tsx
-'use client';
+import { CategoryType, FireBaseDocument, ProductBundleType, SectionType, StateNewProductType } from '@/app/utils/types';
+import NameAndDescriptionSection from '../novo/NameAndDescriptionSection';
 import { useNewProductState } from '@/app/hooks/useNewProductState';
+import VariationsSection from '../novo/VariationSection/VariationsSection';
+import SiteSectionSection from '../novo/SiteSectionSection/SiteSectionSection';
+import DimensionsSection from '../novo/DimensionsSection';
+import StockSection from '../novo/StockSection';
+import CategoriesSection from '../novo/CategorieSection.tsx/CategoriesSection';
+import CodesSection from '../novo/CodesSection';
+import PricesSection from '../novo/PricesSection';
 import LargeButton from '@/app/components/LargeButton';
-import NameAndDescriptionSection from './NameAndDescriptionSection';
-import PhotosSection from './PhotoSection/PhotosSection';
-import PricesSection from './PricesSection';
-import StockSection from './StockSection';
-import CodesSection from './CodesSection';
-import DimensionsSection from './DimensionsSection';
-import CategoriesSection from './CategorieSection.tsx/CategoriesSection';
-import VariationsSection from './VariationSection/VariationsSection';
-// import AssociatedProductsSection from './AssociatedProductsSection';
-// import RecommendedProductsSection from './RecommendedProductsSection';
-import SiteSectionSection from './SiteSectionSection/SiteSectionSection';
+import PhotosSection from '../novo/PhotoSection/PhotosSection';
 import { useCollection } from '@/app/hooks/useCollection';
-import { CategoryType, ProductBundleType } from '@/app/utils/types';
-import { useProductConverter } from '@/app/hooks/useProductConverter';
+// import { emptyProductBundleInitialState } from './emptyProductBundleInitialState';
 
-export default function NewProductPage() {
+interface DashboardProductEditionProps {
+    product?:  StateNewProductType,
+    useProductDataHandlers: {
+        hasNoProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
+        hasProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
+        uploadAndGetAllImagesUrl: (images: {
+            file?: File;
+            localUrl: string;
+        }[]) => Promise<string[]>;
+        createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
+            exist?: boolean;
+            id?: string;
+        })[]) => Promise<void>;
+    }
+    productFromFirebase: ProductBundleType & FireBaseDocument;
+
+}
+
+export default function DashboardProductEdition({ product, useProductDataHandlers, productFromFirebase }: DashboardProductEditionProps) {
+    const { state, handlers } = useNewProductState(product);
     const { addDocument: createNewProductDocument } = useCollection<ProductBundleType>('products');
     const { addDocument: createNewCategoryDocument } = useCollection<CategoryType>('categories');
-    
-    const { state, handlers } = useNewProductState();
-    const { useProductDataHandlers } = useProductConverter();
 
     const handleCreateNewProductClick = async() => {
         console.log(state);
@@ -36,8 +48,24 @@ export default function NewProductPage() {
         }
 
         await useProductDataHandlers.createAndUpdateSiteSections(state.sectionsSite);
+        
+        // definindo productId
+        let productId: string;
+        if(productFromFirebase && productFromFirebase.exist && productFromFirebase.id) {
+            productId = productFromFirebase.id;
+        } else {
+            if(state.barcode && state.barcode.length > 1) {
+                productId = state.barcode;
+            } else {
+                if(state.productVariations[0].defaultProperties.barcode) {
+                    productId = state.productVariations[0].defaultProperties.barcode;
+                } else {
+                    productId = '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
+                }
+            }
+        }
 
-        const productId = state.id && state.id.length > 1 ? state.id : '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
+        // const productId = state.barcode && state.barcode.length > 1 ? state.barcode : '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
 
         if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
             const newProduct = useProductDataHandlers.hasProductVariations(state, allImagesUrls, productId);
@@ -51,15 +79,16 @@ export default function NewProductPage() {
         }
 
     };
-    
+
     return (
-        <main className='flex flex-col gap-2 w-full'>
-            <h1 className='font-bold'>Novo Produto</h1>
+        <section className='flex flex-col gap-2 w-full'>
+            <h1 className='font-bold'>Editar Produto</h1>
             <NameAndDescriptionSection
                 state={ state }
                 handleNameChange={ handlers.handleNameChange }
                 handleDescriptionChange={ handlers.handleDescriptionChange }
             />
+
             <PhotosSection
                 state={ state }
                 handleSetImages={ handlers.handleSetImages }
@@ -68,13 +97,6 @@ export default function NewProductPage() {
             <PricesSection
                 state={ state }
                 handleValueChange={ handlers.handleValueChange }
-            />
-
-            <SiteSectionSection
-                state={ state }
-                handleAddSectionsSite={ handlers.handleAddSectionsSite }
-                handleAddSection={ handlers.handleAddSection }
-                handleAddSubSection={ handlers.handleAddSubSection }
             />
 
             <CodesSection
@@ -117,8 +139,12 @@ export default function NewProductPage() {
                 handleStockQuantityChange={ handlers.handleStockQuantityChange }
             />
 
-            { /* <AssociatedProductsSection />
-            <RecommendedProductsSection /> */ }
+            <SiteSectionSection
+                state={ state }
+                handleAddSectionsSite={ handlers.handleAddSectionsSite }
+                handleAddSection={ handlers.handleAddSection }
+                handleAddSubSection={ handlers.handleAddSubSection }
+            />
 
             <LargeButton color='blue'
                 loadingButton={ false }
@@ -126,6 +152,7 @@ export default function NewProductPage() {
             >
             Criar Produto
             </LargeButton>
+            
             <LargeButton color='green'
                 loadingButton={ false }
                 onClick={ () => {
@@ -133,6 +160,6 @@ export default function NewProductPage() {
                 } }>
                 Mostrar estado
             </LargeButton>
-        </main>
+        </section>
     );
 }

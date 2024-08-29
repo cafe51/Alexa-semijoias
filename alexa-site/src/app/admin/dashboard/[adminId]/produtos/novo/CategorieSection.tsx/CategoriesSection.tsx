@@ -1,9 +1,9 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CategoriesSection/CategoriesSection.tsx
 
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import CreateCategoriesForm from './CreateCategories';
-import { CheckboxData, StateNewProductType } from '@/app/utils/types';
+import { StateNewProductType } from '@/app/utils/types';
 
 interface CategoriesSectionmProps {
     handleAddCategories: (category: string) => void
@@ -11,8 +11,6 @@ interface CategoriesSectionmProps {
     handleRemoveCategory: (category: string) => void
     handleSetCategoriesFromFb: (category: string[]) => void
     state: StateNewProductType;
-    options: CheckboxData[];
-    setOptions: Dispatch<SetStateAction<CheckboxData[]>>
   }
 
 export default function CategoriesSection({
@@ -21,14 +19,8 @@ export default function CategoriesSection({
     handleRemoveAllCategories,
     handleRemoveCategory,
     handleSetCategoriesFromFb,
-    setOptions,
-    options,
 }: CategoriesSectionmProps) {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
-
-
-
-
 
     return (
         <section className="p-4 border rounded-md bg-white">
@@ -39,8 +31,6 @@ export default function CategoriesSection({
                 >
                     <CreateCategoriesForm
                         categories={ [...categories, ...categoriesFromFirebase] }
-                        options={ options }
-                        setOptions={ setOptions }
                         handleAddCategories={ handleAddCategories }
                         handleRemoveAllCategories={ handleRemoveAllCategories }
                         handleRemoveCategory={ handleRemoveCategory }

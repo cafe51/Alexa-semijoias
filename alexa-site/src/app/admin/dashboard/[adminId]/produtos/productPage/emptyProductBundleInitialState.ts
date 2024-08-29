@@ -1,0 +1,27 @@
+export const emptyProductBundleInitialState = {
+    exist: false,
+    id: '',
+    categories: [''],
+    description: '',
+    estoqueTotal: 0,
+    images: [''],
+    name: '',
+    productVariations: [
+        {
+            barcode: '',
+            categories: [''],
+            dimensions: { altura: 0, comprimento: 0, largura: 0 },
+            estoque: 0,
+            image: '',
+            name: '',
+            peso: 0,
+            productId: '',
+            sku: '',
+            value: { cost: 0, price: 0, promotionalPrice: 0 },
+        },
+    ],
+    sections: [''],
+    subsections: [''],
+    showProduct: false,
+    value: { cost: 0, price: 0, promotionalPrice: 0 },
+};

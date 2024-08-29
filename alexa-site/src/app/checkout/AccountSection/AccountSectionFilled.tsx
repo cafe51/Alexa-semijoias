@@ -17,10 +17,11 @@ export default function AccountSectionFilled({ nome, email, cpf, telefone }: Acc
 
     const changeAccount = () => {
         if(carrinho && carrinho.length > 0) {
-            const cartInfos = carrinho.map(({ productId, quantidade }) => {
+            const cartInfos = carrinho.map(({ productId, quantidade, skuId }) => {
                 return {
                     productId,
                     quantidade,
+                    skuId,
                     userId: 'guest',
                 };
             });

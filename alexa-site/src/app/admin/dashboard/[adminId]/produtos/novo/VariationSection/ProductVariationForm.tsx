@@ -7,12 +7,18 @@ import { VariationProductType } from '@/app/utils/types';
 
 interface ProductVariationFormProps {
   variations: string[];
+  sections: string[];
   setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
   productVariationState: VariationProductType;
+  totalProductVariationsCreated: number;
   estoque: number;
   setEstoque: Dispatch<SetStateAction<number>>;
   peso: number;
   setPeso: Dispatch<SetStateAction<number>>;
+  sku: string;
+  setSku: Dispatch<SetStateAction<string>>;
+  barCode: string;
+  setBarCode: Dispatch<SetStateAction<string>>;
   dimensions: {
     altura: number;
     largura: number;
@@ -28,12 +34,18 @@ interface ProductVariationFormProps {
 
 export default function ProductVariationForm({
     variations,
+    sections,
     productVariationState,
+    totalProductVariationsCreated,
     setProductVariationState,
     estoque,
     dimensions,
     peso,
     setEstoque,
+    sku,
+    setSku,
+    barCode,
+    setBarCode,
     setDimensions,
     setPeso,
     setIsFormValid,
@@ -42,7 +54,7 @@ export default function ProductVariationForm({
     useEffect(() => {
         const isValid = validateForm();
         setIsFormValid(isValid);
-    }, [productVariationState, estoque, variations]);
+    }, [productVariationState, estoque, variations, sku, barCode]);
 
     const validateForm = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,12 +90,19 @@ export default function ProductVariationForm({
                 )) }
       
                 <InputStandartProperties
+                    sections={ sections }
+                    productVariationState={ productVariationState }
                     estoque={ estoque }
                     setEstoque={ setEstoque }
                     peso={ peso }
                     setPeso={ setPeso }
+                    barCode={ barCode }
+                    setBarCode={ setBarCode }
+                    sku={ sku }
+                    setSku={ setSku }
                     dimensions={ dimensions }
                     setDimensions={ setDimensions }
+                    totalProductVariationsCreated={ totalProductVariationsCreated }
                 />
             </div>
 

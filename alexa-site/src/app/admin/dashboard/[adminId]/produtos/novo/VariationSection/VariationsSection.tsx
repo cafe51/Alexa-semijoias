@@ -22,21 +22,21 @@ interface VariationsSectionProps {
 
 // const productVariations = [
 //     {
-//         customProperties: { tamanho: 'P', cor: 'verde' },
+//         customProperties: { tamanho: 'pequeno', cor: 'verde', idade: '22', nacionalidade: 'brasileiro' },
 //         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
 //     },
 //     {
-//         customProperties: { tamanho: 'G', cor: 'verde' },
+//         customProperties: { tamanho: 'grande', cor: 'verde', idade: '44', nacionalidade: 'indiano' },
 //         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
 //     },
 //     {
-//         customProperties: { tamanho: 'M', cor: 'amarelo' },
+//         customProperties: { tamanho: 'médio', cor: 'amarelo', idade: '233', nacionalidade: 'americano' },
 //         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
 //     },
 // ];
 
 export default function VariationsSection({
-    state: { variations, productVariations, images },
+    state: { variations, productVariations, images, sections },
     handleVariationsChange,
     handleAddProductVariation,
     handleRemoveProductVariation,
@@ -57,6 +57,8 @@ export default function VariationsSection({
                 altura: 0,
                 comprimento: 0,
             },
+            barcode: '',
+            sku: '',
         },
     });
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
@@ -75,8 +77,6 @@ export default function VariationsSection({
                         handleRemoveVariationInAllProductVariations={ handleRemoveVariationInAllProductVariations }
                         handleClearProductVariations={ handleClearProductVariations }
                         setProductVariationState={ setProductVariationState }
-
-
                     />
                 </ModalMaker>
             ) }
@@ -96,10 +96,12 @@ export default function VariationsSection({
                         ?
                         <CreateNewProductVariationForm
                             variations={ variations }
+                            sections={ sections }
                             productVariationState={ productVariationState }
                             setProductVariationState={ setProductVariationState }
                             handleAddProductVariation={ handleAddProductVariation }
                             handleStockQuantityChange={ handleStockQuantityChange }
+                            totalProductVariationsCreated={ productVariations.length }
                         />
                         
                         :
@@ -121,6 +123,9 @@ export default function VariationsSection({
                             variations={ variations }
                             handleRemoveProductVariation={ handleRemoveProductVariation }
                             handleUpdateProductVariation={ handleUpdateProductVariation }
+                            totalProductVariationsCreated={ productVariations.length }
+                            sections={ sections }
+
                         />
                 }
             </div>

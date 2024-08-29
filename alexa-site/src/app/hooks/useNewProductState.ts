@@ -24,11 +24,11 @@ type ActionType =
     | { type: 'SET_FB_CATEGORIES', payload: string[]}
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
-    | { type: 'SET_IMAGES', payload: { file: File; localUrl: string; }[]}
+    | { type: 'SET_IMAGES', payload: { file?: File; localUrl: string; }[]}
 
 
 
-const initialState: StateNewProductType= {
+export const initialEmptyState: StateNewProductType= {
     name: '',
     categories: [],
     categoriesFromFirebase: [],
@@ -122,7 +122,7 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
     }
 }
 
-export function useNewProductState() {
+export function useNewProductState(initialState: StateNewProductType=initialEmptyState) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleNameChange = useCallback((name: string) => {
@@ -209,34 +209,37 @@ export function useNewProductState() {
         dispatch({ type: 'SET_REMOVE_ALL_CATEGORIES' });
     }, []);
 
-    const handleSetImages = useCallback((images: { file: File; localUrl: string; }[]) => {
+    const handleSetImages = useCallback((images: { file?: File; localUrl: string; }[]) => {
         dispatch({ type: 'SET_IMAGES', payload: images });
     }, []);
 
 
     return {
         state,
-        handleNameChange,
-        handleDescriptionChange,
-        handleValueChange,
-        handleStockQuantityChange,
-        handleVariationsChange,
-        handleSkuChange,
-        handleBarcodeChange,
-        handleDimensionsChange,
-        handleAddProductVariation,
-        handleClearProductVariations,
-        handleRemoveProductVariation,
-        handleUpdateProductVariation,
-        handleAddNewVariationInAllProductVariations,
-        handleRemoveVariationInAllProductVariations,
-        handleAddSectionsSite,
-        handleAddSection,
-        handleAddSubSection,
-        handleAddCategories,
-        handleSetCategoriesFromFb,
-        handleRemoveCategory,
-        handleRemoveAllCategories,
-        handleSetImages,
+        handlers: {
+            handleNameChange,
+            handleDescriptionChange,
+            handleValueChange,
+            handleStockQuantityChange,
+            handleVariationsChange,
+            handleSkuChange,
+            handleBarcodeChange,
+            handleDimensionsChange,
+            handleAddProductVariation,
+            handleClearProductVariations,
+            handleRemoveProductVariation,
+            handleUpdateProductVariation,
+            handleAddNewVariationInAllProductVariations,
+            handleRemoveVariationInAllProductVariations,
+            handleAddSectionsSite,
+            handleAddSection,
+            handleAddSubSection,
+            handleAddCategories,
+            handleSetCategoriesFromFb,
+            handleRemoveCategory,
+            handleRemoveAllCategories,
+            handleSetImages,
+        },
+
     };
 }

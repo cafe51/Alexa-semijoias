@@ -8,15 +8,19 @@ import { VariationProductType } from '@/app/utils/types';
 
 
 interface UpdateProductVariationFormProps {
-  variations: string[];
-  handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void
-  productVariation: VariationProductType;
-  setEditionProductVariationMode: () => void;
+    sections: string[]
+    totalProductVariationsCreated: number;
+    variations: string[];
+    handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void
+    productVariation: VariationProductType;
+    setEditionProductVariationMode: () => void;
 
 
 }
 
 export default function UpdateProductVariationForm({
+    sections,
+    totalProductVariationsCreated,
     variations,
     productVariation,
     handleUpdateProductVariation,
@@ -25,6 +29,8 @@ export default function UpdateProductVariationForm({
     const [newProductVariationState, setNewProductVariationState] = useState<VariationProductType>(productVariation);
     const [estoque, setEstoque] = useState(productVariation.defaultProperties.estoque);
     const [peso, setPeso] = useState(productVariation.defaultProperties.peso);
+    const [sku, setSku] = useState(productVariation.defaultProperties.sku);
+    const [barCode, setBarCode] = useState(productVariation.defaultProperties.barcode);
     const [dimensions, setDimensions] = useState(productVariation.defaultProperties.dimensions);
 
     
@@ -44,6 +50,8 @@ export default function UpdateProductVariationForm({
                     dimensions,
                     peso,
                     estoque,
+                    barcode: barCode,
+                    sku,
                 },
             });
             setEditionProductVariationMode();
@@ -56,6 +64,8 @@ export default function UpdateProductVariationForm({
     return (
         <div className='flex p-2 gap-2 rounded-lg border border-solid border-blue-400 w-full'>
             <ProductVariationForm
+                sections={ sections }
+                totalProductVariationsCreated={ totalProductVariationsCreated }
                 setIsFormValid={ setIsFormValid }
                 variations={ variations }
                 productVariationState={ newProductVariationState }
@@ -66,6 +76,10 @@ export default function UpdateProductVariationForm({
                 setDimensions={ setDimensions }
                 setPeso={ setPeso }
                 setEstoque={ setEstoque }
+                barCode={ barCode }
+                setBarCode={ setBarCode }
+                sku={ sku }
+                setSku={ setSku }
             />
             <div className='flex flex-col justify-between pr-2 py-2'>
 

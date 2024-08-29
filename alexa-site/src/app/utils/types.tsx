@@ -17,7 +17,14 @@ export type CategoryType = {
 
 export type VariationProductType = {
     customProperties: { [key: string]: string },
-    defaultProperties: { estoque: number, peso: number, imageIndex: number, dimensions: { largura: number, altura: number, comprimento: number }} 
+    defaultProperties: {
+        estoque: number,
+        peso: number,
+        imageIndex: number,
+        dimensions: { largura: number, altura: number, comprimento: number},
+        sku: string,
+        barcode: string
+    } 
 }
 
 export type ProductVariation = {
@@ -51,6 +58,7 @@ export type ProductBundleType = {
 }
 
 export type StateNewProductType = {
+    id?: string;
     name: string;
     description: string;
     categories: string[],
@@ -69,7 +77,7 @@ export type StateNewProductType = {
     sku?: string | undefined,
     barcode?: string | undefined,
     dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,
-    images: { file: File; localUrl: string; }[],
+    images: { file?: File; localUrl: string; }[],
 
 }
 
