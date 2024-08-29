@@ -12,6 +12,7 @@ import VariationsSection from './novo/VariationSection/VariationsSection';
 import SiteSectionSection from './novo/SiteSectionSection/SiteSectionSection';
 import LargeButton from '@/app/components/LargeButton';
 import { useCollection } from '@/app/hooks/useCollection';
+import { productIdGenerator } from '@/app/utils/productIdGenerator';
 
 interface ProductEditionFormProps {
     product?:  StateNewProductType,
@@ -25,43 +26,33 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
     const { addDocument: createNewCategoryDocument } = useCollection<CategoryType>('categories');
 
     const handleCreateNewProductClick = async() => {
-        console.log(state);
+        try {
+            const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(state.images);
 
-        const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(state.images);
-
-        if(state && state.categories && state.categories.length > 0) {
-            for(const category of state.categories) {
-                createNewCategoryDocument({ categoryName: category });
-            }
-        }
-
-        await useProductDataHandlers.createAndUpdateSiteSections(state.sectionsSite);
-        
-        // definindo productId
-        let productId: string;
-        if(productFromFirebase && productFromFirebase.exist && productFromFirebase.id) {
-            productId = productFromFirebase.id;
-        } else {
-            if(state.barcode && state.barcode.length > 1) {
-                productId = state.barcode;
-            } else {
-                if(state.productVariations[0].defaultProperties.barcode) {
-                    productId = state.productVariations[0].defaultProperties.barcode;
-                } else {
-                    productId = '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
+            if(state && state.categories && state.categories.length > 0) {
+                for(const category of state.categories) {
+                    createNewCategoryDocument({ categoryName: category });
                 }
             }
-        }
 
-        if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
-            const newProduct = useProductDataHandlers.hasProductVariations(state, allImagesUrls, productId);
-            await createNewProductDocument(newProduct, productId);
-        }
+            await useProductDataHandlers.createAndUpdateSiteSections(state.sectionsSite);
+        
+            const productId = productIdGenerator(productFromFirebase, state.barcode, state.productVariations[0].defaultProperties.barcode);
 
-        if(!state.productVariations || state.productVariations.length === 0) {
-            const newProduct = useProductDataHandlers.hasNoProductVariations(state, allImagesUrls, productId);
-            await createNewProductDocument(newProduct, productId);
-            handlers.handleVariationsChange([]);
+            if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
+                const newProduct = useProductDataHandlers.hasProductVariations(state, allImagesUrls, productId);
+                await createNewProductDocument(newProduct, productId);
+                console.log('novo produto criado', newProduct);
+            }
+
+            if(!state.productVariations || state.productVariations.length === 0) {
+                const newProduct = useProductDataHandlers.hasNoProductVariations(state, allImagesUrls, productId);
+                await createNewProductDocument(newProduct, productId);
+                console.log('novo produto criado', newProduct);
+                handlers.handleVariationsChange([]);
+            }
+        } catch(error) {
+            console.error(error);
         }
 
     };
@@ -75,13 +66,11 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
             <SiteSectionSection state={ state }  handlers={ handlers } />
             <CategoriesSection state={ state } handlers={ handlers } />
             <VariationsSection state={ state } handlers={ handlers } />
-
             { 
                 (!state.productVariations || state.productVariations.length == 0) &&
                 <>
                     <StockSection state={ state } handlers={ handlers } />
                     <DimensionsSection state={ state } handlers={ handlers } />
-
                     <CodesSection
                         barCode={ state.barcode }
                         sections={ state.sections }
@@ -91,10 +80,8 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                     />
                 </>
             }
-
             { /* <AssociatedProductsSection />
             <RecommendedProductsSection /> */ }
-
             <LargeButton color='blue' loadingButton={ false } onClick={ handleCreateNewProductClick }>
             Criar Produto
             </LargeButton>
