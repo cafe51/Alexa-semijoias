@@ -77,7 +77,7 @@ export default function CodesSection({
 
     return (
         <section className='p-4 border rounded-md bg-white'>
-            <h2 className="text-lg font-bold">Códigos</h2>
+            <h2 className="pb-4">Códigos</h2>
 
             { barCodeAndSku.map(({ propertyName, propertyValue, setProperty, setRandom }, index) => {
                 return (
