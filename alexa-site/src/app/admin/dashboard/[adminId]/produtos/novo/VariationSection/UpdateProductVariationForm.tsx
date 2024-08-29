@@ -4,26 +4,20 @@ import { useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md';
 import ProductVariationForm from './ProductVariationForm';
-import { VariationProductType } from '@/app/utils/types';
+import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 
 
 interface UpdateProductVariationFormProps {
-    sections: string[]
-    totalProductVariationsCreated: number;
-    variations: string[];
-    handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void
+    state: StateNewProductType;
+    handlers: UseNewProductState;
     productVariation: VariationProductType;
     setEditionProductVariationMode: () => void;
-
-
 }
 
 export default function UpdateProductVariationForm({
-    sections,
-    totalProductVariationsCreated,
-    variations,
+    handlers,
+    state,
     productVariation,
-    handleUpdateProductVariation,
     setEditionProductVariationMode,
 }: UpdateProductVariationFormProps) {
     const [newProductVariationState, setNewProductVariationState] = useState<VariationProductType>(productVariation);
@@ -32,18 +26,16 @@ export default function UpdateProductVariationForm({
     const [sku, setSku] = useState(productVariation.defaultProperties.sku);
     const [barCode, setBarCode] = useState(productVariation.defaultProperties.barcode);
     const [dimensions, setDimensions] = useState(productVariation.defaultProperties.dimensions);
-
-    
     const [isFormValid, setIsFormValid] = useState(false);
 
     function handleUpdateVariation() {
         console.log(Object.keys(productVariation));
-        console.log(variations);
+        console.log(state.variations);
         try {
             if (!isFormValid) {
                 throw new Error('Todos os campos devem estar preenchidos');
             }
-            handleUpdateProductVariation(productVariation, {
+            handlers.handleUpdateProductVariation(productVariation, {
                 ...newProductVariationState,
                 defaultProperties: {
                     ...newProductVariationState.defaultProperties,
@@ -64,10 +56,8 @@ export default function UpdateProductVariationForm({
     return (
         <div className='flex p-2 gap-2 rounded-lg border border-solid border-blue-400 w-full'>
             <ProductVariationForm
-                sections={ sections }
-                totalProductVariationsCreated={ totalProductVariationsCreated }
+                state={ state }
                 setIsFormValid={ setIsFormValid }
-                variations={ variations }
                 productVariationState={ newProductVariationState }
                 setProductVariationState={ setNewProductVariationState }
                 estoque={ estoque }

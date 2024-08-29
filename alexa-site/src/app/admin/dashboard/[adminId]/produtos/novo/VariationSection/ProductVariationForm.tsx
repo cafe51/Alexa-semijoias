@@ -3,40 +3,36 @@
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import VariationFieldInput from './VariationFieldInput';
 import InputStandartProperties from './InputStandartProperties';
-import { VariationProductType } from '@/app/utils/types';
+import { StateNewProductType, VariationProductType } from '@/app/utils/types';
 
 interface ProductVariationFormProps {
-  variations: string[];
-  sections: string[];
-  setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
-  productVariationState: VariationProductType;
-  totalProductVariationsCreated: number;
-  estoque: number;
-  setEstoque: Dispatch<SetStateAction<number>>;
-  peso: number;
-  setPeso: Dispatch<SetStateAction<number>>;
-  sku: string;
-  setSku: Dispatch<SetStateAction<string>>;
-  barCode: string;
-  setBarCode: Dispatch<SetStateAction<string>>;
-  dimensions: {
-    altura: number;
-    largura: number;
-    comprimento: number;
-}
-  setDimensions: Dispatch<SetStateAction<{
-    altura: number;
-    largura: number;
-    comprimento: number;
-}>>
-  setIsFormValid: Dispatch<SetStateAction<boolean>>;
-}
+    state: StateNewProductType;
+    setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
+    productVariationState: VariationProductType;
+    estoque: number;
+    setEstoque: Dispatch<SetStateAction<number>>;
+    peso: number;
+    setPeso: Dispatch<SetStateAction<number>>;
+    sku: string;
+    setSku: Dispatch<SetStateAction<string>>;
+    barCode: string;
+    setBarCode: Dispatch<SetStateAction<string>>;
+    dimensions: {
+        altura: number;
+        largura: number;
+        comprimento: number;
+    }
+    setDimensions: Dispatch<SetStateAction<{
+        altura: number;
+        largura: number;
+        comprimento: number;
+    }>>
+    setIsFormValid: Dispatch<SetStateAction<boolean>>;
+    }
 
 export default function ProductVariationForm({
-    variations,
-    sections,
+    state,
     productVariationState,
-    totalProductVariationsCreated,
     setProductVariationState,
     estoque,
     dimensions,
@@ -54,13 +50,13 @@ export default function ProductVariationForm({
     useEffect(() => {
         const isValid = validateForm();
         setIsFormValid(isValid);
-    }, [productVariationState, estoque, variations, sku, barCode]);
+    }, [productVariationState, estoque, sku, barCode]);
 
     const validateForm = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { customProperties, defaultProperties } = productVariationState;
 
-        if (JSON.stringify(variations) !== JSON.stringify(Object.keys(customProperties))) {
+        if (JSON.stringify(state.variations) !== JSON.stringify(Object.keys(customProperties))) {
             return false;
         }
 
@@ -80,7 +76,7 @@ export default function ProductVariationForm({
     return (
         <div className='w-full flex flex-col gap-2 mt-2'>
             <div className='w-full flex self-center gap-2 flex-wrap'>
-                { variations.map((variation, index) => (
+                { state.variations.map((variation, index) => (
                     <VariationFieldInput
                         key={ index }
                         variation={ variation }
@@ -90,7 +86,8 @@ export default function ProductVariationForm({
                 )) }
       
                 <InputStandartProperties
-                    sections={ sections }
+                    sections={ state.sections }
+                    totalProductVariationsCreated={ state.productVariations.length }
                     productVariationState={ productVariationState }
                     estoque={ estoque }
                     setEstoque={ setEstoque }
@@ -102,7 +99,6 @@ export default function ProductVariationForm({
                     setSku={ setSku }
                     dimensions={ dimensions }
                     setDimensions={ setDimensions }
-                    totalProductVariationsCreated={ totalProductVariationsCreated }
                 />
             </div>
 

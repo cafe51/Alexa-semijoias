@@ -3,28 +3,17 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import LargeButton from '@/app/components/LargeButton';
 import ProductVariationForm from './ProductVariationForm';
-import { VariationProductType } from '@/app/utils/types';
+import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 
 
 interface CreateNewProductVariationFormProps {
-  variations: string[];
-  sections: string[]
-  totalProductVariationsCreated: number;
-  setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
-  productVariationState: VariationProductType;
-  handleAddProductVariation: (productVariation: VariationProductType) => void;
-  handleStockQuantityChange: (estoque: number | undefined) => void;
+    state: StateNewProductType;
+    handlers: UseNewProductState;
+    setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
+    productVariationState: VariationProductType;
 }
 
-export default function CreateNewProductVariationForm({
-    variations,
-    sections,
-    productVariationState, 
-    totalProductVariationsCreated,
-    setProductVariationState,
-    handleAddProductVariation,
-    handleStockQuantityChange,
-}: CreateNewProductVariationFormProps) {
+export default function CreateNewProductVariationForm({ state, handlers, productVariationState, setProductVariationState }: CreateNewProductVariationFormProps) {
     const [estoque, setEstoque] = useState(0);
     const [peso, setPeso] = useState(0);
     const [dimensions, setDimensions] = useState({
@@ -39,13 +28,11 @@ export default function CreateNewProductVariationForm({
     const [isFormValid, setIsFormValid] = useState(false);
 
     function handleSaveVariation() {
-        console.log(Object.keys(productVariationState));
-        console.log(variations);
         try {
             if (!isFormValid) {
                 throw new Error('Todos os campos devem estar preenchidos');
             }
-            handleAddProductVariation({
+            handlers.handleAddProductVariation({
                 ...productVariationState,
                 defaultProperties: {
                     imageIndex: 0,
@@ -81,7 +68,7 @@ export default function CreateNewProductVariationForm({
                         },
                     } };
             });
-            handleStockQuantityChange(undefined);
+            handlers.handleStockQuantityChange(undefined);
             setEstoque(0);
             setPeso(0);
             setSku('');
@@ -100,9 +87,8 @@ export default function CreateNewProductVariationForm({
     return (
         <div className='w-full flex flex-col gap-2 mt-2'>
             <ProductVariationForm
+                state={ state }
                 setIsFormValid={ setIsFormValid }
-                variations={ variations }
-                sections={ sections }
                 productVariationState={ productVariationState }
                 setProductVariationState={ setProductVariationState }
                 estoque={ estoque }
@@ -115,7 +101,6 @@ export default function CreateNewProductVariationForm({
                 setBarCode={ setBarCode }
                 sku={ sku }
                 setSku={ setSku }
-                totalProductVariationsCreated={ totalProductVariationsCreated }
             />
 
             <LargeButton

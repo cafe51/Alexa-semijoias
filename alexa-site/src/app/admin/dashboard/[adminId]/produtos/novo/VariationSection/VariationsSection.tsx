@@ -1,22 +1,12 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/VariationsSection.tsx
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { StateNewProductType, VariationProductType } from '@/app/utils/types';
+import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import { useState } from 'react';
 import CreateVariationsForm from './CreateVariationsForm';
 import ProductVariationFormFilled from './ProductVariationFormFilled';
 import CreateNewProductVariationForm from './CreateNewProductVariationForm';
 
-interface VariationsSectionProps {
-    handleVariationsChange: (variations: string[] | never[]) => void;
-    state: StateNewProductType;
-    handleAddProductVariation: (productVariation: VariationProductType) => void;
-    handleRemoveProductVariation: (productVariation: VariationProductType) => void;
-    handleUpdateProductVariation: (oldVariation: VariationProductType, newVariation: VariationProductType) => void;
-    handleAddNewVariationInAllProductVariations: (newVariation: string) => void;
-    handleRemoveVariationInAllProductVariations: (variationToBeRemoved: string) => void;
-    handleClearProductVariations: () => void;
-    handleStockQuantityChange: (estoque: number | undefined) => void
-}
+interface VariationsSectionProps { state: StateNewProductType; handlers: UseNewProductState;}
 
 // const variations = [ 'tamanho', 'cor' ];
 
@@ -35,17 +25,7 @@ interface VariationsSectionProps {
 //     },
 // ];
 
-export default function VariationsSection({
-    state: { variations, productVariations, images, sections },
-    handleVariationsChange,
-    handleAddProductVariation,
-    handleRemoveProductVariation,
-    handleUpdateProductVariation,
-    handleAddNewVariationInAllProductVariations,
-    handleRemoveVariationInAllProductVariations,
-    handleClearProductVariations,
-    handleStockQuantityChange,
-}: VariationsSectionProps) {
+export default function VariationsSection({ state, handlers }: VariationsSectionProps) {
     const [productVariationState, setProductVariationState] = useState<VariationProductType>({
         customProperties: { },
         defaultProperties: {
@@ -70,20 +50,13 @@ export default function VariationsSection({
                     title='Crie novas variações'
                     closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
                 >
-                    <CreateVariationsForm
-                        handleVariationsChange={ handleVariationsChange }
-                        variations={ variations }
-                        handleAddNewVariationInAllProductVariations={ handleAddNewVariationInAllProductVariations }
-                        handleRemoveVariationInAllProductVariations={ handleRemoveVariationInAllProductVariations }
-                        handleClearProductVariations={ handleClearProductVariations }
-                        setProductVariationState={ setProductVariationState }
-                    />
+                    <CreateVariationsForm state={ state } handlers={ handlers } setProductVariationState={ setProductVariationState } />
                 </ModalMaker>
             ) }
 
             <div className='flex justify-between'>
                 <h2 className="text-lg font-bold">Variações</h2>
-                { (variations && variations.length > 0) &&
+                { (state.variations && state.variations.length > 0) &&
                 <button className='text-blue-500'
                     onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }>
                         Editar
@@ -92,16 +65,13 @@ export default function VariationsSection({
             
             <div className=' border-t border-solid w-full'>
                 {
-                    (variations && variations.length > 0)
+                    (state.variations && state.variations.length > 0)
                         ?
                         <CreateNewProductVariationForm
-                            variations={ variations }
-                            sections={ sections }
+                            state={ state }
+                            handlers={ handlers }
                             productVariationState={ productVariationState }
                             setProductVariationState={ setProductVariationState }
-                            handleAddProductVariation={ handleAddProductVariation }
-                            handleStockQuantityChange={ handleStockQuantityChange }
-                            totalProductVariationsCreated={ productVariations.length }
                         />
                         
                         :
@@ -115,16 +85,12 @@ export default function VariationsSection({
                         </div>)
                 }
                 {
-                    (productVariations && productVariations.length > 0 && variations && variations.length > 0)
+                    (state.productVariations && state.productVariations.length > 0 && state.variations && state.variations.length > 0)
                         &&
                         <ProductVariationFormFilled
-                            images={ images && images.length > 0 ? images.map((image) => image.localUrl) :  null }
-                            productVariations={ productVariations }
-                            variations={ variations }
-                            handleRemoveProductVariation={ handleRemoveProductVariation }
-                            handleUpdateProductVariation={ handleUpdateProductVariation }
-                            totalProductVariationsCreated={ productVariations.length }
-                            sections={ sections }
+                            images={ state.images && state.images.length > 0 ? state.images.map((image) => image.localUrl) :  null }
+                            state={ state }
+                            handlers={ handlers }
 
                         />
                 }

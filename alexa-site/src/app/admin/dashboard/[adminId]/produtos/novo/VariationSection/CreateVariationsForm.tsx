@@ -1,31 +1,20 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/CreateVariationsForm.tsx
 
-import { VariationProductType } from '@/app/utils/types';
+import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaRegTrashAlt } from 'react-icons/fa';
 
-
 interface CreateVariationsFormProps {
-  handleVariationsChange: (variations: string[] | never[]) => void;
-  variations: string[] | never[];
-  handleAddNewVariationInAllProductVariations: (newVariation: string) => void;
-  handleRemoveVariationInAllProductVariations: (variationToBeRemoved: string) => void;
-  handleClearProductVariations: () => void;
-  setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
+    state: StateNewProductType;
+    handlers: UseNewProductState;
+    setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
 }
 
-export default function CreateVariationsForm({
-    handleVariationsChange,
-    variations,
-    handleAddNewVariationInAllProductVariations,
-    handleRemoveVariationInAllProductVariations,
-    handleClearProductVariations,
-    setProductVariationState,
-}: CreateVariationsFormProps) {
+export default function CreateVariationsForm({ state, handlers, setProductVariationState }: CreateVariationsFormProps) {
     const [newVariation, setNewVariation] = useState('');
 
     function handleAddVariationClick() {
-        (newVariation && newVariation.length > 0) && handleVariationsChange([...variations, newVariation]);
+        (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation]);
         setProductVariationState((prevState) => ({
             ...prevState,
             customProperties: {
@@ -34,13 +23,13 @@ export default function CreateVariationsForm({
             },
 
         }));
-        handleAddNewVariationInAllProductVariations(newVariation);
+        handlers.handleAddNewVariationInAllProductVariations(newVariation);
         setNewVariation('');
     }
 
     function handleRemoveVariation(v: string) {
-        const newVariations = variations.filter((vstate) => vstate !== v);
-        handleVariationsChange(newVariations);
+        const newVariations = state.variations.filter((vstate) => vstate !== v);
+        handlers.handleVariationsChange(newVariations);
         setProductVariationState((prevState) => {
             const newState = { ...prevState };
             delete newState.customProperties[v];
@@ -48,8 +37,8 @@ export default function CreateVariationsForm({
         });
        
 
-        handleRemoveVariationInAllProductVariations(v);
-        newVariations.length === 0 && handleClearProductVariations();
+        handlers.handleRemoveVariationInAllProductVariations(v);
+        newVariations.length === 0 && handlers.handleClearProductVariations();
     }
 
     return (
@@ -77,7 +66,7 @@ export default function CreateVariationsForm({
             <div className='flex flex-col w-5/6 gap-2'>
 
                 {
-                    variations
+                    state.variations
                         .map((variation, index) => {
                             return (
                                 variation.length > 0

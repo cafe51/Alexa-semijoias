@@ -84,17 +84,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
 
             <CategoriesSection state={ state } handlers={ handlers } />
 
-            <VariationsSection
-                state={ state }
-                handleVariationsChange={ handlers.handleVariationsChange }
-                handleAddProductVariation={ handlers.handleAddProductVariation }
-                handleRemoveProductVariation={ handlers.handleRemoveProductVariation }
-                handleUpdateProductVariation={ handlers.handleUpdateProductVariation }
-                handleAddNewVariationInAllProductVariations={ handlers.handleAddNewVariationInAllProductVariations }
-                handleRemoveVariationInAllProductVariations={ handlers.handleRemoveVariationInAllProductVariations }
-                handleClearProductVariations={ handlers.handleClearProductVariations }
-                handleStockQuantityChange={ handlers.handleStockQuantityChange }
-            />
+            <VariationsSection state={ state } handlers={ handlers } />
 
             { 
                 (!state.productVariations || state.productVariations.length == 0) &&
