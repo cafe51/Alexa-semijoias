@@ -58,6 +58,8 @@ export type ProductBundleType = {
 
 }
 
+export type MoreOptionsType = { isChecked: boolean, label: string, property: string }
+
 export type StateNewProductType = {
     id?: string;
     name: string;
@@ -79,6 +81,7 @@ export type StateNewProductType = {
     barcode?: string | undefined,
     dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,
     images: { file?: File; localUrl: string; }[],
+    moreOptions: MoreOptionsType[]
 
 }
 
@@ -277,4 +280,5 @@ export type UseNewProductState = {
     handleRemoveCategory: (category: string) => void;
     handleRemoveAllCategories: () => void;
     handleSetImages: (images: { file?: File; localUrl: string; }[]) => void;
+    handleSetMoreOptions: (moreOptions: MoreOptionsType[]) => void;
 }

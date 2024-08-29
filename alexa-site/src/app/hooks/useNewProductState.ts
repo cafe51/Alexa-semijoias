@@ -1,6 +1,6 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { SectionType, StateNewProductType, UseNewProductState, VariationProductType } from '../utils/types';
+import { MoreOptionsType, SectionType, StateNewProductType, UseNewProductState, VariationProductType } from '../utils/types';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
@@ -25,6 +25,8 @@ type ActionType =
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
     | { type: 'SET_IMAGES', payload: { file?: File; localUrl: string; }[]}
+    | { type: 'SET_MORE_OPTIONS', payload: MoreOptionsType[]}
+
 
 
 
@@ -48,6 +50,10 @@ export const initialEmptyState: StateNewProductType= {
     barcode: undefined,
     dimensions: undefined,
     images: [],
+    moreOptions: [
+        { isChecked: true, label: 'Exibir na minha loja', property: 'showProduct' },
+        { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
+    ],
 };
 
 function reducer(state: StateNewProductType, action: ActionType): StateNewProductType{
@@ -117,6 +123,8 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
         return { ...state, categories: [] };
     case 'SET_IMAGES':
         return { ...state, images: action.payload };
+    case 'SET_MORE_OPTIONS':
+        return { ...state, moreOptions: action.payload };
     default:
         return state;
     }
@@ -213,6 +221,10 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         dispatch({ type: 'SET_IMAGES', payload: images });
     }, []);
 
+    const handleSetMoreOptions = useCallback((moreOptions: MoreOptionsType[]) => {
+        dispatch({ type: 'SET_MORE_OPTIONS', payload: moreOptions });
+    }, []);
+
     const handlers: UseNewProductState = {
         handleNameChange,
         handleDescriptionChange,
@@ -236,6 +248,7 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         handleRemoveCategory,
         handleRemoveAllCategories,
         handleSetImages,
+        handleSetMoreOptions,
     };
 
     return {

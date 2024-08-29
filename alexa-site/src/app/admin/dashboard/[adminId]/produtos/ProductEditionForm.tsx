@@ -81,7 +81,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                     />
                 </>
             }
-            <MoreOptionsSection />
+            <MoreOptionsSection state={ state } handlers={ handlers }/>
             { /* <AssociatedProductsSection />
             <RecommendedProductsSection /> */ }
             <LargeButton color='blue' loadingButton={ false } onClick={ handleCreateNewProductClick }>
