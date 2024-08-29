@@ -71,19 +71,11 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
     return (
         <section className='flex flex-col gap-2 w-full'>
             <h1 className='font-bold'>{ product ? 'Editar Produto': 'Novo Produto' }</h1>
-            <NameAndDescriptionSection
-                state={ state }
-                handleNameChange={ handlers.handleNameChange }
-                handleDescriptionChange={ handlers.handleDescriptionChange }
-            />
+            <NameAndDescriptionSection state={ state } handlers={ handlers } />
             <PhotosSection state={ state } handleSetImages={ handlers.handleSetImages } />
-
             <PricesSection state={ state } handleValueChange={ handlers.handleValueChange } />
-
             <SiteSectionSection state={ state }  handlers={ handlers } />
-
             <CategoriesSection state={ state } handlers={ handlers } />
-
             <VariationsSection state={ state } handlers={ handlers } />
 
             { 
@@ -111,17 +103,10 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
             { /* <AssociatedProductsSection />
             <RecommendedProductsSection /> */ }
 
-            <LargeButton color='blue'
-                loadingButton={ false }
-                onClick={ handleCreateNewProductClick }
-            >
+            <LargeButton color='blue' loadingButton={ false } onClick={ handleCreateNewProductClick }>
             Criar Produto
             </LargeButton>
-            <LargeButton color='green'
-                loadingButton={ false }
-                onClick={ () => {
-                    console.log(state);
-                } }>
+            <LargeButton color='green' loadingButton={ false } onClick={ () => { console.log(state); } }>
                 Mostrar estado
             </LargeButton>
         </section>
