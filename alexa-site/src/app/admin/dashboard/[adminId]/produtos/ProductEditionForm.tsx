@@ -13,6 +13,7 @@ import SiteSectionSection from './novo/SiteSectionSection/SiteSectionSection';
 import LargeButton from '@/app/components/LargeButton';
 import { useCollection } from '@/app/hooks/useCollection';
 import { productIdGenerator } from '@/app/utils/productIdGenerator';
+import MoreOptionsSection from './novo/MoreOpionsSection';
 
 interface ProductEditionFormProps {
     product?:  StateNewProductType,
@@ -80,6 +81,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                     />
                 </>
             }
+            <MoreOptionsSection />
             { /* <AssociatedProductsSection />
             <RecommendedProductsSection /> */ }
             <LargeButton color='blue' loadingButton={ false } onClick={ handleCreateNewProductClick }>
