@@ -1,25 +1,14 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CategoriesSection/CreateCategoriesForm.tsx
 
-import { CategoryType, CheckboxData, FireBaseDocument } from '@/app/utils/types';
+import { CategoryType, CheckboxData, FireBaseDocument, UseNewProductState } from '@/app/utils/types';
 import CategoriesListFromFb from './CategoriesListFromFb';
 import SelectedCategoriesList from './SelectedCategoriesList';
 import { useEffect, useState } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 
-interface CreateCategoriesFormProps {
-    handleAddCategories: (category: string) => void
-    handleRemoveAllCategories: () => void
-    handleRemoveCategory: (category: string) => void
-    categories: string[];
-    handleSetCategoriesFromFb: (category: string[]) => void
-}
+interface CreateCategoriesFormProps { categories: string[]; handlers: UseNewProductState; }
 
-export default function CreateCategoriesForm({
-    categories,
-    handleAddCategories,
-    handleSetCategoriesFromFb,
-    handleRemoveCategory,
-}: CreateCategoriesFormProps) {
+export default function CreateCategoriesForm({ categories, handlers }: CreateCategoriesFormProps) {
     const [categoriesStateFromFirebase, setCategoriesStateFromFirebase] = useState<(CategoryType & FireBaseDocument)[] | never[]>([]);
     const { getAllDocuments } = useCollection<CategoryType>('categories');
     const [options, setOptions] = useState<CheckboxData[]>([]);
@@ -50,24 +39,23 @@ export default function CreateCategoriesForm({
         const newSelectedOptions = updatedOptions
             .filter((option) => option.isChecked)
             .map((option) => option.label);
-        handleSetCategoriesFromFb(newSelectedOptions);
+        handlers.handleSetCategoriesFromFb(newSelectedOptions);
     }
 
     return (
         <section className='flex flex-col items-center gap-2 w-full'>
             <CategoriesListFromFb
+                handlers={ handlers }
                 handleCheckboxChange={ handleCheckboxChange }
                 options={ options }
-                handleAddCategories={ handleAddCategories }
                 selectedOptions={ categories }
 
 
             />
             <SelectedCategoriesList
+                handlers={ handlers }
                 handleCheckboxChange={ handleCheckboxChange }
-                handleRemoveCategory={ handleRemoveCategory }
                 selectedOptions={ categories }
-                handleAddCategories={ handleAddCategories }
             />
         </section>
           

@@ -82,13 +82,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
 
             <SiteSectionSection state={ state }  handlers={ handlers } />
 
-            <CategoriesSection
-                state={ state }
-                handleAddCategories={ handlers.handleAddCategories }
-                handleRemoveAllCategories={ handlers.handleRemoveAllCategories }
-                handleRemoveCategory={ handlers.handleRemoveCategory }
-                handleSetCategoriesFromFb={ handlers.handleSetCategoriesFromFb }
-            />
+            <CategoriesSection state={ state } handlers={ handlers } />
 
             <VariationsSection
                 state={ state }

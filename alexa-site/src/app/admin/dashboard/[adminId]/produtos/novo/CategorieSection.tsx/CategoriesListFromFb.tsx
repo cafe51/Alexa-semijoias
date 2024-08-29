@@ -1,3 +1,4 @@
+import { UseNewProductState } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
 
 type CheckboxData = {
@@ -6,13 +7,13 @@ type CheckboxData = {
   }
 
 interface CategoriesListFromFbProps {
+    handlers: UseNewProductState;
     options: CheckboxData[];
     handleCheckboxChange(label: string): void;
-    handleAddCategories: (category: string) => void
     selectedOptions: string[];
 }
 
-export default function CategoriesListFromFb({ options, selectedOptions, handleCheckboxChange, handleAddCategories }: CategoriesListFromFbProps) {
+export default function CategoriesListFromFb({ options, selectedOptions, handleCheckboxChange, handlers }: CategoriesListFromFbProps) {
     const [filteredOptions, setFilteredOptions] = useState<CheckboxData[] | never[]>([]);
     const [newSearch, setNewSearch] = useState('');
 
@@ -80,7 +81,7 @@ export default function CategoriesListFromFb({ options, selectedOptions, handleC
                         <div
                             className={ 'bg-green-200 text-green-600 rounded p-2 hover:bg-pink-200 w-full full ms-2 text-sm font-medium' }
                             onClick={ () => {
-                                handleAddCategories(newSearch);
+                                handlers.handleAddCategories(newSearch);
                                 setNewSearch('');
                             } }
                         >

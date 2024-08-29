@@ -1,46 +1,24 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CategoriesSection/CategoriesSection.tsx
-
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { useState } from 'react';
 import CreateCategoriesForm from './CreateCategories';
-import { StateNewProductType } from '@/app/utils/types';
+import { StateNewProductType, UseNewProductState } from '@/app/utils/types';
 
-interface CategoriesSectionmProps {
-    handleAddCategories: (category: string) => void
-    handleRemoveAllCategories: () => void
-    handleRemoveCategory: (category: string) => void
-    handleSetCategoriesFromFb: (category: string[]) => void
-    state: StateNewProductType;
-  }
+interface CategoriesSectionProps { handlers: UseNewProductState; state: StateNewProductType; }
 
-export default function CategoriesSection({
-    state: { categories, categoriesFromFirebase },
-    handleAddCategories,
-    handleRemoveAllCategories,
-    handleRemoveCategory,
-    handleSetCategoriesFromFb,
-}: CategoriesSectionmProps) {
+export default function CategoriesSection({ state, handlers }: CategoriesSectionProps) {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
 
     return (
         <section className="p-4 border rounded-md bg-white">
             { (showVariationEditionModal) && (
-                <ModalMaker
-                    title='Crie novas categorias'
-                    closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
-                >
-                    <CreateCategoriesForm
-                        categories={ [...categories, ...categoriesFromFirebase] }
-                        handleAddCategories={ handleAddCategories }
-                        handleRemoveAllCategories={ handleRemoveAllCategories }
-                        handleRemoveCategory={ handleRemoveCategory }
-                        handleSetCategoriesFromFb={ handleSetCategoriesFromFb }
-                    />
+                <ModalMaker title='Crie novas categorias' closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) } >
+                    <CreateCategoriesForm categories={ [...state.categories, ...state.categoriesFromFirebase]  } handlers={ handlers }/>
                 </ModalMaker>
             ) }
             <div className='flex justify-between'>
                 <h2 className="text-lg font-bold">Categorias</h2>
-                { ((categories && categories.length > 0) || (categoriesFromFirebase && categoriesFromFirebase.length > 0)) &&
+                { ((state.categories && state.categories.length > 0) || (state.categoriesFromFirebase && state.categoriesFromFirebase.length > 0)) &&
                 <button className='text-blue-500'
                     onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }>
                         Editar
@@ -49,11 +27,11 @@ export default function CategoriesSection({
 
             <div className=' border-t border-solid w-full p-4'>
                 {
-                    ((categories && categories.length > 0) || (categoriesFromFirebase && categoriesFromFirebase.length > 0))
+                    ((state.categories && state.categories.length > 0) || (state.categoriesFromFirebase && state.categoriesFromFirebase.length > 0))
                         ?
                         <div className='flex flex-wrap gap-2'>
                             {
-                                [...categories, ...categoriesFromFirebase].map((category, index) => {
+                                [...state.categories, ...state.categoriesFromFirebase].map((category, index) => {
                                     return (
                                         <div key={ index } className='p-2 bg-green-700 text-white text-xs rounded-lg'>
                                             { category }

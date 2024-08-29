@@ -1,13 +1,13 @@
+import { UseNewProductState } from '@/app/utils/types';
 import { FaRegTrashAlt } from 'react-icons/fa';
 
 interface SelectedCategoriesListProps {
     selectedOptions: string[];
     handleCheckboxChange(label: string): void;
-    handleRemoveCategory: (category: string) => void;
-    handleAddCategories: (category: string) => void
+    handlers: UseNewProductState;
 }
 
-export default function SelectedCategoriesList({ selectedOptions, handleCheckboxChange, handleRemoveCategory  }: SelectedCategoriesListProps) {
+export default function SelectedCategoriesList({ selectedOptions, handleCheckboxChange, handlers  }: SelectedCategoriesListProps) {
     return (
         <section className='flex flex-col w-5/6 h-48 px-3 pb-3 gap-2 overflow-y-auto'>
 
@@ -28,9 +28,8 @@ export default function SelectedCategoriesList({ selectedOptions, handleCheckbox
 
                               />
                               <button className='px-3 bg-red-400 rounded-r-md' onClick={ () => {
-                                  handleRemoveCategory(category);
+                                  handlers.handleRemoveCategory(category);
                                   handleCheckboxChange(category);
-
                               } }>
                                   <FaRegTrashAlt/>
                               </button>
