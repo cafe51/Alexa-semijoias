@@ -1,28 +1,22 @@
 // app/admin/dashboard/[adminId]/produtos/novo/DimensionsSection.tsx
 
 import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
-import { StateNewProductType } from '@/app/utils/types';
+import { StateNewProductType, UseNewProductState } from '@/app/utils/types';
 import React from 'react';
 
-interface DimensionsSectionProps {
-    state: StateNewProductType;
-    handleDimensionsChange: (dimensions: { largura: number, altura: number, comprimento: number, peso: number }) => void;
-}
+interface DimensionsSectionProps { state: StateNewProductType; handlers: UseNewProductState; }
 
-export default function DimensionsSection({
-    state,
-    handleDimensionsChange,
-}: DimensionsSectionProps) {
+export default function DimensionsSection({ state, handlers }: DimensionsSectionProps) {
 
     function handleChange(input: number, state: StateNewProductType, property: string) {
         if(state && state.dimensions){
-            handleDimensionsChange({
+            handlers.handleDimensionsChange({
                 ...state.dimensions,
                 [property]: input,
             });
         }
         if(state && !state.dimensions) {
-            handleDimensionsChange({
+            handlers.handleDimensionsChange({
                 altura: 0,
                 comprimento: 0,
                 largura: 0,

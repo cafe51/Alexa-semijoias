@@ -80,7 +80,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                 (!state.productVariations || state.productVariations.length == 0) &&
                 <>
                     <StockSection state={ state } handlers={ handlers } />
-                    <DimensionsSection state={ state } handleDimensionsChange={ handlers.handleDimensionsChange } />
+                    <DimensionsSection state={ state } handlers={ handlers } />
 
                     <CodesSection
                         barCode={ state.barcode }
