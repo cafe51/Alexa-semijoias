@@ -53,8 +53,6 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
             }
         }
 
-        // const productId = state.barcode && state.barcode.length > 1 ? state.barcode : '78902166' + (Math.floor(Math.random() * 9000) + 1000).toString();
-
         if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
             const newProduct = useProductDataHandlers.hasProductVariations(state, allImagesUrls, productId);
             await createNewProductDocument(newProduct, productId);
@@ -81,14 +79,8 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
             { 
                 (!state.productVariations || state.productVariations.length == 0) &&
                 <>
-                    <StockSection
-                        state={ state }
-                        handleStockQuantityChange={ handlers.handleStockQuantityChange }
-                    />
-                    <DimensionsSection
-                        state={ state }
-                        handleDimensionsChange={ handlers.handleDimensionsChange }
-                    />
+                    <StockSection state={ state } handlers={ handlers } />
+                    <DimensionsSection state={ state } handleDimensionsChange={ handlers.handleDimensionsChange } />
 
                     <CodesSection
                         barCode={ state.barcode }
