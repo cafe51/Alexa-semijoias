@@ -1,10 +1,5 @@
-import { UseNewProductState } from '@/app/utils/types';
+import { CheckboxData, UseNewProductState } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
-
-type CheckboxData = {
-    label: string;
-    isChecked: boolean;
-  }
 
 interface CategoriesListFromFbProps {
     handlers: UseNewProductState;
