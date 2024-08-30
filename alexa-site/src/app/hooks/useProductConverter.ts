@@ -29,6 +29,17 @@ export function useProductConverter() {
 
     
     const hasProductVariations = (editableProduct: StateNewProductType, imageUrls: string[], productId: string): ProductBundleType => {
+        // const {
+        //     categoriesFromFirebase,
+        //     moreOptions,
+        //     sectionsSite,
+        //     estoque,
+        //     dimensions,
+        //     sku,
+        //     barcode,
+
+        // } = editableProduct;
+
         let totalStock = 0;
 
         for (const pv of editableProduct.productVariations) {
@@ -37,8 +48,7 @@ export function useProductConverter() {
 
         return {
             ...editableProduct,
-            name: editableProduct.name,
-            showProduct: true,
+            showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imageUrls,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
             estoqueTotal: totalStock,
@@ -75,7 +85,7 @@ export function useProductConverter() {
 
         return {
             ...editableProduct,
-            showProduct: true,
+            showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imageUrls,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
             estoqueTotal: editableProduct.estoque ? editableProduct.estoque : 0,
@@ -109,6 +119,10 @@ export function useProductConverter() {
         const theOnlyVariation = finalProduct.productVariations[0];
         return {
             ...finalProduct,
+            moreOptions: [
+                { isChecked: finalProduct.showProduct, label: 'Exibir na minha loja', property: 'showProduct' },
+                { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
+            ],
             categoriesFromFirebase: finalProduct.categories,
             barcode: hasMoreThanOneVariation ? undefined : theOnlyVariation.barcode,
             categories: [],
