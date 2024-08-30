@@ -59,21 +59,24 @@ export default function SubSectionList({ siteSectionManagement, setNewSubSection
                     </section>
                     
                 </ModalMaker>) }
-            { siteSectionManagement.selectedSection?.subsections?.map((subsection, index) => (
-                <p
-                    key={ index }
-                    className={ `p-2 rounded-lg text-xs min-w-20
+            {
+                siteSectionManagement.selectedSection?.subsections?.map((subsection, index) => (
+                    <p
+                        key={ index }
+                        className={ `p-2 rounded-lg text-xs min-w-20
             ${siteSectionManagement.selectedSubSection === subsection ? 'border-solid border-blue-500 border-4' : ''}
             ${siteSectionManagement.selectedSection
                 && siteSectionManagement.selectedSection.sectionName
                 && isSubSectionSaved(siteSectionManagement.selectedSection.sectionName!, subsection)
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-200'}` }
-                    onClick={ () => siteSectionManagement.handleSubSectionClick(subsection) }
-                >
-                    { subsection }
-                </p>
-            )) }
+                        ? 'bg-green-500 text-white'
+                        : 'bg-gray-200'}` }
+                        onClick={ () => siteSectionManagement.handleSubSectionClick(subsection) }
+                    >
+                        { subsection }
+                    </p>
+                ))
+            }
+            
             { siteSectionManagement.selectedSection && <p
                 className={ 'p-2 rounded-lg text-sm min-w-20 bg-gray-100 border-dashed border-2 border-green-500 text-center text-green-500' }
                 onClick={ () =>  setShowSectionEditionModal(!showSectionEditionModal) }

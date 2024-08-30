@@ -25,7 +25,7 @@ export default function ChooseSection({ state, firebaseSections, handlers, setNe
         <section className="flex flex-col h-full w-full gap-2">
             <div className="flex gap-2 h-full w-full">
                 <SectionList
-                    sections={ firebaseSections }
+                    firebaseSections={ firebaseSections }
                     siteSectionManagement={ siteSectionManagement }
                     setNewSections={ setNewSections }
                 />

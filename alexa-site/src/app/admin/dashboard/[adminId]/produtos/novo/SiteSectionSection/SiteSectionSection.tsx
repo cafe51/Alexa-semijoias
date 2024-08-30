@@ -6,38 +6,35 @@ import { useEffect, useState } from 'react';
 import ChooseSection from './ChooseSection';
 import ProductSections from '../../productPage/ProductSections';
 
-interface SiteSectionSectionProps {
-    state: StateNewProductType;
-    handlers: UseNewProductState;
-}
+interface SiteSectionSectionProps { state: StateNewProductType; handlers: UseNewProductState; }
+
 export default function SiteSectionSection({ state, handlers }: SiteSectionSectionProps) {
-    const { getAllDocuments } = useCollection<SectionType>('siteSections');
-    const [sections, setSections] = useState<((SectionType & FireBaseDocument)[]) | (SectionType[])| never[]>([]);
+    const [firebaseSections, setFireBaseSections] = useState<((SectionType & FireBaseDocument)[]) | (SectionType[])| never[]>([]);
     const [newSections, setNewSections] = useState<(SectionType)[] | never[]>([]);
     const [newSubSection, setNewSubSection] = useState<{sectionName: string, subsection: string} | undefined>(undefined);
-
+    
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
+    const { getAllDocuments } = useCollection<SectionType>('siteSections');
 
 
     useEffect(() => {
         async function getSectionsFromFireBase() {
             const res = await getAllDocuments();
-            setSections(res);
+            setFireBaseSections(res);
         }
         getSectionsFromFireBase();
     }, []);
 
     useEffect(() => {
-        setSections((prevSections) => {
+        setFireBaseSections((prevSections) => {
             return [...prevSections, ...newSections];
         });
     }, [newSections]);
 
     useEffect(() => {
         if(newSubSection) {
-            setSections((prevSections) => {
-                const prevSectionsClone = [...prevSections];
-                const newSectionsMapped = prevSectionsClone.map((pvS) => {
+            setFireBaseSections((prevSections) => {
+                return prevSections.map((pvS) => {
                     if(pvS.sectionName === newSubSection.sectionName) {
                         return {
                             ...pvS,
@@ -45,7 +42,6 @@ export default function SiteSectionSection({ state, handlers }: SiteSectionSecti
                         };
                     } else return { ...pvS };
                 });
-                return newSectionsMapped;
             });
         }
     }, [newSubSection]);
@@ -62,7 +58,7 @@ export default function SiteSectionSection({ state, handlers }: SiteSectionSecti
                         handlers={ handlers }
                         setNewSubSection={ setNewSubSection }
                         setNewSections={ setNewSections }
-                        firebaseSections={ sections }
+                        firebaseSections={ firebaseSections }
                     />
 
                 </ModalMaker>
