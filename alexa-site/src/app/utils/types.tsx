@@ -46,7 +46,7 @@ export type ProductBundleType = {
     categories: string[],
     showProduct: boolean,
     freeShipping: boolean,
-    // lancamento: false,
+    lancamento: boolean,
     description: string;
     estoqueTotal: number,
     name: string;

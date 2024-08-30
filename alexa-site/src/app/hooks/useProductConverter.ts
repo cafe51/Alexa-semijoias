@@ -48,6 +48,7 @@ export function useProductConverter() {
 
         return {
             ...editableProduct,
+            lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imageUrls,
@@ -86,6 +87,7 @@ export function useProductConverter() {
 
         return {
             ...editableProduct,
+            lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imageUrls,
@@ -124,6 +126,8 @@ export function useProductConverter() {
             moreOptions: [
                 { isChecked: finalProduct.showProduct, label: 'Exibir na minha loja', property: 'showProduct' },
                 { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
+                { isChecked: false, label: 'Marcar como lancamento', property: 'lancamento' },
+
             ],
             categoriesFromFirebase: finalProduct.categories,
             barcode: hasMoreThanOneVariation ? undefined : theOnlyVariation.barcode,

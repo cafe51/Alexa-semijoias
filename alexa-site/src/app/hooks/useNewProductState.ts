@@ -53,6 +53,7 @@ export const initialEmptyState: StateNewProductType= {
     moreOptions: [
         { isChecked: true, label: 'Exibir na minha loja', property: 'showProduct' },
         { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
+        { isChecked: false, label: 'Marcar como lancamento', property: 'lancamento' },
     ],
 };
 
