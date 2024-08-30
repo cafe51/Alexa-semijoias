@@ -23,5 +23,6 @@ export const emptyProductBundleInitialState = {
     sections: [''],
     subsections: [''],
     showProduct: false,
+    freeShipping: false,
     value: { cost: 0, price: 0, promotionalPrice: 0 },
 };

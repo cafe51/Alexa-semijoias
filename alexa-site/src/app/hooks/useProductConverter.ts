@@ -48,6 +48,7 @@ export function useProductConverter() {
 
         return {
             ...editableProduct,
+            freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imageUrls,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
@@ -85,6 +86,7 @@ export function useProductConverter() {
 
         return {
             ...editableProduct,
+            freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imageUrls,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
