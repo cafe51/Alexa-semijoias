@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { SectionType, SiteSectionManagementType } from '@/app/utils/types';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
+import { normalizeString } from '@/app/utils/normalizeString';
 
 interface SectionListProps {
     firebaseSections: SectionType[];
@@ -11,6 +12,7 @@ interface SectionListProps {
 export default function SectionList({ firebaseSections, setNewSections, siteSectionManagement }: SectionListProps){
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
     const [newSectionName, setNewSectionName] = useState('');
+    const [errorMessage, setErrorMessage] = useState<string>();
 
     return (
         <div className="flex flex-col gap-2">
@@ -27,17 +29,26 @@ export default function SectionList({ firebaseSections, setNewSections, siteSect
                                 name='newSection'
                                 type="text"
                                 value={ newSectionName }
-                                onChange={ (e) => setNewSectionName(e.target.value) }
+                                onChange={ (e) => {
+                                    setNewSectionName(normalizeString(e.target.value));
+                                    setErrorMessage(undefined);
+                                } }
                                 placeholder="Nova Seção"
                             />
+                            { errorMessage && <span className='text-sm text-red-500'>{ errorMessage }</span> }
                         </div>
                         <button
                             className='p-2 bg-green-600 text-white disabled:bg-gray-300 '
                             disabled={ !(!!newSectionName && newSectionName.length > 0)  }
                             onClick={ () => {
-                                setNewSections([{ sectionName: newSectionName }]);
-                                setNewSectionName('');
-                                setShowSectionEditionModal(!showSectionEditionModal);
+                                if(firebaseSections.some((fbsection) => normalizeString(fbsection.sectionName) === normalizeString(newSectionName))) {
+                                    setErrorMessage('Já existe uma seção com esse nome');
+                                } else {
+                                    setNewSections([{ sectionName: newSectionName }]);
+                                    setNewSectionName('');
+                                    setShowSectionEditionModal(!showSectionEditionModal);
+                                }
+                                
                             } }
                         >
                             Criar

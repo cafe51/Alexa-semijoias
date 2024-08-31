@@ -1,18 +1,45 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { SiteSectionManagementType } from '@/app/utils/types';
+import { FireBaseDocument, SectionType, SiteSectionManagementType } from '@/app/utils/types';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
+import { normalizeString } from '@/app/utils/normalizeString';
 
 interface SubSectionListProps {
     siteSectionManagement: SiteSectionManagementType;
     setNewSubSection: Dispatch<SetStateAction<{ sectionName: string; subsection: string; } | undefined>>
+    firebaseSections: never[] | (SectionType & FireBaseDocument)[] | SectionType[]
 }
 
-export default function SubSectionList({ siteSectionManagement, setNewSubSection }: SubSectionListProps) {
+export default function SubSectionList({ siteSectionManagement, setNewSubSection, firebaseSections }: SubSectionListProps) {
     const isSubSectionSaved = (sectionName: string, subsection: string) => {
         return siteSectionManagement.savedSubSections.some(saved => saved.sectionName === sectionName && saved.subsection === subsection);
     };
     const [showSectionEditionModal, setShowSectionEditionModal] = useState(false);
     const [newSubSectionName, setNewSubSectionName] = useState('');
+    const [errorMessage, setErrorMessage] = useState<string>();
+
+    function handleCrateNewSubSection() {
+        const selectedSection = siteSectionManagement.selectedSection;
+        if(!selectedSection || !selectedSection.sectionName) return;
+
+        const foundedSection = firebaseSections.find((fbsection) => normalizeString(fbsection.sectionName) === selectedSection.sectionName);
+        if(foundedSection?.subsections?.some((ss) => ss === newSubSectionName)) {
+            setErrorMessage('Já existe uma sub seção com esse nome');
+        } else {
+            setNewSubSection({ sectionName: selectedSection.sectionName, subsection: newSubSectionName });
+
+            siteSectionManagement.handleSectionClick(
+                {
+                    ...selectedSection,
+                    subsections: selectedSection.subsections
+                        ? [...selectedSection.subsections, newSubSectionName ]
+                        : [newSubSectionName],
+                },
+            );
+            setNewSubSectionName('');
+            setShowSectionEditionModal(!showSectionEditionModal);
+        }
+    }
+
 
     return (
         <div className="flex flex-col gap-2 bg-gray-100 w-full">
@@ -30,29 +57,19 @@ export default function SubSectionList({ siteSectionManagement, setNewSubSection
                                 name='newSubSectionName'
                                 type="text"
                                 value={ newSubSectionName }
-                                onChange={ (e) => setNewSubSectionName(e.target.value) }
+                                onChange={ (e) => {
+                                    setNewSubSectionName(normalizeString(e.target.value));
+                                    setErrorMessage(undefined);
+                                } }
                                 placeholder="Nova Sub Seção"
                             />
+                            { errorMessage && <span className='text-sm text-red-500'>{ errorMessage }</span> }
+
                         </div>
                         <button
                             className='p-2 bg-green-500 disabled:bg-gray-300 '
                             disabled={ !(!!newSubSectionName && newSubSectionName.length > 0)  }
-                            onClick={ () => {
-                                siteSectionManagement.selectedSection?.sectionName
-                                && setNewSubSection({ sectionName: siteSectionManagement.selectedSection?.sectionName, subsection: newSubSectionName });
-
-                                siteSectionManagement.selectedSection
-                                && siteSectionManagement.handleSectionClick(
-                                    {
-                                        ...siteSectionManagement.selectedSection,
-                                        subsections: siteSectionManagement.selectedSection.subsections
-                                            ? [...siteSectionManagement.selectedSection.subsections, newSubSectionName ]
-                                            : [newSubSectionName],
-                                    },
-                                );
-                                setNewSubSectionName('');
-                                setShowSectionEditionModal(!showSectionEditionModal);
-                            } }
+                            onClick={ handleCrateNewSubSection }
                         >
                             Criar
                         </button>

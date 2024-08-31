@@ -33,6 +33,7 @@ export default function ChooseSection({ state, firebaseSections, handlers, setNe
                 <div className="min-h-full border border-solid border-gray-200 w-[1px]" />
 
                 <SubSectionList
+                    firebaseSections={ firebaseSections }
                     setNewSubSection={ setNewSubSection }
                     siteSectionManagement={ siteSectionManagement }
                 />
