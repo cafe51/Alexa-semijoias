@@ -1,19 +1,42 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CategoriesSection/CategoriesSection.tsx
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateCategoriesForm from './CreateCategories';
-import { StateNewProductType, UseNewProductState } from '@/app/utils/types';
+import { CategoryType, CheckboxData, FireBaseDocument, StateNewProductType, UseNewProductState } from '@/app/utils/types';
+import { useCollection } from '@/app/hooks/useCollection';
 
 interface CategoriesSectionProps { handlers: UseNewProductState; state: StateNewProductType; }
 
 export default function CategoriesSection({ state, handlers }: CategoriesSectionProps) {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
+    const { getAllDocuments } = useCollection<CategoryType>('categories');
+    const [categoriesStateFromFirebase, setCategoriesStateFromFirebase] = useState<(CategoryType & FireBaseDocument)[] | never[]>([]);
+    const [options, setOptions] = useState<CheckboxData[]>([]);
+
+    useEffect(() => {
+        async function getCategoriesFromFirebase() {
+            const res = await getAllDocuments();
+            console.log('categorias', res);
+            setCategoriesStateFromFirebase(res);
+        }
+        getCategoriesFromFirebase();
+    }, []);
+
+    useEffect(() => {
+        const initialOptions = categoriesStateFromFirebase.map((c) => ({ label: c.categoryName, isChecked: false }));
+        setOptions(initialOptions);
+    }, [categoriesStateFromFirebase]);
 
     return (
         <section className="p-4 border rounded-md bg-white">
             { (showVariationEditionModal) && (
                 <ModalMaker title='Crie novas categorias' closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) } >
-                    <CreateCategoriesForm categories={ [...state.categories, ...state.categoriesFromFirebase]  } handlers={ handlers }/>
+                    <CreateCategoriesForm
+                        categories={ [...state.categories, ...state.categoriesFromFirebase]  }
+                        options={ options }
+                        setOptions={ setOptions }
+                        handlers={ handlers }
+                    />
                 </ModalMaker>
             ) }
             <div className='flex justify-between'>
