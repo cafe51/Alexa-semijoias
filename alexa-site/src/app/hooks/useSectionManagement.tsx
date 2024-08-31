@@ -27,7 +27,7 @@ export function useSectionManagement({ initialState }: UseSectionManagementProps
             );
 
         setSavedSubSections(savedSubSections.filter(savedSubSection => savedSubSection !== undefined));
-    }, [initialState]);
+    }, []);
 
     const handleSectionClick = (section: SectionType) => {
         setSelectedSection(section);
@@ -42,19 +42,23 @@ export function useSectionManagement({ initialState }: UseSectionManagementProps
         if (!selectedSection) return;
 
         const newSectionList = [...sectionList];
-        const foundSectionIndex = newSectionList.findIndex(section => section.sectionName === selectedSection.sectionName);
+        const foundSectionIndex = sectionList.findIndex(section => section.sectionName === selectedSection.sectionName);
 
         if (selectedSubSection) {
             if (foundSectionIndex !== -1) {
                 const foundSection = newSectionList[foundSectionIndex];
+                
                 const updatedSubsections = foundSection.subsections
-                    ? [...foundSection.subsections, selectedSubSection]
+                    ? Array.from(new Set([...foundSection.subsections, selectedSubSection]))
                     : [selectedSubSection];
+
                 newSectionList[foundSectionIndex] = { ...foundSection, subsections: updatedSubsections };
             } else {
                 newSectionList.push({ ...selectedSection, subsections: [selectedSubSection] });
             }
+
             saveSubSection(selectedSection.sectionName, selectedSubSection);
+            
         } else if (foundSectionIndex === -1) {
             newSectionList.push({ ...selectedSection, subsections: [] });
         }
@@ -66,20 +70,23 @@ export function useSectionManagement({ initialState }: UseSectionManagementProps
     const removeSectionOrSubSection = () => {
         if (!selectedSection) return;
 
-        const updatedSectionList = sectionList.filter(section => {
-            if (section.sectionName === selectedSection.sectionName) {
-                if (selectedSubSection) {
-                    const updatedSubsections = section.subsections?.filter(sub => sub !== selectedSubSection);
-                    return updatedSubsections && updatedSubsections.length > 0
-                        ? { ...section, subsections: updatedSubsections }
-                        : false;
-                }
-                return false;
-            }
-            return true;
-        });
+        if(!selectedSubSection) {
+            const updatedSectionList = sectionList.filter(section => section.sectionName !== selectedSection.sectionName);
+            setSectionList(updatedSectionList);
+        }
 
-        setSectionList(updatedSectionList);
+        if(selectedSubSection) {
+            const updatedSectionList = sectionList.map((section) => {
+                if(section.sectionName === selectedSection.sectionName) {
+                    const updatedSubsections = section.subsections?.filter(sub => sub !== selectedSubSection);
+                    return { ...section, subsections: updatedSubsections };
+                }
+                else {
+                    return section;
+                }
+            });
+            setSectionList(updatedSectionList);
+        }
 
         if (selectedSubSection) {
             setSavedSubSections(prev =>
@@ -96,7 +103,13 @@ export function useSectionManagement({ initialState }: UseSectionManagementProps
     };
 
     const saveSubSection = (sectionName: string, subsection: string) => {
-        setSavedSubSections(prev => [...prev, { sectionName, subsection }]);
+        setSavedSubSections((prev) => {
+            const prevClone = [...prev];
+            const filteredPrevSections = prevClone.filter((p) => p.sectionName === sectionName);
+            if(filteredPrevSections.some((filtPrev) => filtPrev.subsection.includes(subsection)) === false) {
+                return [...prev, { sectionName, subsection }];
+            } else return prev;
+        });
     };
 
     return {
