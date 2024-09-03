@@ -11,7 +11,7 @@ export const useLogin = () => {
     const { dispatch } = useAuthContext();
     const [error, setError] = useState<string | null>(null);
     const { getLocalCart, setLocalCart } = useLocalStorage();
-    const { addDocument: createNewCart, deleteDocument: deleteCartItemFromDb, getAllDocuments } = useCollection('carrinhos'); 
+    const { addDocument: createNewCart, deleteDocument: deleteCartItemFromDb, getAllDocuments } = useCollection<CartInfoType>('carrinhos'); 
 
     const syncLocalCartToFirebase = async(userId: string) => {
         try {

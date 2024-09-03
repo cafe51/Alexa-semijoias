@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from './useCollection';
 import { useLogin } from './useLogin';
-import { CartInfoType } from '../utils/types';
+import { CartInfoType, UserType } from '../utils/types';
 import { useLocalStorage } from './useLocalStorage';
 
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
-    const { addDocument: createNewUser } = useCollection('usuarios');
-    const { addDocument: createNewCart } = useCollection('carrinhos');
+    const { addDocument: createNewUser } = useCollection<UserType>('usuarios');
+    const { addDocument: createNewCart } = useCollection<CartInfoType>('carrinhos');
     const { getLocalCart, setLocalCart } = useLocalStorage();
 
 
@@ -27,7 +27,7 @@ export const useSignUp = () => {
         setLocalCart([]);
     };
 
-    const signup = async(singInData : { email: string, password: string, nome: string, tel?: string | undefined }) => {
+    const signup = async(singInData : { email: string, password: string, nome: string, tel: string }) => {
         try {
             const res = await createUserWithEmailAndPassword(auth, singInData.email, singInData.password);
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
