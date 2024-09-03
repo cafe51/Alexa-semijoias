@@ -72,7 +72,7 @@ function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument
                     cost: 1,
                 },
                 productId: 'string',
-                image: { localUrl: 'string', index: 0 },
+                image: '',
             }];
         }
         return productBundle.productVariations
