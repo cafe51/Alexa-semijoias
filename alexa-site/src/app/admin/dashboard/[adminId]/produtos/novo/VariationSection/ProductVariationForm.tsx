@@ -72,6 +72,10 @@ export default function ProductVariationForm({
             }
         }
 
+        if(!barCode || !sku || barCode.length < 1 || sku.length < 1) {
+            return false;
+        }
+
         return true;
     };
 
