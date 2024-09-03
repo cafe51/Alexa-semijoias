@@ -1,6 +1,7 @@
-export default function marginProfitValue(v: { price: number, promotionalPrice: number, cost: number, }) {
-    const finalPrice = v.promotionalPrice && v.promotionalPrice > 0 ? v.promotionalPrice : v.price;
-    const profit = (finalPrice - v.cost);
-    const margin = profit/finalPrice;
-    return margin * 100;
+export function marginProfitValue({ price, promotionalPrice, cost }: { price: number, promotionalPrice: number, cost: number }) {
+    const finalPrice = promotionalPrice > 0 ? promotionalPrice : price;
+    if (finalPrice <= 0 || cost <= 0) return 0;
+
+    const profit = finalPrice - cost;
+    return (profit / finalPrice) * 100;
 }
