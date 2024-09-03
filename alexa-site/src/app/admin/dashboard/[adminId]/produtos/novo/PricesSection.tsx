@@ -9,14 +9,10 @@ interface PricesSectionProps {
     handleValueChange: (value: { price: number, promotionalPrice: number, cost: number, }) => void;
 }
 
-
-
 export default function PricesSection({
     state: { value },
     handleValueChange,
 } : PricesSectionProps){
-
-
 
     return (
         <section className="flex flex-col gap-2 p-2 py-4 border rounded-md bg-white w-full">

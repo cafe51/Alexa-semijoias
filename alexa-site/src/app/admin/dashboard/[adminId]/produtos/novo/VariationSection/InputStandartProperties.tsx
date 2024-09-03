@@ -27,7 +27,6 @@ interface InputStandartPropertiesFormProps {
   }>>
 }
   
-
 export default function InputStandartProperties({
     sections,
     productVariationState,
@@ -44,8 +43,6 @@ export default function InputStandartProperties({
     setBarCode,
 }: InputStandartPropertiesFormProps) {
     const dimensionProperties = Object.keys(dimensions);
-
-
 
     const estoqueAndPeso = [
         { propertyName: 'estoque', propertyValue: estoque, setProperty: setEstoque },
