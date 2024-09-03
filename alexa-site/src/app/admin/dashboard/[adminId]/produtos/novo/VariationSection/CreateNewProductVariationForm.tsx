@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import LargeButton from '@/app/components/LargeButton';
 import ProductVariationForm from './ProductVariationForm';
 import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
+import deepEqual from '@/app/utils/deepEqual';
 
 
 interface CreateNewProductVariationFormProps {
@@ -14,6 +15,7 @@ interface CreateNewProductVariationFormProps {
 }
 
 export default function CreateNewProductVariationForm({ state, handlers, productVariationState, setProductVariationState }: CreateNewProductVariationFormProps) {
+    const [errorMessage, setErrorMessage] = useState<string>();
     const [estoque, setEstoque] = useState(0);
     const [peso, setPeso] = useState(0);
     const [dimensions, setDimensions] = useState({
@@ -31,6 +33,15 @@ export default function CreateNewProductVariationForm({ state, handlers, product
         try {
             if (!isFormValid) {
                 throw new Error('Todos os campos devem estar preenchidos');
+            }
+            const pvClone = [...state.productVariations];
+            const pvStateCproperties = productVariationState.customProperties; // { tamanho: 'grande', cor: 'amarelo' }
+            const stateCustomProperties = pvClone.map((pv) => pv.customProperties); // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
+            const existSameCustomProperty = stateCustomProperties.some((stateCustomProperty) => deepEqual(pvStateCproperties, stateCustomProperty));
+
+            if(existSameCustomProperty) { // verifica se já existe a cp dentro da lista de cp criadas
+                setErrorMessage('Já existe um produto salvo com essas propriedades');
+                return;
             }
             handlers.handleAddProductVariation({
                 ...productVariationState,
@@ -101,8 +112,9 @@ export default function CreateNewProductVariationForm({ state, handlers, product
                 setBarCode={ setBarCode }
                 sku={ sku }
                 setSku={ setSku }
+                setErrorMessage={ setErrorMessage }
             />
-
+            { errorMessage && <p className='text-sm text-center justify-self-center text-red-500'>{ errorMessage }</p> }
             <LargeButton
                 color='blue'
                 disabled={ !isFormValid }

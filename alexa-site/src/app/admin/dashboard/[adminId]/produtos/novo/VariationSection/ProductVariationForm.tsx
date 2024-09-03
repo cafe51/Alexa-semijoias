@@ -28,7 +28,8 @@ interface ProductVariationFormProps {
         comprimento: number;
     }>>
     setIsFormValid: Dispatch<SetStateAction<boolean>>;
-    }
+    setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
+}
 
 export default function ProductVariationForm({
     state,
@@ -45,6 +46,7 @@ export default function ProductVariationForm({
     setDimensions,
     setPeso,
     setIsFormValid,
+    setErrorMessage,
 }: ProductVariationFormProps) {
 
     useEffect(() => {
@@ -82,6 +84,8 @@ export default function ProductVariationForm({
                         variation={ variation }
                         productVariationState={ productVariationState }
                         setProductVariationState={ setProductVariationState }
+                        setErrorMessage={ setErrorMessage }
+
                     />
                 )) }
       
