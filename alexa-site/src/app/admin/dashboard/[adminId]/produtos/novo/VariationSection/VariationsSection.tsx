@@ -88,7 +88,7 @@ export default function VariationsSection({ state, handlers }: VariationsSection
                     (state.productVariations && state.productVariations.length > 0 && state.variations && state.variations.length > 0)
                         &&
                         <ProductVariationFormFilled
-                            images={ state.images && state.images.length > 0 ? state.images.map((image) => image.localUrl) :  null }
+                            images={ state.images }
                             state={ state }
                             handlers={ handlers }
 

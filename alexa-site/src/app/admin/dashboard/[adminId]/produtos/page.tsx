@@ -20,7 +20,6 @@ export default function ProductsDashboard() {
     const [showProductDetailModal, setShowProductDetailModal] = useState<boolean>(false);
     const [productBundleEditable, setProductBundleEditable] = useState<StateNewProductType>(initialEmptyState);
     const [selectedProduct, setSelectedProduct] = useState< ProductBundleType & FireBaseDocument>(emptyProductBundleInitialState);
-    // const [fileImages, setFileImages] = useState<{ file: File; localUrl: string; }[]>();
 
     const { useProductDataHandlers } = useProductConverter();
 
@@ -83,7 +82,7 @@ export default function ProductsDashboard() {
                                 >
                                     <Image
                                         className='rounded-lg object-cover scale-100'
-                                        src={ product.images ? product.images[0] : blankImage }
+                                        src={ product.images ? product.images[0].localUrl : blankImage }
                                         alt="Foto da peça"
                                         fill
                                     />

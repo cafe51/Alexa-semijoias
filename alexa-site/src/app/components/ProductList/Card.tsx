@@ -81,7 +81,7 @@ export default function Card({ productData }: CardProps) {
                     <Image
                         data-testid="product-link"
                         className='rounded-lg object-cover scale-125'
-                        src={ productData.images && productData.images[0] ? productData?.images[0] : blankImage }
+                        src={ productData.images && productData.images[0] ? productData?.images[0].localUrl : blankImage.src }
                         alt="Foto da peça"
                         fill
                     />

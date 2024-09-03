@@ -19,7 +19,7 @@ export default function ResponsiveCarousel({ productData }: { productData: Produ
                 swipeable={ true }
                 showThumbs={ false }
             >
-                { (productData.images ? productData.images : [blankImage.src, blankImage.src, blankImage.src]).map((image: string, index) => (
+                { (productData.images ? productData.images.map((image) => image.localUrl) : [blankImage.src, blankImage.src, blankImage.src]).map((image: string, index) => (
                     <div key={ productData.id + '(' + index + ')' } className='w-full rounded-lg relative h-[350px] '>
                         <Image
                             className='rounded-lg object-cover scale-80'

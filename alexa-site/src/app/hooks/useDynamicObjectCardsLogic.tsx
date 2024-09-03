@@ -52,6 +52,7 @@ function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument
     function filterProductVariations(productBundle: ProductBundleType, selectedProperties: { [key: string]: string }): ProductVariation[] {
         if(!productBundle) {
             return [{
+                categories: [''],
                 barcode: 'string',
                 customProperties: {
                     a: 'string',
@@ -71,7 +72,7 @@ function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument
                     cost: 1,
                 },
                 productId: 'string',
-                image: 'string',
+                image: { localUrl: 'string', index: 0 },
             }];
         }
         return productBundle.productVariations

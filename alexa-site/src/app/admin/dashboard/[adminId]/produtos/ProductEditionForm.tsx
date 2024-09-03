@@ -38,12 +38,13 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
 
             await useProductDataHandlers.createAndUpdateSiteSections(state.sectionsSite);
         
-            const productId = productIdGenerator(productFromFirebase, state.barcode, state.productVariations[0].defaultProperties.barcode);
+            const productId = productIdGenerator(productFromFirebase, state.barcode, state.productVariations[0]?.defaultProperties?.barcode);
 
-            if(state.productVariations && state.productVariations.length > 0 && state.subsections) {
+            if(state.productVariations && state.productVariations.length > 0) {
                 const newProduct = useProductDataHandlers.hasProductVariations(state, allImagesUrls, productId);
                 await createNewProductDocument(newProduct, productId);
                 console.log('novo produto criado', newProduct);
+                console.log('id do novo produto criado:', productId);
             }
 
             if(!state.productVariations || state.productVariations.length === 0) {
@@ -55,7 +56,6 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
         } catch(error) {
             console.error(error);
         }
-
     };
 
     return (

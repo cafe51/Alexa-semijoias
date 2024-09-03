@@ -4,7 +4,7 @@ export const emptyProductBundleInitialState = {
     categories: [''],
     description: '',
     estoqueTotal: 0,
-    images: [''],
+    images: [{ localUrl: '', index: 0 }],
     name: '',
     productVariations: [
         {

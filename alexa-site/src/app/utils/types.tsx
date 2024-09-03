@@ -16,6 +16,12 @@ export type CategoryType = {
     categoryName: string;
 }
 
+export type ImageProductDataType = {
+    file?: File;
+    localUrl: string;
+    index: number;
+}
+
 export type VariationProductType = {
     customProperties: { [key: string]: string },
     defaultProperties: {
@@ -56,7 +62,7 @@ export type ProductBundleType = {
     subsections?: string[], // do tipo 'sectionName:subsectionName'[]
     value: { price: number, promotionalPrice: number, cost: number }
     variations?: string[],
-    images: string[],
+    images: ImageProductDataType[],
 
 }
 
@@ -82,7 +88,7 @@ export type StateNewProductType = {
     sku?: string | undefined,
     barcode?: string | undefined,
     dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,
-    images: { file?: File; localUrl: string; }[],
+    images: ImageProductDataType[],
     moreOptions: MoreOptionsType[]
 
 }
@@ -153,8 +159,6 @@ export type ProductCartType = {
 
     skuId: string,
 }
-
-
 
 export type CartInfoType = {
     // exist: boolean,
@@ -247,12 +251,9 @@ export type SiteSectionManagementType = {
 }
 
 export type UseProductDataHandlers = {
-    hasNoProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
-    hasProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
-    uploadAndGetAllImagesUrl: (images: {
-        file?: File;
-        localUrl: string;
-    }[]) => Promise<string[]>;
+    hasNoProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
+    hasProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
+    uploadAndGetAllImagesUrl: (images: ImageProductDataType[]) => Promise<ImageProductDataType[]>;
     createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
         exist?: boolean;
         id?: string;
@@ -281,6 +282,6 @@ export type UseNewProductState = {
     handleSetCategoriesFromFb: (categories: string[]) => void;
     handleRemoveCategory: (category: string) => void;
     handleRemoveAllCategories: () => void;
-    handleSetImages: (images: { file?: File; localUrl: string; }[]) => void;
+    handleSetImages: (images: ImageProductDataType[]) => void;
     handleSetMoreOptions: (moreOptions: MoreOptionsType[]) => void;
 }

@@ -53,8 +53,8 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
         if (!availableOptions.includes(option)) {
             setErrorMessage(
                 currentPhase === 0
-                    ? `No momento estamos sem estoque para essa opção de ${keys[currentPhase]}`
-                    : `No momento estamos sem estoque dessa opção de ${keys[currentPhase]} para a opção de ${keys[currentPhase - 1]} ${selectedOptions[keys[currentPhase - 1]]} escolhida`,
+                    ? `No momento estamos sem estoque para essa opção de ${keys[currentPhase].toLowerCase()}`
+                    : `No momento estamos sem estoque dessa opção de ${keys[currentPhase].toLowerCase()} para a opção de ${keys[currentPhase - 1]} ${selectedOptions[keys[currentPhase - 1]]} escolhida`,
             );
             return;
         }

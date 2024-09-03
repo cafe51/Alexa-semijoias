@@ -1,6 +1,6 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { MoreOptionsType, SectionType, StateNewProductType, UseNewProductState, VariationProductType } from '../utils/types';
+import { ImageProductDataType, MoreOptionsType, SectionType, StateNewProductType, UseNewProductState, VariationProductType } from '../utils/types';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
@@ -24,11 +24,8 @@ type ActionType =
     | { type: 'SET_FB_CATEGORIES', payload: string[]}
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
-    | { type: 'SET_IMAGES', payload: { file?: File; localUrl: string; }[]}
+    | { type: 'SET_IMAGES', payload: ImageProductDataType[]}
     | { type: 'SET_MORE_OPTIONS', payload: MoreOptionsType[]}
-
-
-
 
 export const initialEmptyState: StateNewProductType= {
     name: '',
@@ -218,7 +215,7 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         dispatch({ type: 'SET_REMOVE_ALL_CATEGORIES' });
     }, []);
 
-    const handleSetImages = useCallback((images: { file?: File; localUrl: string; }[]) => {
+    const handleSetImages = useCallback((images: ImageProductDataType[]) => {
         dispatch({ type: 'SET_IMAGES', payload: images });
     }, []);
 

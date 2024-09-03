@@ -56,7 +56,7 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
             { documents && documents[0] && (
                 <div className=" flex flex-wrap justify-center gap-2 ">
                     { documents.map((productData) => {
-                        return <Card key={ productData.id } sectionName={ sectionName } productData={ productData }  />;
+                        return <Card key={ productData.id } productData={ productData }  />;
                     }) }
                 </div>
             ) }

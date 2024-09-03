@@ -1,11 +1,8 @@
-import { StateNewProductType } from '@/app/utils/types';
+import { ImageProductDataType, StateNewProductType } from '@/app/utils/types';
 
 interface PhotosSectionProps {
     state: StateNewProductType;
-    handleSetImages: (images: {
-        file?: File;
-        localUrl: string;
-    }[]) => void;
+    handleSetImages: (images: ImageProductDataType[]) => void;
 }
 
 export default function PhotosSection({ state, handleSetImages }: PhotosSectionProps) {
@@ -13,11 +10,12 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
         const files = e.target.files;
         if (files) {
             const newImages = await Promise.all(
-                Array.from(files).map(async(file) => {
+                Array.from(files).map(async(file, index) => {
                     const croppedFile = await cropToSquare(file);
                     return {
                         file: croppedFile,
                         localUrl: URL.createObjectURL(croppedFile),
+                        index: state.images.length + index,
                     };
                 }),
             );
@@ -66,9 +64,20 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
     };
 
     const removeImage = (index: number) => {
-        const imagesClone = [...state.images];
-        const imagesFiltered = imagesClone.filter((_, i) => i !== index);
-        handleSetImages(imagesFiltered);
+        const imagesFromState = [...state.images].filter((image) => image.index !== index);
+        const imagesWithNewIndex = imagesFromState.map((imageFromState) => {
+            if(imageFromState.index > index){
+                return { ...imageFromState, index: imageFromState.index -= 1 };
+            } else {
+                return imageFromState;
+            }
+        });
+        // for(const imageFromState of imagesFromState) {
+        //     if(imageFromState.index > index) {
+        //         imageFromState.index -= 1;
+        //     }
+        // }
+        handleSetImages(imagesWithNewIndex);
     };
 
     return (
@@ -79,7 +88,7 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
                     <div key={ index } className="relative">
                         <img src={ image.localUrl } alt={ `product image ${index}` } className="h-32 w-32 object-cover rounded-lg" />
                         <button
-                            onClick={ () => removeImage(index) }
+                            onClick={ () => removeImage(image.index) }
                             className="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-white text-red-500 rounded-full p-1 shadow-lg hover:text-red-700 transition"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="h-5 w-5">

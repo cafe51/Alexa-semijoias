@@ -56,7 +56,7 @@ export default function CodesSection({
             }
         }
 
-        const skuGenerated = getRandomSku(sections, barCode);
+        const skuGenerated = getRandomSku(sections, barCode, customProperties);
 
         handleSkuChange(skuGenerated);
         setSkuGenerateErrorMessage(undefined);

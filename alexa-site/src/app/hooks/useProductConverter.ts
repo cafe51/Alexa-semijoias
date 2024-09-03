@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FireBaseDocument, ProductBundleType, SectionType, StateNewProductType } from '../utils/types';
+import { FireBaseDocument, ImageProductDataType, ProductBundleType, SectionType, StateNewProductType } from '../utils/types';
 import { useCollection } from './useCollection';
 import useFirebaseUpload from './useFirebaseUpload';
 import { getRandomBarCode } from '../utils/getRandomBarCode';
 import { getRandomSku } from '../utils/getRandomSku';
+import blankImage from '../../../public/blankImage.jpg';
 
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
@@ -25,36 +26,25 @@ export function useProductConverter() {
 
         fetchFromFirebase();
     }, []);
-
-
     
-    const hasProductVariations = (editableProduct: StateNewProductType, imageUrls: string[], productId: string): ProductBundleType => {
-        // const {
-        //     categoriesFromFirebase,
-        //     moreOptions,
-        //     sectionsSite,
-        //     estoque,
-        //     dimensions,
-        //     sku,
-        //     barcode,
-
-        // } = editableProduct;
-
+    const hasProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
         let totalStock = 0;
 
         for (const pv of editableProduct.productVariations) {
             totalStock += pv.defaultProperties.estoque;
         }
 
+        const { description, name, sections, value, variations } = editableProduct;
+
         return {
-            ...editableProduct,
+            description, name, sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
-            images: imageUrls,
+            images: imagesData,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
             estoqueTotal: totalStock,
-            // images= editableProduct.images.map((image) => image.file),
+            // images= images.map((image) => image.file),
     
             productVariations: editableProduct.productVariations.map((pv, index) => {
                 const codigoDeBarra = (pv.defaultProperties.barcode && pv.defaultProperties.barcode.length > 0) ? pv.defaultProperties.barcode : getRandomBarCode(index);
@@ -63,11 +53,12 @@ export function useProductConverter() {
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { imageIndex, ...restOfDefaultProperties } = pv.defaultProperties;
+                const imageVariation = imagesData.find((imageData) => imageData.index === imageIndex);
                 return {
 
                     customProperties: { ...pv.customProperties },
                     ...restOfDefaultProperties,
-                    image: imageUrls[imageIndex],
+                    image: imageVariation ? imageVariation.localUrl : blankImage.src,
                     productId,
                     name: editableProduct.name,
                     value: editableProduct.value,
@@ -80,22 +71,23 @@ export function useProductConverter() {
         };
     };
 
-    const hasNoProductVariations = (editableProduct: StateNewProductType, imageUrls: string[], productId: string): ProductBundleType => {
+    const hasNoProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
+        const { description, name, sections, value, variations } = editableProduct;
+
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
-        const customProperties = editableProduct.productVariations[0].customProperties;
-        const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, customProperties);
+        const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
         return {
-            ...editableProduct,
+            description, name, sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
-            images: imageUrls,
+            images: imagesData,
             categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
             estoqueTotal: editableProduct.estoque ? editableProduct.estoque : 0,
             productVariations: [
                 {   productId,
-                    image: imageUrls && imageUrls[0] ? imageUrls[0] : '',
+                    image: imagesData && imagesData[0] ? imagesData[0].localUrl : blankImage.src,
                     estoque: editableProduct.estoque ? editableProduct.estoque : 0,
                     peso: editableProduct.dimensions && editableProduct.dimensions.peso ? editableProduct.dimensions.peso : 0,
                     name: editableProduct.name,
@@ -134,18 +126,21 @@ export function useProductConverter() {
             categories: [],
             dimensions: hasMoreThanOneVariation ? undefined: { ...theOnlyVariation.dimensions, peso: theOnlyVariation.peso },
             estoque: finalProduct.estoqueTotal,
-            images: finalProduct.images.map((img) => ({ localUrl: img })), //////////////////
-            productVariations: hasMoreThanOneVariation ? finalProduct.productVariations.map((pv) => ({
-                customProperties: pv.customProperties!,
-                defaultProperties: {
-                    dimensions: pv.dimensions,
-                    estoque: pv.estoque,
-                    imageIndex: finalProduct.images.indexOf(pv.image) !== -1 ? finalProduct.images.indexOf(pv.image) : 0,
-                    peso: pv.peso,
-                    barcode: pv.barcode,
-                    sku: pv.sku,
-                },
-            })) : [], 
+            images: finalProduct.images, //////////////////
+            productVariations: hasMoreThanOneVariation ? finalProduct.productVariations.map((pv) => {
+                const foundedImage = finalProduct.images.find((image) => image.localUrl === pv.image);
+
+                return {
+                    customProperties: pv.customProperties!,
+                    defaultProperties: {
+                        dimensions: pv.dimensions,
+                        estoque: pv.estoque,
+                        imageIndex: foundedImage ? foundedImage.index : 0,
+                        peso: pv.peso,
+                        barcode: pv.barcode,
+                        sku: pv.sku,
+                    },
+                };}) : [], 
             sectionsSite: siteSectionsFromFirebase
                 .filter((ssfb) => finalProduct.sections.includes(ssfb.sectionName))
                 .map(({ exist, id, sectionName }) => {
@@ -166,17 +161,16 @@ export function useProductConverter() {
         };
     };
 
-    const uploadAndGetAllImagesUrl = async(images: { file?: File; localUrl: string; }[]) => {
+    const uploadAndGetAllImagesUrl = async(images: ImageProductDataType[]) => {
         const imagesFromStateClone1 = [...images];
         const imagesFromStateClone2 = [...images];
 
-        const imageFiles = imagesFromStateClone1.filter((image) => image.file !== undefined).map((imagWithFile) => imagWithFile.file) as File[]; // filtra as imagens locais
-        const imageUrls = await uploadImages(imageFiles); // upa as imagens locais e pega o link delas
+        const imagesWithFiles = imagesFromStateClone1.filter((image) => image.file !== undefined) as {file: File, localUrl: string, index: number }[]; // filtra as imagens locais
+        const imagesFromFirebase = await uploadImages(imagesWithFiles); // upa as imagens locais e pega o link delas
         return [
             ...imagesFromStateClone2
-                .filter((img) => img.file === undefined)
-                .map((imagWithNoFile) => imagWithNoFile.localUrl), //imagens antigas
-            ...imageUrls, //novas imagens
+                .filter((img) => img.file === undefined), //imagens antigas
+            ...imagesFromFirebase, //novas imagens
         ]; // junta todos os links, antigos e novos
     };
 

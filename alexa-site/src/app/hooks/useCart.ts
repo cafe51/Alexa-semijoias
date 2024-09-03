@@ -69,6 +69,7 @@ export const useCart = (
                             return {
                                 ...productVariation,
                                 ...cartInfo,
+                                // image: productVariation.image.localUrl,
                             };
                         }
 

@@ -1,22 +1,11 @@
-import { FireBaseDocument, ProductBundleType, SectionType, StateNewProductType } from '@/app/utils/types';
+import { FireBaseDocument, ProductBundleType, StateNewProductType, UseProductDataHandlers } from '@/app/utils/types';
 
 import ProductEditionForm from '../ProductEditionForm';
 // import { emptyProductBundleInitialState } from './emptyProductBundleInitialState';
 
 interface DashboardProductEditionProps {
     product?:  StateNewProductType,
-    useProductDataHandlers: {
-        hasNoProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
-        hasProductVariations: (editableProduct: StateNewProductType, imageUrls: string[], productId: string) => ProductBundleType;
-        uploadAndGetAllImagesUrl: (images: {
-            file?: File;
-            localUrl: string;
-        }[]) => Promise<string[]>;
-        createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
-            exist?: boolean;
-            id?: string;
-        })[]) => Promise<void>;
-    }
+    useProductDataHandlers: UseProductDataHandlers;
     productFromFirebase: ProductBundleType & FireBaseDocument;
 
 }

@@ -1,4 +1,4 @@
-import { VariationProductType } from '@/app/utils/types';
+import { ImageProductDataType, VariationProductType } from '@/app/utils/types';
 import Image from 'next/image';
 import blankImage from '../../../../../../../../public/blankImage.jpg';
 import { useState } from 'react';
@@ -16,15 +16,15 @@ function FilledField({ propertyName, propertyValue, wFull=false }: {propertyName
     );
 }
 
-function ChooseImage({ image, handleClick, i }: { image: string, handleClick: (image: string) => void, i: number }) {
+function ChooseImage({ imageUrl, handleClick, i }: { imageUrl: string, handleClick: (imageUrl: string) => void, i: number }) {
     return (
         <div
             className='w-[100px] rounded-lg relative h-[100px] overflow-hidden'
-            onClick={ () => handleClick(image) }
+            onClick={ () => handleClick(imageUrl) }
         >
             <Image
                 className='rounded-lg object-cover '
-                src={ image }
+                src={ imageUrl }
                 alt={ `Foto da peça ${ i }` }
                 fill
             />
@@ -34,13 +34,14 @@ function ChooseImage({ image, handleClick, i }: { image: string, handleClick: (i
 
 interface VariationFieldInputFilledProps {
     productVariation: VariationProductType;
-    images: string[] | null;
+    images: ImageProductDataType[];
     handleUpdateProductVariation: (oldVariation: any, newVariation: any) => void;
 
 }
 
 export default function VariationFieldInputFilled({ productVariation, images, handleUpdateProductVariation }: VariationFieldInputFilledProps) {
     const { customProperties, defaultProperties } = productVariation;
+    // const [selectedImage, setSelectedImage] = useState<string>();
     // const [imageIndex, setImageIndex] = useState(0);
     const [showChooseImageModel, setShowChooseImageModel] = useState<boolean>(false);
 
@@ -54,17 +55,26 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
         { propertyName: 'sku', propertyValue: defaultProperties.sku },
     ];
 
-    const chooseImageClick = (image: string) => {
+    const chooseImageClick = (imageSelectedLocalUrl: string) => {
         // console.log(images.indexOf(image));
         // setImageIndex(images.indexOf(image));
         setShowChooseImageModel(!showChooseImageModel);
+        const foundedImage = images.find((image) => image.localUrl === imageSelectedLocalUrl);
         handleUpdateProductVariation(productVariation, {
             ...productVariation,
             defaultProperties: {
                 ...productVariation.defaultProperties,
-                imageIndex: images!.indexOf(image),
+                imageIndex: foundedImage ? foundedImage.index : 0,
             },
         });
+    };
+
+    const findImage = (images: ImageProductDataType[], index: number) => {
+        const imageFounded = images.find((image) => image.index === index);
+        if(imageFounded) {
+            return imageFounded.localUrl;
+        }
+        return blankImage;
     };
 
 
@@ -73,7 +83,7 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
             <div className='flex gap-4 justify-evenly w-full'>
                 { showChooseImageModel && <ModalMaker title='Escolha uma imagem' closeModelClick={ () => setShowChooseImageModel(!showChooseImageModel) }>
                     <div className='flex flex-wrap gap-4'>
-                        { images && images.map((image, i) => <ChooseImage key={ i } image={ image } handleClick={ chooseImageClick } i={ i }/>) }
+                        { images && images.map((image, i) => <ChooseImage key={ i } imageUrl={ image.localUrl } handleClick={ chooseImageClick } i={ i }/>) }
                     </div>
 
                 </ModalMaker> }
@@ -81,7 +91,7 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
                 <div className='rounded-lg relative h-36 w-36 overflow-hidden flex-shrink-0' onClick={ () => setShowChooseImageModel(!showChooseImageModel) } >
                     <Image
                         className='rounded-lg object-cover '
-                        src={ images ? images[productVariation.defaultProperties.imageIndex ? productVariation.defaultProperties.imageIndex : 0] : blankImage }
+                        src={ findImage(images, productVariation.defaultProperties.imageIndex) }
                         alt="Foto da peça"
                         fill
                     />

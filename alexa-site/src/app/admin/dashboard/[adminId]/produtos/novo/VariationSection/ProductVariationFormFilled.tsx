@@ -4,14 +4,14 @@ import UpdateProductVariationForm from './UpdateProductVariationForm';
 import { FaTrashAlt } from 'react-icons/fa';
 import { FiEdit } from 'react-icons/fi';
 import VariationFieldInputFilled from './VariationFieldInputFilled';
-import { StateNewProductType, UseNewProductState } from '@/app/utils/types';
+import { ImageProductDataType, StateNewProductType, UseNewProductState } from '@/app/utils/types';
 
 
 interface ProductVariationFilledProps {
     handlers: UseNewProductState;
     productVariation: any;
-    setEditingIndex: () => void
-    images: string[] | null;
+    setEditingIndex: () => void;
+    images: ImageProductDataType[];
 }
 
 function ProductVariationFilled({ handlers, productVariation, setEditingIndex, images }: ProductVariationFilledProps) {
@@ -42,7 +42,7 @@ function ProductVariationFilled({ handlers, productVariation, setEditingIndex, i
 interface ProductVariationFormFilledProps {
     state: StateNewProductType;
     handlers: UseNewProductState;
-    images: string[] | null;
+    images: ImageProductDataType[];
 }
 
 export default function ProductVariationFormFilled({ handlers, state, images }: ProductVariationFormFilledProps) {
