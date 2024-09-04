@@ -5,6 +5,7 @@ import useFirebaseUpload from './useFirebaseUpload';
 import { getRandomBarCode } from '../utils/getRandomBarCode';
 import { getRandomSku } from '../utils/getRandomSku';
 import blankImage from '../../../public/blankImage.jpg';
+import { Timestamp } from 'firebase/firestore';
 
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
@@ -34,9 +35,11 @@ export function useProductConverter() {
             totalStock += pv.defaultProperties.estoque;
         }
 
-        const { description, name, sections, value, variations } = editableProduct;
+        const { description, name, sections, value, variations, creationDate } = editableProduct;
 
         return {
+            creationDate,
+            updatingDate: Timestamp.now(),
             description, name, sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
@@ -72,12 +75,14 @@ export function useProductConverter() {
     };
 
     const hasNoProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
-        const { description, name, sections, value, variations } = editableProduct;
+        const { description, name, sections, value, variations, creationDate } = editableProduct;
 
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
         return {
+            creationDate,
+            updatingDate: Timestamp.now(),
             description, name, sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,

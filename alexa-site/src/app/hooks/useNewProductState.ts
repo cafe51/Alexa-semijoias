@@ -1,6 +1,7 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
 import { ImageProductDataType, MoreOptionsType, SectionType, StateNewProductType, UseNewProductState, VariationProductType } from '../utils/types';
+import { Timestamp } from 'firebase/firestore';
 
 type ActionType =
     | { type: 'SET_NAME', payload: string }
@@ -26,6 +27,10 @@ type ActionType =
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
     | { type: 'SET_IMAGES', payload: ImageProductDataType[]}
     | { type: 'SET_MORE_OPTIONS', payload: MoreOptionsType[]}
+    | { type: 'SET_CREATION_DATE', payload: Timestamp}
+    | { type: 'SET_UPDATING_DATE', payload: Timestamp}
+
+
 
 export const initialEmptyState: StateNewProductType= {
     name: '',
@@ -52,6 +57,8 @@ export const initialEmptyState: StateNewProductType= {
         { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
         { isChecked: false, label: 'Marcar como lancamento', property: 'lancamento' },
     ],
+    creationDate: Timestamp.now(),
+    updatingDate: Timestamp.now(),
 };
 
 function reducer(state: StateNewProductType, action: ActionType): StateNewProductType{
@@ -123,6 +130,10 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
         return { ...state, images: action.payload };
     case 'SET_MORE_OPTIONS':
         return { ...state, moreOptions: action.payload };
+    case 'SET_CREATION_DATE':
+        return { ...state, creationDate: action.payload };
+    case 'SET_UPDATING_DATE':
+        return { ...state, updatingDate: action.payload };
     default:
         return state;
     }
@@ -223,6 +234,14 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         dispatch({ type: 'SET_MORE_OPTIONS', payload: moreOptions });
     }, []);
 
+    const handleSetCreationDate = useCallback((creationDate: Timestamp) => {
+        dispatch({ type: 'SET_CREATION_DATE', payload: creationDate });
+    }, []);
+
+    const handleSetUpdatingDate = useCallback((updatingDate: Timestamp) => {
+        dispatch({ type: 'SET_UPDATING_DATE', payload: updatingDate });
+    }, []);
+
     const handlers: UseNewProductState = {
         handleNameChange,
         handleDescriptionChange,
@@ -247,6 +266,8 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         handleRemoveAllCategories,
         handleSetImages,
         handleSetMoreOptions,
+        handleSetCreationDate,
+        handleSetUpdatingDate,
     };
 
     return {

@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export const emptyProductBundleInitialState = {
     exist: false,
     id: '',
@@ -26,4 +28,6 @@ export const emptyProductBundleInitialState = {
     freeShipping: false,
     lancamento: false,
     value: { cost: 0, price: 0, promotionalPrice: 0 },
+    creationDate: Timestamp.now(),
+    updatingDate: Timestamp.now(),
 };

@@ -1,7 +1,7 @@
 // app/hooks/useCollection.ts
 
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc  } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy  } from 'firebase/firestore';
 import { FilterOption, FireBaseDocument } from '../utils/types';
 
 export const useCollection = <T>(collectionName: string) => {
@@ -42,20 +42,30 @@ export const useCollection = <T>(collectionName: string) => {
     const getAllDocuments = async(filterOptions?: FilterOption[] | null): Promise<(T & FireBaseDocument)[]> => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
-        if(filterOptions) {
-            ref = query(ref, ...filterOptions.map(option => where(option.field, option.operator, option.value)));
+        if (filterOptions) {
+            const whereClauses = filterOptions.filter(option => option.operator && option.value);
+            const orderClauses = filterOptions.filter(option => option.order);
+
+            if (whereClauses.length > 0) {
+                ref = query(ref, ...whereClauses.map(option => where(option.field, option.operator!, option.value!)));
+            }
+
+            if (orderClauses.length > 0) {
+                orderClauses.forEach(option => {
+                    ref = query(ref, orderBy(option.field, option.order!));
+                });
+            }
         }
+
         const collectionSnapshot = await getDocs(ref);
         const collectionSnapshotDocs = collectionSnapshot.docs.map((doc) => ({
             id: doc.id,
             exist: doc.exists(),
             ...doc.data() as T,
         }));
-        console.log('COLLECTIONSNAPSHOT', collectionSnapshotDocs);
 
         return collectionSnapshotDocs;
-
-    }; 
+    };
     
     
     return { addDocument, deleteDocument, getDocumentById, updateDocumentField, getAllDocuments };

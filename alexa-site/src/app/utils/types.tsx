@@ -1,5 +1,5 @@
 //app/utils/types.tsx
-import { WhereFilterOp } from 'firebase/firestore';
+import { Timestamp, WhereFilterOp } from 'firebase/firestore';
 import { SavedSubSectionType } from '../hooks/useSectionManagement';
 
 export type FireBaseDocument = {
@@ -58,6 +58,9 @@ export type ProductBundleType = {
     name: string;
     productVariations: ProductVariation[];
 
+    creationDate: Timestamp;
+    updatingDate: Timestamp;
+
     sections: string[],
     subsections?: string[], // do tipo 'sectionName:subsectionName'[]
     value: { price: number, promotionalPrice: number, cost: number }
@@ -89,7 +92,10 @@ export type StateNewProductType = {
     barcode?: string | undefined,
     dimensions?: { largura: number, altura: number, comprimento: number, peso: number } | undefined,
     images: ImageProductDataType[],
-    moreOptions: MoreOptionsType[]
+    moreOptions: MoreOptionsType[],
+
+    creationDate: Timestamp,
+    updatingDate: Timestamp,
 
 }
 
@@ -99,8 +105,6 @@ export type SectionType = {
 }
 
 // export type StateNewProductType = FullProductType & { sectionsSite: SectionType[] | never[] };
-
-
 
 export type UseCheckoutStateType = {
     showFullOrderSummary: boolean;
@@ -130,7 +134,13 @@ export type DeliveryOptionType = {
     price: number;
   }
 
-export type FilterOption = { field: string, operator: WhereFilterOp, value: string | number | string[] | number[] } ;
+export type FilterOption = { 
+    field: string; 
+    operator?: WhereFilterOp; 
+    value?: string | number | string[] | number[]; 
+    order?: 'asc' | 'desc'; // Adiciona a opção de ordenação
+};
+
 
 export type ProductCartType = {
     //o que vem de ProductVariation exceto desconto, lancamento e descrição
@@ -284,4 +294,6 @@ export type UseNewProductState = {
     handleRemoveAllCategories: () => void;
     handleSetImages: (images: ImageProductDataType[]) => void;
     handleSetMoreOptions: (moreOptions: MoreOptionsType[]) => void;
+    handleSetCreationDate: (creationDate: Timestamp) => void;
+    handleSetUpdatingDate: (updatingDate: Timestamp) => void;
 }
