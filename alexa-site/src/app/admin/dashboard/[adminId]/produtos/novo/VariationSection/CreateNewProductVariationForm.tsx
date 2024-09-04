@@ -12,10 +12,19 @@ interface CreateNewProductVariationFormProps {
     handlers: UseNewProductState;
     setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
     productVariationState: VariationProductType;
+    setErrorMessage: Dispatch<SetStateAction<string | undefined>>
+    errorMessage: string | undefined
 }
 
-export default function CreateNewProductVariationForm({ state, handlers, productVariationState, setProductVariationState }: CreateNewProductVariationFormProps) {
-    const [errorMessage, setErrorMessage] = useState<string>();
+export default function CreateNewProductVariationForm({
+    state,
+    handlers,
+    productVariationState,
+    setProductVariationState,
+    setErrorMessage,
+    errorMessage,
+
+}: CreateNewProductVariationFormProps) {
     const [estoque, setEstoque] = useState(0);
     const [peso, setPeso] = useState(0);
     const [dimensions, setDimensions] = useState({

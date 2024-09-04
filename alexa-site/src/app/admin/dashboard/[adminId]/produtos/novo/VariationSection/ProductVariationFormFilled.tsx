@@ -1,5 +1,5 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/ProductVariationFormFilled.tsx
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import UpdateProductVariationForm from './UpdateProductVariationForm';
 import { FaTrashAlt } from 'react-icons/fa';
 import { FiEdit } from 'react-icons/fi';
@@ -43,9 +43,17 @@ interface ProductVariationFormFilledProps {
     state: StateNewProductType;
     handlers: UseNewProductState;
     images: ImageProductDataType[];
+    setErrorMessage: Dispatch<SetStateAction<string | undefined>>
+    errorMessage: string | undefined
 }
 
-export default function ProductVariationFormFilled({ handlers, state, images }: ProductVariationFormFilledProps) {
+export default function ProductVariationFormFilled({
+    handlers,
+    state,
+    images,
+    setErrorMessage,
+    errorMessage,
+}: ProductVariationFormFilledProps) {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
     return (
@@ -56,6 +64,8 @@ export default function ProductVariationFormFilled({ handlers, state, images }: 
                         editingIndex === index 
                             ?
                             <UpdateProductVariationForm
+                                errorMessage={ errorMessage }
+                                setErrorMessage={ setErrorMessage }
                                 key={ index }
                                 state={ state }
                                 handlers={ handlers }

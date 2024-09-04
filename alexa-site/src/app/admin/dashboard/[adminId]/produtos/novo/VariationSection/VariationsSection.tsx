@@ -26,6 +26,7 @@ interface VariationsSectionProps { state: StateNewProductType; handlers: UseNewP
 // ];
 
 export default function VariationsSection({ state, handlers }: VariationsSectionProps) {
+    const [errorMessage, setErrorMessage] = useState<string>();
     const [productVariationState, setProductVariationState] = useState<VariationProductType>({
         customProperties: { },
         defaultProperties: {
@@ -69,6 +70,8 @@ export default function VariationsSection({ state, handlers }: VariationsSection
                         ?
                         <CreateNewProductVariationForm
                             state={ state }
+                            errorMessage={ errorMessage }
+                            setErrorMessage={ setErrorMessage }
                             handlers={ handlers }
                             productVariationState={ productVariationState }
                             setProductVariationState={ setProductVariationState }
@@ -90,6 +93,8 @@ export default function VariationsSection({ state, handlers }: VariationsSection
                         <ProductVariationFormFilled
                             images={ state.images }
                             state={ state }
+                            errorMessage={ errorMessage }
+                            setErrorMessage={ setErrorMessage }
                             handlers={ handlers }
 
                         />
