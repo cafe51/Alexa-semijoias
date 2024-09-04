@@ -2,16 +2,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, collection, query, where, onSnapshot } from 'firebase/firestore';
-import { FilterOption, FireBaseDocument } from '../utils/types';
+import { FilterOptionForUseSnapshot, FireBaseDocument } from '../utils/types';
 
-export const useSnapshot = <T>(collectionName: string, filterOptions: FilterOption[] | null) => {
+export const useSnapshot = <T>(collectionName: string, filterOptions: FilterOptionForUseSnapshot[] | null) => {
     const [documents, setDocuments] = useState<(T & FireBaseDocument)[] | null>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
-        if (filterOptions && filterOptions.length > 0) {
+        if (filterOptions && filterOptions.length > 0 && filterOptions) {
             // Cria um array de condições where
             const whereConditions = filterOptions.map(option => 
                 where(option.field, option.operator, option.value),

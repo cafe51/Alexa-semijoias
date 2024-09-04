@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import Card from './Card';
 import { useSnapshot } from '../../hooks/useSnapshot';
-import { FilterOption, ProductBundleType } from '../../utils/types';
+import { FilterOptionForUseSnapshot, ProductBundleType } from '../../utils/types';
 
 export default function ProductsList({ sectionName, subsection }: { sectionName: string, subsection?: string }) {
     const [isLoading, setIsLoading] = useState(true);
-    const pedidosFiltrados = useMemo<FilterOption[]>(() => {
+    const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[]>(() => {
         // { field: 'subsections', operator: 'array-contains', value: subsections }
         if(subsection) {
             return [

@@ -2,7 +2,7 @@
 'use client';
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { CartInfoType, FilterOption, FireBaseDocument, OrderType, ProductBundleType, ProductCartType, ProductVariation, UserType } from '../utils/types';
+import { CartInfoType, FilterOptionForUseSnapshot, FireBaseDocument, OrderType, ProductBundleType, ProductCartType, ProductVariation, UserType } from '../utils/types';
 import { useSnapshot } from '../hooks/useSnapshot';
 import { useCart } from '../hooks/useCart';
 
@@ -25,7 +25,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
 
     const { user } = useAuthContext();
     
-    const userQuery = useMemo<FilterOption[]>(() => 
+    const userQuery = useMemo<FilterOptionForUseSnapshot[]>(() => 
         [{ field: 'userId', operator: '==', value: user ? user.uid : 'invalidId' }],
     [user], // Só recriar a query quando 'user' mudar
     );
@@ -45,7 +45,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         userQuery, 
     );
 
-    const produtosDoCarrinhoQuery = useMemo<FilterOption[]>(() => 
+    const produtosDoCarrinhoQuery = useMemo<FilterOptionForUseSnapshot[]>(() => 
         [{ field: '__name__', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }],
     [productIds], // Só recriar a query quando 'productIds' mudar
     );

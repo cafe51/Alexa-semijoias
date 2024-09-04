@@ -134,13 +134,18 @@ export type DeliveryOptionType = {
     price: number;
   }
 
+export type FilterOptionForUseSnapshot = {
+    field: string,
+    operator: WhereFilterOp,
+    value: string | number | string[] | number[]
+};
+
 export type FilterOption = { 
     field: string; 
     operator?: WhereFilterOp; 
     value?: string | number | string[] | number[]; 
     order?: 'asc' | 'desc'; // Adiciona a opção de ordenação
 };
-
 
 export type ProductCartType = {
     //o que vem de ProductVariation exceto desconto, lancamento e descrição
