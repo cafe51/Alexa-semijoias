@@ -11,9 +11,14 @@ interface CreateVariationsFormProps {
 }
 
 export default function CreateVariationsForm({ state, handlers, setProductVariationState }: CreateVariationsFormProps) {
+    const [errorMessage, setErrorMessage] = useState<string>();
     const [newVariation, setNewVariation] = useState('');
 
     function handleAddVariationClick() {
+        if(state.variations.length > 0 && state.variations.includes(newVariation)) {
+            setErrorMessage('Essa variação já existe');
+            return;
+        }
         (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation]);
         setProductVariationState((prevState) => ({
             ...prevState,
@@ -52,9 +57,13 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
                         name="newVariation"
                         type="text"
                         value={ newVariation }
-                        onChange={ (e) => setNewVariation(e.target.value) }
+                        onChange={ (e) => {
+                            setNewVariation(e.target.value);
+                            setErrorMessage(undefined);
+                        } }
                         placeholder='Insira a nova variação'
                     />
+
                     <button
                         className='p-2 rounded-full bg-green-400 w-full mt-2 disabled:bg-green-200 disabled:text-gray-400'
                         onClick={ handleAddVariationClick }
@@ -63,6 +72,8 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
                     </button>
                 </div>
             </div>
+            { errorMessage && <p className='text-sm text-center justify-self-center text-red-500'>{ errorMessage }</p> }
+
             <div className='flex flex-col w-5/6 gap-2'>
 
                 {
