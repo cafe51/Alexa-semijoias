@@ -1,8 +1,9 @@
+// app/admin/dashboard/[adminId]/produtos/novo/VariationSection/VariationFieldInputFilled.tsx
 import { ImageProductDataType, VariationProductType } from '@/app/utils/types';
 import Image from 'next/image';
-import blankImage from '../../../../../../../../public/blankImage.jpg';
 import { useState } from 'react';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
+import { findImage } from '@/app/utils/findImage';
 
 function FilledField({ propertyName, propertyValue, wFull=false }: {propertyName: string, propertyValue: string | number, wFull?: boolean}) {
     return (
@@ -51,7 +52,7 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
     ];
 
     const barCodeAndSku = [
-        { propertyName: 'código de barras', propertyValue: defaultProperties.barcode },
+        { propertyName: 'código de barras', propertyValue: defaultProperties.barCode },
         { propertyName: 'sku', propertyValue: defaultProperties.sku },
     ];
 
@@ -69,13 +70,7 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
         });
     };
 
-    const findImage = (images: ImageProductDataType[], index: number) => {
-        const imageFounded = images.find((image) => image.index === index);
-        if(imageFounded) {
-            return imageFounded.localUrl;
-        }
-        return blankImage;
-    };
+
 
 
     return (

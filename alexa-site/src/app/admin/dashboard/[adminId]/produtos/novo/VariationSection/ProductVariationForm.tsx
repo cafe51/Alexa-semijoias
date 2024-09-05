@@ -2,31 +2,15 @@
 
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import VariationFieldInput from './VariationFieldInput';
-import InputStandartProperties from './InputStandartProperties';
-import { StateNewProductType, VariationProductType } from '@/app/utils/types';
+import InputStandardProperties from './InputStandardProperties';
+import { ProductDefaultPropertiesType, StateNewProductType, VariationProductType } from '@/app/utils/types';
 
 interface ProductVariationFormProps {
     state: StateNewProductType;
+    productDefaultProperties: ProductDefaultPropertiesType
+    handleProductDefaultPropertyChange: (field: string, value: any) => void
     setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
     productVariationState: VariationProductType;
-    estoque: number;
-    setEstoque: Dispatch<SetStateAction<number>>;
-    peso: number;
-    setPeso: Dispatch<SetStateAction<number>>;
-    sku: string;
-    setSku: Dispatch<SetStateAction<string>>;
-    barCode: string;
-    setBarCode: Dispatch<SetStateAction<string>>;
-    dimensions: {
-        altura: number;
-        largura: number;
-        comprimento: number;
-    }
-    setDimensions: Dispatch<SetStateAction<{
-        altura: number;
-        largura: number;
-        comprimento: number;
-    }>>
     setIsFormValid: Dispatch<SetStateAction<boolean>>;
     setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
 }
@@ -35,16 +19,9 @@ export default function ProductVariationForm({
     state,
     productVariationState,
     setProductVariationState,
-    estoque,
-    dimensions,
-    peso,
-    setEstoque,
-    sku,
-    setSku,
-    barCode,
-    setBarCode,
-    setDimensions,
-    setPeso,
+    productDefaultProperties: { barCode, estoque ,sku },
+    productDefaultProperties,
+    handleProductDefaultPropertyChange,
     setIsFormValid,
     setErrorMessage,
 }: ProductVariationFormProps) {
@@ -93,20 +70,12 @@ export default function ProductVariationForm({
                     />
                 )) }
       
-                <InputStandartProperties
+                <InputStandardProperties
                     sections={ state.sections }
+                    productDefaultProperties={ productDefaultProperties }
+                    handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                     totalProductVariationsCreated={ state.productVariations.length }
                     productVariationState={ productVariationState }
-                    estoque={ estoque }
-                    setEstoque={ setEstoque }
-                    peso={ peso }
-                    setPeso={ setPeso }
-                    barCode={ barCode }
-                    setBarCode={ setBarCode }
-                    sku={ sku }
-                    setSku={ setSku }
-                    dimensions={ dimensions }
-                    setDimensions={ setDimensions }
                 />
             </div>
 

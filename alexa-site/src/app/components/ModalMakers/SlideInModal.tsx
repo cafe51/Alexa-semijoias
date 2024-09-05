@@ -17,7 +17,7 @@ export default function SlideInModal({ children, closeModelClick, title, isOpen,
     useEffect(() => {
         if (isOpen) {
             setShouldRender(true);
-            setTimeout(() => setIsMounted(true), 10); // Inicia a animação
+            setTimeout(() => setIsMounted(true), 50); // Inicia a animação
             document.body.style.overflow = 'hidden';
         } else {
             setIsMounted(false); // Inicia a animação de deslize para fora

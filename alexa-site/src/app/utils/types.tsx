@@ -22,16 +22,21 @@ export type ImageProductDataType = {
     index: number;
 }
 
+export type ProductDefaultPropertiesType = {
+    estoque: number;
+    peso: number;
+    dimensions: {
+        altura: number;
+        largura: number;
+        comprimento: number;
+    };
+    sku: string;
+    barCode: string;
+}
+
 export type VariationProductType = {
     customProperties: { [key: string]: string },
-    defaultProperties: {
-        estoque: number,
-        peso: number,
-        imageIndex: number,
-        dimensions: { largura: number, altura: number, comprimento: number},
-        sku: string,
-        barcode: string
-    } 
+    defaultProperties: ProductDefaultPropertiesType & { imageIndex: number }
 }
 
 export type ProductVariation = {
@@ -85,7 +90,7 @@ export type StateNewProductType = {
     sections: string[],
     subsections?: string[] | undefined, // do tipo 'sectionName:subsectionName'[]
     sectionsSite: ((SectionType & { exist?: boolean, id?: string })[] | never[]) 
-    variations: string[] | never[],
+    variations: string[],
     productVariations: VariationProductType[] | never[];
     estoque?: number | undefined,
     sku?: string | undefined,
@@ -103,8 +108,6 @@ export type SectionType = {
     sectionName: string,
     subsections?: string[] | null | undefined,
 }
-
-// export type StateNewProductType = FullProductType & { sectionsSite: SectionType[] | never[] };
 
 export type UseCheckoutStateType = {
     showFullOrderSummary: boolean;

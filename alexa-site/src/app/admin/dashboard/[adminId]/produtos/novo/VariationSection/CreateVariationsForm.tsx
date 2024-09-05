@@ -2,15 +2,16 @@
 
 import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import VariationsList from './VariationsList';
 
 interface CreateVariationsFormProps {
     state: StateNewProductType;
     handlers: UseNewProductState;
     setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
+    handleRemoveVariation(v: string): void;
 }
 
-export default function CreateVariationsForm({ state, handlers, setProductVariationState }: CreateVariationsFormProps) {
+export default function CreateVariationsForm({ state, handlers, setProductVariationState, handleRemoveVariation }: CreateVariationsFormProps) {
     const [errorMessage, setErrorMessage] = useState<string>();
     const [newVariation, setNewVariation] = useState('');
 
@@ -32,22 +33,14 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
         setNewVariation('');
     }
 
-    function handleRemoveVariation(v: string) {
-        const newVariations = state.variations.filter((vstate) => vstate !== v);
-        handlers.handleVariationsChange(newVariations);
-        setProductVariationState((prevState) => {
-            const newState = { ...prevState };
-            delete newState.customProperties[v];
-            return newState;
-        });
-       
-
-        handlers.handleRemoveVariationInAllProductVariations(v);
-        newVariations.length === 0 && handlers.handleClearProductVariations();
-    }
 
     return (
         <section className='flex flex-col items-center  gap-2 w-full'>
+
+            <VariationsList
+                handleRemoveVariation={ handleRemoveVariation }
+                variations={ state.variations }
+            />
             <div className="">
                 <label className="block text-sm font-medium" htmlFor="newVariation">Nova variação</label>
                 <div className='w-full'>
@@ -73,35 +66,6 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
                 </div>
             </div>
             { errorMessage && <p className='text-sm text-center justify-self-center text-red-500'>{ errorMessage }</p> }
-
-            <div className='flex flex-col w-5/6 gap-2'>
-
-                {
-                    state.variations
-                        .map((variation, index) => {
-                            return (
-                                variation.length > 0
-                          &&
-                          (<div key={ index } className="flex min-h-12">
-                              <input
-                                  className="block w-full px-3 border rounded-l-md "
-                                  id={ `variation ${index}` }
-                                  name={ `variation ${index}` }
-                                  type="text"
-                                  value={ variation }
-                                  onChange={ (e) => setNewVariation(e.target.value) }
-                                  readOnly={ true }
-
-                              />
-                              <button className='px-3 bg-red-400 rounded-r-md' onClick={ () => handleRemoveVariation(variation) }>
-                                  <FaRegTrashAlt/>
-                              </button>
-
-                          </div>)
-                            );
-                        })
-                }
-            </div>
         </section>
           
     );

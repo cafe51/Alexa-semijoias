@@ -3,17 +3,23 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import LargeButton from '@/app/components/LargeButton';
 import ProductVariationForm from './ProductVariationForm';
-import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
+import { ProductDefaultPropertiesType, StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import deepEqual from '@/app/utils/deepEqual';
 
+const emptyInitialProductDefaultPropertiesState = {
+    estoque: 0,
+    peso: 0,
+    dimensions: { altura: 0, largura: 0, comprimento: 0 },
+    sku: '',
+    barCode: '',
+};
 
 interface CreateNewProductVariationFormProps {
     state: StateNewProductType;
     handlers: UseNewProductState;
     setProductVariationState: Dispatch<SetStateAction<VariationProductType>>
     productVariationState: VariationProductType;
-    setErrorMessage: Dispatch<SetStateAction<string | undefined>>
-    errorMessage: string | undefined
+    toggleVariationEditionModal?: () => void | undefined
 }
 
 export default function CreateNewProductVariationForm({
@@ -21,22 +27,20 @@ export default function CreateNewProductVariationForm({
     handlers,
     productVariationState,
     setProductVariationState,
-    setErrorMessage,
-    errorMessage,
+    toggleVariationEditionModal,
 
 }: CreateNewProductVariationFormProps) {
-    const [estoque, setEstoque] = useState(0);
-    const [peso, setPeso] = useState(0);
-    const [dimensions, setDimensions] = useState({
-        altura: 0,
-        largura: 0,
-        comprimento: 0,
-    });
-    const [sku, setSku] = useState('');
-    const [barCode, setBarCode] = useState('');
-
+    const [productDefaultProperties, setProductDefaultProperties] = useState<ProductDefaultPropertiesType>(emptyInitialProductDefaultPropertiesState);
+    const [errorMessage, setErrorMessage] = useState<string>();
 
     const [isFormValid, setIsFormValid] = useState(false);
+
+    const handleProductDefaultPropertyChange = (field: string, value: any) => {
+        setProductDefaultProperties(prevState => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
 
     function handleSaveVariation() {
         try {
@@ -56,11 +60,11 @@ export default function CreateNewProductVariationForm({
                 ...productVariationState,
                 defaultProperties: {
                     imageIndex: 0,
-                    estoque: estoque ? estoque : 0,
-                    peso: peso ? peso : 0,
-                    sku: sku ? sku : '',
-                    barcode: barCode ? barCode : '',
-                    dimensions: dimensions ? dimensions : {
+                    estoque: productDefaultProperties.estoque ? productDefaultProperties.estoque : 0,
+                    peso: productDefaultProperties.peso ? productDefaultProperties.peso : 0,
+                    sku: productDefaultProperties.sku ? productDefaultProperties.sku : '',
+                    barCode: productDefaultProperties.barCode ? productDefaultProperties.barCode : '',
+                    dimensions: productDefaultProperties.dimensions ? productDefaultProperties.dimensions : {
                         altura: 0,
                         largura: 0,
                         comprimento: 0,
@@ -76,28 +80,13 @@ export default function CreateNewProductVariationForm({
                 return {
                     customProperties: newCustomProperties,
                     defaultProperties: {
+                        ...emptyInitialProductDefaultPropertiesState,
                         imageIndex: 0,
-                        peso: 0,
-                        estoque: 0,
-                        sku: '',
-                        barcode: '',
-                        dimensions: {
-                            largura: 0,
-                            altura: 0,
-                            comprimento: 0,
-                        },
                     } };
             });
             handlers.handleStockQuantityChange(undefined);
-            setEstoque(0);
-            setPeso(0);
-            setSku('');
-            setBarCode('');
-            setDimensions({
-                altura: 0,
-                largura: 0,
-                comprimento: 0,
-            });
+            setProductDefaultProperties(emptyInitialProductDefaultPropertiesState);
+            toggleVariationEditionModal && toggleVariationEditionModal();
 
         } catch(error) {
             console.error(error);
@@ -111,16 +100,8 @@ export default function CreateNewProductVariationForm({
                 setIsFormValid={ setIsFormValid }
                 productVariationState={ productVariationState }
                 setProductVariationState={ setProductVariationState }
-                estoque={ estoque }
-                setEstoque={ setEstoque }
-                peso={ peso }
-                setPeso={ setPeso }
-                dimensions={ dimensions }
-                setDimensions={ setDimensions }
-                barCode={ barCode }
-                setBarCode={ setBarCode }
-                sku={ sku }
-                setSku={ setSku }
+                productDefaultProperties={ productDefaultProperties }
+                handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                 setErrorMessage={ setErrorMessage }
             />
             { errorMessage && <p className='text-sm text-center justify-self-center text-red-500'>{ errorMessage }</p> }

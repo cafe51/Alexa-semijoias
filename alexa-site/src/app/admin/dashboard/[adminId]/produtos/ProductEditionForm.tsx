@@ -38,7 +38,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
 
             await useProductDataHandlers.createAndUpdateSiteSections(state.sectionsSite);
         
-            const productId = productIdGenerator(productFromFirebase, state.barcode, state.productVariations[0]?.defaultProperties?.barcode);
+            const productId = productIdGenerator(productFromFirebase, state.barcode, state.productVariations[0]?.defaultProperties?.barCode);
 
             if(state.productVariations && state.productVariations.length > 0) {
                 const newProduct = useProductDataHandlers.hasProductVariations(state, allImagesUrls, productId);

@@ -50,7 +50,7 @@ export function useProductConverter() {
             // images= images.map((image) => image.file),
     
             productVariations: editableProduct.productVariations.map((pv, index) => {
-                const codigoDeBarra = (pv.defaultProperties.barcode && pv.defaultProperties.barcode.length > 0) ? pv.defaultProperties.barcode : getRandomBarCode(index);
+                const codigoDeBarra = (pv.defaultProperties.barCode && pv.defaultProperties.barCode.length > 0) ? pv.defaultProperties.barCode : getRandomBarCode(index);
 
                 const skuGenerated = pv.defaultProperties.sku ? pv.defaultProperties.sku : getRandomSku(editableProduct.sections, codigoDeBarra, pv.customProperties);
 
@@ -142,7 +142,7 @@ export function useProductConverter() {
                         estoque: pv.estoque,
                         imageIndex: foundedImage ? foundedImage.index : 0,
                         peso: pv.peso,
-                        barcode: pv.barcode,
+                        barCode: pv.barcode,
                         sku: pv.sku,
                     },
                 };}) : [], 

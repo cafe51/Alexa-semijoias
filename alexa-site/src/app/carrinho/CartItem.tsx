@@ -10,6 +10,7 @@ import blankImage from '../../../public/blankImage.jpg';
 import SelectingQuantityBox from '../components/SelectingQuantityBox';
 // import { FaRegTrashAlt } from 'react-icons/fa';
 import { PiTrashSimpleBold } from 'react-icons/pi';
+import DisplayCustomProperties from '../components/DisplayCustomProperties';
 
 export default function CartItem({ produto }: { produto: ProductCartType | (ProductCartType & FireBaseDocument) }) {
     const { user } = useAuthContext();
@@ -57,18 +58,7 @@ export default function CartItem({ produto }: { produto: ProductCartType | (Prod
                     <div className='flex-grow'>
                         <p>{ produto.name }</p>
                     </div>
-                    <div className='flex flex-col rounded-lg text-xs ' >
-                        {
-                            produto.customProperties && Object.entries(produto.customProperties).sort().map(([key, value]) => {
-                                return (
-                                    <div key={ key } className="flex gap-2">
-                                        <span >{ key }:</span>
-                                        <span className='font-bold'>{ typeof value === 'string' ? value : 'Value not a string' }</span>
-                                    </div>
-                                );
-                            })
-                        }
-                    </div>
+                    { produto.customProperties && <DisplayCustomProperties customProperties={ produto.customProperties }/> }
                 </div>
 
                 <div className='flex-shrink-0'>

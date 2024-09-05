@@ -1,105 +1,113 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/VariationsSection.tsx
-import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
-import { useState } from 'react';
-import CreateVariationsForm from './CreateVariationsForm';
-import ProductVariationFormFilled from './ProductVariationFormFilled';
 import CreateNewProductVariationForm from './CreateNewProductVariationForm';
-
-interface VariationsSectionProps { state: StateNewProductType; handlers: UseNewProductState;}
+import ProductVariationFormFilled from './ProductVariationFormFilled';
+import { StateNewProductType, UseNewProductState } from '@/app/utils/types';
+import { useVariationState } from '@/app/hooks/useVariationState';
+import CreateVariationsForm from './CreateVariationsForm';
+import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
+import VariationsList from './VariationsList';
+import ProductVariationItemsList from './ProductVariationItemsList';
 
 // const variations = [ 'tamanho', 'cor' ];
 
-// const productVariations = [
+// const productVariations: VariationProductType[] = [
 //     {
 //         customProperties: { tamanho: 'pequeno', cor: 'verde', idade: '22', nacionalidade: 'brasileiro' },
-//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
+//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 }, imageIndex: 0, sku: '1234', barCode: '111' },
 //     },
 //     {
 //         customProperties: { tamanho: 'grande', cor: 'verde', idade: '44', nacionalidade: 'indiano' },
-//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
+//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 }, imageIndex: 0, sku: '1236', barCode: '222' },
 //     },
 //     {
 //         customProperties: { tamanho: 'médio', cor: 'amarelo', idade: '233', nacionalidade: 'americano' },
-//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 } },
+//         defaultProperties: { estoque: 2, peso: 2, dimensions: { largura: 2, altura: 2, comprimento: 2 }, imageIndex: 0, sku: '1235', barCode: '333' },
 //     },
 // ];
 
+interface VariationsSectionProps { 
+    state: StateNewProductType; 
+    handlers: UseNewProductState;
+  }
+
 export default function VariationsSection({ state, handlers }: VariationsSectionProps) {
-    const [errorMessage, setErrorMessage] = useState<string>();
-    const [productVariationState, setProductVariationState] = useState<VariationProductType>({
-        customProperties: { },
-        defaultProperties: {
-            imageIndex: 0,
-            peso: 0,
-            estoque: 0,
-            dimensions: {
-                largura: 0,
-                altura: 0,
-                comprimento: 0,
-            },
-            barcode: '',
-            sku: '',
-        },
-    });
-    const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
+    const { variationsState, variationsHandlers } = useVariationState();
+    
+    const renderContent = () => {
+        if (!state.variations || state.variations.length === 0) {
+            return (
+                <div className="mt-2 text-center w-full">
+                    <button className="text-blue-500" onClick={ variationsHandlers.toggleVariationEditionModal }>
+            Adicionar variações
+                    </button>
+                </div>
+            );
+        }
+
+        return (
+            <div className='flex flex-col gap-2'>
+                <VariationsList
+                    handleRemoveVariation={
+                        (v: string) => variationsHandlers.handleRemoveVariation(v, state.variations, handlers)
+                    }
+                    variations={ state.variations }/>
+                <ProductVariationItemsList
+                    handlers={ handlers }
+                    images={ state.images }
+                    productVariations={ state.productVariations }
+                    setSelectedProductVariation={ variationsHandlers.setSelectedProductVariation }
+                    toggleProductVariationEditionModal={ variationsHandlers.toggleProductVariationEditionModal }
+                />
+            </div>
+        );
+    };
 
     return (
         <section className="flex flex-col gap-2 p-4 border rounded-md bg-white w-full">
-            { showVariationEditionModal &&(
-                <ModalMaker
-                    title='Crie novas variações'
-                    closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
-                >
-                    <CreateVariationsForm state={ state } handlers={ handlers } setProductVariationState={ setProductVariationState } />
-                </ModalMaker>
-            ) }
+            <SlideInModal
+                isOpen={ variationsState.showVariationEditionModal }
+                closeModelClick={ variationsHandlers.toggleVariationEditionModal }
+                fullWidth title='Criar Nova Variação'>
+                <CreateVariationsForm
+                    state={ state }
+                    handlers={ handlers }
+                    setProductVariationState={ variationsHandlers.setProductVariationState }
+                    handleRemoveVariation={ (v: string) => variationsHandlers.handleRemoveVariation(v, state.variations, handlers) }
+                />
+                {
+                    state.variations && state.variations.length > 0 && <CreateNewProductVariationForm
+                        state={ state }
+                        handlers={ handlers }
+                        productVariationState={ variationsState.productVariationState }
+                        setProductVariationState={ variationsHandlers.setProductVariationState }
+                        toggleVariationEditionModal={ variationsHandlers.toggleVariationEditionModal }
+                    />
+                }
+            </SlideInModal>
 
-            <div className='flex justify-between'>
+            <SlideInModal
+                isOpen={ variationsState.showProductVariationEditionModal }
+                closeModelClick={ variationsHandlers.toggleProductVariationEditionModal }
+                fullWidth
+                title='Editar Produto'>
+                <ProductVariationFormFilled
+                    state={ state }
+                    handlers={ handlers }
+                    images={ state.images }
+                    productVariation={ variationsState.selectedProductVariation }
+                    toggleProductVariationEditionModal={ variationsHandlers.toggleProductVariationEditionModal }
+                />
+            </SlideInModal>
+
+            <div className="flex justify-between">
                 <h2 className="text-lg font-bold">Variações</h2>
-                { (state.variations && state.variations.length > 0) &&
-                <button className='text-blue-500'
-                    onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }>
-                        Editar
-                </button> }
+                { state.variations && state.variations.length > 0 && (
+                    <button className="text-blue-500" onClick={ variationsHandlers.toggleVariationEditionModal }>
+            Editar
+                    </button>
+                ) }
             </div>
-            
-            <div className=' border-t border-solid w-full'>
-                {
-                    (state.variations && state.variations.length > 0)
-                        ?
-                        <CreateNewProductVariationForm
-                            state={ state }
-                            errorMessage={ errorMessage }
-                            setErrorMessage={ setErrorMessage }
-                            handlers={ handlers }
-                            productVariationState={ productVariationState }
-                            setProductVariationState={ setProductVariationState }
-                        />
-                        
-                        :
-                        (<div className="mt-2 text-center w-full">
-                            <button
-                                className="text-blue-500"
-                                onClick={ () => setShowVariationEditionModal(!showVariationEditionModal) }
-                            >
-                                Adicionar variações
-                            </button>
-                        </div>)
-                }
-                {
-                    (state.productVariations && state.productVariations.length > 0 && state.variations && state.variations.length > 0)
-                        &&
-                        <ProductVariationFormFilled
-                            images={ state.images }
-                            state={ state }
-                            errorMessage={ errorMessage }
-                            setErrorMessage={ setErrorMessage }
-                            handlers={ handlers }
-
-                        />
-                }
-            </div>
+            <div className="border-t border-solid pt-4 w-full">{ renderContent() }</div>
         </section>
     );
 }
