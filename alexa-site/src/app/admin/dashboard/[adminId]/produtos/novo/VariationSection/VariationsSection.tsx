@@ -96,6 +96,8 @@ export default function VariationsSection({ state, handlers }: VariationsSection
                     images={ state.images }
                     productVariation={ variationsState.selectedProductVariation }
                     toggleProductVariationEditionModal={ variationsHandlers.toggleProductVariationEditionModal }
+                    setSelectedProductVariation={ variationsHandlers.setSelectedProductVariation }
+                    
                 />
             </SlideInModal>
 

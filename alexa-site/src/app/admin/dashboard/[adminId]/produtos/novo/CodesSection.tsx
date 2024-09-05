@@ -1,7 +1,7 @@
 // app/admin/dashboard/[adminId]/produtos/novo/CodesSection.tsx
 import { getRandomBarCode } from '@/app/utils/getRandomBarCode';
 import { getRandomSku } from '@/app/utils/getRandomSku';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 interface CodesSectionProps {
     sections: string[];
@@ -11,6 +11,10 @@ interface CodesSectionProps {
     handleBarcodeChange: (barcode: string) => void;
     customProperties?: { [key: string]: string; };
     totalProductVariationsCreated?: number;
+    barCodeErrorMessage?: string | undefined;
+    skuErrorMessage?: string | undefined;
+    setBarCodeErrorMessage?: Dispatch<SetStateAction<string | undefined>>
+    setSkuErrorMessage?: Dispatch<SetStateAction<string | undefined>>
 }
 
 export default function CodesSection({
@@ -21,6 +25,10 @@ export default function CodesSection({
     handleBarcodeChange,
     customProperties,
     totalProductVariationsCreated,
+    barCodeErrorMessage,
+    skuErrorMessage,
+    setBarCodeErrorMessage,
+    setSkuErrorMessage,
 }: CodesSectionProps){
     const [skuGenerateErrorMessage, setSkuGenerateErrorMessage] = useState<string>();
 
@@ -60,19 +68,30 @@ export default function CodesSection({
 
         handleSkuChange(skuGenerated);
         setSkuGenerateErrorMessage(undefined);
+        setSkuErrorMessage && setSkuErrorMessage(undefined);
 
     };
 
     const setRandomBarCode = () => {
         setSkuGenerateErrorMessage(undefined);
+        setBarCodeErrorMessage && setBarCodeErrorMessage(undefined);
         const randomBarcode = getRandomBarCode(totalProductVariationsCreated ? totalProductVariationsCreated : 0);
         handleBarcodeChange(randomBarcode);
     };
 
-    
     const barCodeAndSku = [
-        { propertyName: 'código de barras', propertyValue: barCode ? barCode : '', setProperty: handleBarcodeChange, setRandom: setRandomBarCode  },
-        { propertyName: 'sku', propertyValue: sku ? sku : '', setProperty: handleSkuChange, setRandom: setRandomSku },
+        {
+            propertyName: 'código de barras',
+            propertyValue: barCode ? barCode : '',
+            setProperty: handleBarcodeChange,
+            setRandom: setRandomBarCode,
+        },
+        {
+            propertyName: 'sku',
+            propertyValue: sku ? sku : '',
+            setProperty: handleSkuChange,
+            setRandom: setRandomSku,
+        },
     ];
 
     return (
@@ -92,10 +111,15 @@ export default function CodesSection({
                             onChange={ (e) => {
                                 setSkuGenerateErrorMessage(undefined);
                                 setProperty(e.target.value);
+                                propertyName === 'sku' && setSkuErrorMessage && setSkuErrorMessage(undefined);
+                                propertyName === 'código de barras' && setBarCodeErrorMessage && setBarCodeErrorMessage(undefined);
                             } }
                             placeholder=''
                         />
                         <span className='text-xs text-red-500'>{ propertyName === 'sku' && skuGenerateErrorMessage }</span>
+                        { skuErrorMessage && <span className='text-xs text-red-500'>{ propertyName === 'sku' && skuErrorMessage }</span> }
+                        { barCodeErrorMessage && <span className='text-xs text-red-500'>{ propertyName === 'código de barras' && barCodeErrorMessage }</span> }
+
                         <button onClick={ () => setRandom() }>Criar { propertyName.charAt(0).toUpperCase() + propertyName.slice(1) }</button>
                     </div>
                 );

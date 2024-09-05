@@ -1,5 +1,4 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/CreateNewProductVariationForm.tsx
-
 import { Dispatch, SetStateAction, useState } from 'react';
 import LargeButton from '@/app/components/LargeButton';
 import ProductVariationForm from './ProductVariationForm';
@@ -32,7 +31,8 @@ export default function CreateNewProductVariationForm({
 }: CreateNewProductVariationFormProps) {
     const [productDefaultProperties, setProductDefaultProperties] = useState<ProductDefaultPropertiesType>(emptyInitialProductDefaultPropertiesState);
     const [errorMessage, setErrorMessage] = useState<string>();
-
+    const [barCodeErrorMessage, setBarCodeErrorMessage] = useState<string>();
+    const [skuErrorMessage, setSkuErrorMessage] = useState<string>();
     const [isFormValid, setIsFormValid] = useState(false);
 
     const handleProductDefaultPropertyChange = (field: string, value: any) => {
@@ -42,20 +42,53 @@ export default function CreateNewProductVariationForm({
         }));
     };
 
-    function handleSaveVariation() {
+    const isThereACodeAlreadyCreated = (codeType: 'barCode' | 'sku') => { 
+        const stateDefaultProperties = state.productVariations.map((statePv) => statePv.defaultProperties);
+        const createdCodes = stateDefaultProperties.map((stateDefaultProperty) => {
+            return stateDefaultProperty[codeType];
+        });
+        return createdCodes.includes(productDefaultProperties[codeType]);
+    };
+
+    const isThereCustomPropertyCombinationAlreadyCreated = () => { 
+        const stateCustomProperties = state.productVariations.map((statePv) => statePv.customProperties); // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
+        const existSameCustomProperty = stateCustomProperties.some((stateCustomProperty) => deepEqual(productVariationState.customProperties, stateCustomProperty));
+        return existSameCustomProperty;
+    };
+
+    const handleSaveVariation = () => {
         try {
             if (!isFormValid) {
+                setErrorMessage('Todos os campos devem estar preenchidos');
                 throw new Error('Todos os campos devem estar preenchidos');
             }
-            const pvClone = [...state.productVariations];
-            const pvStateCproperties = productVariationState.customProperties; // { tamanho: 'grande', cor: 'amarelo' }
-            const stateCustomProperties = pvClone.map((pv) => pv.customProperties); // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
-            const existSameCustomProperty = stateCustomProperties.some((stateCustomProperty) => deepEqual(pvStateCproperties, stateCustomProperty));
 
-            if(existSameCustomProperty) { // verifica se já existe a cp dentro da lista de cp criadas
+            if(isThereCustomPropertyCombinationAlreadyCreated()) { // verifica se já existe a cp dentro da lista de cp criadas
                 setErrorMessage('Já existe um produto salvo com essas propriedades');
                 return;
             }
+
+            if(!productDefaultProperties.barCode || productDefaultProperties.barCode.length < 1) {
+                setBarCodeErrorMessage('Preencha o código de barras');
+                return;
+            }
+
+            if(!productDefaultProperties.sku || productDefaultProperties.sku.length < 1) {
+                setSkuErrorMessage('Preencha o sku');
+                return;
+            }
+
+            if(isThereACodeAlreadyCreated('barCode')) {
+                setBarCodeErrorMessage('Já existe um produto salvo com esse código de barras');
+                return;
+            }
+
+            if(isThereACodeAlreadyCreated('sku')) {
+                setSkuErrorMessage('Já existe um produto salvo com esse sku');
+                return;
+            }
+
+
             handlers.handleAddProductVariation({
                 ...productVariationState,
                 defaultProperties: {
@@ -91,7 +124,7 @@ export default function CreateNewProductVariationForm({
         } catch(error) {
             console.error(error);
         }
-    }
+    };
 
     return (
         <div className='w-full flex flex-col gap-2 mt-2'>
@@ -103,6 +136,10 @@ export default function CreateNewProductVariationForm({
                 productDefaultProperties={ productDefaultProperties }
                 handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                 setErrorMessage={ setErrorMessage }
+                barCodeErrorMessage={ barCodeErrorMessage }
+                setBarCodeErrorMessage={ setBarCodeErrorMessage }
+                setSkuErrorMessage={ setSkuErrorMessage }
+                skuErrorMessage={ skuErrorMessage }
             />
             { errorMessage && <p className='text-sm text-center justify-self-center text-red-500'>{ errorMessage }</p> }
             <LargeButton

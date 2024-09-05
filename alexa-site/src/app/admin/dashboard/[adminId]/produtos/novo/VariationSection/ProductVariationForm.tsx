@@ -1,9 +1,9 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/ProductVariationForm.tsx
 
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import VariationFieldInput from './VariationFieldInput';
 import InputStandardProperties from './InputStandardProperties';
 import { ProductDefaultPropertiesType, StateNewProductType, VariationProductType } from '@/app/utils/types';
+import InputCustomProperties from './InputCustomProperties';
 
 interface ProductVariationFormProps {
     state: StateNewProductType;
@@ -13,6 +13,10 @@ interface ProductVariationFormProps {
     productVariationState: VariationProductType;
     setIsFormValid: Dispatch<SetStateAction<boolean>>;
     setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
+    barCodeErrorMessage: string | undefined;
+    skuErrorMessage: string | undefined;
+    setBarCodeErrorMessage: Dispatch<SetStateAction<string | undefined>>
+    setSkuErrorMessage: Dispatch<SetStateAction<string | undefined>>
 }
 
 export default function ProductVariationForm({
@@ -24,6 +28,10 @@ export default function ProductVariationForm({
     handleProductDefaultPropertyChange,
     setIsFormValid,
     setErrorMessage,
+    barCodeErrorMessage,
+    skuErrorMessage,
+    setBarCodeErrorMessage,
+    setSkuErrorMessage,
 }: ProductVariationFormProps) {
 
     useEffect(() => {
@@ -49,26 +57,20 @@ export default function ProductVariationForm({
             }
         }
 
-        if(!barCode || !sku || barCode.length < 1 || sku.length < 1) {
-            return false;
-        }
-
         return true;
     };
 
     return (
         <div className='w-full flex flex-col gap-2 mt-2'>
             <div className='w-full flex self-center gap-2 flex-wrap'>
-                { state.variations.map((variation, index) => (
-                    <VariationFieldInput
-                        key={ index }
-                        variation={ variation }
-                        productVariationState={ productVariationState }
-                        setProductVariationState={ setProductVariationState }
-                        setErrorMessage={ setErrorMessage }
+                <InputCustomProperties
+                    state={ state }
+                    productVariationState={ productVariationState }
+                    handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
+                    setProductVariationState={ setProductVariationState }
+                    setErrorMessage={ setErrorMessage }
 
-                    />
-                )) }
+                />
       
                 <InputStandardProperties
                     sections={ state.sections }
@@ -76,6 +78,10 @@ export default function ProductVariationForm({
                     handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                     totalProductVariationsCreated={ state.productVariations.length }
                     productVariationState={ productVariationState }
+                    barCodeErrorMessage={ barCodeErrorMessage }
+                    setBarCodeErrorMessage={ setBarCodeErrorMessage }
+                    setSkuErrorMessage={ setSkuErrorMessage }
+                    skuErrorMessage={ skuErrorMessage }
                 />
             </div>
 

@@ -2,14 +2,18 @@
 import { ProductDefaultPropertiesType, VariationProductType } from '@/app/utils/types';
 import CodesSection from '../CodesSection';
 import InputField from './InputField';
+import { Dispatch, SetStateAction } from 'react';
 
 interface InputStandardPropertiesFormProps {
     sections: string[];
     productDefaultProperties: ProductDefaultPropertiesType
     handleProductDefaultPropertyChange: (field: string, value: any) => void
-
     productVariationState: VariationProductType;
     totalProductVariationsCreated: number;
+    barCodeErrorMessage: string | undefined;
+    skuErrorMessage: string | undefined;
+    setBarCodeErrorMessage: Dispatch<SetStateAction<string | undefined>>
+    setSkuErrorMessage: Dispatch<SetStateAction<string | undefined>>
 }
   
 export default function InputStandardProperties({
@@ -18,6 +22,10 @@ export default function InputStandardProperties({
     totalProductVariationsCreated,
     productDefaultProperties: { barCode, estoque, sku, dimensions, peso },
     handleProductDefaultPropertyChange,
+    barCodeErrorMessage,
+    skuErrorMessage,
+    setBarCodeErrorMessage,
+    setSkuErrorMessage,
 }: InputStandardPropertiesFormProps) {
     const dimensionProperties = Object.keys(dimensions);
 
@@ -64,6 +72,10 @@ export default function InputStandardProperties({
                 sku={ sku }
                 customProperties={ productVariationState.customProperties }
                 totalProductVariationsCreated={ totalProductVariationsCreated }
+                barCodeErrorMessage={ barCodeErrorMessage }
+                setBarCodeErrorMessage={ setBarCodeErrorMessage }
+                setSkuErrorMessage={ setSkuErrorMessage }
+                skuErrorMessage={ skuErrorMessage }
             />
         </section>
     );

@@ -1,5 +1,5 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/ProductVariationFormFilled.tsx
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import UpdateProductVariationForm from './UpdateProductVariationForm';
 import { FiEdit } from 'react-icons/fi';
 import VariationFieldInputFilled from './VariationFieldInputFilled';
@@ -53,6 +53,7 @@ interface ProductVariationFormFilledProps {
     images: ImageProductDataType[];
     productVariation: VariationProductType;
     toggleProductVariationEditionModal?: () => void | undefined
+    setSelectedProductVariation: Dispatch<SetStateAction<VariationProductType>>
 }
 
 export default function ProductVariationFormFilled({
@@ -61,10 +62,13 @@ export default function ProductVariationFormFilled({
     images,
     productVariation,
     toggleProductVariationEditionModal,
+    setSelectedProductVariation,
 }: ProductVariationFormFilledProps) {
     // const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editMode, setEditMode] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>();
+    const [barCodeErrorMessage, setBarCodeErrorMessage] = useState<string>();
+    const [skuErrorMessage, setSkuErrorMessage] = useState<string>();
 
     return (
         <div className='w-full flex flex-col gap-2 mt-2'>
@@ -79,6 +83,11 @@ export default function ProductVariationFormFilled({
                             handlers={ handlers }
                             productVariation={ productVariation }
                             setEditionProductVariationMode={ () => setEditMode(!editMode) }
+                            setSelectedProductVariation={ setSelectedProductVariation }
+                            barCodeErrorMessage={ barCodeErrorMessage }
+                            setBarCodeErrorMessage={ setBarCodeErrorMessage }
+                            setSkuErrorMessage={ setSkuErrorMessage }
+                            skuErrorMessage={ skuErrorMessage }
                         />
                         :
 
@@ -86,7 +95,12 @@ export default function ProductVariationFormFilled({
                             handlers={ handlers }
                             images={ images }
                             productVariation={ productVariation }
-                            setEditingIndex={ () => setEditMode(!editMode) }
+                            setEditingIndex={ () => {
+                                setSkuErrorMessage(undefined);
+                                setBarCodeErrorMessage(undefined);
+                                setErrorMessage(undefined);
+                                setEditMode(!editMode);
+                            } }
                             toggleProductVariationEditionModal={ toggleProductVariationEditionModal }
 
                         />
