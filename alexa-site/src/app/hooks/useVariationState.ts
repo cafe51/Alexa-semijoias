@@ -24,6 +24,28 @@ function removeCustomVariationInAllElementsOfTheArray(arrayOfProducts: Variation
     return res;
 }
 
+function removeDuplicateCustomProperties(arrayOfProducts: VariationProductType[], handlers: UseNewProductState, v: string) {
+    const uniqueProducts: VariationProductType[] = [];
+
+    removeCustomVariationInAllElementsOfTheArray(arrayOfProducts, v).forEach((product) => {
+        const hasDuplicate = uniqueProducts.some((uniqueProduct) => 
+            deepEqual(product.customProperties, uniqueProduct.customProperties),
+        );
+    
+        if (!hasDuplicate) {
+            uniqueProducts.push(product);
+        }
+    });
+
+    handlers.handleClearProductVariations(); // apaga todos os pv do estado
+    console.log('uniqueProducts', uniqueProducts);
+    uniqueProducts.forEach((fpv) => { // recria o estado adicionando cada um dos pv filtrados
+        console.log('fpv', fpv);
+        handlers.handleAddProductVariation(fpv);
+    });
+
+}
+
 export function useVariationState() {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
     const [showProductVariationEditionModal, setShowProductVariationEditionModal] = useState<boolean>(false);
@@ -32,28 +54,6 @@ export function useVariationState() {
 
     const toggleVariationEditionModal = () => setShowVariationEditionModal(prev => !prev);
     const toggleProductVariationEditionModal = () => setShowProductVariationEditionModal(prev => !prev);
-    
-    function removeDuplicateCustomProperties(arrayOfProducts: VariationProductType[], handlers: UseNewProductState, v: string) {
-        const uniqueProducts: VariationProductType[] = [];
-    
-        removeCustomVariationInAllElementsOfTheArray(arrayOfProducts, v).forEach((product) => {
-            const hasDuplicate = uniqueProducts.some((uniqueProduct) => 
-                deepEqual(product.customProperties, uniqueProduct.customProperties),
-            );
-        
-            if (!hasDuplicate) {
-                uniqueProducts.push(product);
-            }
-        });
-
-        handlers.handleClearProductVariations(); // apaga todos os pv do estado
-        console.log('uniqueProducts', uniqueProducts);
-        uniqueProducts.forEach((fpv) => { // recria o estado adicionando cada um dos pv filtrados
-            console.log('fpv', fpv);
-            handlers.handleAddProductVariation(fpv);
-        });
-
-    }
 
     function handleRemoveVariation(v: string, variations: string[], handlers: UseNewProductState, state: StateNewProductType) {
         const newVariations = variations.filter((vstate) => vstate !== v);
@@ -67,9 +67,7 @@ export function useVariationState() {
         newVariations.length === 0 && handlers.handleClearProductVariations();
 
         newVariations.length > 0 && removeDuplicateCustomProperties(state.productVariations, handlers, v);
-
     }
-
 
     return {
         variationsState: {
