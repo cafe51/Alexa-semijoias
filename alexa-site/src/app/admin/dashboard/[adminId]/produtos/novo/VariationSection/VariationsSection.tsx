@@ -48,7 +48,7 @@ export default function VariationsSection({ state, handlers }: VariationsSection
             <div className='flex flex-col gap-2'>
                 <VariationsList
                     handleRemoveVariation={
-                        (v: string) => variationsHandlers.handleRemoveVariation(v, state.variations, handlers)
+                        (v: string) => variationsHandlers.handleRemoveVariation(v, state.variations, handlers, state)
                     }
                     variations={ state.variations }/>
                 <ProductVariationItemsList
@@ -72,7 +72,7 @@ export default function VariationsSection({ state, handlers }: VariationsSection
                     state={ state }
                     handlers={ handlers }
                     setProductVariationState={ variationsHandlers.setProductVariationState }
-                    handleRemoveVariation={ (v: string) => variationsHandlers.handleRemoveVariation(v, state.variations, handlers) }
+                    handleRemoveVariation={ (v: string) => variationsHandlers.handleRemoveVariation(v, state.variations, handlers, state) }
                 />
                 {
                     state.variations && state.variations.length > 0 && <CreateNewProductVariationForm

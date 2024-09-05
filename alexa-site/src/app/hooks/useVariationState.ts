@@ -1,6 +1,7 @@
 // app/hooks/useVariationState.ts
 import { useState } from 'react';
-import { UseNewProductState, VariationProductType } from '@/app/utils/types';
+import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
+import deepEqual from '../utils/deepEqual';
 
 const emptyPv = {
     customProperties: {},
@@ -14,6 +15,15 @@ const emptyPv = {
     },
 };
 
+function removeCustomVariationInAllElementsOfTheArray(arrayOfProducts: VariationProductType[], customProductKey: string): VariationProductType[] {
+    const res = arrayOfProducts.map((pv) =>{
+        const newProductVariation = { ...pv };
+        delete newProductVariation.customProperties[customProductKey];
+        return newProductVariation;
+    });
+    return res;
+}
+
 export function useVariationState() {
     const [showVariationEditionModal, setShowVariationEditionModal] = useState<boolean>(false);
     const [showProductVariationEditionModal, setShowProductVariationEditionModal] = useState<boolean>(false);
@@ -22,8 +32,30 @@ export function useVariationState() {
 
     const toggleVariationEditionModal = () => setShowVariationEditionModal(prev => !prev);
     const toggleProductVariationEditionModal = () => setShowProductVariationEditionModal(prev => !prev);
+    
+    function removeDuplicateCustomProperties(arrayOfProducts: VariationProductType[], handlers: UseNewProductState, v: string) {
+        const uniqueProducts: VariationProductType[] = [];
+    
+        removeCustomVariationInAllElementsOfTheArray(arrayOfProducts, v).forEach((product) => {
+            const hasDuplicate = uniqueProducts.some((uniqueProduct) => 
+                deepEqual(product.customProperties, uniqueProduct.customProperties),
+            );
+        
+            if (!hasDuplicate) {
+                uniqueProducts.push(product);
+            }
+        });
 
-    function handleRemoveVariation(v: string, variations: string[], handlers: UseNewProductState) {
+        handlers.handleClearProductVariations(); // apaga todos os pv do estado
+        console.log('uniqueProducts', uniqueProducts);
+        uniqueProducts.forEach((fpv) => { // recria o estado adicionando cada um dos pv filtrados
+            console.log('fpv', fpv);
+            handlers.handleAddProductVariation(fpv);
+        });
+
+    }
+
+    function handleRemoveVariation(v: string, variations: string[], handlers: UseNewProductState, state: StateNewProductType) {
         const newVariations = variations.filter((vstate) => vstate !== v);
         handlers.handleVariationsChange(newVariations);
         setProductVariationState((prevState) => {
@@ -32,9 +64,10 @@ export function useVariationState() {
             return newState;
         });
        
-
-        handlers.handleRemoveVariationInAllProductVariations(v);
         newVariations.length === 0 && handlers.handleClearProductVariations();
+
+        newVariations.length > 0 && removeDuplicateCustomProperties(state.productVariations, handlers, v);
+
     }
 
 
