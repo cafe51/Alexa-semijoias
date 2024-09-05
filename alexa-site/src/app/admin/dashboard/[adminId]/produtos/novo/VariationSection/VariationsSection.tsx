@@ -105,7 +105,7 @@ export default function VariationsSection({ state, handlers }: VariationsSection
                 <h2 className="text-lg font-bold">Variações</h2>
                 { state.variations && state.variations.length > 0 && (
                     <button className="text-blue-500" onClick={ variationsHandlers.toggleVariationEditionModal }>
-            Editar
+            Criar Nova Variação
                     </button>
                 ) }
             </div>
