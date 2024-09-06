@@ -1,32 +1,12 @@
 // app/admin/dashboard/[adminId]/produtos/novo/PricesSection.tsx
 
+import { formatCurrencyInputMode } from '@/app/utils/formatPrice';
 import { marginProfitValue } from '@/app/utils/marginProfitValue';
 import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { StateNewProductType } from '@/app/utils/types';
 import { useState, useMemo } from 'react';
 
-function formatCurrency(value: string): string {
-    // Remove todos os caracteres que não sejam dígitos
-    const numericValue = value.replace(/\D/g, '');
 
-    // Permite que o valor seja "0" durante a digitação
-    if (numericValue === '') {
-        return 'R$ 0,00';
-    }
-
-    // Adiciona zeros à esquerda conforme necessário para garantir pelo menos 3 dígitos
-    const paddedValue = numericValue.padStart(3, '0');
-
-    // Converte o valor para inteiro e formata como moeda
-    const intValue = parseInt(paddedValue, 10);
-    const formattedValue = (intValue / 100).toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 2,
-    });
-
-    return formattedValue;
-}
 
 interface PricesSectionProps {
     state: StateNewProductType;
@@ -42,7 +22,7 @@ export default function PricesSection({ state: { value }, handleValueChange }: P
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, propertyKey: string) => {
         const { value: rawValue } = e.target;
-        const formattedValue = formatCurrency(rawValue);
+        const formattedValue = formatCurrencyInputMode(rawValue);
         setInputValues((prevValues) => ({
             ...prevValues,
             [propertyKey]: rawValue,
@@ -74,7 +54,7 @@ export default function PricesSection({ state: { value }, handleValueChange }: P
                                 id={ propertyKey }
                                 name={ propertyKey }
                                 type="text"
-                                value={ formatCurrency(propertyValue) }
+                                value={ formatCurrencyInputMode(propertyValue) }
                                 onChange={ (e) => handleInputChange(e, propertyKey) }
                                 placeholder=''
                                 aria-label={ `Insira o ${propertyName}` }

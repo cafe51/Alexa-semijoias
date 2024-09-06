@@ -1,6 +1,6 @@
 // app/checkout/PaymentSection/InstallmentOptions.tsx
 
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 interface InstallmentOptionsProps {
   totalPrice: number;

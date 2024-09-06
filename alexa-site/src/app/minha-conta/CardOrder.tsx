@@ -1,7 +1,7 @@
 //app/minha-conta/CardOrder.tsx
 import Image from 'next/image';
 import {  FireBaseDocument, OrderType } from '../utils/types';
-import formatPrice from '../utils/formatPrice';
+import { formatPrice } from '../utils/formatPrice';
 import { Dispatch, SetStateAction } from 'react';
 
 function CardImages({ pedido }: { pedido: OrderType & FireBaseDocument }) {

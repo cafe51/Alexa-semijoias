@@ -1,5 +1,5 @@
 // app/checkout/PaymentSection/ChoosePaymentOptionSection.tsx
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 interface ChoosePaymentOptionSectionProps {
     selectedPaymentOption: string | null;

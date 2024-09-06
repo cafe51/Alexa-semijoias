@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { PiTrashSimpleBold } from 'react-icons/pi';
 import blankImage from '../../../../../../../public/blankImage.jpg';
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 interface ProductListItemProps {
     product: ProductBundleType & FireBaseDocument;

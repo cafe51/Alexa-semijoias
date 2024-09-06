@@ -2,7 +2,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
-import formatPrice from '../utils/formatPrice';
+import { formatPrice } from '../utils/formatPrice';
 import CartItem from './CartItem';
 
 export default function Carrinho() {

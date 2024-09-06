@@ -1,5 +1,5 @@
 // app/checkout/DeliveryPriceSection/ChooseDeliveryPriceSection.tsx
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 import FreeShippingSection from './FreeShippingSection';
 import { DeliveryOptionType } from '@/app/utils/types';
 

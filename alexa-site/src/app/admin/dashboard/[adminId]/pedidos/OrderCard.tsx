@@ -1,7 +1,7 @@
 // OrderCard.tsx
 
 import { useCollection } from '@/app/hooks/useCollection';
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
 

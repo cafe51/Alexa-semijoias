@@ -1,5 +1,5 @@
 // app/checkout/OrderSummarySection/OrderSummaryShort.tsx
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 interface OrderSummaryShortProps {
     handleShowFullOrderSummary: (option: boolean) => void;

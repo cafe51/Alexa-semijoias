@@ -1,6 +1,6 @@
 // app/checkout/DeliveryPriceSection/DeliveryPriceSectionFilled.tsx
 
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 interface DeliveryPriceSectionFilledProps {
     handleSelectedDeliveryOption:  (option: string | null) => void

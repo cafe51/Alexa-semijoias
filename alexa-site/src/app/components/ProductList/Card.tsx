@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useUserInfo } from '../../hooks/useUserInfo';
-import formatPrice from '../../utils/formatPrice';
+import { formatPrice } from '../../utils/formatPrice';
 import SmallButton from '.././SmallButton';
 import { useState } from 'react';
 import { FireBaseDocument, ProductBundleType } from '../../utils/types';

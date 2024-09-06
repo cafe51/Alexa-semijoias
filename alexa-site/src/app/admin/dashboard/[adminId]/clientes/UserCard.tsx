@@ -4,7 +4,7 @@ import { CiMail } from 'react-icons/ci';
 import { FilterOption, FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import { useEffect, useMemo, useState } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

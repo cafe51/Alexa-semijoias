@@ -4,7 +4,7 @@ import { FireBaseDocument, ProductCartType } from '../utils/types';
 import { useCollection } from '../hooks/useCollection';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import formatPrice from '../utils/formatPrice';
+import { formatPrice } from '../utils/formatPrice';
 import { useEffect } from 'react';
 import blankImage from '../../../public/blankImage.jpg';
 import SelectingQuantityBox from '../components/SelectingQuantityBox';

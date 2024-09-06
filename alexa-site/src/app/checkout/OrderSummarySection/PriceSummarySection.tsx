@@ -1,6 +1,6 @@
 // app/checkout/OrderSummarySection/PriceSummarySection.tsx
 
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 interface PriceSummarySectionProps {
     subtotalPrice: number | undefined;

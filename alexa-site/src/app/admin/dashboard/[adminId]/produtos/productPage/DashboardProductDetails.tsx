@@ -2,7 +2,7 @@ import ResponsiveCarousel from '@/app/components/ResponsiveCarousel';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import ProductSections from './ProductSections';
 import { marginProfitValue } from '@/app/utils/marginProfitValue';
-import formatPrice from '@/app/utils/formatPrice';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 export default function DashboardProductDetails({ product }: {product:  ProductBundleType & FireBaseDocument}) {
     return (
