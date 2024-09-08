@@ -7,7 +7,7 @@ import { findImage } from '@/app/utils/findImage';
 
 function FilledField({ propertyName, propertyValue, wFull=false }: {propertyName: string, propertyValue: string | number, wFull?: boolean}) {
     return (
-        <div className={ `flex flex-col gap-1 ${wFull ? 'flex-grow' : 'w-20'}` }>
+        <div className={ `flex flex-col gap-1 ${wFull ? 'flex-grow' : 'w-32'}` }>
             <label className="text-xs font-small" htmlFor={ propertyName }>{ propertyName.charAt(0).toUpperCase() + propertyName.slice(1) }</label>
             <div className={ `flex items-center justify-center ${wFull ? 'flex-grow' : 'w-11'} h-8 text-center text-xs px-3 border rounded-md bg-green-600` }>
                 <p className='text-white'>{ propertyValue }</p>
