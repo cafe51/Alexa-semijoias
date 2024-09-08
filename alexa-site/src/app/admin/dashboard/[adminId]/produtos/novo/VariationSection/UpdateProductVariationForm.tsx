@@ -37,6 +37,14 @@ export default function UpdateProductVariationForm({
     const [newProductVariationState, setNewProductVariationState] = useState<VariationProductType>(productVariation);
     const [isFormValid, setIsFormValid] = useState(false);
 
+    const handleProductDefaultPropertyChange = (value: any, field: string) => {
+        setNewProductVariationState(prevState => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
+
+
     const isThereACodeAlreadyCreated = (codeType: 'barCode' | 'sku') => { 
         const stateDefaultProperties = state.productVariations
             .filter((stateDefaultProperties) => !deepEqual(stateDefaultProperties, productVariation)) // remover o produto editado da comparação
@@ -111,12 +119,7 @@ export default function UpdateProductVariationForm({
                     skuErrorMessage={ skuErrorMessage }
                     state={ state }
                     productDefaultProperties={ newProductVariationState.defaultProperties }
-                    handleProductDefaultPropertyChange={ (field, value) =>
-                        setNewProductVariationState(prev => ({
-                            ...prev,
-                            defaultProperties: { ...prev.defaultProperties, [field]: value },
-                        }))
-                    }
+                    handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                     setIsFormValid={ setIsFormValid }
                     productVariationState={ newProductVariationState }
                     setProductVariationState={ setNewProductVariationState }

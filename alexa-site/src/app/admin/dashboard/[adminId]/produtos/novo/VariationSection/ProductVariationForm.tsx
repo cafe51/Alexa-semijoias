@@ -8,7 +8,7 @@ import InputCustomProperties from './InputCustomProperties';
 interface ProductVariationFormProps {
     state: StateNewProductType;
     productDefaultProperties: ProductDefaultPropertiesType
-    handleProductDefaultPropertyChange: (field: string, value: any) => void
+    handleProductDefaultPropertyChange: (value: any, field: string) => void
     setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
     productVariationState: VariationProductType;
     setIsFormValid: Dispatch<SetStateAction<boolean>>;

@@ -12,13 +12,20 @@ export function formatPrice(valor: number | null | undefined): string {
     return formatador.format(valor);
 }
 
-export function formatCurrencyInputMode(value: string): string {
+export function formatInputMode(value: string, unitType: 'currency' | 'dimension' | 'weight'): string {
     // Remove todos os caracteres que não sejam dígitos
     const numericValue = value.replace(/\D/g, '');
 
     // Permite que o valor seja "0" durante a digitação
     if (numericValue === '') {
-        return 'R$ 0,00';
+        switch (unitType) {
+        case 'currency':
+            return 'R$ 0,00';
+        case 'dimension':
+            return '0,00 cm';
+        case 'weight':
+            return '0,00 g';
+        }
     }
 
     // Adiciona zeros à esquerda conforme necessário para garantir pelo menos 3 dígitos
@@ -30,7 +37,15 @@ export function formatCurrencyInputMode(value: string): string {
         style: 'currency',
         currency: 'BRL',
         minimumFractionDigits: 2,
-    });
+    }).replace('R$', '').trim(); // Remove o símbolo de moeda "R$" para todas as formatações
 
-    return formattedValue;
+    // Adiciona o símbolo apropriado com base no tipo
+    switch (unitType) {
+    case 'currency':
+        return `R$ ${formattedValue}`;
+    case 'dimension':
+        return `${formattedValue} cm`;
+    case 'weight':
+        return `${formattedValue} g`;
+    }
 }

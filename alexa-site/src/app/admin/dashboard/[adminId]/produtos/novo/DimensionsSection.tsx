@@ -1,55 +1,28 @@
-// app/admin/dashboard/[adminId]/produtos/novo/DimensionsSection.tsx
-
-import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
 import { StateNewProductType, UseNewProductState } from '@/app/utils/types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import InputSection from './InputSection';
 
 interface DimensionsSectionProps { state: StateNewProductType; handlers: UseNewProductState; }
 
 export default function DimensionsSection({ state, handlers }: DimensionsSectionProps) {
+    const [dimensionsState, setDimensionsState] = useState({
+        altura: state.dimensions && state.dimensions.altura ? state.dimensions.altura : 0,
+        comprimento: state.dimensions && state.dimensions.comprimento ? state.dimensions.comprimento : 0,
+        largura: state.dimensions && state.dimensions.largura ? state.dimensions.largura : 0,
+        peso: state.dimensions && state.dimensions.peso ? state.dimensions.peso : 0,
+    });
 
-    function handleChange(input: number, state: StateNewProductType, property: string) {
-        if(state && state.dimensions){
-            handlers.handleDimensionsChange({
-                ...state.dimensions,
-                [property]: input,
-            });
+    useEffect(() => {
+        if(state.dimensions) {
+            setDimensionsState(state.dimensions);
         }
-        if(state && !state.dimensions) {
-            handlers.handleDimensionsChange({
-                altura: 0,
-                comprimento: 0,
-                largura: 0,
-                peso: 0,
-                [property]: (input),
-            });
-        }
-    }
-
-    const properties: ['largura', 'altura', 'comprimento', 'peso'] = ['largura', 'altura', 'comprimento', 'peso'];
+    }, [state.dimensions]);
 
     return (
         <section className="flex flex-col gap-2 p-2 py-4 border rounded-md bg-white w-full">
             <h2 className="font-bold  p-2">Peso e dimensões</h2>
             <div className='flex flex-wrap justify-center w-full gap-4 text-xs'>
-                {
-                    properties.map((property, index) => {
-                        return (
-                            <div key={ index } className="w-5/12">
-                                <label htmlFor={ property } className="text-xs font-medium w-full">{ property.replace(/^\w/, (c) => c.toUpperCase()) }</label>
-                                <input
-                                    id={ property }
-                                    name={ property }                                
-                                    type="text"
-                                    value={ state && state.dimensions ? state.dimensions[property] : 0 }
-                                    onChange={ (e) => transformTextInputInNumber(e.target.value, (input) => handleChange(input, state, property)) }
-                                    className="mt-1 w-full px-3 py-2 border rounded-md"
-                                    placeholder={ property }
-                                />
-                            </div>
-                        );
-                    })
-                }
+                <InputSection handleChange={ handlers.handleDimensionsChange } stateToBeChange={ dimensionsState } unitType='dimension'/>
             </div>
         </section>
     );

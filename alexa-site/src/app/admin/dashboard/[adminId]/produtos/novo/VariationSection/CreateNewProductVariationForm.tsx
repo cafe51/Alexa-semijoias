@@ -35,7 +35,7 @@ export default function CreateNewProductVariationForm({
     const [skuErrorMessage, setSkuErrorMessage] = useState<string>();
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const handleProductDefaultPropertyChange = (field: string, value: any) => {
+    const handleProductDefaultPropertyChange = (value: any, field: string) => {
         setProductDefaultProperties(prevState => ({
             ...prevState,
             [field]: value,

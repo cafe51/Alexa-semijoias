@@ -8,7 +8,7 @@ interface VariationFieldInputProps {
     setProductVariationState: Dispatch<SetStateAction<VariationProductType>>;
     productVariationState: VariationProductType;
     setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
-    handleProductDefaultPropertyChange: (field: string, value: any) => void;
+    handleProductDefaultPropertyChange: (value: any, field: string) => void;
 }
 
 export default function VariationFieldInput({
@@ -32,8 +32,8 @@ export default function VariationFieldInput({
                         value={ customProperties[variation as keyof typeof customProperties] || '' }
                         onChange={ (e) => {
                             setErrorMessage(undefined);
-                            handleProductDefaultPropertyChange('barCode', '');
-                            handleProductDefaultPropertyChange('sku', '');
+                            handleProductDefaultPropertyChange('', 'barCode');
+                            handleProductDefaultPropertyChange('', 'sku');
                             setProductVariationState((prevState) => ({
                                 ...prevState,
                                 customProperties: {

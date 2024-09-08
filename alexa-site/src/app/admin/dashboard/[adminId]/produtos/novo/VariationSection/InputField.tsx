@@ -1,26 +1,30 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/InputField.tsx
 
-import { transformTextInputInNumber } from '@/app/utils/transformTextInputInNumber';
+import { ChangeEvent } from 'react';
+
+const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
 
 interface InputFieldProps {
-    index: number,
     propertyName: string,
-    propertyValue: number,
-    setProperty: (value: number) => void
+    propertyValue: string | number,
+    propertyKey: string,
+    onChange:  (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function InputField({ index, propertyName, propertyValue, setProperty }: InputFieldProps) {
+export default function InputField({ propertyName, propertyValue, propertyKey, onChange }: InputFieldProps) {
     return (
-        <div key={ index } className='flex flex-col gap-2 w-5/12'>
-            <label className="text-xs" htmlFor={ propertyName }>{ propertyName.charAt(0).toUpperCase() + propertyName.slice(1) }</label>
+        <div className='flex flex-col gap-2 w-5/12'>
+            <label className="text-xs" htmlFor={ propertyKey }>{ capitalize(propertyName) }</label>
             <input
                 className="text-xs px-3 py-2 border rounded-md "
-                id={ propertyName }
-                name={ propertyName }
+                id={ propertyKey }
+                name={ propertyKey }
                 type="text"
                 value={ propertyValue }
-                onChange={ (e) => transformTextInputInNumber(e.target.value, setProperty) }
+                onChange={ onChange }
                 placeholder=''
+                aria-label={ `Insira o ${propertyName}` }
             />
         </div>
     );

@@ -7,7 +7,7 @@ interface InputCustomProperties {
     setProductVariationState: Dispatch<SetStateAction<VariationProductType>>;
     productVariationState: VariationProductType;
     setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
-    handleProductDefaultPropertyChange: (field: string, value: any) => void;
+    handleProductDefaultPropertyChange: (value: any, field: string) => void;
 }
 
 export default function InputCustomProperties({
