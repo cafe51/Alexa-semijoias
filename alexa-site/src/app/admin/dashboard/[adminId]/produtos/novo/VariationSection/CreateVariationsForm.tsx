@@ -20,7 +20,7 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
             setErrorMessage('Essa variação já existe');
             return;
         }
-        (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation]);
+        (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation.trim()]);
         setProductVariationState((prevState) => ({
             ...prevState,
             customProperties: {
@@ -29,7 +29,7 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
             },
 
         }));
-        handlers.handleAddNewVariationInAllProductVariations(newVariation);
+        handlers.handleAddNewVariationInAllProductVariations(newVariation.trim());
         setNewVariation('');
     }
 
