@@ -9,7 +9,7 @@ interface ProductVariationFormProps {
     state: StateNewProductType;
     productDefaultProperties: ProductDefaultPropertiesType
     handleProductDefaultPropertyChange: (value: any, field: string) => void
-    setProductVariationState:  Dispatch<SetStateAction<VariationProductType>>;
+    handleProductCustomPropertyChange: (value: string, field: string) => void;
     productVariationState: VariationProductType;
     setIsFormValid: Dispatch<SetStateAction<boolean>>;
     setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
@@ -22,7 +22,7 @@ interface ProductVariationFormProps {
 export default function ProductVariationForm({
     state,
     productVariationState,
-    setProductVariationState,
+    handleProductCustomPropertyChange,
     productDefaultProperties: { barCode, estoque ,sku },
     productDefaultProperties,
     handleProductDefaultPropertyChange,
@@ -67,7 +67,7 @@ export default function ProductVariationForm({
                     state={ state }
                     productVariationState={ productVariationState }
                     handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
-                    setProductVariationState={ setProductVariationState }
+                    handleProductCustomPropertyChange={ handleProductCustomPropertyChange }
                     setErrorMessage={ setErrorMessage }
 
                 />

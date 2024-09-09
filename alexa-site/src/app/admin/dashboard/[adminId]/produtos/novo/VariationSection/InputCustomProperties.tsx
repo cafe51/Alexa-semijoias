@@ -4,15 +4,15 @@ import VariationFieldInput from './VariationFieldInput';
 
 interface InputCustomProperties {
     state: StateNewProductType;
-    setProductVariationState: Dispatch<SetStateAction<VariationProductType>>;
     productVariationState: VariationProductType;
     setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
     handleProductDefaultPropertyChange: (value: any, field: string) => void;
+    handleProductCustomPropertyChange: (value: string, field: string) => void;
 }
 
 export default function InputCustomProperties({
     state,
-    setProductVariationState,
+    handleProductCustomPropertyChange,
     productVariationState,
     setErrorMessage,
     handleProductDefaultPropertyChange,
@@ -25,7 +25,7 @@ export default function InputCustomProperties({
                     variation={ variation }
                     productVariationState={ productVariationState }
                     handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
-                    setProductVariationState={ setProductVariationState }
+                    handleProductCustomPropertyChange={ handleProductCustomPropertyChange }
                     setErrorMessage={ setErrorMessage }
 
                 />

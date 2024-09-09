@@ -42,6 +42,16 @@ export default function CreateNewProductVariationForm({
         }));
     };
 
+    const handleProductCustomPropertyChange = (value: any, field: string) => {
+        setProductVariationState((prevState) => ({
+            ...prevState,
+            customProperties: {
+                ...prevState.customProperties,
+                [field]: value,
+            },
+        }));
+    };
+
     const isThereACodeAlreadyCreated = (codeType: 'barCode' | 'sku') => { 
         const stateDefaultProperties = state.productVariations.map((statePv) => statePv.defaultProperties);
         const createdCodes = stateDefaultProperties.map((stateDefaultProperty) => {
@@ -132,7 +142,7 @@ export default function CreateNewProductVariationForm({
                 state={ state }
                 setIsFormValid={ setIsFormValid }
                 productVariationState={ productVariationState }
-                setProductVariationState={ setProductVariationState }
+                handleProductCustomPropertyChange={ handleProductCustomPropertyChange }
                 productDefaultProperties={ productDefaultProperties }
                 handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                 setErrorMessage={ setErrorMessage }

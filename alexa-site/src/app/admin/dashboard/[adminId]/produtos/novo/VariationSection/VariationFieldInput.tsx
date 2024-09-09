@@ -5,18 +5,18 @@ import { Dispatch, SetStateAction } from 'react';
 
 interface VariationFieldInputProps {
     variation: string;
-    setProductVariationState: Dispatch<SetStateAction<VariationProductType>>;
     productVariationState: VariationProductType;
     setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
     handleProductDefaultPropertyChange: (value: any, field: string) => void;
+    handleProductCustomPropertyChange: (value: string, field: string) => void;
 }
 
 export default function VariationFieldInput({
     variation,
-    setProductVariationState,
     productVariationState,
     setErrorMessage,
     handleProductDefaultPropertyChange,
+    handleProductCustomPropertyChange,
 }: VariationFieldInputProps) {
     const { customProperties } = productVariationState;
     if(variation in customProperties) {
@@ -34,13 +34,8 @@ export default function VariationFieldInput({
                             setErrorMessage(undefined);
                             handleProductDefaultPropertyChange('', 'barCode');
                             handleProductDefaultPropertyChange('', 'sku');
-                            setProductVariationState((prevState) => ({
-                                ...prevState,
-                                customProperties: {
-                                    ...prevState.customProperties,
-                                    [variation]: e.target.value,
-                                },
-                            }));
+                            handleProductCustomPropertyChange(e.target.value, variation);
+                            
                         } }
                         placeholder=''
                     />
