@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { findImage } from '@/app/utils/findImage';
+import ChooseImage from './ChooseImage';
 
 function FilledField({ propertyName, propertyValue, wFull=false }: {propertyName: string, propertyValue: string | number, wFull?: boolean}) {
     return (
@@ -11,24 +12,7 @@ function FilledField({ propertyName, propertyValue, wFull=false }: {propertyName
             <label className="text-xs font-small" htmlFor={ propertyName }>{ propertyName.charAt(0).toUpperCase() + propertyName.slice(1) }</label>
             <div className={ `flex items-center justify-center ${wFull ? 'flex-grow' : 'w-11'} h-8 text-center text-xs px-3 border rounded-md bg-green-600` }>
                 <p className='text-white'>{ propertyValue }</p>
-
             </div>
-        </div>
-    );
-}
-
-function ChooseImage({ imageUrl, handleClick, i }: { imageUrl: string, handleClick: (imageUrl: string) => void, i: number }) {
-    return (
-        <div
-            className='w-[100px] rounded-lg relative h-[100px] overflow-hidden'
-            onClick={ () => handleClick(imageUrl) }
-        >
-            <Image
-                className='rounded-lg object-cover '
-                src={ imageUrl }
-                alt={ `Foto da peça ${ i }` }
-                fill
-            />
         </div>
     );
 }
@@ -37,14 +21,12 @@ interface VariationFieldInputFilledProps {
     productVariation: VariationProductType;
     images: ImageProductDataType[];
     handleUpdateProductVariation: (oldVariation: any, newVariation: any) => void;
-
 }
 
 export default function VariationFieldInputFilled({ productVariation, images, handleUpdateProductVariation }: VariationFieldInputFilledProps) {
     const { customProperties, defaultProperties } = productVariation;
-    // const [selectedImage, setSelectedImage] = useState<string>();
-    // const [imageIndex, setImageIndex] = useState(0);
     const [showChooseImageModel, setShowChooseImageModel] = useState<boolean>(false);
+    const [ imageIndex, setImageIndex ] = useState(productVariation.defaultProperties.imageIndex);
 
     const estoqueAndPeso = [
         { propertyName: 'estoque', propertyValue: defaultProperties.estoque },
@@ -56,37 +38,23 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
         { propertyName: 'sku', propertyValue: defaultProperties.sku },
     ];
 
-    const chooseImageClick = (imageSelectedLocalUrl: string) => {
-        // console.log(images.indexOf(image));
-        // setImageIndex(images.indexOf(image));
-        setShowChooseImageModel(!showChooseImageModel);
-        const foundedImage = images.find((image) => image.localUrl === imageSelectedLocalUrl);
-        handleUpdateProductVariation(productVariation, {
-            ...productVariation,
-            defaultProperties: {
-                ...productVariation.defaultProperties,
-                imageIndex: foundedImage ? foundedImage.index : 0,
-            },
-        });
-    };
-
-
-
-
     return (
         <div className='flex flex-col gap-2 w-full'>
             <div className='flex gap-4 justify-evenly w-full'>
                 { showChooseImageModel && <ModalMaker title='Escolha uma imagem' closeModelClick={ () => setShowChooseImageModel(!showChooseImageModel) }>
-                    <div className='flex flex-wrap gap-4'>
-                        { images && images.map((image, i) => <ChooseImage key={ i } imageUrl={ image.localUrl } handleClick={ chooseImageClick } i={ i }/>) }
-                    </div>
-
+                    <ChooseImage
+                        images={ images }
+                        productVariation={ productVariation }
+                        handleUpdateProductVariation={ handleUpdateProductVariation }
+                        setImageIndex={ setImageIndex }
+                        setShowChooseImageModel={ setShowChooseImageModel }
+                    />
                 </ModalMaker> }
 
                 <div className='rounded-lg relative h-36 w-36 overflow-hidden flex-shrink-0' onClick={ () => setShowChooseImageModel(!showChooseImageModel) } >
                     <Image
                         className='rounded-lg object-cover '
-                        src={ findImage(images, productVariation.defaultProperties.imageIndex) }
+                        src={ findImage(images, imageIndex) }
                         alt="Foto da peça"
                         fill
                     />
@@ -104,7 +72,6 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
                     }
                 </div>
             </div>
-            
 
             <section className='flex flex-col gap-4 p-2 w-full rounded-lg'>
                 <div className='flex flex-wrap gap-2 w-full py-2 justify-self-start border-t-2 border-green-400'>
@@ -135,6 +102,5 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
 
             </section>
         </div>
-
     );
 }
