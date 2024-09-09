@@ -1,9 +1,6 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/VariationFieldInputFilled.tsx
 import { ImageProductDataType, VariationProductType } from '@/app/utils/types';
-import Image from 'next/image';
 import { useState } from 'react';
-import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { findImage } from '@/app/utils/findImage';
 import ChooseImage from './ChooseImage';
 
 function FilledField({ propertyName, propertyValue, wFull=false }: {propertyName: string, propertyValue: string | number, wFull?: boolean}) {
@@ -41,24 +38,15 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
     return (
         <div className='flex flex-col gap-2 w-full'>
             <div className='flex gap-4 justify-evenly w-full'>
-                { showChooseImageModel && <ModalMaker title='Escolha uma imagem' closeModelClick={ () => setShowChooseImageModel(!showChooseImageModel) }>
-                    <ChooseImage
-                        images={ images }
-                        productVariation={ productVariation }
-                        handleUpdateProductVariation={ handleUpdateProductVariation }
-                        setImageIndex={ setImageIndex }
-                        setShowChooseImageModel={ setShowChooseImageModel }
-                    />
-                </ModalMaker> }
-
-                <div className='rounded-lg relative h-36 w-36 overflow-hidden flex-shrink-0' onClick={ () => setShowChooseImageModel(!showChooseImageModel) } >
-                    <Image
-                        className='rounded-lg object-cover '
-                        src={ findImage(images, imageIndex) }
-                        alt="Foto da peça"
-                        fill
-                    />
-                </div>
+                <ChooseImage
+                    images={ images }
+                    imageIndex={ imageIndex }
+                    productVariation={ productVariation }
+                    showChooseImageModel={ showChooseImageModel }
+                    handleUpdateProductVariation={ handleUpdateProductVariation }
+                    setImageIndex={ setImageIndex }
+                    setShowChooseImageModel={ setShowChooseImageModel }
+                />
 
                 <div className='flex flex-col gap-2 flex-grow '>
                     {
