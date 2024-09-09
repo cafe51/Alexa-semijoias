@@ -40,7 +40,7 @@ export default function UpdateProductVariationForm({
     const handleProductDefaultPropertyChange = (value: any, field: string) => {
         setNewProductVariationState(prevState => ({
             ...prevState,
-            [field]: value,
+            defaultProperties: { ...prevState.defaultProperties, [field]: value },
         }));
     };
 
@@ -102,6 +102,9 @@ export default function UpdateProductVariationForm({
 
 
             handlers.handleUpdateProductVariation(productVariation, newProductVariationState);
+            console.log('productVariation', productVariation);
+            console.log('newProductVariationState', newProductVariationState);
+
             setSelectedProductVariation(newProductVariationState);
             setEditionProductVariationMode();
         } catch(error) {
