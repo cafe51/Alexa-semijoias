@@ -20,7 +20,7 @@ export default function ProductsDashboard() {
 
     const { useProductDataHandlers } = useProductConverter();
 
-    const { getAllDocuments } = useCollection<ProductBundleType>('products');
+    const { getAllDocuments, deleteDocument } = useCollection<ProductBundleType>('products');
 
     useEffect(() => {
         const fetchProducts = async() => {
@@ -77,11 +77,12 @@ export default function ProductsDashboard() {
                                 key={ index }
                                 index={ index }
                                 product={ product }
-                                setSelectedProduct={ setSelectedProduct }
-                                setShowEditionModal={ setShowEditionModal }
-                                setShowProductDetailModal={ setShowProductDetailModal }
-                                showEditionModal={ showEditionModal }
-                                showProductDetailModal={ showProductDetailModal }
+                                setSelectedProduct={ (product: ProductBundleType & FireBaseDocument) => setSelectedProduct(product) }
+                                setShowEditionModal={ () => setShowEditionModal((prev) => !prev) }
+                                setShowProductDetailModal={ () => setShowProductDetailModal((prev) => !prev) }
+                                deleteDocument={ () => deleteDocument(product.id) }
+                                setRefreshProducts={ () => setRefreshProducts((prev) => !prev) }
+
                             />
                         );
                     })
