@@ -32,11 +32,12 @@ export type ProductDefaultPropertiesType = {
     };
     sku: string;
     barCode: string;
+    imageIndex: number;
 }
 
 export type VariationProductType = {
     customProperties: { [key: string]: string },
-    defaultProperties: ProductDefaultPropertiesType & { imageIndex: number }
+    defaultProperties: ProductDefaultPropertiesType,
 }
 
 export type ProductVariation = {

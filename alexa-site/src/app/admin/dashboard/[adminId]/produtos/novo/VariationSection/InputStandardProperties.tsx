@@ -1,11 +1,12 @@
 // app/admin/dashboard/[adminId]/produtos/novo/VariationSection/InputStandardProperties.tsx
-import { ProductDefaultPropertiesType, VariationProductType } from '@/app/utils/types';
+import { ImageProductDataType, ProductDefaultPropertiesType, StateNewProductType, VariationProductType } from '@/app/utils/types';
 import CodesSection from '../CodesSection';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import InputSection from '../InputSection';
+import ChooseImage from './ChooseImage';
 
 interface InputStandardPropertiesFormProps {
-    sections: string[];
+    state: StateNewProductType;
     productDefaultProperties: ProductDefaultPropertiesType
     handleProductDefaultPropertyChange: (value: any, field: string) => void
     productVariationState: VariationProductType;
@@ -17,20 +18,32 @@ interface InputStandardPropertiesFormProps {
 }
   
 export default function InputStandardProperties({
-    sections,
+    state,
     productVariationState,
     totalProductVariationsCreated,
-    productDefaultProperties: { barCode, estoque, sku, dimensions, peso },
+    productDefaultProperties: { barCode, estoque, sku, dimensions, peso, imageIndex },
     handleProductDefaultPropertyChange,
     barCodeErrorMessage,
     skuErrorMessage,
     setBarCodeErrorMessage,
     setSkuErrorMessage,
 }: InputStandardPropertiesFormProps) {
+    const [showChooseImageModel, setShowChooseImageModel] = useState<boolean>(false);
+
+    function handleImageChange(foundedImage: ImageProductDataType | undefined) {
+        handleProductDefaultPropertyChange(foundedImage ? foundedImage.index : 0, 'imageIndex');
+    }
     
     return(
         <section className='flex flex-col gap-4 bg-gray-100 p-2 w-full rounded-lg'>
             <div className='flex flex-wrap gap-2 w-full py-2 justify-self-start border-t-2 border-gray-200'>
+                <ChooseImage
+                    images={ state.images }
+                    imageIndex={ imageIndex }
+                    showChooseImageModel={ showChooseImageModel }
+                    handleImageChange={ handleImageChange }
+                    setShowChooseImageModel={ setShowChooseImageModel }
+                />
                 <InputSection
                     handleChange={ (value: any, field: string | undefined) => handleProductDefaultPropertyChange(value, field!) }
                     stateToBeChange={ { estoque } }
@@ -57,7 +70,7 @@ export default function InputStandardProperties({
             <CodesSection
                 handleBarcodeChange={ (value: string) => handleProductDefaultPropertyChange(value, 'barCode') }
                 handleSkuChange={ (value: string) => handleProductDefaultPropertyChange(value, 'sku') }
-                sections={ sections }
+                sections={ state.sections }
                 barCode={ barCode }
                 sku={ sku }
                 customProperties={ productVariationState.customProperties }

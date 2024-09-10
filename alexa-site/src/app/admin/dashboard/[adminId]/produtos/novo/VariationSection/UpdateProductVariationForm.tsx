@@ -108,9 +108,6 @@ export default function UpdateProductVariationForm({
 
 
             handlers.handleUpdateProductVariation(productVariation, newProductVariationState);
-            console.log('productVariation', productVariation);
-            console.log('newProductVariationState', newProductVariationState);
-
             setSelectedProductVariation(newProductVariationState);
             setEditionProductVariationMode();
         } catch(error) {

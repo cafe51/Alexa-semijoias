@@ -35,16 +35,25 @@ export default function VariationFieldInputFilled({ productVariation, images, ha
         { propertyName: 'sku', propertyValue: defaultProperties.sku },
     ];
 
+    function handleImageChange(foundedImage: ImageProductDataType | undefined) {
+        setImageIndex(foundedImage ? foundedImage.index : 0);
+        handleUpdateProductVariation(productVariation, {
+            ...productVariation,
+            defaultProperties: {
+                ...productVariation.defaultProperties,
+                imageIndex: foundedImage ? foundedImage.index : 0,
+            },
+        });
+    }
+
     return (
         <div className='flex flex-col gap-2 w-full'>
             <div className='flex gap-4 justify-evenly w-full'>
                 <ChooseImage
                     images={ images }
                     imageIndex={ imageIndex }
-                    productVariation={ productVariation }
                     showChooseImageModel={ showChooseImageModel }
-                    handleUpdateProductVariation={ handleUpdateProductVariation }
-                    setImageIndex={ setImageIndex }
+                    handleImageChange={ handleImageChange }
                     setShowChooseImageModel={ setShowChooseImageModel }
                 />
 

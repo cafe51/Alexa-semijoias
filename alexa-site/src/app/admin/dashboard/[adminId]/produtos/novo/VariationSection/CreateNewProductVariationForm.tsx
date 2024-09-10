@@ -5,12 +5,13 @@ import ProductVariationForm from './ProductVariationForm';
 import { ProductDefaultPropertiesType, StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import deepEqual from '@/app/utils/deepEqual';
 
-const emptyInitialProductDefaultPropertiesState = {
+const emptyInitialProductDefaultPropertiesState: ProductDefaultPropertiesType = {
     estoque: 0,
     peso: 0,
     dimensions: { altura: 0, largura: 0, comprimento: 0 },
     sku: '',
     barCode: '',
+    imageIndex: 0,
 };
 
 interface CreateNewProductVariationFormProps {
@@ -98,35 +99,16 @@ export default function CreateNewProductVariationForm({
                 return;
             }
 
+            handlers.handleAddProductVariation({ ...productVariationState, defaultProperties: productDefaultProperties });
 
-            handlers.handleAddProductVariation({
-                ...productVariationState,
-                defaultProperties: {
-                    imageIndex: 0,
-                    estoque: productDefaultProperties.estoque ? productDefaultProperties.estoque : 0,
-                    peso: productDefaultProperties.peso ? productDefaultProperties.peso : 0,
-                    sku: productDefaultProperties.sku ? productDefaultProperties.sku : '',
-                    barCode: productDefaultProperties.barCode ? productDefaultProperties.barCode : '',
-                    dimensions: productDefaultProperties.dimensions ? productDefaultProperties.dimensions : {
-                        altura: 0,
-                        largura: 0,
-                        comprimento: 0,
-                    },
-
-                },
-            });
             setProductVariationState((prevState) => {
-                const newCustomProperties = { ...prevState.customProperties };
+                const resetCustomProperties = { ...prevState.customProperties };
                 for (const property in prevState.customProperties) {
-                    newCustomProperties[property] = '';
+                    resetCustomProperties[property] = '';
                 }
-                return {
-                    customProperties: newCustomProperties,
-                    defaultProperties: {
-                        ...emptyInitialProductDefaultPropertiesState,
-                        imageIndex: 0,
-                    } };
+                return { customProperties: resetCustomProperties, defaultProperties: emptyInitialProductDefaultPropertiesState };
             });
+            
             handlers.handleStockQuantityChange(undefined);
             setProductDefaultProperties(emptyInitialProductDefaultPropertiesState);
             toggleVariationEditionModal && toggleVariationEditionModal();

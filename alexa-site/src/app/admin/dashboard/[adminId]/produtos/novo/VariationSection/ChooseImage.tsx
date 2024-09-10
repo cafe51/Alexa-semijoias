@@ -1,25 +1,21 @@
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { findImage } from '@/app/utils/findImage';
-import { ImageProductDataType, VariationProductType } from '@/app/utils/types';
+import { ImageProductDataType } from '@/app/utils/types';
 import Image from 'next/image';
 import { Dispatch, SetStateAction } from 'react';
 
 interface ChooseImageProps  {
-    handleUpdateProductVariation: (oldVariation: any, newVariation: any) => void;
     setShowChooseImageModel: Dispatch<SetStateAction<boolean>>;
     images: ImageProductDataType[];
-    productVariation: VariationProductType;
-    setImageIndex: Dispatch<SetStateAction<number>>;
     imageIndex: number;
     showChooseImageModel: boolean;
+    handleImageChange: (foundedImage: ImageProductDataType | undefined) => void;
 }
 
 export default function ChooseImage({
-    handleUpdateProductVariation,
     setShowChooseImageModel,
     images,
-    productVariation,
-    setImageIndex,
+    handleImageChange,
     imageIndex,
     showChooseImageModel,
     
@@ -27,14 +23,7 @@ export default function ChooseImage({
     const chooseImageClick = (imageSelectedLocalUrl: string) => {
         setShowChooseImageModel((prev) => !prev);
         const foundedImage = images.find((image) => image.localUrl === imageSelectedLocalUrl);
-        setImageIndex(foundedImage ? foundedImage.index : 0);
-        handleUpdateProductVariation(productVariation, {
-            ...productVariation,
-            defaultProperties: {
-                ...productVariation.defaultProperties,
-                imageIndex: foundedImage ? foundedImage.index : 0,
-            },
-        });
+        handleImageChange(foundedImage);
     };
 
     return (

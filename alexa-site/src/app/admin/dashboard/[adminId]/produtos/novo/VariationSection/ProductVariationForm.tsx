@@ -23,7 +23,7 @@ export default function ProductVariationForm({
     state,
     productVariationState,
     handleProductCustomPropertyChange,
-    productDefaultProperties: { barCode, estoque ,sku },
+    productDefaultProperties: { barCode, estoque, sku },
     productDefaultProperties,
     handleProductDefaultPropertyChange,
     setIsFormValid,
@@ -73,7 +73,7 @@ export default function ProductVariationForm({
                 />
       
                 <InputStandardProperties
-                    sections={ state.sections }
+                    state={ state }
                     productDefaultProperties={ productDefaultProperties }
                     handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                     totalProductVariationsCreated={ state.productVariations.length }
