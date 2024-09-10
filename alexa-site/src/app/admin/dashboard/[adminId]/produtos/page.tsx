@@ -16,6 +16,7 @@ export default function ProductsDashboard() {
     const [showProductDetailModal, setShowProductDetailModal] = useState<boolean>(false);
     const [productBundleEditable, setProductBundleEditable] = useState<StateNewProductType>(initialEmptyState);
     const [selectedProduct, setSelectedProduct] = useState< ProductBundleType & FireBaseDocument>(emptyProductBundleInitialState);
+    const [refreshProducts, setRefreshProducts] = useState(false);
 
     const { useProductDataHandlers } = useProductConverter();
 
@@ -29,7 +30,11 @@ export default function ProductsDashboard() {
             setProducts(res);
         };
         fetchProducts();
-    }, []);
+    }, [refreshProducts]);
+
+    useEffect(() => {
+        setShowEditionModal(false);
+    }, [refreshProducts]);
 
     useEffect(() => {
         if(selectedProduct.exist) {
@@ -50,6 +55,9 @@ export default function ProductsDashboard() {
                     product={ productBundleEditable }
                     useProductDataHandlers={ useProductDataHandlers }
                     productFromFirebase={ selectedProduct }
+                    setRefreshProducts={ () => setRefreshProducts((prev) => !prev) }
+
+
                 /> }
             </SlideInModal>
             <SlideInModal

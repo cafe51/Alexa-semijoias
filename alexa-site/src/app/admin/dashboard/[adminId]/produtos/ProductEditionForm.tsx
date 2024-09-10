@@ -19,9 +19,15 @@ interface ProductEditionFormProps {
     product?:  StateNewProductType,
     useProductDataHandlers: UseProductDataHandlers;
     productFromFirebase?: ProductBundleType & FireBaseDocument;
+    setRefreshProducts?: () => void;
 }
 
-export default function ProductEditionForm({ product, useProductDataHandlers, productFromFirebase }: ProductEditionFormProps) {
+export default function ProductEditionForm({
+    product,
+    useProductDataHandlers,
+    productFromFirebase,
+    setRefreshProducts,
+}: ProductEditionFormProps) {
     const { state, handlers } = useNewProductState(product);
     const { addDocument: createNewProductDocument } = useCollection<ProductBundleType>('products');
     const { addDocument: createNewCategoryDocument } = useCollection<CategoryType>('categories');
@@ -45,6 +51,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                 await createNewProductDocument(newProduct, productId);
                 console.log('novo produto criado', newProduct);
                 console.log('id do novo produto criado:', productId);
+                setRefreshProducts && setRefreshProducts();
             }
 
             if(!state.productVariations || state.productVariations.length === 0) {
@@ -52,6 +59,7 @@ export default function ProductEditionForm({ product, useProductDataHandlers, pr
                 await createNewProductDocument(newProduct, productId);
                 console.log('novo produto criado', newProduct);
                 handlers.handleVariationsChange([]);
+                setRefreshProducts && setRefreshProducts();
             }
         } catch(error) {
             console.error(error);

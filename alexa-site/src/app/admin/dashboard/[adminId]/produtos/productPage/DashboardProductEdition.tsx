@@ -7,11 +7,21 @@ interface DashboardProductEditionProps {
     product?:  StateNewProductType,
     useProductDataHandlers: UseProductDataHandlers;
     productFromFirebase: ProductBundleType & FireBaseDocument;
-
+    setRefreshProducts: () => void;
 }
 
-export default function DashboardProductEdition({ product, useProductDataHandlers, productFromFirebase }: DashboardProductEditionProps) {
+export default function DashboardProductEdition({
+    product,
+    useProductDataHandlers,
+    productFromFirebase,
+    setRefreshProducts,
+}: DashboardProductEditionProps) {
     return(
-        <ProductEditionForm product={ product }  useProductDataHandlers={ useProductDataHandlers } productFromFirebase={ productFromFirebase }/>
+        <ProductEditionForm
+            product={ product } 
+            useProductDataHandlers={ useProductDataHandlers }
+            productFromFirebase={ productFromFirebase }
+            setRefreshProducts={ setRefreshProducts }
+        />
     );
 }
