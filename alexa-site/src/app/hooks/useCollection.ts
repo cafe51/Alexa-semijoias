@@ -7,7 +7,6 @@ import { FilterOption, FireBaseDocument } from '../utils/types';
 export const useCollection = <T>(collectionName: string) => {
     const addDocument = async(dataObj: T & { id?: string }, id?: string) => {
         if (id) {
-            console.log('CHEGOU AQUIIIII ID', id);
             // Define o ID específico
             const docRef = doc(projectFirestoreDataBase, collectionName, id);
             await setDoc(docRef, dataObj);
@@ -15,9 +14,7 @@ export const useCollection = <T>(collectionName: string) => {
             // Gera um ID automaticamente
             await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
         }
-
     };
-
   
     const deleteDocument = async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
 
@@ -26,7 +23,6 @@ export const useCollection = <T>(collectionName: string) => {
         console.log('chamou update', id, field, value, docRef);
         await updateDoc(docRef, { [field]: value });
     };
-
 
     const getDocumentById = async(id: string): Promise<T & FireBaseDocument> => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id); // Referência ao documento com ID '12345'
@@ -67,8 +63,5 @@ export const useCollection = <T>(collectionName: string) => {
         return collectionSnapshotDocs;
     };
     
-    
     return { addDocument, deleteDocument, getDocumentById, updateDocumentField, getAllDocuments };
-
-
 };

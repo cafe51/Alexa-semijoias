@@ -14,7 +14,6 @@ export const useSignUp = () => {
     const { addDocument: createNewCart } = useCollection<CartInfoType>('carrinhos');
     const { getLocalCart, setLocalCart } = useLocalStorage();
 
-
     const { login } = useLogin();
 
     const syncLocalCartToFirebase = async(userId: string) => {
