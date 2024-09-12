@@ -22,4 +22,6 @@ export default function AccountSection({ state, handleShowLoginSection, setIsCar
     
     if (!state.showLoginSection && !userInfo) return <RegisterSection setShowLogin={ handleShowLoginSection }/>;
 
+    return null;
+
 }

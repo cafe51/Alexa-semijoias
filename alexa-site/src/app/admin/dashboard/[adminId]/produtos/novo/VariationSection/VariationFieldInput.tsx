@@ -42,6 +42,8 @@ export default function VariationFieldInput({
                 </div>
             </div>
         );
+    } else {
+        return null;
     }
 
 }
