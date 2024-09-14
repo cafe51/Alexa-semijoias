@@ -147,7 +147,7 @@ export default function RegisterForm({ loadingButton, setLoadingButton }: Regist
                     { registerErrorMessage }
                 </p>
             ) }
-            <LargeButton color='green' disabled={ isButtonDisabled() } loadingButton={ loadingButton }>
+            <LargeButton color='green' disabled={ isButtonDisabled() } loadingButton={ loadingButton } type='submit'>
                 Cadastre-se
             </LargeButton>
             { error && <p className='text-red-500'>{ error }</p> }
