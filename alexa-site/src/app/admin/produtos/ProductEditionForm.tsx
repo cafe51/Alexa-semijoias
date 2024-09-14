@@ -1,19 +1,20 @@
-
+import { lazy } from 'react';
 import { useNewProductState } from '@/app/hooks/useNewProductState';
-import NameAndDescriptionSection from './novo/NameAndDescriptionSection';
 import { CategoryType, FireBaseDocument, ProductBundleType, StateNewProductType, UseProductDataHandlers } from '@/app/utils/types';
-import PhotosSection from './novo/PhotoSection/PhotosSection';
-import PricesSection from './novo/PricesSection';
-import CodesSection from './novo/CodesSection';
-import CategoriesSection from './novo/CategorieSection.tsx/CategoriesSection';
-import StockSection from './novo/StockSection';
-import DimensionsSection from './novo/DimensionsSection';
-import VariationsSection from './novo/VariationSection/VariationsSection';
-import SiteSectionSection from './novo/SiteSectionSection/SiteSectionSection';
 import LargeButton from '@/app/components/LargeButton';
 import { useCollection } from '@/app/hooks/useCollection';
 import { productIdGenerator } from '@/app/utils/productIdGenerator';
-import MoreOptionsSection from './novo/MoreOpionsSection';
+
+const NameAndDescriptionSection = lazy(() => import('./novo/NameAndDescriptionSection'));
+const PhotosSection = lazy(() => import('./novo/PhotoSection/PhotosSection'));
+const PricesSection = lazy(() => import('./novo/PricesSection'));
+const CodesSection = lazy(() => import('./novo/CodesSection'));
+const CategoriesSection = lazy(() => import('./novo/CategorieSection.tsx/CategoriesSection'));
+const StockSection = lazy(() => import('./novo/StockSection'));
+const DimensionsSection = lazy(() => import('./novo/DimensionsSection'));
+const VariationsSection = lazy(() => import('./novo/VariationSection/VariationsSection'));
+const SiteSectionSection = lazy(() => import('./novo/SiteSectionSection/SiteSectionSection'));
+const MoreOptionsSection = lazy(() => import('./novo/MoreOpionsSection'));
 
 interface ProductEditionFormProps {
     product?:  StateNewProductType,
