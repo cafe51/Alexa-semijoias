@@ -1,29 +1,32 @@
-//app/firebase/config.ts
 import { getApps, initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-
-import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getAuth, connectAuthEmulator, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getStorage, connectStorageEmulator } from 'firebase/storage';
+import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyC8Z3tYN8Glm3ptKy-aPOIupiN89mHtISk',
-    authDomain: 'alexa-semijoias.firebaseapp.com',
-    projectId: 'alexa-semijoias',
-    storageBucket: 'gs://alexa-semijoias.appspot.com',
-    messagingSenderId: '335721127639',
-    appId: '1:335721127639:web:15a170805690148c501a92',
-    measurementId: 'G-MEGLYC6L4Z',
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// const app = initializeApp(firebaseConfig);
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-
 const projectFirestoreDataBase = getFirestore(app);
-
-// Obtém a instância de autenticação
 const auth = getAuth(app);
-
+setPersistence(auth, browserLocalPersistence);
 const storage = getStorage(app);
+const functions = getFunctions(app);
 
-export { projectFirestoreDataBase, auth, storage };
+if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
+    connectFirestoreEmulator(projectFirestoreDataBase, 'localhost', 8080);
+    connectAuthEmulator(auth, 'http://localhost:9099');
+    connectStorageEmulator(storage, 'localhost', 9199);
+    connectFunctionsEmulator(functions, 'localhost', 5001);
+}
+
+export { projectFirestoreDataBase, auth, storage, functions };

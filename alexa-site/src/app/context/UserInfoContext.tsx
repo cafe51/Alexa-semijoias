@@ -15,10 +15,14 @@ interface IUserInfoContext {
 export const UserInfoContext = createContext<IUserInfoContext | null>(null);
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
-    const [cartLocalStorageState, setCartLocalStorageState] = useState<CartInfoType[]>(
-        JSON.parse(localStorage.getItem('cart') || '[]'), // Inicializa com o valor atual
-    );
-    
+    const [cartLocalStorageState, setCartLocalStorageState] = useState<CartInfoType[]>([]);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
+        }
+    }, []);
+
     const [productIds, setProductIds] = useState<string[] | null>(null);
     const [skuList, setSkuList] = useState<string[]>(['']);
     const [productVariationsState, setProductVariationsState] = useState<(ProductVariation)[] | never[]>([]);
@@ -90,30 +94,30 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
 
     //montagem do carrinho
     useEffect(() => {
-        // se o usuário estiver logado o carrinho é montado a partir do firebase
-        if(user) {
-            if (cartInfos && cartInfos) {
-                const cartInfosCLone1 = [...cartInfos];
-                const cartInfosCLone2 = [...cartInfos];
-                const ids = cartInfosCLone1.map((info) => info.productId);
-                const skus = cartInfosCLone2.map((info) => info.skuId);
+        const mountCart = () => {
+            if (user) {
+                if (cartInfos && cartInfos.length > 0) {
+                    const ids = cartInfos.map((info) => info.productId);
+                    const skus = cartInfos.map((info) => info.skuId);
 
-                console.log('useEffect userInforContext.tsx cartInfos');
-                setProductIds(Array.from(new Set(ids))); //remove valores repetidos
-                setSkuList(skus);
+                    console.log('useEffect userInforContext.tsx cartInfos');
+                    setProductIds(Array.from(new Set(ids))); //remove valores repetidos
+                    setSkuList(skus);
+                }
+            } else {
+                if (cartLocalStorageState.length > 0) {
+                    const ids = cartLocalStorageState.map((info) => info.productId);
+                    const skus = cartLocalStorageState.map((info) => info.skuId);
+                    
+                    console.log('USER NÃO EXISTE!', ids);
+                    setProductIds(Array.from(new Set(ids))); //remove valores repetidos
+                    setSkuList(skus);
+                }
             }
-        } else {
-        // se o usuário estiver deslogado o carrinho é montado a partir do localstorage
-            if (cartLocalStorageState.length > 0) {
-                const cartInfosCLone1 = [...cartLocalStorageState];
-                const cartInfosCLone2 = [...cartLocalStorageState];
-                const ids = cartInfosCLone1.map((info) => info.productId);
-                const skus = cartInfosCLone2.map((info) => info.skuId);
-                
-                console.log('USER NÂO EXISTE!', ids);
-                setProductIds(Array.from(new Set(ids))); //remove valores repetidos
-                setSkuList(skus);
-            }
+        };
+
+        if (typeof window !== 'undefined') {
+            mountCart();
         }
     }, [cartInfos, user, cartLocalStorageState]);
 

@@ -1,11 +1,13 @@
 // app/hooks/useLogin.ts
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, getIdTokenResult } from 'firebase/auth';
 import { useState } from 'react';
-import { auth } from '../firebase/config';
+import { auth, projectFirestoreDataBase } from '../firebase/config';
 import { useAuthContext } from './useAuthContext';
 import { useLocalStorage } from './useLocalStorage';
 import { CartInfoType } from '../utils/types';
 import { useCollection } from './useCollection';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { getDoc, doc } from 'firebase/firestore';
 
 export const useLogin = () => {
     const { dispatch } = useAuthContext();
@@ -33,6 +35,31 @@ export const useLogin = () => {
         }
     };
 
+    const checkAndSetAdminClaim = async(user: any) => {
+        try {
+            const userDoc = await getDoc(doc(projectFirestoreDataBase, 'usuarios', user.uid));
+            const userData = userDoc.data();
+            const isAdminInFirestore = userData?.admin === true;
+
+            const idTokenResult = await getIdTokenResult(user, true);
+            const hasAdminClaim = idTokenResult.claims.admin === true;
+
+            if (isAdminInFirestore && !hasAdminClaim) {
+                const functions = getFunctions();
+                const setAdminClaim = httpsCallable(functions, 'setAdminClaim');
+                await setAdminClaim({ uid: user.uid });
+                // Atualizar o token após definir o claim
+                await user.getIdToken(true);
+            }
+
+            dispatch({ type: 'SET_ADMIN', payload: isAdminInFirestore });
+            console.log('useLogin - isAdmin:', isAdminInFirestore);
+        } catch (error) {
+            console.error('Erro ao verificar status de administrador:', error);
+            dispatch({ type: 'SET_ADMIN', payload: false });
+        }
+    };
+
     const login = async(email: string, password: string) => {
         setError(null); 
 
@@ -41,6 +68,7 @@ export const useLogin = () => {
             dispatch({ type: 'LOGIN', payload: res.user });
 
             await syncLocalCartToFirebase(res.user.uid); 
+            await checkAndSetAdminClaim(res.user);
 
         } catch (err) {
             if (err instanceof Error) {

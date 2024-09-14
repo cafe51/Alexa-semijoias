@@ -11,7 +11,7 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 
 
 const FullHeader = () => {
-    const{ user } = useAuthContext();
+    const{ user, isAdmin } = useAuthContext();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -24,6 +24,8 @@ const FullHeader = () => {
 
     useEffect(() => {
         console.log('bem vindo', user);
+        console.log('o estado do admin do user logado é', isAdmin);
+
         if (!user) {
             try {
                 setPathLoginAccount('login');

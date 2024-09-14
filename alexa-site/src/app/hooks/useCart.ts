@@ -1,3 +1,5 @@
+'use client';
+
 // app/hooks/useCart.ts
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useCollection } from './useCollection';
@@ -19,23 +21,22 @@ export const useCart = (
     const [mappedProducts, setMappedProducts] = useState<(ProductCartType)[] | null>(null);
 
     const fixQuantityByStockInLocalStorage = (productVariation: ProductVariation) => {
-        // eslint-disable-next-line prefer-const
-        let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
-        const cartItem = localCart.find((item) => item.skuId === productVariation.sku);
-        console.log('LOCAL CART AAAAAAAAAAAAAAAAAAAAaa', localCart);
-        
-        if (cartItem && cartItem.quantidade > productVariation.estoque) {
-            cartItem.quantidade = productVariation.estoque;
-        }
+        if (typeof window !== 'undefined') {
+            let localCart: CartInfoType[] = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartItem = localCart.find((item) => item.skuId === productVariation.sku);
+            
+            if (cartItem && cartItem.quantidade > productVariation.estoque) {
+                cartItem.quantidade = productVariation.estoque;
+            }
 
-        if (cartItem && cartItem.quantidade < 1) {
-            localCart = localCart.filter((element) => element != cartItem);
+            if (cartItem && cartItem.quantidade < 1) {
+                localCart = localCart.filter((element) => element != cartItem);
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(localCart));
+            console.warn('Quantidade do produto', productVariation.sku ,'do carrinho corrigida.');
+            setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
         }
-        
-        localStorage.setItem('cart', JSON.stringify(localCart));
-        console.warn('Quantidade do produto do produto', productVariation.sku ,' do carrinho corrigida.');
-        setCartLocalStorageState(JSON.parse(localStorage.getItem('cart') || '[]'));
-        return;
     };
 
     const fixQuantityByStockInFirebase = (cartInfo: CartInfoType & FireBaseDocument, product: ProductVariation) => {
@@ -49,9 +50,7 @@ export const useCart = (
 
     useEffect(() => {
         const fetchProducts = async() => {
-
-            if (productVariations && productVariations.length > 0 && cartInfos) {
-                // console.log('productVariations', 'AAAAAAAAAAA', productVariations);
+            if (typeof window !== 'undefined' && productVariations && productVariations.length > 0 && cartInfos) {
                 const productsCart = productVariations
                     .map((productVariation) => {
                         const cartInfo = cartInfos.find((cart) => productVariation.sku === cart.skuId); 
@@ -72,12 +71,10 @@ export const useCart = (
                                 // image: productVariation.image.localUrl,
                             };
                         }
-
                     }).filter(Boolean) as ((ProductCartType & FireBaseDocument)[]) | ProductCartType[];
 
                 setMappedProducts(productsCart);
             }
-            // }
         };
 
         fetchProducts();

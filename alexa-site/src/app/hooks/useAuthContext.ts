@@ -1,8 +1,8 @@
 // app/hooks/useAuthContext.ts
 import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, AuthState } from '../context/AuthContext';
 
-export const useAuthContext = () => {
+export const useAuthContext = (): AuthState & { dispatch: React.Dispatch<any> } => {
     const context = useContext(AuthContext);
 
     if (!context) {

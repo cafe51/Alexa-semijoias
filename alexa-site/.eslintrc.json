@@ -8,6 +8,16 @@
       "version": "18"
     }
   },
+  "ignorePatterns": [
+      "node_modules",
+      "dist",
+      "build",
+      "coverage",
+      "public",
+      "*.json",
+      "*.d.ts",
+      "*.js"
+  ],
   "extends": [
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended",
