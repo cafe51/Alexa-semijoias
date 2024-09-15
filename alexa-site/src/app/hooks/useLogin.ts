@@ -40,18 +40,32 @@ export const useLogin = () => {
             const userDoc = await getDoc(doc(projectFirestoreDataBase, 'usuarios', user.uid));
             const userData = userDoc.data();
             const isAdminInFirestore = userData?.admin === true;
-
+    
+            console.log('useLogin - userData:', userData);
+            console.log('useLogin - isAdminInFirestore:', isAdminInFirestore);
+    
             const idTokenResult = await getIdTokenResult(user, true);
             const hasAdminClaim = idTokenResult.claims.admin === true;
-
+    
+            console.log('useLogin - hasAdminClaim:', hasAdminClaim);
+    
             if (isAdminInFirestore && !hasAdminClaim) {
+                console.log('useLogin - Tentando definir claim de admin');
                 const functions = getFunctions();
                 const setAdminClaim = httpsCallable(functions, 'setAdminClaim');
-                await setAdminClaim({ uid: user.uid });
-                // Atualizar o token após definir o claim
-                await user.getIdToken(true);
+                try {
+                    const result = await setAdminClaim({ uid: user.uid });
+                    console.log('useLogin - Resultado da chamada setAdminClaim:', result);
+                    // Atualizar o token após definir o claim
+                    await user.getIdToken(true);
+                    // Verificar novamente o token após atualização
+                    const newIdTokenResult = await getIdTokenResult(user, true);
+                    console.log('useLogin - Novo hasAdminClaim:', newIdTokenResult.claims.admin);
+                } catch (callableError) {
+                    console.error('Erro ao chamar setAdminClaim:', callableError);
+                }
             }
-
+    
             dispatch({ type: 'SET_ADMIN', payload: isAdminInFirestore });
             console.log('useLogin - isAdmin:', isAdminInFirestore);
         } catch (error) {

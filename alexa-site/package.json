@@ -10,7 +10,7 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "emulators": "firebase emulators:start",
+    "emulators": "cd functions && npm run build && firebase emulators:start",
     "clean": "rm -rf .next"
   },
   "dependencies": {

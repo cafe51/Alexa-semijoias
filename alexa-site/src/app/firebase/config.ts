@@ -24,9 +24,10 @@ const functions = getFunctions(app);
 
 if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
     connectFirestoreEmulator(projectFirestoreDataBase, 'localhost', 8080);
-    connectAuthEmulator(auth, 'http://localhost:9099');
+    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
     connectStorageEmulator(storage, 'localhost', 9199);
     connectFunctionsEmulator(functions, 'localhost', 5001);
+    console.log('Firebase emulators connected');
 }
 
 export { projectFirestoreDataBase, auth, storage, functions };
