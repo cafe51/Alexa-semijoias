@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { FireBaseDocument, SectionType, SiteSectionManagementType } from '@/app/utils/types';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { normalizeString } from '@/app/utils/normalizeString';
+import { removePunctuationAndSpace } from '@/app/utils/removePunctuationAndSpace';
 
 interface SubSectionListProps {
     siteSectionManagement: SiteSectionManagementType;
@@ -25,14 +26,14 @@ export default function SubSectionList({ siteSectionManagement, setNewSubSection
         if(foundedSection?.subsections?.some((ss) => ss === newSubSectionName)) {
             setErrorMessage('Já existe uma sub seção com esse nome');
         } else {
-            setNewSubSection({ sectionName: selectedSection.sectionName, subsection: newSubSectionName });
+            setNewSubSection({ sectionName: selectedSection.sectionName.trim(), subsection: newSubSectionName.trim() });
 
             siteSectionManagement.handleSectionClick(
                 {
                     ...selectedSection,
                     subsections: selectedSection.subsections
-                        ? [...selectedSection.subsections, newSubSectionName ]
-                        : [newSubSectionName],
+                        ? [...selectedSection.subsections, newSubSectionName.trim() ]
+                        : [newSubSectionName.trim()],
                 },
             );
             setNewSubSectionName('');
@@ -58,7 +59,8 @@ export default function SubSectionList({ siteSectionManagement, setNewSubSection
                                 type="text"
                                 value={ newSubSectionName }
                                 onChange={ (e) => {
-                                    setNewSubSectionName(normalizeString(e.target.value));
+                                    //Preciso de uma forma de remover sinais de pontuação do valor criado no onChange para o e.target.value.
+                                    setNewSubSectionName(removePunctuationAndSpace(e.target.value));
                                     setErrorMessage(undefined);
                                 } }
                                 placeholder="Nova Sub Seção"

@@ -1,3 +1,4 @@
+import { removePunctuationAndSpace } from '@/app/utils/removePunctuationAndSpace';
 import { CheckboxData, UseNewProductState } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
 
@@ -41,7 +42,7 @@ export default function CategoriesListFromFb({ options, selectedOptions, handleC
                         type="text"
                         placeholder="Procurar Categoria"
                         value={ newSearch }
-                        onChange={ (e) => setNewSearch(e.target.value) }
+                        onChange={ (e) => setNewSearch(removePunctuationAndSpace(e.target.value)) }
 
                     />
                 </div>
@@ -76,7 +77,7 @@ export default function CategoriesListFromFb({ options, selectedOptions, handleC
                         <div
                             className={ 'bg-green-200 text-green-600 rounded p-2 hover:bg-pink-200 w-full full ms-2 text-sm font-medium' }
                             onClick={ () => {
-                                handlers.handleAddCategories(newSearch);
+                                handlers.handleAddCategories(newSearch.trim());
                                 setNewSearch('');
                             } }
                         >

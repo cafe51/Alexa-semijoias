@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { SectionType, SiteSectionManagementType } from '@/app/utils/types';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { normalizeString } from '@/app/utils/normalizeString';
+import { removePunctuationAndSpace } from '@/app/utils/removePunctuationAndSpace';
 
 interface SectionListProps {
     firebaseSections: SectionType[];
@@ -30,7 +31,7 @@ export default function SectionList({ firebaseSections, setNewSections, siteSect
                                 type="text"
                                 value={ newSectionName }
                                 onChange={ (e) => {
-                                    setNewSectionName(normalizeString(e.target.value));
+                                    setNewSectionName(removePunctuationAndSpace(e.target.value));
                                     setErrorMessage(undefined);
                                 } }
                                 placeholder="Nova Seção"
@@ -44,7 +45,7 @@ export default function SectionList({ firebaseSections, setNewSections, siteSect
                                 if(firebaseSections.some((fbsection) => normalizeString(fbsection.sectionName) === normalizeString(newSectionName))) {
                                     setErrorMessage('Já existe uma seção com esse nome');
                                 } else {
-                                    setNewSections([{ sectionName: newSectionName }]);
+                                    setNewSections([{ sectionName: newSectionName.trim() }]);
                                     setNewSectionName('');
                                     setShowSectionEditionModal(!showSectionEditionModal);
                                 }
