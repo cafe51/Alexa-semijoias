@@ -50,7 +50,8 @@ export default function VariationsSection({ state, handlers }: VariationsSection
                     handleRemoveVariation={
                         (v: string) => variationsHandlers.handleRemoveVariation(v, state.variations, handlers, state)
                     }
-                    variations={ state.variations }/>
+                    variations={ state.variations }
+                />
                 <ProductVariationItemsList
                     handlers={ handlers }
                     images={ state.images }

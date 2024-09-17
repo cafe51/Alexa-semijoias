@@ -2,8 +2,9 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import LargeButton from '@/app/components/LargeButton';
 import ProductVariationForm from './ProductVariationForm';
-import { ProductDefaultPropertiesType, StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
+import { ProductDefaultPropertiesType, ProductVariationsType, StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import deepEqual from '@/app/utils/deepEqual';
+import { useCollection } from '@/app/hooks/useCollection';
 
 const emptyInitialProductDefaultPropertiesState: ProductDefaultPropertiesType = {
     estoque: 0,
@@ -35,6 +36,7 @@ export default function CreateNewProductVariationForm({
     const [barCodeErrorMessage, setBarCodeErrorMessage] = useState<string>();
     const [skuErrorMessage, setSkuErrorMessage] = useState<string>();
     const [isFormValid, setIsFormValid] = useState(false);
+    const { getAllDocuments: getAllProductVariationsFromFirebase } = useCollection<ProductVariationsType>('productVariations');
 
     const handleProductDefaultPropertyChange = (value: any, field: string) => {
         setProductDefaultProperties(prevState => ({
@@ -61,13 +63,19 @@ export default function CreateNewProductVariationForm({
         return createdCodes.includes(productDefaultProperties[codeType]);
     };
 
+    const isThereACodeInTheFireStore = async(codeType: 'barCode' | 'sku') => { 
+        const docsInFirestore = await getAllProductVariationsFromFirebase([{ field: codeType, operator: '==', value: productDefaultProperties[codeType] }]);
+        return docsInFirestore.length > 0;
+
+    };
+
     const isThereCustomPropertyCombinationAlreadyCreated = () => { 
         const stateCustomProperties = state.productVariations.map((statePv) => statePv.customProperties); // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
         const existSameCustomProperty = stateCustomProperties.some((stateCustomProperty) => deepEqual(productVariationState.customProperties, stateCustomProperty));
         return existSameCustomProperty;
     };
 
-    const handleSaveVariation = () => {
+    const handleSaveVariation = async() => {
         try {
             if (!isFormValid) {
                 setErrorMessage('Todos os campos devem estar preenchidos');
@@ -98,6 +106,16 @@ export default function CreateNewProductVariationForm({
                 setSkuErrorMessage('Já existe um produto salvo com esse sku');
                 return;
             }
+
+            if(await isThereACodeInTheFireStore('barCode')) {
+                setBarCodeErrorMessage('Já existe um produto salvo no banco de dados com esse código de barras');
+                return; 
+            }
+
+            if(await isThereACodeInTheFireStore('sku')) {
+                setSkuErrorMessage('Já existe um produto salvo no banco de dados com esse sku');
+                return;
+            }    
 
             handlers.handleAddProductVariation({ ...productVariationState, defaultProperties: productDefaultProperties });
 
