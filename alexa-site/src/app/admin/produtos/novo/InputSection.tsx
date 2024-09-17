@@ -10,6 +10,7 @@ interface InputSectionProps {
     stateToBeChange: { [key: string]: string | number };
     unitType: 'currency' | 'dimension' | 'weight';
     integer?: boolean;
+    labels?: { [key: string]: string };
 }
 
 function converteValoresParaString(objeto: {[key: string]: number | string}) {
@@ -28,7 +29,7 @@ function convertToProperties(objeto: {[key: string]: string}): PropertyType[] {
     });
 }
 
-export default function InputSection({ handleChange, stateToBeChange, unitType, integer=false }: InputSectionProps) {
+export default function InputSection({ handleChange, stateToBeChange, unitType, integer=false, labels }: InputSectionProps) {
     const [inputValues, setInputValues] = useState(converteValoresParaString(stateToBeChange));
 
     const handleInputChange = (rawValue: string, propertyKey: string) => {
@@ -56,7 +57,7 @@ export default function InputSection({ handleChange, stateToBeChange, unitType, 
                         <InputField
                             key={ propertyKey }
                             propertyKey={ propertyKey } 
-                            propertyName={ propertyName }
+                            propertyName={ labels?.[propertyKey] || propertyName }
                             propertyValue={ integer ? Number(propertyValue) : formatInputMode(propertyValue, unitType) }
                             onChange={ (e) => handleInputChange(e.target.value, propertyKey) }
                         />
