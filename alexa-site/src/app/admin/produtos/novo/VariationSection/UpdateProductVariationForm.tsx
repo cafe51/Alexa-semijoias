@@ -72,9 +72,7 @@ export default function UpdateProductVariationForm({
         const docsInFirestore = await getAllProductVariationsFromFirebase(
             [{ field: codeType, operator: '==', value: newProductVariationState.defaultProperties[codeType] }],
         );
-        console.log('oldProductVariationState', oldProductVariationState.defaultProperties[codeType]);
-        console.log('newProductVariationState.defaultProperties[codeType]', newProductVariationState.defaultProperties[codeType]);
-        console.log('docsInFirestore', docsInFirestore);
+
         return docsInFirestore.length > 0;
 
     };
@@ -82,10 +80,6 @@ export default function UpdateProductVariationForm({
         const stateCustomProperties = state.productVariations
             .filter((stateCustomProperties) => !deepEqual(stateCustomProperties, productVariation)) // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
             .map((statePv) => statePv.customProperties);
-
-        console.log('state.productVariations', state.productVariations);
-        console.log('stateCustomProperties', stateCustomProperties);
-        console.log('newProductVariationState', newProductVariationState);
 
         const existSameCustomProperty = stateCustomProperties.some((stateCustomProperty) => deepEqual(newProductVariationState.customProperties, stateCustomProperty));
         return existSameCustomProperty;
