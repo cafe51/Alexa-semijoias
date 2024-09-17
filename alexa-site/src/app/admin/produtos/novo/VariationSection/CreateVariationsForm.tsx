@@ -3,6 +3,7 @@
 import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import { Dispatch, SetStateAction, useState } from 'react';
 import VariationsList from './VariationsList';
+import { removePunctuationAndSpace } from '@/app/utils/removePunctuationAndSpace';
 
 interface CreateVariationsFormProps {
     state: StateNewProductType;
@@ -51,7 +52,7 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
                         type="text"
                         value={ newVariation }
                         onChange={ (e) => {
-                            setNewVariation(e.target.value);
+                            setNewVariation(removePunctuationAndSpace(e.target.value));
                             setErrorMessage(undefined);
                         } }
                         placeholder='Insira a nova variação'
