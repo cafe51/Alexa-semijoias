@@ -32,7 +32,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     }
 
     return (
-        <div className="flex h-screen bg-gray-100 w-full">
+        <div className="flex bg-gray-100 w-full">
             <main className="flex-1 overflow-y-auto w-full">
                 { children }
             </main>
