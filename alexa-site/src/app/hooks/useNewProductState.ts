@@ -143,7 +143,7 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleNameChange = useCallback((name: string) => {
-        dispatch({ type: 'SET_NAME', payload: name.trim() });
+        dispatch({ type: 'SET_NAME', payload: name });
     }, []);
     
     const handleDescriptionChange = useCallback((description: string) => {
