@@ -107,7 +107,7 @@ export default function CodesSection({
                             id={ propertyName }
                             name={ propertyName }
                             type="text"
-                            value={ propertyValue }
+                            value={ propertyValue.trim() }
                             onChange={ (e) => {
                                 setSkuGenerateErrorMessage(undefined);
                                 setProperty(e.target.value);
