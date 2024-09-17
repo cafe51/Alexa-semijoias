@@ -35,10 +35,11 @@ export function useProductConverter() {
             totalStock += pv.defaultProperties.estoque;
         }
 
-        const { description, name, sections, value, variations, creationDate } = editableProduct;
+        const { description, name, sections, value, variations, creationDate, subsections } = editableProduct;
 
         return {
             creationDate,
+            subsections,
             updatingDate: Timestamp.now(),
             description, name, sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
@@ -75,13 +76,14 @@ export function useProductConverter() {
     };
 
     const hasNoProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
-        const { description, name, sections, value, variations, creationDate } = editableProduct;
+        const { description, name, sections, value, variations, creationDate, subsections } = editableProduct;
 
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
         return {
             creationDate,
+            subsections,
             updatingDate: Timestamp.now(),
             description, name, sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
