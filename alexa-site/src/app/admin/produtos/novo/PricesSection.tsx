@@ -11,9 +11,9 @@ interface PricesSectionProps {
 
 export default function PricesSection({ state: { value }, handleValueChange }: PricesSectionProps) {
     const [pricesState, setPricesState] = useState({
-        price: value?.price ?? 0,
-        promotionalPrice: value?.promotionalPrice ?? 0,
-        cost: value?.cost ?? 0,
+        price: value?.price * 100 ?? 0,
+        promotionalPrice: value?.promotionalPrice * 100 ?? 0,
+        cost: value?.cost * 100 ?? 0,
     });
 
     useEffect(() => {
