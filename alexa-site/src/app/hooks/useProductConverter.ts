@@ -50,10 +50,12 @@ export function useProductConverter() {
         const { description, name, sections, value, variations, creationDate, subsections } = editableProduct;
 
         return {
+            name: name.trim(),
+            description: description.trim(),
             creationDate,
             subsections,
             updatingDate: Timestamp.now(),
-            description, name, sections, value, variations,
+            sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
@@ -94,10 +96,12 @@ export function useProductConverter() {
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
         return {
+            name: name.trim(),
+            description: description.trim(),
             creationDate,
             subsections,
             updatingDate: Timestamp.now(),
-            description, name, sections, value, variations,
+            sections, value, variations,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
@@ -134,6 +138,8 @@ export function useProductConverter() {
         const theOnlyVariation = finalProduct.productVariations[0];
         return {
             ...finalProduct,
+            name: finalProduct.name.trim(),
+            description: finalProduct.description.trim(),
             moreOptions: [
                 { isChecked: finalProduct.showProduct, label: 'Exibir na minha loja', property: 'showProduct' },
                 { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
