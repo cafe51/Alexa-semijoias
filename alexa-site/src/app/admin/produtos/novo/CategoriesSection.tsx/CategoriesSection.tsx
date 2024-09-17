@@ -16,14 +16,13 @@ export default function CategoriesSection({ state, handlers }: CategoriesSection
     useEffect(() => {
         async function getCategoriesFromFirebase() {
             const res = await getAllDocuments();
-            console.log('categorias', res);
             setCategoriesStateFromFirebase(res);
         }
         getCategoriesFromFirebase();
     }, []);
 
     useEffect(() => {
-        const initialOptions = categoriesStateFromFirebase.map((c) => ({ label: c.categoryName, isChecked: false }));
+        const initialOptions = categoriesStateFromFirebase.map((c) => ({ label: c.categoryName, isChecked: state.categoriesFromFirebase.includes(c.categoryName) }));
         setOptions(initialOptions);
     }, [categoriesStateFromFirebase]);
 
