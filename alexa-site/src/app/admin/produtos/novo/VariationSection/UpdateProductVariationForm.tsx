@@ -3,8 +3,9 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import ProductVariationForm from './ProductVariationForm';
 import { FaCheckCircle } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md';
-import { StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
+import { ProductVariationsType, StateNewProductType, UseNewProductState, VariationProductType } from '@/app/utils/types';
 import deepEqual from '@/app/utils/deepEqual';
+import { useCollection } from '@/app/hooks/useCollection';
 
 interface UpdateProductVariationFormProps {
   state: StateNewProductType;
@@ -36,6 +37,7 @@ export default function UpdateProductVariationForm({
 }: UpdateProductVariationFormProps) {
     const [newProductVariationState, setNewProductVariationState] = useState<VariationProductType>(productVariation);
     const [isFormValid, setIsFormValid] = useState(false);
+    const { getAllDocuments: getAllProductVariationsFromFirebase } = useCollection<ProductVariationsType>('productVariations');
 
     const handleProductDefaultPropertyChange = (value: any, field: string) => {
         setNewProductVariationState(prevState => ({
@@ -61,7 +63,22 @@ export default function UpdateProductVariationForm({
         return createdCodes.includes(newProductVariationState.defaultProperties[codeType]);
     };
 
-    const isThereCustomPropertyCombinationAlreadyCreated = () => { 
+    const oldProductVariationState = productVariation;
+    
+    const isThereACodeInTheFireStore = async(codeType: 'barCode' | 'sku') => { 
+        if (oldProductVariationState.defaultProperties[codeType] === newProductVariationState.defaultProperties[codeType]) {
+            return false;
+        }
+        const docsInFirestore = await getAllProductVariationsFromFirebase(
+            [{ field: codeType, operator: '==', value: newProductVariationState.defaultProperties[codeType] }],
+        );
+        console.log('oldProductVariationState', oldProductVariationState.defaultProperties[codeType]);
+        console.log('newProductVariationState.defaultProperties[codeType]', newProductVariationState.defaultProperties[codeType]);
+        console.log('docsInFirestore', docsInFirestore);
+        return docsInFirestore.length > 0;
+
+    };
+    const isThereCustomPropertyCombinationAlreadyCreated = () => {
         const stateCustomProperties = state.productVariations
             .filter((stateCustomProperties) => !deepEqual(stateCustomProperties, productVariation)) // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
             .map((statePv) => statePv.customProperties);
@@ -74,7 +91,8 @@ export default function UpdateProductVariationForm({
         return existSameCustomProperty;
     };
 
-    const handleUpdateVariation = () => {
+
+    const handleUpdateVariation = async() => {
         try {
             if (!isFormValid) {
                 setErrorMessage('Todos os campos devem estar preenchidos');
@@ -105,6 +123,17 @@ export default function UpdateProductVariationForm({
                 setSkuErrorMessage('Já existe um produto salvo com esse sku');
                 return;
             }
+
+            if(await isThereACodeInTheFireStore('barCode')) {
+                setBarCodeErrorMessage('Já existe um produto salvo no banco de dados com esse código de barras');
+                return; 
+            }
+
+            if(await isThereACodeInTheFireStore('sku')) {
+                setSkuErrorMessage('Já existe um produto salvo no banco de dados com esse sku');
+                return;
+            }    
+
 
 
             handlers.handleUpdateProductVariation(productVariation, newProductVariationState);
