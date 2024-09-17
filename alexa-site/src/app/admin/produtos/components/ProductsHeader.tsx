@@ -15,22 +15,22 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts, onSearch
     };
 
     return (
-        <div className="bg-white shadow-md p-4 mb-4 rounded-lg">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">Produtos ({ totalProducts })</h1>
-                <Link href="/admin/produtos/novo" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        <div className="bg-white shadow-md p-4 mb-4 rounded-lg w-full">
+            <div className="flex gap-2 justify-between items-center mb-4">
+                <h1 className="text-xl font-bold">Produtos ({ totalProducts })</h1>
+                <Link href="/admin/produtos/novo" className="bg-blue-500 hover:bg-blue-600 text-white text-center font-bold p-2 rounded">
                     Adicionar Produto
                 </Link>
             </div>
-            <form onSubmit={ handleSearch } className="flex gap-2">
+            <form onSubmit={ handleSearch } className="flex flex-col md:flex-row gap-2 w-full">
                 <input
+                    className="p-2 border border-gray-300 rounded w-full md:w-auto"
                     type="text"
                     value={ searchQuery }
                     onChange={ (e) => setSearchQuery(e.target.value) }
                     placeholder="Buscar produtos..."
-                    className="flex-grow p-2 border border-gray-300 rounded"
                 />
-                <button type="submit" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">
+                <button type="submit" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded w-full md:w-auto">
                     Buscar
                 </button>
             </form>
