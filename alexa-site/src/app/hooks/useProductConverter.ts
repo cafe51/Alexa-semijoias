@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FireBaseDocument, ImageProductDataType, ProductBundleType, SectionType, StateNewProductType } from '../utils/types';
+import { CategoryType, FireBaseDocument, ImageProductDataType, ProductBundleType, ProductVariation, ProductVariationsType, SectionType, StateNewProductType } from '../utils/types';
 import { useCollection } from './useCollection';
 import useFirebaseUpload from './useFirebaseUpload';
 import { getRandomBarCode } from '../utils/getRandomBarCode';
@@ -15,9 +15,21 @@ export function useProductConverter() {
         addDocument: createNewSiteSectionDocument,
         updateDocumentField: updateSiteSectionDocumentField,
         getDocumentById: getSiteSectionDocumentById,
+        getAllDocuments: getSiteSectionsFromFirebase,
     } = useCollection<SectionType>('siteSections');
 
-    const { getAllDocuments: getSiteSectionsFromFirebase } = useCollection<SectionType>('siteSections');
+    const {
+        getAllDocuments: getAllCategoriesFromFirebase,
+        addDocument: createNewCategoryDocument,
+    } = useCollection<CategoryType>('categories');
+
+    const {
+        getAllDocuments: getAllProductVariationsFromFirebase,
+        addDocument: createNewProductVariationDocument,
+        deleteDocument: deleteProductVariationDocument,
+    } = useCollection<ProductVariationsType>('productVariations');
+
+
 
     useEffect(() => {
         const fetchFromFirebase = async() => {
@@ -181,6 +193,18 @@ export function useProductConverter() {
         ]; // junta todos os links, antigos e novos
     };
 
+    const createOrUpdateCategories = async(categories: string[]) => {
+        if(!categories || categories.length === 0) return;
+        const existingCategories = await getAllCategoriesFromFirebase();
+        const existingCategoryNames = new Set(existingCategories.map(cat => cat.categoryName));
+      
+        for (const category of categories) {
+            if (!existingCategoryNames.has(category)) {
+                await createNewCategoryDocument({ categoryName: category });
+            }
+        }
+    };
+
     const createAndUpdateSiteSections = async(sectionsSiteState: never[] | (SectionType & { exist?: boolean; id?: string; })[]) => {
         if(sectionsSiteState && sectionsSiteState.length > 0) {
             for(const siteSection of sectionsSiteState) {
@@ -205,6 +229,21 @@ export function useProductConverter() {
         }
     };
 
+    const createOrUpdateProductVariations = async(productId: string, variations: ProductVariation[]) => {
+        const existingVariations = await getAllProductVariationsFromFirebase([{ field: 'productId', operator: '==', value: productId }]);
+
+        if(existingVariations && existingVariations.length > 0) {
+            await Promise.all(existingVariations.map((pv) => deleteProductVariationDocument(pv.id)));
+        }
+        await Promise.all(variations.map((pv) => {
+            createNewProductVariationDocument({
+                barCode: pv.barcode,
+                sku: pv.sku,
+                productId: productId,
+            });
+        }));
+    };
+
     return {
         useProductDataHandlers: {
             hasProductVariations,
@@ -212,6 +251,8 @@ export function useProductConverter() {
             finalTypeToEditableType,
             uploadAndGetAllImagesUrl,
             createAndUpdateSiteSections,
+            createOrUpdateCategories,
+            createOrUpdateProductVariations,
         },
 
     };

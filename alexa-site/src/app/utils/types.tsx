@@ -16,6 +16,12 @@ export type CategoryType = {
     categoryName: string;
 }
 
+export type ProductVariationsType = {
+    productId: string;
+    sku: string;
+    barCode: string;
+}
+
 export type ImageProductDataType = {
     file?: File;
     localUrl: string;
@@ -273,10 +279,12 @@ export type UseProductDataHandlers = {
     hasNoProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
     hasProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
     uploadAndGetAllImagesUrl: (images: ImageProductDataType[]) => Promise<ImageProductDataType[]>;
+    createOrUpdateCategories: (categories: string[]) => Promise<void>;
     createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
         exist?: boolean;
         id?: string;
     })[]) => Promise<void>;
+    createOrUpdateProductVariations: (productId: string, variations: ProductVariation[]) => Promise<void>;
 }
 
 export type UseNewProductState = {

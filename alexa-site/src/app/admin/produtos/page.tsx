@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
-import { FireBaseDocument, ProductBundleType, StateNewProductType } from '@/app/utils/types';
+import { FireBaseDocument, ProductBundleType, ProductVariationsType, StateNewProductType } from '@/app/utils/types';
 import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
 import DashboardProductDetails from './productPage/DashboardProductDetails';
 import DashboardProductEdition from './productPage/DashboardProductEdition';
@@ -59,7 +59,9 @@ export default function ProductsDashboard() {
 
     const { products, setRefreshProducts, isLoading, error } = useProductManagement();
     const { useProductDataHandlers } = useProductConverter();
-    const { deleteDocument } = useCollection<ProductBundleType>('products');
+    const { deleteDocument: deleteProductBundle } = useCollection<ProductBundleType>('products');
+    const { deleteDocument: deleteProductVariation, getAllDocuments: getAllProductVariations } = useCollection<ProductVariationsType>('productVariations');
+
 
     useEffect(() => {
         if (selectedProduct.exist) {
@@ -82,14 +84,16 @@ export default function ProductsDashboard() {
 
     const handleDelete = useCallback(async(id: string) => {
         try {
-            await deleteDocument(id);
+            const productVariationsFromCollection = await getAllProductVariations([{ field: 'productId', operator: '==', value: id }]);
+            await Promise.all(productVariationsFromCollection.map((pv) => deleteProductVariation(pv.id)));
+            await deleteProductBundle(id);
             handleRefresh();
             setNotification({ message: 'Produto excluído com sucesso', type: 'success' });
         } catch (error) {
             console.error('Erro ao excluir produto:', error);
             setNotification({ message: 'Falha ao excluir produto. Por favor, tente novamente.', type: 'error' });
         }
-    }, [deleteDocument, handleRefresh]);
+    }, [deleteProductBundle, handleRefresh, deleteProductVariation, getAllProductVariations]);
 
     const handleSearch = useCallback((query: string) => {
         setSearchQuery(query);

@@ -1,20 +1,18 @@
-import { lazy } from 'react';
 import { useNewProductState } from '@/app/hooks/useNewProductState';
-import { CategoryType, FireBaseDocument, ProductBundleType, StateNewProductType, UseProductDataHandlers } from '@/app/utils/types';
+import { FireBaseDocument, ProductBundleType, StateNewProductType, UseProductDataHandlers } from '@/app/utils/types';
 import LargeButton from '@/app/components/LargeButton';
 import { useCollection } from '@/app/hooks/useCollection';
 import { productIdGenerator } from '@/app/utils/productIdGenerator';
-
-const NameAndDescriptionSection = lazy(() => import('./novo/NameAndDescriptionSection'));
-const PhotosSection = lazy(() => import('./novo/PhotoSection/PhotosSection'));
-const PricesSection = lazy(() => import('./novo/PricesSection'));
-const CodesSection = lazy(() => import('./novo/CodesSection'));
-const CategoriesSection = lazy(() => import('./novo/CategorieSection.tsx/CategoriesSection'));
-const StockSection = lazy(() => import('./novo/StockSection'));
-const DimensionsSection = lazy(() => import('./novo/DimensionsSection'));
-const VariationsSection = lazy(() => import('./novo/VariationSection/VariationsSection'));
-const SiteSectionSection = lazy(() => import('./novo/SiteSectionSection/SiteSectionSection'));
-const MoreOptionsSection = lazy(() => import('./novo/MoreOpionsSection'));
+import NameAndDescriptionSection from './novo/NameAndDescriptionSection';
+import PhotosSection from './novo/PhotoSection/PhotosSection';
+import PricesSection from './novo/PricesSection';
+import SiteSectionSection from './novo/SiteSectionSection/SiteSectionSection';
+import CategoriesSection from './novo/CategoriesSection.tsx/CategoriesSection';
+import VariationsSection from './novo/VariationSection/VariationsSection';
+import StockSection from './novo/StockSection';
+import DimensionsSection from './novo/DimensionsSection';
+import CodesSection from './novo/CodesSection';
+import MoreOptionsSection from './novo/MoreOptionsSection';
 
 interface ProductEditionFormProps {
     product?:  StateNewProductType,
@@ -31,17 +29,12 @@ export default function ProductEditionForm({
 }: ProductEditionFormProps) {
     const { state, handlers } = useNewProductState(product);
     const { addDocument: createNewProductDocument } = useCollection<ProductBundleType>('products');
-    const { addDocument: createNewCategoryDocument } = useCollection<CategoryType>('categories');
 
     const handleCreateNewProductClick = async() => {
         try {
             const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(state.images);
 
-            if(state && state.categories && state.categories.length > 0) {
-                for(const category of state.categories) {
-                    createNewCategoryDocument({ categoryName: category });
-                }
-            }
+            await useProductDataHandlers.createOrUpdateCategories(state.categories);
 
             await useProductDataHandlers.createAndUpdateSiteSections(state.sectionsSite);
         
@@ -52,6 +45,7 @@ export default function ProductEditionForm({
                 await createNewProductDocument(newProduct, productId);
                 console.log('novo produto criado', newProduct);
                 console.log('id do novo produto criado:', productId);
+                await useProductDataHandlers.createOrUpdateProductVariations(productId, newProduct.productVariations);
                 setRefreshProducts && setRefreshProducts();
             }
 
@@ -61,6 +55,8 @@ export default function ProductEditionForm({
                 console.log('novo produto criado', newProduct);
                 handlers.handleVariationsChange([]);
                 setRefreshProducts && setRefreshProducts();
+                await useProductDataHandlers.createOrUpdateProductVariations(productId, newProduct.productVariations);
+
             }
         } catch(error) {
             console.error(error);

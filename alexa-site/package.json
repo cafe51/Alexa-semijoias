@@ -10,7 +10,8 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "emulators": "cd functions && npm run build && firebase emulators:start",
+    "emulators": "cd functions && npm run build && firebase emulators:start --import=../emulator_data",
+    "save-emulator-data": "firebase emulators:export ./emulator_data",
     "clean": "rm -rf .next"
   },
   "dependencies": {
@@ -37,7 +38,8 @@
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.13",
+    "@types/json-schema": "^7.0.15",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-beautiful-dnd": "^13.1.8",

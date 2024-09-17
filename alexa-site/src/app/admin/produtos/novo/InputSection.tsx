@@ -58,7 +58,7 @@ export default function InputSection({ handleChange, stateToBeChange, unitType, 
                             key={ propertyKey }
                             propertyKey={ propertyKey } 
                             propertyName={ labels?.[propertyKey] || propertyName }
-                            propertyValue={ integer ? Number(propertyValue) : formatInputMode(propertyValue, unitType) }
+                            propertyValue={ integer ? propertyValue : formatInputMode(propertyValue, unitType) }
                             onChange={ (e) => handleInputChange(e.target.value, propertyKey) }
                         />
                     );
