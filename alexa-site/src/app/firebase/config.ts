@@ -1,8 +1,8 @@
-import { getApps, initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
-import { getAuth, connectAuthEmulator, setPersistence, browserLocalPersistence } from 'firebase/auth';
-import { getStorage, connectStorageEmulator } from 'firebase/storage';
-import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
+import { getApps, initializeApp, FirebaseApp } from 'firebase/app';
+import { getFirestore, connectFirestoreEmulator, Firestore } from 'firebase/firestore';
+import { getAuth, connectAuthEmulator, setPersistence, browserLocalPersistence, Auth } from 'firebase/auth';
+import { getStorage, connectStorageEmulator, FirebaseStorage } from 'firebase/storage';
+import { getFunctions, connectFunctionsEmulator, Functions } from 'firebase/functions';
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,20 +14,40 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+let app: FirebaseApp | undefined;
+let projectFirestoreDataBase: Firestore;
+let auth: Auth;
+let storage: FirebaseStorage;
+let functions: Functions;
 
-const projectFirestoreDataBase = getFirestore(app);
-const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence);
-const storage = getStorage(app);
-const functions = getFunctions(app);
+const initializeFirebase = () => {
+    if (!app) {
+        app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+        projectFirestoreDataBase = getFirestore(app);
+        auth = getAuth(app);
+        setPersistence(auth, browserLocalPersistence);
+        storage = getStorage(app);
+        functions = getFunctions(app);
+    }
+};
 
 if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
+    console.log('Usando emuladores do Firebase');
+    
+    // Inicializa o app sem conectar aos serviços reais
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+    
+    projectFirestoreDataBase = getFirestore(app);
+    auth = getAuth(app);
+    storage = getStorage(app);
+    functions = getFunctions(app);
+
     connectFirestoreEmulator(projectFirestoreDataBase, 'localhost', 8080);
     connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
     connectStorageEmulator(storage, 'localhost', 9199);
     connectFunctionsEmulator(functions, 'localhost', 5001);
-    console.log('Firebase emulators connected');
+} else {
+    initializeFirebase();
 }
 
-export { projectFirestoreDataBase, auth, storage, functions };
+export { projectFirestoreDataBase, auth, storage, functions, initializeFirebase };
