@@ -3,20 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { FilterOptionForUseSnapshot, FireBaseDocument } from '../utils/types';
-import { useAuthContext } from './useAuthContext';
 
 export const useSnapshot = <T>(collectionName: string, filterOptions: FilterOptionForUseSnapshot[] | null) => {
     const [documents, setDocuments] = useState<(T & FireBaseDocument)[] | null>(null);
-    const [error, setError] = useState<string | null>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const { user } = useAuthContext();
 
     useEffect(() => {
-        if (!user) {
-            setDocuments(null);
-            setError('Usuário não autenticado');
-            return;
-        }
 
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
@@ -56,7 +48,7 @@ export const useSnapshot = <T>(collectionName: string, filterOptions: FilterOpti
             unsub();
         };
 
-    }, [collectionName, filterOptions, user]);
+    }, [collectionName, filterOptions]);
 
-    return { documents, error };
+    return { documents };
 };
