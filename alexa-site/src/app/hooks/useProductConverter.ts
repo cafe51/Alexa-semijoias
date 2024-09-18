@@ -90,7 +90,7 @@ export function useProductConverter() {
     };
 
     const hasNoProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
-        const { description, name, sections, value, variations, creationDate, subsections } = editableProduct;
+        const { description, name, sections, value, creationDate, subsections } = editableProduct;
 
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
@@ -101,7 +101,7 @@ export function useProductConverter() {
             creationDate,
             subsections,
             updatingDate: Timestamp.now(),
-            sections, value, variations,
+            sections, value,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
@@ -250,6 +250,75 @@ export function useProductConverter() {
         }));
     };
 
+    const isThereACodeInTheFireStore = async(codeType: 'barCode' | 'sku', state: StateNewProductType) => { 
+        const docsInFirestore = await getAllProductVariationsFromFirebase(
+            [{ field: codeType, operator: '==', value: state[codeType === 'barCode' ? 'barcode' : 'sku'] }],
+        );
+        return docsInFirestore.length > 0;
+    };
+
+    const verifyFieldsOnFinishProductCreation = async(
+        state: StateNewProductType,
+        oldState: StateNewProductType,
+        setFinishFormError: (errorMesage: string) => void,
+    ) => {
+        if(state.name.length === 0) {
+            setFinishFormError('O nome do produto não pode estar vazio');
+            return false;
+        }
+        if(state.description.length === 0) {
+            setFinishFormError('A descrição do produto não pode estar vazia');
+            return false;
+        }
+
+        if(state.sections.length === 0 || state.sectionsSite.length === 0) {
+            setFinishFormError('É necessário selecionar pelo menos uma seção');
+            return false;
+        }
+
+        if(state.productVariations.length === 0) {
+            if(!state.barcode || state.barcode.length === 0) {
+                setFinishFormError('Preencha o código de barras');
+                return false;
+            }
+            if(!state.sku || state.sku.length === 0) {
+                setFinishFormError('Preencha o SKU');
+                return false;
+            }
+            if(oldState.barcode !== state.barcode) {
+                if(await isThereACodeInTheFireStore('barCode', state)) {
+                    setFinishFormError('Já existe um produto com este código de barras');
+                    return false;
+                }
+            }
+            if(oldState.sku !== state.sku) {
+                if(await isThereACodeInTheFireStore('sku', state)) {
+                    setFinishFormError('Já existe um produto com este sku');
+                    return false;
+                }
+            }
+
+        }
+
+        if(state.productVariations.length > 0) {
+            const hasError = state.productVariations.some(variation => {
+                if(variation.defaultProperties?.barCode?.length === 0) {
+                    return true;
+                }
+                if(variation.defaultProperties?.sku.length === 0) {
+                    return true;
+                }
+                return false;
+            });
+            if(hasError) {
+                setFinishFormError('Preencha todos os campos obrigatórios das variações');
+                return false;
+            }
+        }
+
+        return true;
+    };
+
     return {
         useProductDataHandlers: {
             hasProductVariations,
@@ -259,6 +328,7 @@ export function useProductConverter() {
             createAndUpdateSiteSections,
             createOrUpdateCategories,
             createOrUpdateProductVariations,
+            verifyFieldsOnFinishProductCreation,
         },
 
     };

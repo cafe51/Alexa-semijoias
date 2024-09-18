@@ -285,6 +285,7 @@ export type UseProductDataHandlers = {
         id?: string;
     })[]) => Promise<void>;
     createOrUpdateProductVariations: (productId: string, variations: ProductVariation[]) => Promise<void>;
+    verifyFieldsOnFinishProductCreation: (state: StateNewProductType, oldState: StateNewProductType, setFinishFormError: (errorMesage: string) => void) => Promise<boolean>
 }
 
 export type UseNewProductState = {

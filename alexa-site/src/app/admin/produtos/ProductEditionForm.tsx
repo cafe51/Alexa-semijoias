@@ -13,6 +13,7 @@ import StockSection from './novo/StockSection';
 import DimensionsSection from './novo/DimensionsSection';
 import CodesSection from './novo/CodesSection';
 import MoreOptionsSection from './novo/MoreOptionsSection';
+import { useState, useRef, useEffect } from 'react';
 
 interface ProductEditionFormProps {
     product?:  StateNewProductType,
@@ -28,10 +29,28 @@ export default function ProductEditionForm({
     setRefreshProducts,
 }: ProductEditionFormProps) {
     const { state, handlers } = useNewProductState(product);
+    const [ finishFormError, setFinishFormError ] = useState<string | undefined>(undefined);
     const { addDocument: createNewProductDocument } = useCollection<ProductBundleType>('products');
+
+    const oldStateRef = useRef<StateNewProductType | null>(null);
+
+    useEffect(() => {
+        if (oldStateRef.current === null) {
+            oldStateRef.current = state;
+        }
+    }, []);
 
     const handleCreateNewProductClick = async() => {
         try {
+            const oldState = oldStateRef.current;
+            if (!oldState) {
+                throw new Error('Estado inicial não foi capturado');
+            }
+            
+            const verifyFields = await useProductDataHandlers.verifyFieldsOnFinishProductCreation(state, oldState, setFinishFormError);
+
+            if(!verifyFields) return;
+
             const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(state.images);
 
             await useProductDataHandlers.createOrUpdateCategories(state.categories);
@@ -92,9 +111,13 @@ export default function ProductEditionForm({
             <LargeButton color='blue' loadingButton={ false } onClick={ handleCreateNewProductClick }>
             Criar Produto
             </LargeButton>
-            <LargeButton color='green' loadingButton={ false } onClick={ () => { console.log(state); } }>
+            <LargeButton color='green' loadingButton={ false } onClick={ () => {
+                console.log('state', state);
+                console.log('oldState', oldStateRef.current);
+            } }>
                 Mostrar estado
             </LargeButton>
+            { finishFormError && <p className='text-red-500'>{ finishFormError }</p> }
         </section>
     );
 }

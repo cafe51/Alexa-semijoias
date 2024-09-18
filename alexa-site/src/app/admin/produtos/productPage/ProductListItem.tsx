@@ -83,7 +83,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
             >
                 <Image
                     className='rounded-lg object-cover scale-100'
-                    src={ product.images ? product.images[0].localUrl : blankImage }
+                    src={ product.images && product.images.length > 0 && product.images[0].localUrl ? product.images[0].localUrl : blankImage }
                     alt="Foto da peça"
                     fill
                     loading="lazy"
