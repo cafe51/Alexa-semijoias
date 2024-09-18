@@ -20,6 +20,7 @@ interface ProductEditionFormProps {
     useProductDataHandlers: UseProductDataHandlers;
     productFromFirebase?: ProductBundleType & FireBaseDocument;
     setRefreshProducts?: () => void;
+    goToProductPage?: () => void;
 }
 
 export default function ProductEditionForm({
@@ -27,6 +28,7 @@ export default function ProductEditionForm({
     useProductDataHandlers,
     productFromFirebase,
     setRefreshProducts,
+    goToProductPage,
 }: ProductEditionFormProps) {
     const { state, handlers } = useNewProductState(product);
     const [ finishFormError, setFinishFormError ] = useState<string | undefined>(undefined);
@@ -82,6 +84,7 @@ export default function ProductEditionForm({
                 await useProductDataHandlers.createOrUpdateProductVariations(productId, newProduct.productVariations);
 
             }
+            goToProductPage && goToProductPage();
             setLoadingButton(false);
         } catch(error) {
             console.error(error);
