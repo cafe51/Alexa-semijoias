@@ -31,6 +31,7 @@ export default function ProductEditionForm({
     const { state, handlers } = useNewProductState(product);
     const [ finishFormError, setFinishFormError ] = useState<string | undefined>(undefined);
     const { addDocument: createNewProductDocument } = useCollection<ProductBundleType>('products');
+    const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
     const oldStateRef = useRef<StateNewProductType | null>(null);
 
@@ -42,6 +43,7 @@ export default function ProductEditionForm({
 
     const handleCreateNewProductClick = async() => {
         try {
+            setLoadingButton(true);
             const oldState = oldStateRef.current;
             if (!oldState) {
                 throw new Error('Estado inicial não foi capturado');
@@ -49,7 +51,10 @@ export default function ProductEditionForm({
             
             const verifyFields = await useProductDataHandlers.verifyFieldsOnFinishProductCreation(state, oldState, setFinishFormError);
 
-            if(!verifyFields) return;
+            if(!verifyFields) {
+                setLoadingButton(false);
+                return;
+            }
 
             const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(state.images);
 
@@ -77,6 +82,7 @@ export default function ProductEditionForm({
                 await useProductDataHandlers.createOrUpdateProductVariations(productId, newProduct.productVariations);
 
             }
+            setLoadingButton(false);
         } catch(error) {
             console.error(error);
         }
@@ -108,7 +114,9 @@ export default function ProductEditionForm({
             <MoreOptionsSection state={ state } handlers={ handlers }/>
             { /* <AssociatedProductsSection />
             <RecommendedProductsSection /> */ }
-            <LargeButton color='blue' loadingButton={ false } onClick={ handleCreateNewProductClick }>
+            { finishFormError && <p className='text-red-500'>{ finishFormError }</p> }
+
+            <LargeButton color='blue' loadingButton={ loadingButton } onClick={ handleCreateNewProductClick }>
             Criar Produto
             </LargeButton>
             <LargeButton color='green' loadingButton={ false } onClick={ () => {
@@ -117,7 +125,6 @@ export default function ProductEditionForm({
             } }>
                 Mostrar estado
             </LargeButton>
-            { finishFormError && <p className='text-red-500'>{ finishFormError }</p> }
         </section>
     );
 }

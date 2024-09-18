@@ -286,14 +286,16 @@ export function useProductConverter() {
                 return false;
             }
             if(oldState.barcode !== state.barcode) {
-                if(await isThereACodeInTheFireStore('barCode', state)) {
-                    setFinishFormError('Já existe um produto com este código de barras');
+                const isThereAbarCodeInTheFirestore = await isThereACodeInTheFireStore('barCode', state);
+                if(isThereAbarCodeInTheFirestore) {
+                    setFinishFormError('Já existe um produto registrado com este código de barras');
                     return false;
                 }
             }
             if(oldState.sku !== state.sku) {
-                if(await isThereACodeInTheFireStore('sku', state)) {
-                    setFinishFormError('Já existe um produto com este sku');
+                const isThereAskuInTheFirestore = await isThereACodeInTheFireStore('sku', state);
+                if(isThereAskuInTheFirestore) {
+                    setFinishFormError('Já existe um produto registrado com este sku');
                     return false;
                 }
             }
