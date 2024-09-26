@@ -134,7 +134,7 @@ export function useProductConverter() {
     };
 
     const finalTypeToEditableType = (finalProduct: ProductBundleType & FireBaseDocument): StateNewProductType => {
-        const hasMoreThanOneVariation = finalProduct.productVariations.length > 1;
+        const hasCustomProperties = finalProduct.variations && finalProduct.variations.length > 0;
         const theOnlyVariation = finalProduct.productVariations[0];
         return {
             ...finalProduct,
@@ -147,12 +147,12 @@ export function useProductConverter() {
 
             ],
             categoriesFromFirebase: finalProduct.categories,
-            barcode: hasMoreThanOneVariation ? undefined : theOnlyVariation.barcode,
+            barcode: hasCustomProperties ? undefined : theOnlyVariation.barcode,
             categories: [],
-            dimensions: hasMoreThanOneVariation ? undefined: { ...theOnlyVariation.dimensions, peso: theOnlyVariation.peso },
+            dimensions: hasCustomProperties ? undefined: { ...theOnlyVariation.dimensions, peso: theOnlyVariation.peso },
             estoque: finalProduct.estoqueTotal,
             images: finalProduct.images, //////////////////
-            productVariations: hasMoreThanOneVariation ? finalProduct.productVariations.map((pv) => {
+            productVariations: hasCustomProperties ? finalProduct.productVariations.map((pv) => {
                 const foundedImage = finalProduct.images.find((image) => image.localUrl === pv.image);
 
                 return {
@@ -181,7 +181,7 @@ export function useProductConverter() {
                     };
                 }),
                 
-            sku: hasMoreThanOneVariation ? undefined : theOnlyVariation.sku,
+            sku: hasCustomProperties ? undefined : theOnlyVariation.sku,
             variations: finalProduct.variations ? finalProduct.variations : [],
         };
     };
