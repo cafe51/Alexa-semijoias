@@ -60,6 +60,8 @@ export default function ProductEditionForm({
 
             const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(state.images);
 
+            const orderedImagesByIndex = allImagesUrls.sort((a, b) => a.index - b.index);
+
             await useProductDataHandlers.createOrUpdateCategories(state.categories);
 
             await useProductDataHandlers.createAndUpdateSiteSections(state.sectionsSite);
@@ -67,7 +69,7 @@ export default function ProductEditionForm({
             const productId = productIdGenerator(productFromFirebase, state.barcode, state.productVariations[0]?.defaultProperties?.barCode);
 
             if(state.productVariations && state.productVariations.length > 0) {
-                const newProduct = useProductDataHandlers.hasProductVariations(state, allImagesUrls, productId);
+                const newProduct = useProductDataHandlers.hasProductVariations(state, orderedImagesByIndex, productId);
                 await createNewProductDocument(newProduct, productId);
                 console.log('novo produto criado', newProduct);
                 console.log('id do novo produto criado:', productId);
@@ -76,7 +78,7 @@ export default function ProductEditionForm({
             }
 
             if(!state.productVariations || state.productVariations.length === 0) {
-                const newProduct = useProductDataHandlers.hasNoProductVariations(state, allImagesUrls, productId);
+                const newProduct = useProductDataHandlers.hasNoProductVariations(state, orderedImagesByIndex, productId);
                 await createNewProductDocument(newProduct, productId);
                 console.log('novo produto criado', newProduct);
                 handlers.handleVariationsChange([]);
