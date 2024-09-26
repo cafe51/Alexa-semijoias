@@ -7,6 +7,17 @@ export type FireBaseDocument = {
     id: string,
 }
 
+export type PaymentType = {
+    id: string;
+    userId: string,
+    orderId: string,
+    status: string,
+    paymentMethod: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
+}
+
+
 export type CheckboxData = {
     label: string;
     isChecked: boolean;
@@ -239,7 +250,7 @@ export type OrderType = {
     userId: string,
     endereco: AddressType
 
-    data: string;
+    date: Timestamp;
     totalQuantity: number,
     paymentOption: string,
     deliveryOption: string,

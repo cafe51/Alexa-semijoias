@@ -12,6 +12,9 @@ export const useCollection = <T>(collectionName: string) => {
             await setDoc(docRef, dataObj);
         } else {
             // Gera um ID automaticamente
+            console.log('projectFirestoreDataBase', projectFirestoreDataBase);
+            console.log('collectionName', collectionName);
+            console.log('dataObj', dataObj);
             await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
         }
     };

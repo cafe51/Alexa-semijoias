@@ -7,7 +7,7 @@ import PixPaymentSection from './PixPaymentSection';
 import { FireBaseDocument, OrderType, ProductBundleType, ProductCartType, UseCheckoutStateType } from '@/app/utils/types';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useCollection } from '@/app/hooks/useCollection';
-import { formatDateToCustomString } from '@/app/utils/formatDateToCustomString';
+import { Timestamp } from 'firebase/firestore';
 
 interface PaymentSectionProps {
     state: UseCheckoutStateType;
@@ -56,15 +56,14 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
         const deliveryPrice = deliveryOption?.price || 0;
         // const cartPrice = carrinho?.map((items) => (Number(items.quantidade) * (items.preco))).reduce((a, b) => a + b, 0) || 0;
         const totalQuantity = carrinho?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) || 0;
-        const currentDate = new Date();
-        const formattedDate = formatDateToCustomString(currentDate);
 
         if(userInfo && carrinho && address && deliveryOption && selectedDeliveryOption && selectedPaymentOption) {
             const newOrder: OrderType = {
                 endereco: address,
-                cartSnapShot: carrinho.map(({ image, name, value, productId, quantidade, skuId, barcode, categories, customProperties }) => (
-                    { skuId, name, barcode, categories, productId, quantidade, image, value, customProperties }
-                )),
+                // cartSnapShot: carrinho.map(({ image, name, value, productId, quantidade, skuId, barcode, categories, customProperties }) => (
+                //     { skuId, name, barcode, categories, productId, quantidade, image, value, customProperties }
+                // )),
+                cartSnapShot: carrinho,
                 status: 'pendente',
                 userId: userInfo.id,
                 valor: {
@@ -75,7 +74,7 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
                 totalQuantity,
                 paymentOption: selectedPaymentOption,
                 deliveryOption: selectedDeliveryOption,
-                data: formattedDate,
+                date: Timestamp.now(),
             };
 
             console.log(newOrder);
