@@ -54,7 +54,11 @@ export default function CardOrder({ pedido, setShowFullOrderModal }: CardOrderPr
                 { pedido.userId }
             </div>
             <div className="font-bold">
-                { pedido.data }
+                { pedido.date.toDate().toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                }) }
             </div>
             <div className="text-gray-500">
                 { `${pedido.endereco.logradouro}, ${pedido.endereco.numero} - ${pedido.endereco.localidade}` }
