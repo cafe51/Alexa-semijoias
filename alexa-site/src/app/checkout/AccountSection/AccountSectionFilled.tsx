@@ -8,9 +8,10 @@ interface AccountSectionFilledProps {
     email: string;
     cpf: string;
     telefone: string;
+    adminDashboard?: boolean;
   }
 
-export default function AccountSectionFilled({ nome, email, cpf, telefone }: AccountSectionFilledProps) {
+export default function AccountSectionFilled({ nome, email, cpf, telefone, adminDashboard=false }: AccountSectionFilledProps) {
     const { logout } = useLogout();
     const { carrinho } = useUserInfo();
     const { setLocalCart } = useLocalStorage();
@@ -35,12 +36,14 @@ export default function AccountSectionFilled({ nome, email, cpf, telefone }: Acc
             <div className='flex justify-between w-full'>
 
                 <p className="font-bold">CONTA</p>
-                <p
-                    className='text-blue-400 text-sm w-full text-end'
-                    onClick={ () => changeAccount() }
-                >
-              Trocar de conta
-                </p>
+                { adminDashboard ||
+                    <p
+                        className='text-blue-400 text-sm w-full text-end'
+                        onClick={ () => changeAccount() }
+                    >
+                Trocar de conta
+                    </p>    
+                }
             </div>
 
             <div className='flex flex-col p-2'>

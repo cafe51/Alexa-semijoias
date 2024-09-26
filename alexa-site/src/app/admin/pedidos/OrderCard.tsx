@@ -8,10 +8,11 @@ import { useEffect, useState } from 'react';
 // import { usePathname } from 'next/navigation';
 
 interface OrderCardProps {
-    pedido?: OrderType;
+    pedido: OrderType & FireBaseDocument;
+    handleSelectOrder: (order: OrderType & FireBaseDocument, user: UserType & FireBaseDocument) => void;
 }
 
-export default function OrderCard({ pedido }: OrderCardProps){
+export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps){
     const { getDocumentById } = useCollection<UserType>('usuarios');
     const [user, setUser] = useState<(UserType & FireBaseDocument) | null>(null);
     // const pathname = usePathname();
@@ -30,16 +31,19 @@ export default function OrderCard({ pedido }: OrderCardProps){
 
 
     return (
-        <div className="flex items-end flex-col border-b py-4 gap-4 ">
+        <div className="flex items-end flex-col border-b py-4 gap-4" onClick={ () => handleSelectOrder(pedido, user) }>
             <div className='flex justify-between w-full'>
-                <p>{ 
+                <p>
+                    { 
                     // converter pedido.date do tipo Timestamp do firebase para um formato possível de ser renderizado e legível para o usuário
-                    pedido.date.toDate().toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                    })
-                } </p>
+                        pedido.date.toDate().toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                        })
+                    }
+                </p>
+                <p>{ pedido.status }</p>
                 <p>{ formatPrice(pedido?.valor.soma) } </p>
             </div>
             <div className="flex justify-between items-center gap-4 w-full">
