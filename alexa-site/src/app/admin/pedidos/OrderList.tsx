@@ -10,9 +10,10 @@ import OrderDetails from './OrderDetails';
 
 interface OrderListProps {
     pedidos: (OrderType  & FireBaseDocument)[];
+    handleRefreshProductList: () => void
 }
 
-export default function OrderList({ pedidos }: OrderListProps) {
+export default function OrderList({ pedidos, handleRefreshProductList }: OrderListProps) {
     const [selectedOrder, setSelectedProduct] = useState<OrderType & FireBaseDocument>(emptyOrderTypeInitialState);
     const [showOrderDetailModal, setShowOrderDetailModal] = useState<boolean>(false);
     const [userSelected, setUserSelected] = useState<UserType & FireBaseDocument>(emptyUserTypeInitialState);
@@ -32,7 +33,10 @@ export default function OrderList({ pedidos }: OrderListProps) {
             }
             <SlideInModal
                 isOpen={ showOrderDetailModal }
-                closeModelClick={ () => setShowOrderDetailModal(false) }
+                closeModelClick={ () => {
+                    handleRefreshProductList();
+                    setShowOrderDetailModal(false);
+                } }
                 title="Detalhes do Pedido"
                 fullWidth
             >

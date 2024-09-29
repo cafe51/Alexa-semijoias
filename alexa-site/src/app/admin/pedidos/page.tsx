@@ -1,6 +1,6 @@
 // AdminPage.tsx
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 import { FireBaseDocument, OrderType } from '@/app/utils/types';
 import SearchBar from '../clientes/SearchBar';
@@ -10,6 +10,8 @@ export default function DashBoardUsers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [pedidos, setPedidos] = useState<(OrderType & FireBaseDocument)[] | undefined | null>(null);
     const [loadingPedidos, setLoadingPedidos] = useState(false);
+    const [refreshOrders, setRefreshOrders] = useState(false);
+
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
 
     useEffect(() => {
@@ -22,8 +24,9 @@ export default function DashBoardUsers() {
             setLoadingPedidos(false);
         }
         getOrders();
-    }, []);
+    }, [refreshOrders]);
     
+    const handleRefreshProductList = useCallback(() => setRefreshOrders(prev => !prev), []);
 
     // const filteredUsers = users?.filter(user => 
     //     user.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -38,7 +41,7 @@ export default function DashBoardUsers() {
                 loadingPedidos && <p>Carregando pedidos...</p>
             }
             {
-                pedidos && <OrderList pedidos={ pedidos } />
+                pedidos && <OrderList pedidos={ pedidos } handleRefreshProductList={ handleRefreshProductList }/>
             }
             {
                 !pedidos && !loadingPedidos && <p>Nenhum pedido encontrado</p>
