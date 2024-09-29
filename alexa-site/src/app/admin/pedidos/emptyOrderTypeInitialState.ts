@@ -5,7 +5,7 @@ export const emptyOrderTypeInitialState: OrderType & FireBaseDocument = {
     exist: false,
     id: '',
     cartSnapShot: [],
-    status: 'pendente',
+    status: 'aguardando pagamento',
     valor: {
         frete: 0,
         soma: 0,

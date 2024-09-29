@@ -243,9 +243,12 @@ export type AddressType = {
     referencia: string,
 }
 
+export type StatusType = 'aguardando pagamento' | 'preparando para o envio' | 'pedido enviado' | 'cancelado' | 'entregue';
+
+
 export type OrderType = {
     cartSnapShot: CartHistoryType[],
-    status: string,
+    status: StatusType,
     valor: ValueType,
     userId: string,
     endereco: AddressType

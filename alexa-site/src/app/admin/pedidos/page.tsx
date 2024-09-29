@@ -15,7 +15,9 @@ export default function DashBoardUsers() {
     useEffect(() => {
         async function getOrders() {
             setLoadingPedidos(true);
-            const res = await getAllDocuments();
+            const res = await getAllDocuments([
+                { field: 'date', order: 'desc' },
+            ]);
             setPedidos(res);
             setLoadingPedidos(false);
         }
