@@ -64,7 +64,7 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
                 //     { skuId, name, barcode, categories, productId, quantidade, image, value, customProperties }
                 // )),
                 cartSnapShot: carrinho,
-                status: 'pendente',
+                status: 'aguardando pagamento',
                 userId: userInfo.id,
                 valor: {
                     frete: deliveryPrice,
