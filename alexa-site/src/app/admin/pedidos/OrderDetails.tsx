@@ -5,6 +5,7 @@ import SummaryCard from '@/app/checkout/OrderSummarySection/SummaryCard';
 import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/types';
 import ChangeStatus from './ChangeStatus';
 import { useState } from 'react';
+import CancelOrderButton from './CancelOrderButton';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -15,14 +16,22 @@ interface OrderDetailsProps {
 export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }: OrderDetailsProps) {
     const [status, setStatus] = useState<StatusType>(pedido.status);
 
+    const statusButtonTextColorMap: Record<StatusType, string> = {
+        'aguardando pagamento': 'text-yellow-600',
+        'preparando para o envio': 'text-blue-500',
+        'pedido enviado': 'text-blue-500',
+        'cancelado': 'text-red-500',
+        'entregue': 'text-green-500',
+    };
+
     return (
         <div className="flex flex-col gap-2 text-sm ">
             <div className='w-full p-2 text-center'>
-                <h2>{ status }</h2>
+                <h2 className= { ` ${ statusButtonTextColorMap[status] }` }>{ status }</h2>
             </div>
             <ChangeStatus
                 pedidoId={ pedido.id }
-                initialStatus={ pedido.status }
+                initialStatus={ status }
                 changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
             />
             <AccountSectionFilled
@@ -34,7 +43,9 @@ export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }
             />
 
             <AddressSectionFilled address={ pedido.endereco } />
-
+            {
+                status !== 'entregue' && status !== 'cancelado' && <CancelOrderButton pedido={ pedido } changeStatus={ () => setStatus('cancelado') }/>
+            }
             <PriceSummarySection
                 frete={ pedido.valor.frete }
                 subtotalPrice={ pedido.valor.soma }

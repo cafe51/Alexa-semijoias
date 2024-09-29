@@ -40,11 +40,19 @@ export default function ChangeStatus({ pedidoId, changeStatus, initialStatus }: 
     const [changeStatusModal, setChangeStatusModal] = useState(false);
     const [currentStatus, setCurrentStatus] = useState<StatusType>(initialStatus);
     const [nextStatus, setNextStatus] = useState<StatusType | null>(getNextStatus(initialStatus));
+    const [showButton, setShowButton] = useState(true);
     const { updateDocumentField } = useCollection<OrderType>('pedidos');
 
     useEffect(() => {
         setNextStatus(getNextStatus(currentStatus));
     }, [currentStatus]);
+
+    useEffect(() => {
+        if (currentStatus === 'cancelado' || currentStatus === 'entregue' || initialStatus === 'cancelado' || initialStatus === 'entregue'){
+            setShowButton(false);
+        }
+
+    }, [initialStatus, currentStatus]);
 
     const handleOpenModal = () => {
         setChangeStatusModal(true);
@@ -91,13 +99,13 @@ export default function ChangeStatus({ pedidoId, changeStatus, initialStatus }: 
         );
     };
 
-    if (currentStatus === 'cancelado' || currentStatus === 'entregue') {
-        return <div className="text-xs font-bold p-4">{ getButtonText(currentStatus) }</div>;
-    }
-
     return (
         <>
-            { changeStatusModal ? renderModal() : renderButton() }
+            {
+                changeStatusModal
+                    ? renderModal()
+                    : showButton && renderButton()
+            }
         </>
     );
 }
