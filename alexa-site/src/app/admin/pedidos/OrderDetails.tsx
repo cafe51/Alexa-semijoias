@@ -6,23 +6,17 @@ import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/t
 import ChangeStatus from './ChangeStatus';
 import { useState } from 'react';
 import CancelOrderButton from './CancelOrderButton';
+import { statusButtonTextColorMap } from '@/app/utils/statusButtonTextColorMap';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
     user: UserType & FireBaseDocument;
 }
 
-
 export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }: OrderDetailsProps) {
     const [status, setStatus] = useState<StatusType>(pedido.status);
 
-    const statusButtonTextColorMap: Record<StatusType, string> = {
-        'aguardando pagamento': 'text-yellow-600',
-        'preparando para o envio': 'text-blue-500',
-        'pedido enviado': 'text-blue-500',
-        'cancelado': 'text-red-500',
-        'entregue': 'text-green-500',
-    };
+
 
     return (
         <div className="flex flex-col gap-2 text-sm ">

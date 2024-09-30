@@ -2,6 +2,7 @@
 
 import { useCollection } from '@/app/hooks/useCollection';
 import { formatPrice } from '@/app/utils/formatPrice';
+import { statusButtonTextColorMap } from '@/app/utils/statusButtonTextColorMap';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
 
@@ -32,7 +33,7 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
 
     return (
         <div className="flex items-end flex-col border-b py-4 gap-4" onClick={ () => handleSelectOrder(pedido, user) }>
-            <div className='flex justify-between w-full'>
+            <div className='flex justify-between w-full text-center text-xs bg-gray-200'>
                 <p>
                     { 
                     // converter pedido.date do tipo Timestamp do firebase para um formato possível de ser renderizado e legível para o usuário
@@ -43,7 +44,9 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
                         })
                     }
                 </p>
-                <p>{ pedido.status }</p>
+
+                <p className= { `${ statusButtonTextColorMap[pedido.status] }` }>{ pedido.status }</p>
+
                 <p>{ formatPrice(pedido?.valor.soma) } </p>
             </div>
             <div className="flex justify-between items-center gap-4 w-full">
