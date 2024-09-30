@@ -4,10 +4,11 @@ import ChoosePaymentOptionSection from './ChoosePaymentOptionSection';
 import CreditPaymentSection from './CreditPaymentSection';
 import PaymentSectionPending from './PaymentSectionPending';
 import PixPaymentSection from './PixPaymentSection';
-import { FireBaseDocument, OrderType, ProductBundleType, ProductCartType, UseCheckoutStateType } from '@/app/utils/types';
+import { FireBaseDocument, OrderType, ProductCartType, UseCheckoutStateType } from '@/app/utils/types';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useCollection } from '@/app/hooks/useCollection';
 import { Timestamp } from 'firebase/firestore';
+import { useManageProductStock } from '@/app/hooks/useManageProductStock';
 
 interface PaymentSectionProps {
     state: UseCheckoutStateType;
@@ -18,38 +19,10 @@ interface PaymentSectionProps {
 export default function PaymentSection({ cartPrice, state, handleSelectedPaymentOption }: PaymentSectionProps) {
     const { userInfo, carrinho } = useUserInfo();
     const { addDocument: createNewOrder  } = useCollection<OrderType>('pedidos');
-    const { updateDocumentField: updateProductBundleDocument, getDocumentById: getProductBundleDocumentById  } = useCollection<ProductBundleType>('products');
     const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinhos');
-
+    const { updateTheProductDocumentStock } = useManageProductStock();
 
     const { editingAddressMode, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
-
-    const updateTheProductDocumentStock = async(productId: string, skuId: string, quantity: number) => {
-        try {
-            // 1. Recuperar o documento do produto
-            const product = await getProductBundleDocumentById(productId);
-            console.log('productId', productId);
-            if (!product.exist) throw new Error('Product not found');
-    
-            // 2. Encontrar a variação específica
-            const variationIndex = product.productVariations.findIndex(v => v.sku === skuId);
-            if (variationIndex === -1) throw new Error('Product variation not found');
-    
-            // 3. Atualizar o estoque da variação e o estoque total
-            const updatedVariations = [...product.productVariations];
-            updatedVariations[variationIndex].estoque -= quantity;
-    
-            const updatedStockTotal = product.estoqueTotal - quantity;
-    
-            // 4. Enviar as atualizações para o Firebase
-            await updateProductBundleDocument(productId, 'productVariations', updatedVariations);
-            await updateProductBundleDocument(productId, 'estoqueTotal', updatedStockTotal);
-    
-            console.log('Estoque atualizado com sucesso!');
-        } catch (error) {
-            console.error('Erro ao atualizar estoque:', error);
-        }
-    };
 
     const finishPayment = async() => {
         const { address, deliveryOption, selectedDeliveryOption, selectedPaymentOption } = state;
@@ -81,7 +54,7 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
             createNewOrder(newOrder);
 
             await Promise.all(carrinho.map((item) => {
-                updateTheProductDocumentStock(item.productId, item.skuId, item.quantidade);
+                updateTheProductDocumentStock(item.productId, item.skuId, item.quantidade, '-');
             }));
 
             await Promise.all(carrinho.map((item) => {
