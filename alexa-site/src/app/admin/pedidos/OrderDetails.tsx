@@ -16,8 +16,6 @@ interface OrderDetailsProps {
 export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }: OrderDetailsProps) {
     const [status, setStatus] = useState<StatusType>(pedido.status);
 
-
-
     return (
         <div className="flex flex-col gap-2 text-sm ">
             <div className='w-full p-2 text-center'>
