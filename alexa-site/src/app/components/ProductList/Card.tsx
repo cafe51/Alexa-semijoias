@@ -77,10 +77,10 @@ export default function Card({ productData }: CardProps) {
                 </ModalMaker>
             }
             <section className='flex flex-col w-full'>
-                <Link href={ `/product/${productData.id}` } className='w-full rounded-lg relative h-[200px] overflow-hidden'>
+                <Link href={ `/product/${productData.id}` } className='w-full rounded-lg relative h-[160px] overflow-hidden'>
                     <Image
                         data-testid="product-link"
-                        className='rounded-lg object-cover scale-125'
+                        className='rounded-lg object-cover scale-100'
                         src={ productData.images && productData.images[0] ? productData?.images[0].localUrl : blankImage.src }
                         alt="Foto da peça"
                         fill
