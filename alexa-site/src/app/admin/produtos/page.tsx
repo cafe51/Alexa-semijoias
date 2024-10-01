@@ -146,10 +146,9 @@ export default function ProductsDashboard() {
                 ) : error ? (
                     <div className="text-center py-4 text-red-500">{ error }</div>
                 ) : paginatedItems.length > 0 ? (
-                    paginatedItems.map((product, index) => (
+                    paginatedItems.map((product) => (
                         <ProductListItem
                             key={ product.id }
-                            index={ index }
                             product={ product }
                             setSelectedProduct={ handleProductSelection }
                             setShowProductDetailModal={ handleProductDetail }

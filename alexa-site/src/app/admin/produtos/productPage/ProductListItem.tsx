@@ -10,7 +10,6 @@ import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 
 interface ProductListItemProps {
     product: ProductBundleType & FireBaseDocument;
-    index: number;
     setSelectedProduct: (product: ProductBundleType & FireBaseDocument) => void;
     setShowProductDetailModal: (product: ProductBundleType & FireBaseDocument) => void;
     deleteDocument: (id: string) => void;
@@ -27,14 +26,20 @@ const DeleteConfirmationModal: React.FC<{
     return (
         <ModalMaker closeModelClick={ onClose } title='Deletar produto'>
             <div className='flex flex-col gap-2 p-2'>
-                <p className='text-xl font-bold'>Tem certeza que deseja deletar esse produto?</p>
+                <p className='text-sm text-center p-2 py-4 font-bold'>Tem certeza que deseja deletar esse produto?</p>
                 <div className='flex justify-between w-full'>
-                    <LargeButton color='red' onClick={ onConfirm }>
+                    <div className='w-5/12'>
+                        <LargeButton color='red' onClick={ onConfirm }>
                         Sim
-                    </LargeButton>
-                    <LargeButton color='green' onClick={ onClose }>
+                        </LargeButton>
+                    </div>
+
+                    <div className='w-5/12'>
+                        <LargeButton color='green' onClick={ onClose }>
                         Não
-                    </LargeButton>
+                        </LargeButton>
+                    </div>
+
                 </div>
             </div>
         </ModalMaker>
@@ -45,7 +50,6 @@ DeleteConfirmationModal.displayName = 'DeleteConfirmationModal';
 
 const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
     product,
-    index,
     setSelectedProduct,
     setShowProductDetailModal,
     deleteDocument,
@@ -72,15 +76,17 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
     }, [product.id, deleteDocument, setRefreshProducts]);
 
     return (
-        <div className={ `flex text-xs gap-2 w-full h-32 p-2 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}` }>
-            <DeleteConfirmationModal
-                isOpen={ showDeleteModal }
-                onClose={ () => setShowDeleteModal(false) }
-                onConfirm={ handleDeleteConfirm }
-            />
-            <div className='rounded-lg h-20 w-20 relative overflow-hidden flex-shrink-0'
-                onClick={ handleProductImageClick }
-            >
+        <div className='flex flex-col text-xs w-full p-2 border-b pb-4 gap-4 bg-white shadow-md rounded-lg'>
+            <DeleteConfirmationModal isOpen={ showDeleteModal } onClose={ () => setShowDeleteModal(false) } onConfirm={ handleDeleteConfirm } />
+            <div className='flex justify-between flex-grow'>
+                <p className='font-bold'>{ product.name }</p>
+                
+                <button className='text-blue-500' onClick={ handleEditClick }>
+                    <FiEdit size={ 20 } />
+                </button>
+            </div>
+            
+            <div className='rounded-lg h-20 w-20 relative overflow-hidden flex-shrink-0' onClick={ handleProductImageClick }>
                 <Image
                     className='rounded-lg object-cover scale-100'
                     src={ product.images && product.images.length > 0 && product.images[0].localUrl ? product.images[0].localUrl : blankImage }
@@ -92,19 +98,12 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                 />
             </div>
 
-            <div className='flex flex-col justify-between flex-grow'>
-                <p className='font-bold'>{ product.name }</p>
-                <div className='flex justify-between'>
-                    <p>estoque: <span className='font-bold'>{ product.estoqueTotal }</span></p>
-                    <p>{ formatPrice(product.value.price) }</p>
-                </div>
-            </div>
+            <div className='flex items-center justify-between min-w-7 h-full'>
+                <p>estoque: <span className='font-bold'>{ product.estoqueTotal }</span></p>
 
-            <div className='flex flex-col items-center justify-between min-w-7 h-full flex-shrink-0'>
-                <button onClick={ handleEditClick }>
-                    <FiEdit size={ 20 } />
-                </button>
-                <button className='flex-shrink-0' onClick={ handleDeleteClick }>
+                <p>{ formatPrice(product.value.price) }</p>
+
+                <button className='text-red-500' onClick={ handleDeleteClick }>
                     <PiTrashSimpleBold size={ 20 } />
                 </button>
             </div>
