@@ -18,7 +18,7 @@ export default function DashBoardUsers() {
         async function getOrders() {
             setLoadingPedidos(true);
             const res = await getAllDocuments([
-                { field: 'date', order: 'desc' },
+                { field: 'updatedAt', order: 'desc' },
             ]);
             setPedidos(res);
             setLoadingPedidos(false);

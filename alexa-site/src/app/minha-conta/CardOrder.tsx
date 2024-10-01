@@ -46,7 +46,7 @@ export default function CardOrder({ pedido }: CardOrderProps) {
                 { pedido.id }
             </div>
             <div className="font-bold">
-                { pedido.date.toDate().toLocaleDateString('pt-BR', {
+                { pedido.updatedAt.toDate().toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',

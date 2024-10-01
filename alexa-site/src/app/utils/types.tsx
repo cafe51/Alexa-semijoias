@@ -254,7 +254,6 @@ export type OrderType = {
     userId: string,
     endereco: AddressType
 
-    date: Timestamp;
     totalQuantity: number,
     paymentOption: string,
     deliveryOption: string,

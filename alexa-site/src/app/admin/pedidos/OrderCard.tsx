@@ -36,7 +36,7 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
                 <p>
                     { 
                     // converter pedido.date do tipo Timestamp do firebase para um formato possível de ser renderizado e legível para o usuário
-                        pedido.date.toDate().toLocaleDateString('pt-BR', {
+                        pedido.updatedAt.toDate().toLocaleDateString('pt-BR', {
                             day: '2-digit',
                             month: '2-digit',
                             year: 'numeric',
