@@ -16,7 +16,7 @@ export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
             <div className='flex gap-4 w-full h-[90px] '>
                 <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0'>
                     <Image
-                        className='rounded-lg object-cover scale-125'
+                        className='rounded-lg object-cover scale-100'
                         src={ image ? image : blankImage }
                         alt="Foto da peça"
                         fill
