@@ -261,7 +261,6 @@ export type OrderType = {
 
     pixResponse?: PaymentResponseType;
     paymentId: string;
-    paymentMethod: string;
     createdAt: Timestamp;
     updatedAt: Timestamp;
 }
