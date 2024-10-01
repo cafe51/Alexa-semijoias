@@ -30,10 +30,9 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
 
     if(!user || !pedido) return <p>Loading...</p>;
 
-
     return (
-        <div className="flex items-end flex-col border-b py-4 gap-4" onClick={ () => handleSelectOrder(pedido, user) }>
-            <div className='flex justify-between w-full text-center text-xs bg-gray-200'>
+        <div className="flex flex-col items-end border-b pb-4 gap-4 bg-white" onClick={ () => handleSelectOrder(pedido, user) }>
+            <div className='flex justify-between w-full text-center text-xs p-2  bg-gray-200'>
                 <p>
                     { 
                     // converter pedido.date do tipo Timestamp do firebase para um formato possível de ser renderizado e legível para o usuário
@@ -49,7 +48,7 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
 
                 <p>{ formatPrice(pedido?.valor.soma) } </p>
             </div>
-            <div className="flex justify-between items-center gap-4 w-full">
+            <div className="flex justify-between items-center px-2 gap-4 w-full">
                 <div className='flex flex-col'>
                     <p>{ user.nome } </p>
                     <p><span>quantidade:</span> <span className='font-bold'>{ pedido.totalQuantity }</span></p>

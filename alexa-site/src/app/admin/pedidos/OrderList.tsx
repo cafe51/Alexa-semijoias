@@ -25,10 +25,10 @@ export default function OrderList({ pedidos, handleRefreshProductList }: OrderLi
     };
 
     return (
-        <div className='flex flex-col gap-2 text-sm'>
+        <div className='flex flex-col gap-2 text-sm mt-4'>
             {
-                pedidos.map(pedido => (
-                    <OrderCard key={ pedido.id } pedido={ pedido } handleSelectOrder={ handleSelectOrder } />
+                pedidos.map((pedido) => (
+                    <OrderCard key={ pedido.id } pedido={ pedido } handleSelectOrder={ handleSelectOrder }/>
                 ))
             }
             <SlideInModal
