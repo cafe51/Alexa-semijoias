@@ -2,11 +2,12 @@ import AccountSectionFilled from '@/app/checkout/AccountSection/AccountSectionFi
 import AddressSectionFilled from '@/app/checkout/AddressSection/AddressSectionFilled';
 import PriceSummarySection from '@/app/checkout/OrderSummarySection/PriceSummarySection';
 import SummaryCard from '@/app/checkout/OrderSummarySection/SummaryCard';
-import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/types';
+import { FireBaseDocument, OrderType,  StatusType, UserType } from '@/app/utils/types';
 import ChangeStatus from './ChangeStatus';
 import { useEffect, useState } from 'react';
 import CancelOrderButton from './CancelOrderButton';
 import { statusButtonTextColorMap } from '@/app/utils/statusButtonTextColorMap';
+import PixPayment from '@/app/components/PixPayment';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -14,20 +15,43 @@ interface OrderDetailsProps {
 }
 
 export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }: OrderDetailsProps) {
+    const [pedidoState, setPedidoState] = useState(pedido);
     const [status, setStatus] = useState<StatusType>(pedido.status);
+    const [showPixPayment, setShowPixPayment] = useState(false);
+
+    useEffect(() => {
+        const conditionsToShowPixPayment = pedidoState.status === 'aguardando pagamento' && pedidoState.pixResponse && status === 'aguardando pagamento';
+        if (conditionsToShowPixPayment) {
+            setShowPixPayment(true);
+        } else {
+            setShowPixPayment(false);
+        }
+    }, [pedidoState.pixResponse, pedidoState.status, status]);
 
     useEffect(() => {
         setStatus(pedido.status);
     }, [pedido.status]);
 
+    useEffect(() => {
+        setPedidoState(pedido);
+    }, [pedido]);
+
     return (
         <div className="flex flex-col gap-2 text-sm ">
             <div className='w-full p-2 text-center'>
-                <h2 className= { ` ${ statusButtonTextColorMap[status] }` }>{ status }</h2>
+                <h2 className= { ` ${ statusButtonTextColorMap[pedidoState.status] }` }>{ status }</h2>
             </div>
+            {
+                pedidoState.pixResponse && showPixPayment &&
+                <PixPayment
+                    pixKey={ pedidoState.pixResponse.qrCode }
+                    qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                    ticketUrl={ pedidoState.pixResponse.ticketUrl }
+                />
+            }
             <ChangeStatus
                 pedidoId={ pedido.id }
-                initialStatus={ status }
+                initialStatus={ pedidoState.status }
                 changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
             />
             <AccountSectionFilled

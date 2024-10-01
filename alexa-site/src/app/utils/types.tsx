@@ -245,6 +245,7 @@ export type AddressType = {
 
 export type StatusType = 'aguardando pagamento' | 'preparando para o envio' | 'pedido enviado' | 'cancelado' | 'entregue';
 
+export type PaymentResponseType = { qrCode: string, qrCodeBase64: string, ticketUrl: string }
 
 export type OrderType = {
     cartSnapShot: CartHistoryType[],
@@ -257,6 +258,12 @@ export type OrderType = {
     totalQuantity: number,
     paymentOption: string,
     deliveryOption: string,
+
+    pixResponse?: PaymentResponseType;
+    paymentId: string;
+    paymentMethod: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
 }
 
 export type UserType = {
