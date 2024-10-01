@@ -4,7 +4,7 @@ import PriceSummarySection from '@/app/checkout/OrderSummarySection/PriceSummary
 import SummaryCard from '@/app/checkout/OrderSummarySection/SummaryCard';
 import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/types';
 import ChangeStatus from './ChangeStatus';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CancelOrderButton from './CancelOrderButton';
 import { statusButtonTextColorMap } from '@/app/utils/statusButtonTextColorMap';
 
@@ -15,6 +15,10 @@ interface OrderDetailsProps {
 
 export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }: OrderDetailsProps) {
     const [status, setStatus] = useState<StatusType>(pedido.status);
+
+    useEffect(() => {
+        setStatus(pedido.status);
+    }, [pedido.status]);
 
     return (
         <div className="flex flex-col gap-2 text-sm ">

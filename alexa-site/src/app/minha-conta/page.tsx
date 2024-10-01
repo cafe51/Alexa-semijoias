@@ -7,19 +7,15 @@ import CardOrder from './CardOrder';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
-import { FireBaseDocument, OrderType } from '../utils/types';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import DeleteMySelfForm from './DeleteMySelfForm';
-import FullOrderModal from './FullOrderModal';
 
 export default function MyProfile() {
     const{ user } = useAuthContext();
     const [deleteUseForm, setDeleteUseForm] = useState(false);
     const  { userInfo, pedidos } = useUserInfo();
     const router = useRouter();
-    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: (OrderType & FireBaseDocument) }>({
-        pedido: undefined,
-    });
+
     const { error: deleteUserError } = useDeleteUser();
 
     useEffect(() => {
@@ -52,13 +48,12 @@ export default function MyProfile() {
 
     const listaDeCompras = (
         pedidos?.map((pedido) => {
-            return (<CardOrder pedido={ pedido } key={ pedido.id } setShowFullOrderModal={ setShowFullOrderModal } />);
+            return (<CardOrder pedido={ pedido } key={ pedido.id } />);
         })
     );
 
     return (
         <main className='h-full'>
-            { showFullOrderModal.pedido ? <FullOrderModal setShowFullOrderModal={ setShowFullOrderModal } pedido={ showFullOrderModal.pedido } /> : '' }
             <div className='flex gap-2 h-full'>
                 <Link href={ '/' } className='font-normal'>Início</Link>
                 <span className='font-normal'>{ '>' }</span>
