@@ -11,24 +11,32 @@ export default function OrderPage({ params: { orderId } }: { params: { orderId: 
     const [user, setUser] = useState<(UserType & FireBaseDocument) | null>(null);
     const { document: pedidoDocumentSnapShot } = useSnapshotById<OrderType>('pedidos', orderId);
     const [pedidoState, setPedidoState] = useState(pedidoDocumentSnapShot);
+    const [loadingState, setLoadingState] = useState(true);
 
     useEffect(() => {
+        setLoadingState(true);
         console.log('pedidoState', pedidoState);
         setPedidoState(pedidoDocumentSnapShot);
+        setLoadingState(false);
+
     } , [pedidoDocumentSnapShot]);
 
     useEffect(() => {
         async function fetchUser() {
-            if(pedidoState) {
+            setLoadingState(true);
+
+            if(pedidoState && pedidoState.exist) {
                 const res = await getUserById(pedidoState.userId);
                 setUser(res);
             }
+            setLoadingState(false);
+
         }
         fetchUser();
     }, [pedidoState]);
 
-    if(!pedidoState) return <p>Carregando...</p>;
-    if(!user) return <p>Carregando...</p>;
+    if(loadingState) return <p>Carregando...</p>;
+    if(!pedidoState || !user) return <p>Pedido não encontrado</p>;
 
     return (
         <OrderDetails pedido={ pedidoState } user={ user }/>
