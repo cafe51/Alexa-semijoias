@@ -1,3 +1,4 @@
+//src/app/firebase/config.ts
 import { getApps, initializeApp, FirebaseApp } from 'firebase/app';
 import { getFirestore, connectFirestoreEmulator, Firestore } from 'firebase/firestore';
 import { getAuth, connectAuthEmulator, setPersistence, browserLocalPersistence, Auth } from 'firebase/auth';

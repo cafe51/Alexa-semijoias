@@ -1,7 +1,8 @@
 import LargeButton from '@/app/components/LargeButton';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { useCollection } from '@/app/hooks/useCollection';
-import { useManageProductStock } from '@/app/hooks/useManageProductStock';
+import { usePaymentProcessing } from '@/app/hooks/usePaymentProcessing';
+// import { useCollection } from '@/app/hooks/useCollection';
+// import { useManageProductStock } from '@/app/hooks/useManageProductStock';
 import { FireBaseDocument, OrderType } from '@/app/utils/types';
 import { useState } from 'react';
 
@@ -12,15 +13,11 @@ interface CancelOrderButtonProps {
 
 export default function CancelOrderButton({ pedido, changeStatus }: CancelOrderButtonProps) {
     const [confirmCancelModal, setConfirmCancelModal] = useState(false);
-    const { updateDocumentField } = useCollection<OrderType>('pedidos');
-    const { updateTheProductDocumentStock } = useManageProductStock();
+    const { cancelPayment } = usePaymentProcessing();
 
     const cancelOrder = async() => {
-        updateDocumentField(pedido.id, 'status', 'cancelado');
+        cancelPayment(pedido.id);
         changeStatus();
-        await Promise.all(pedido.cartSnapShot.map((item) => {
-            updateTheProductDocumentStock(item.productId, item.skuId, item.quantidade, '+');
-        }));
         setConfirmCancelModal(false);
     };
 

@@ -7,16 +7,17 @@ import { useRouter } from 'next/navigation';
 import AccountSection from './AccountSection/AccountSection';
 import AddressSection from './AddressSection/AddressSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
-import PaymentSection from './PaymentSection/PaymentSection';
+// import PaymentSection from './PaymentSection/PaymentSection';
 import OrderSummarySection from './OrderSummarySection/OrderSummarySection';
+import PaymentBrick from '../components/PaymentBrick';
 
 export default function Checkout() {
     const router = useRouter();
     const { userInfo, carrinho } = useUserInfo();
-
     const [ loadingScreen, setLoadingScreen ] = useState(true);
     const [cartPrice, setCartPrice] = useState(0);
     const [isCartLoading, setIsCartLoading] = useState(true);
+    const [showPaymentSection, setShowPaymentSection] = useState(false);
 
     const {
         state,
@@ -24,7 +25,7 @@ export default function Checkout() {
         handleAddressChange,
         handleEditingAddressMode,
         handleSelectedDeliveryOption,
-        handleSelectedPaymentOption,
+        // handleSelectedPaymentOption,
         deliveryOptions,
         handleShowFullOrderSummary,
     } = useCheckoutState();
@@ -80,8 +81,17 @@ export default function Checkout() {
             <OrderSummarySection carrinho={ carrinho } cartPrice={ cartPrice } handleShowFullOrderSummary={ handleShowFullOrderSummary }state={ state }/>
             <AccountSection handleShowLoginSection={ handleShowLoginSection } state={ state } setIsCartLoading={ setIsCartLoading }/>
             <AddressSection handleAddressChange={ handleAddressChange } handleEditingAddressMode={ handleEditingAddressMode } state={ state } />
-            <DeliveryPriceSection deliveryOptions={ deliveryOptions } handleSelectedDeliveryOption={ handleSelectedDeliveryOption } state={ state } />
-            <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
+            <DeliveryPriceSection
+                deliveryOptions={ deliveryOptions }
+                handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
+                state={ state }
+                setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
+            />
+            {
+                userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price &&
+                    <PaymentBrick totalAmount={ cartPrice + state.deliveryOption.price } user={ userInfo } state={ state }/>
+                // <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
+            }
         </main>
     );
 }

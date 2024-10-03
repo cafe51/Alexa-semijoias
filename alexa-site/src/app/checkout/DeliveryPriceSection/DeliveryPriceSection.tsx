@@ -7,13 +7,16 @@ import { DeliveryOptionType, UseCheckoutStateType } from '@/app/utils/types';
 interface DeliveryPriceSectionProps {
     state: UseCheckoutStateType;
     deliveryOptions: DeliveryOptionType[];
-    handleSelectedDeliveryOption:  (option: string | null) => void
+    handleSelectedDeliveryOption:  (option: string | null) => void;
+    setShowPaymentSection: (showPaymentSection: boolean) => void;
 }
 
 export default function DeliveryPriceSection(
     { state: { editingAddressMode, deliveryOption, selectedDeliveryOption },
         handleSelectedDeliveryOption,
         deliveryOptions,
+        setShowPaymentSection,
+        
     }: DeliveryPriceSectionProps) {
 
     if (editingAddressMode) return <DeliveryPriceSectionPending />;
@@ -25,12 +28,14 @@ export default function DeliveryPriceSection(
                 price={ deliveryOption.price }
                 term={ deliveryOption.deliveryTime }
                 type={ deliveryOption.name }
+                setShowPaymentSection={ setShowPaymentSection }
             />
         );
     } 
     return (
         <ChooseDeliveryPriceSection
             deliveryOptions={ deliveryOptions }
+            setShowPaymentSection={ setShowPaymentSection }
             selectedDeliveryOption={ selectedDeliveryOption }
             setSelectedDeliveryOption={ handleSelectedDeliveryOption }
         />

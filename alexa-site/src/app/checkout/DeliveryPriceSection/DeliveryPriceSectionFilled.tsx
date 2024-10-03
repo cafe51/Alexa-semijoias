@@ -3,21 +3,25 @@
 import { formatPrice } from '@/app/utils/formatPrice';
 
 interface DeliveryPriceSectionFilledProps {
-    handleSelectedDeliveryOption:  (option: string | null) => void
-    type: string,
-    price: number,
-    term: number,
+    handleSelectedDeliveryOption:  (option: string | null) => void;
+    type: string;
+    price: number;
+    term: number;
+    setShowPaymentSection: (showPaymentSection: boolean) => void;
+
 }
 
 
 export default function DeliveryPriceSectionFilled({
     handleSelectedDeliveryOption,
+    setShowPaymentSection,
     price,
     term,
     type,
 } : DeliveryPriceSectionFilledProps) {
     const handleOptionChange = () => {
         handleSelectedDeliveryOption(null);
+        setShowPaymentSection(false);
     };
 
     return(

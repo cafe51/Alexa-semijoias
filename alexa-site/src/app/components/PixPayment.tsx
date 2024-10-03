@@ -26,7 +26,7 @@ const PixPayment: React.FC<PixPaymentProps> = ({
     };
 
     return (
-        <div className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto">
+        <div className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-xs mx-auto">
             <h2 className="text-xl font-bold text-gray-700 mb-4">Pagamento via PIX</h2>
       
             <div className="bg-white p-4 rounded-lg shadow-md">

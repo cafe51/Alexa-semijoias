@@ -14,7 +14,7 @@ interface OrderDetailsProps {
     user: UserType & FireBaseDocument;
 }
 
-export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }: OrderDetailsProps) {
+export default function OrderDetails({ pedido, user: { cpf, email, nome, tel, admin } }: OrderDetailsProps) {
     const [pedidoState, setPedidoState] = useState(pedido);
     const [status, setStatus] = useState<StatusType>(pedido.status);
     const [showPixPayment, setShowPixPayment] = useState(false);
@@ -39,7 +39,10 @@ export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }
     return (
         <div className="flex flex-col gap-2 text-sm ">
             <div className='w-full p-2 text-center'>
-                <h2 className= { ` ${ statusButtonTextColorMap[pedidoState.status] }` }>{ status }</h2>
+                {
+                    pedidoState.status !== 'cancelado' && pedidoState.status !== 'aguardando pagamento' && <h2 className= 'text-green-500 w-full bg-gray-200 p-4'>Pagamento Aprovado</h2>
+                }
+                <h2 className= { `p-4 ${ statusButtonTextColorMap[pedidoState.status] }` }>{ status }</h2>
             </div>
             {
                 pedidoState.pixResponse && showPixPayment &&
@@ -49,11 +52,13 @@ export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }
                     ticketUrl={ pedidoState.pixResponse.ticketUrl }
                 />
             }
-            <ChangeStatus
-                pedidoId={ pedido.id }
-                initialStatus={ pedidoState.status }
-                changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
-            />
+            {
+                admin && <ChangeStatus
+                    pedidoId={ pedido.id }
+                    initialStatus={ pedidoState.status }
+                    changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
+                />
+            }
             <AccountSectionFilled
                 cpf={ cpf }
                 email={ email }
@@ -64,7 +69,7 @@ export default function OrderDetails({ pedido, user: { cpf, email, nome, tel } }
 
             <AddressSectionFilled address={ pedido.endereco } />
             {
-                status !== 'entregue' && status !== 'cancelado' && <CancelOrderButton pedido={ pedido } changeStatus={ () => setStatus('cancelado') }/>
+                admin && status !== 'entregue' && status !== 'cancelado' && <CancelOrderButton pedido={ pedido } changeStatus={ () => setStatus('cancelado') }/>
             }
             <PriceSummarySection
                 frete={ pedido.valor.frete }

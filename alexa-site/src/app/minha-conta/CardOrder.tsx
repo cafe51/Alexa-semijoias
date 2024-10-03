@@ -3,6 +3,7 @@ import Image from 'next/image';
 import {  FireBaseDocument, OrderType } from '../utils/types';
 import { formatPrice } from '../utils/formatPrice';
 import Link from 'next/link';
+import { statusButtonTextColorMap } from '../utils/statusButtonTextColorMap';
 
 function CardImages({ pedido }: { pedido: OrderType & FireBaseDocument }) {
     return(
@@ -34,11 +35,10 @@ interface CardOrderProps {
     pedido: OrderType & FireBaseDocument
 }
 
-
 export default function CardOrder({ pedido }: CardOrderProps) {
     return (
         <div className='flex flex-col bg-white text-sm w-full gap-2 p-4  shadow-lg shadowColor rounded-lg ' >
-            <div className="mb-2 text-orange-500 font-semibold">
+            <div className={ `mb-2 font-semibold ${ statusButtonTextColorMap[pedido.status] }` }>
                 { pedido.status }
             </div>
             <div className="font-bold">

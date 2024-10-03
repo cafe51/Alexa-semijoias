@@ -8,14 +8,21 @@ const precoFaltanteParaFreteGratis = 250 - cartPrice;
 const precoFaltanteEmPorcentagem = (cartPrice / 250) * 100 + '%';
 
 interface ChooseDeliveryPriceSectionProps {
-    deliveryOptions: DeliveryOptionType[]
-    selectedDeliveryOption:string | null
-    setSelectedDeliveryOption:  (option: string | null) => void
+    deliveryOptions: DeliveryOptionType[];
+    selectedDeliveryOption:string | null;
+    setSelectedDeliveryOption:  (option: string | null) => void;
+    setShowPaymentSection: (showPaymentSection: boolean) => void;
 }
 
-export default function ChooseDeliveryPriceSection({  deliveryOptions, selectedDeliveryOption, setSelectedDeliveryOption }: ChooseDeliveryPriceSectionProps) {
+export default function ChooseDeliveryPriceSection({
+    deliveryOptions,
+    selectedDeliveryOption,
+    setSelectedDeliveryOption,
+    setShowPaymentSection,
+}: ChooseDeliveryPriceSectionProps) {
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDeliveryOption(event.target.value);
+        setShowPaymentSection(true);
         console.log(selectedDeliveryOption);
     };
 

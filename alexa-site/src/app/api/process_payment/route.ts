@@ -1,7 +1,9 @@
+// src/app/api/process_payment/route.ts
+
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { NextRequest, NextResponse } from 'next/server';
 
-const client = new MercadoPagoConfig({ accessToken: process.env.MPKEY! });
+const client = new MercadoPagoConfig({ accessToken: process.env.NEXT_PUBLIC_MPAGOKEY! });
 const payment = new Payment(client);
 
 export async function POST(req: NextRequest) {
@@ -10,7 +12,7 @@ export async function POST(req: NextRequest) {
 
         const response = await payment.create({ body: {
             ...body,
-            notification_url: 'https://webhook.site/21ff4d05-a4c6-454e-b58b-2a6c179cd8a3',
+            notification_url: process.env.NEXT_PUBLIC_URL_FOR_WEBHOOK,
             statement_descriptor: 'AALEXAAAAA',
             date_of_expiration: new Date(new Date().getTime() + 30 * 60 * 1000).toISOString(),
         } });
