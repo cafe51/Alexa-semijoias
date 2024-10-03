@@ -12,9 +12,10 @@ import PixPayment from '@/app/components/PixPayment';
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
     user: UserType & FireBaseDocument;
+    admin?: boolean;
 }
 
-export default function OrderDetails({ pedido, user: { cpf, email, nome, tel, admin } }: OrderDetailsProps) {
+export default function OrderDetails({ pedido, user: { cpf, email, nome, tel }, admin=false }: OrderDetailsProps) {
     const [pedidoState, setPedidoState] = useState(pedido);
     const [status, setStatus] = useState<StatusType>(pedido.status);
     const [showPixPayment, setShowPixPayment] = useState(false);
