@@ -258,7 +258,7 @@ export type OrderType = {
     paymentOption: string,
     deliveryOption: string,
 
-    pixResponse?: PaymentResponseType;
+    pixResponse?: PaymentResponseType | null;
     paymentId: string;
     createdAt: Timestamp;
     updatedAt: Timestamp;

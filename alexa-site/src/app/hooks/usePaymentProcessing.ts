@@ -65,7 +65,7 @@ export const usePaymentProcessing = () => {
             totalQuantity,
             paymentOption: selectedPaymentOption,
             deliveryOption: selectedDeliveryOption,
-            pixResponse: pixPaymentResponse,
+            pixResponse: pixPaymentResponse ? pixPaymentResponse : null,
             paymentId,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now(),

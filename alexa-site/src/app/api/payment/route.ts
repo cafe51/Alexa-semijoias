@@ -43,7 +43,17 @@ async function updateProductStock(productId: string, skuId: string, quantity: nu
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
+        console.log('*******************************');
+        console.log('                               ');
+        console.log('                               ');
+        console.log('                               ');
+
         console.log('Received webhook:', body);
+        console.log('                               ');
+        console.log('*******************************');
+        console.log('                               ');
+        console.log('                               ');
+
 
         if (body.type !== 'payment') {
             return NextResponse.json({ message: 'Ignored non-payment webhook' }, { status: 200 });
@@ -51,9 +61,15 @@ export async function POST(req: NextRequest) {
 
         const paymentId = body.data.id;
         const paymentInfo = await mpPayment.get({ id: paymentId });
-
+        console.log('*******************************');
+        console.log('                               ');
+        console.log('                               ');
+        console.log('                               ');
         console.log('Payment info:', paymentInfo);
-
+        console.log('                               ');
+        console.log('*******************************');
+        console.log('                               ');
+        console.log('                               ');
         const orderId = paymentId.toString();
         // const orderId = paymentInfo.external_reference;
         // if (!orderId) {
