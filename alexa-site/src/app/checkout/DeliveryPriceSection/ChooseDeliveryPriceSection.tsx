@@ -24,11 +24,12 @@ export default function ChooseDeliveryPriceSection({
     setShowPaymentSection,
     setPreferenceId,
 }: ChooseDeliveryPriceSectionProps) {
-    const { carrinho } = useUserInfo();
+    const { carrinho, userInfo } = useUserInfo();
 
     const handleOptionChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
         const response = await axios.post('/api/create-preference', {
             items: carrinho,
+            userInfo: userInfo,
         }, {
             headers: { 'Content-Type': 'application/json' },
         });

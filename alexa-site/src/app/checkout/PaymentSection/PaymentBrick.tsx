@@ -4,6 +4,7 @@ import { FireBaseDocument, UseCheckoutStateType, UserType } from '../../utils/ty
 import { useUserInfo } from '../../hooks/useUserInfo';
 import { usePaymentProcessing } from '../../hooks/usePaymentProcessing';
 import { useEffect } from 'react';
+import { nameGenerator } from '@/app/utils/nameGenerator';
 // import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';
 
 interface PaymentBrickProps {
@@ -34,15 +35,6 @@ export default function PaymentBrick({ totalAmount, user, state, preferenceId }:
             creditCard: 'all',
             maxInstallments: 6,
         },
-    };
-
-    const nameGenerator = (nome: string) => {
-        const fullName = nome;
-        const words = fullName.split(' ');
-        const firstName = words[0];
-        // Juntamos o resto das palavras em uma única string (sobrenome completo)
-        const lastName = words.slice(1).join(' ');
-        return { firstName, lastName };
     };
 
     return (

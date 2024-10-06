@@ -3,7 +3,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { PreferenceRequest } from 'mercadopago/dist/clients/preference/commonTypes';
-import { OrderType } from '@/app/utils/types';
+import { OrderType, UserType } from '@/app/utils/types';
+import { nameGenerator } from '@/app/utils/nameGenerator';
 // import { ProductType } from '@/app/utils/types';
 
 // main = APP_USR-3347535765602982-091914-94de44dd70d353bb9b1eb275cb397e1f-609524119
@@ -18,10 +19,13 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json('create-preference');
 }
 
+
+
 export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const cartItems = body.items as OrderType['cartSnapShot'];
+    const user = body.userInfo as UserType;
 
     const preferenceData: PreferenceRequest = {
         items: cartItems.map((i) => {
@@ -33,18 +37,18 @@ export async function POST(req: NextRequest) {
                 quantity: i.quantidade,
             };
         }),
-        auto_return: 'approved',
+        // auto_return: 'approved',
         payer: {
-            name: 'Japhe',
-            surname: 'Nogueira',
-            email: 'cafecafe51@hotmail.com',
+            name: nameGenerator(user.nome).firstName,
+            surname: nameGenerator(user.nome).lastName,
+            email: user.email,
             phone: {
                 area_code: '92',
                 number: '988065301',
             },
             address: {
-                street_name: 'Rua Barão do Rio Branco',
-                zip_code: '69058581',
+                street_name: user.address?.logradouro,
+                zip_code: user.address?.cep,
             },
         },
         statement_descriptor: 'ALEXAAAAAAAAAAAAAAAAAAAAAA',
@@ -65,15 +69,15 @@ export async function POST(req: NextRequest) {
         //     ],
         //     installments: 6,
         // },
-        shipments: {
-            cost: 30,
-            mode: 'PAC',
-        },
-        back_urls: {
-            failure: 'http://localhost:3000/failure',
-            pending: 'http://localhost:3000/pending',
-            success: 'http://localhost:3000/success',
-        },
+        // shipments: {
+        //     cost: 30,
+        //     mode: 'PAC',
+        // },
+        // back_urls: {
+        //     failure: 'http://localhost:3000/failure',
+        //     pending: 'http://localhost:3000/pending',
+        //     success: 'http://localhost:3000/success',
+        // },
         notification_url: process.env.NEXT_PUBLIC_URL_FOR_WEBHOOK,
         external_reference: 'external_reference_from_create-preference',
 

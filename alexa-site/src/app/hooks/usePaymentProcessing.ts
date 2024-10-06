@@ -9,6 +9,7 @@ import { Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
+import { nameGenerator } from '../utils/nameGenerator';
 export const usePaymentProcessing = () => {
     const router = useRouter();
     const { addDocument: createNewOrder } = useCollection<OrderType>('pedidos');
@@ -92,15 +93,6 @@ export const usePaymentProcessing = () => {
             console.error('Erro ao criar o pedido:', error);
             throw error;
         }
-    };
-
-    const nameGenerator = (nome: string) => {
-        const fullName = nome;
-        const words = fullName.split(' ');
-        const firstName = words[0];
-        // Juntamos o resto das palavras em uma única string (sobrenome completo)
-        const lastName = words.slice(1).join(' ');
-        return { firstName, lastName };
     };
 
     const onSubmit = async(
