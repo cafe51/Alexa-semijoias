@@ -101,6 +101,8 @@ export const usePaymentProcessing = () => {
         user: UserType & FireBaseDocument,
         state: UseCheckoutStateType,
         carrinho: ProductCartType[],
+        setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void,
+        setShowPaymentSection: (showPaymentSection: boolean) => void,
     ) => {
         try {
 
@@ -180,6 +182,28 @@ export const usePaymentProcessing = () => {
             }
 
             if(paymentResponse.status === 'rejected') {
+                // possíveis valores de status_detail: cc_rejected_call_for_authorize, cc_rejected_insufficient_amount, cc_rejected_bad_filled_security_code, cc_rejected_bad_filled_date, cc_rejected_bad_filled_other
+                switch(paymentResponse.status_detail) {
+                case 'cc_rejected_call_for_authorize':
+                    setShowPaymentFailSection('Transação não autorizada pela operadora do cartão.');
+                    break;
+                case 'cc_rejected_insufficient_amount':
+                    setShowPaymentFailSection('Valor do cartão não é suficiente.');
+                    break;
+                case 'cc_rejected_bad_filled_security_code':
+                    setShowPaymentFailSection('Código de segurança do cartão inválido.');
+                    break;
+                case 'cc_rejected_bad_filled_date':
+                    setShowPaymentFailSection('Data do cartão inválida.');
+                    break;
+                case 'cc_rejected_bad_filled_other':
+                    setShowPaymentFailSection('Cartão inválido.');
+                    break;
+                default:
+                    setShowPaymentFailSection('Transação não autorizada pela operadora do cartão.');
+                    break;
+                }
+                setShowPaymentSection(false);
                 return;
             }
 

@@ -10,6 +10,7 @@ import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 // import PaymentSection from './PaymentSection/PaymentSection';
 import OrderSummarySection from './OrderSummarySection/OrderSummarySection';
 import PaymentBrick from './PaymentSection/PaymentBrick';
+import PaymentFailSection from './PaymentSection/PaymentFailSection';
 
 export default function Checkout() {
     const router = useRouter();
@@ -19,6 +20,7 @@ export default function Checkout() {
     const [isCartLoading, setIsCartLoading] = useState(true);
     const [showPaymentSection, setShowPaymentSection] = useState(false);
     const [preferenceId, setPreferenceId] = useState<string | undefined>(undefined);
+    const [showPaymentFailSection, setShowPaymentFailSection] = useState<boolean | string>(false);
 
     const {
         state,
@@ -90,8 +92,23 @@ export default function Checkout() {
                 setPreferenceId = { (preferenceId: string) => setPreferenceId(preferenceId) }
             />
             {
-                userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price && preferenceId &&
-                    <PaymentBrick totalAmount={ cartPrice + state.deliveryOption.price } user={ userInfo } state={ state } preferenceId={ preferenceId }/>
+                userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price && preferenceId && !showPaymentFailSection &&
+                    <PaymentBrick
+                        totalAmount={ cartPrice + state.deliveryOption.price }
+                        user={ userInfo }
+                        state={ state }
+                        preferenceId={ preferenceId }
+                        setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
+                        setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
+                    />
+            }
+            {
+                showPaymentFailSection && !showPaymentSection &&
+                    <PaymentFailSection
+                        setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
+                        setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
+                        showPaymentFailSection= { showPaymentFailSection }
+                    />
                 // <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
             }
         </main>

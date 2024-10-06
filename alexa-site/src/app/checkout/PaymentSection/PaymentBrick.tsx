@@ -12,9 +12,11 @@ interface PaymentBrickProps {
   user: UserType & FireBaseDocument;
   state: UseCheckoutStateType;
   preferenceId: string,
+  setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void
+  setShowPaymentSection: (showPaymentSection: boolean) => void
 }
 
-export default function PaymentBrick({ totalAmount, user, state, preferenceId }: PaymentBrickProps) {
+export default function PaymentBrick({ totalAmount, user, state, preferenceId, setShowPaymentFailSection, setShowPaymentSection }: PaymentBrickProps) {
     const { carrinho } = useUserInfo();
 
     useEffect(() => {
@@ -114,7 +116,7 @@ export default function PaymentBrick({ totalAmount, user, state, preferenceId }:
 
             } }
             customization={ customization }
-            onSubmit={ (params) => onSubmit(params, totalAmount, user, state, carrinho || []) }
+            onSubmit={ (params) => onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection) }
             onReady={ onReady }
             onError={ onError }
         />
