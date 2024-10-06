@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
         
         const response = await payment.create({ body: {
             ...body,
-            statement_descriptor: 'AALEXAAAAA',
+            statement_descriptor: 'ALEXA SEMI JOIAS',
         } });
           
         return NextResponse.json(response, { status: 201 });

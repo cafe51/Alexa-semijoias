@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
                 zip_code: user.address?.cep,
             },
         },
-        statement_descriptor: 'ALEXAAAAAAAAAAAAAAAAAAAAAA',
+        statement_descriptor: 'ALEXA SEMI JOIAS',
         // payment_methods: {
         //     excluded_payment_types: [
         //         {
