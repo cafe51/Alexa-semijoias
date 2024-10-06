@@ -5,6 +5,7 @@ import { useUserInfo } from '../../hooks/useUserInfo';
 import { usePaymentProcessing } from '../../hooks/usePaymentProcessing';
 import { useEffect } from 'react';
 import { nameGenerator } from '@/app/utils/nameGenerator';
+import { convertArrayToString } from '@/app/utils/convertArrayToString';
 // import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';
 
 interface PaymentBrickProps {
@@ -54,6 +55,7 @@ export default function PaymentBrick({ totalAmount, user, state, preferenceId, s
                             name: i.name,
                             units: i.quantidade,
                             value: i.value.promotionalPrice || i.value.price,
+                            description: i.name + ' ' + convertArrayToString(i.categories),
 
                         };
                     }) : [{

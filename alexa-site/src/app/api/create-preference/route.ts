@@ -5,6 +5,7 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { PreferenceRequest } from 'mercadopago/dist/clients/preference/commonTypes';
 import { OrderType, UserType } from '@/app/utils/types';
 import { nameGenerator } from '@/app/utils/nameGenerator';
+import { convertArrayToString } from '@/app/utils/convertArrayToString';
 // import { ProductType } from '@/app/utils/types';
 
 // main = APP_USR-3347535765602982-091914-94de44dd70d353bb9b1eb275cb397e1f-609524119
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
                 title: i.name,
                 unit_price: i.value.promotionalPrice || i.value.price,
                 quantity: i.quantidade,
+                description: i.name + ' ' + convertArrayToString(i.categories),
             };
         }),
         // auto_return: 'approved',

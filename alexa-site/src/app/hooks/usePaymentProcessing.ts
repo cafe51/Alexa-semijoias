@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
 import { nameGenerator } from '../utils/nameGenerator';
+
 export const usePaymentProcessing = () => {
     const router = useRouter();
     const { addDocument: createNewOrder } = useCollection<OrderType>('pedidos');
@@ -136,6 +137,7 @@ export const usePaymentProcessing = () => {
                     return {
                         id: i.skuId,
                         title: i.name,
+                        description: i.name + ' ' + convertArrayToString(i.categories),
                         unit_price: i.value.promotionalPrice || i.value.price,
                         quantity: i.quantidade,
                     };
