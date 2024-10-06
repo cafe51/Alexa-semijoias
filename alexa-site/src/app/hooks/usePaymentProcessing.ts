@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
 import { nameGenerator } from '../utils/nameGenerator';
+import { convertArrayToString } from '../utils/convertArrayToString';
 
 export const usePaymentProcessing = () => {
     const router = useRouter();
