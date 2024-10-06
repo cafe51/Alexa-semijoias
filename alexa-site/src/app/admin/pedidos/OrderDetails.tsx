@@ -21,7 +21,9 @@ export default function OrderDetails({ pedido, user: { cpf, email, nome, tel }, 
     const [showPixPayment, setShowPixPayment] = useState(false);
 
     useEffect(() => {
-        const conditionsToShowPixPayment = pedidoState.status === 'aguardando pagamento' && pedidoState.pixResponse && status === 'aguardando pagamento';
+        const conditionsToShowPixPayment = pedidoState.status === 'aguardando pagamento'
+        && pedidoState.pixResponse && pedidoState.pixResponse.qrCode.length > 0
+        && status === 'aguardando pagamento';
         if (conditionsToShowPixPayment) {
             setShowPixPayment(true);
         } else {

@@ -2,6 +2,8 @@
 import { formatPrice } from '@/app/utils/formatPrice';
 import FreeShippingSection from './FreeShippingSection';
 import { DeliveryOptionType } from '@/app/utils/types';
+import axios from 'axios';
+import { useUserInfo } from '@/app/hooks/useUserInfo';
 
 const cartPrice = 189;
 const precoFaltanteParaFreteGratis = 250 - cartPrice;
@@ -12,6 +14,7 @@ interface ChooseDeliveryPriceSectionProps {
     selectedDeliveryOption:string | null;
     setSelectedDeliveryOption:  (option: string | null) => void;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
+    setPreferenceId: (preferenceId: string) => void
 }
 
 export default function ChooseDeliveryPriceSection({
@@ -19,8 +22,27 @@ export default function ChooseDeliveryPriceSection({
     selectedDeliveryOption,
     setSelectedDeliveryOption,
     setShowPaymentSection,
+    setPreferenceId,
 }: ChooseDeliveryPriceSectionProps) {
-    const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { carrinho } = useUserInfo();
+
+    const handleOptionChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
+        const response = await axios.post('/api/create-preference', {
+            items: carrinho,
+        }, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        console.log('****************************************************************************');
+        console.log('CARINHO PASSADO PARA A REQUISIÇÃO DE CRIAÇÃO DE PREFERENCIA NO FRONTEND', carrinho);
+        console.log('                                                                                   ');
+        console.log('                                                                                   ');
+        console.log('RESPONSE RECEBIDA NO FRONT END APóS REQUISIÇÃO DE CREATE PREFERENCE', response.data);
+        console.log('                                                                                   ');
+        console.log('                                                                                   ');
+        console.log('PREFERENCE ID RECEBIDA NO FRONT END', response.data.id);
+        console.log('****************************************************************************');
+
+        setPreferenceId(response.data.id);
         setSelectedDeliveryOption(event.target.value);
         setShowPaymentSection(true);
         console.log(selectedDeliveryOption);

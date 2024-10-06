@@ -9,6 +9,7 @@ interface DeliveryPriceSectionProps {
     deliveryOptions: DeliveryOptionType[];
     handleSelectedDeliveryOption:  (option: string | null) => void;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
+    setPreferenceId: (preferenceId: string) => void
 }
 
 export default function DeliveryPriceSection(
@@ -16,6 +17,7 @@ export default function DeliveryPriceSection(
         handleSelectedDeliveryOption,
         deliveryOptions,
         setShowPaymentSection,
+        setPreferenceId,
         
     }: DeliveryPriceSectionProps) {
 
@@ -38,6 +40,8 @@ export default function DeliveryPriceSection(
             setShowPaymentSection={ setShowPaymentSection }
             selectedDeliveryOption={ selectedDeliveryOption }
             setSelectedDeliveryOption={ handleSelectedDeliveryOption }
+            setPreferenceId = { (preferenceId: string) => setPreferenceId(preferenceId) }
+
         />
     );
 }

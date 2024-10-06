@@ -2,13 +2,13 @@
 
 import { IPaymentFormData } from '@mercadopago/sdk-react/bricks/payment/type';
 import { IBrickError } from '@mercadopago/sdk-react/bricks/util/types/common';
+import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';
 import axios from 'axios';
-import { FireBaseDocument, OrderType, PaymentResponseType, ProductCartType, UseCheckoutStateType, UserType } from '../utils/types';
+import { FireBaseDocument, OrderType, PixPaymentResponseType, ProductCartType, StatusType, UseCheckoutStateType, UserType } from '../utils/types';
 import { Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
-
 export const usePaymentProcessing = () => {
     const router = useRouter();
     const { addDocument: createNewOrder } = useCollection<OrderType>('pedidos');
@@ -36,13 +36,14 @@ export const usePaymentProcessing = () => {
     };
 
     const finishPayment = async(
+        orderStatus: StatusType,
         paymentId: string,
         selectedPaymentOption: string,
         totalAmount: number,
         user: UserType & FireBaseDocument,
         state: UseCheckoutStateType,
         carrinho: ProductCartType[],
-        pixPaymentResponse?: PaymentResponseType,
+        pixPaymentResponse?: PixPaymentResponseType,
     ) => {
         const { address, deliveryOption, selectedDeliveryOption } = state;
         const deliveryPrice = deliveryOption?.price || 0;
@@ -55,7 +56,7 @@ export const usePaymentProcessing = () => {
         const newOrder: OrderType = {
             endereco: address,
             cartSnapShot: carrinho,
-            status: 'aguardando pagamento',
+            status: orderStatus,
             userId: user.id,
             valor: {
                 frete: deliveryPrice,
@@ -93,6 +94,15 @@ export const usePaymentProcessing = () => {
         }
     };
 
+    const nameGenerator = (nome: string) => {
+        const fullName = nome;
+        const words = fullName.split(' ');
+        const firstName = words[0];
+        // Juntamos o resto das palavras em uma única string (sobrenome completo)
+        const lastName = words.slice(1).join(' ');
+        return { firstName, lastName };
+    };
+
     const onSubmit = async(
         params: IPaymentFormData,
         totalAmount: number,
@@ -101,34 +111,114 @@ export const usePaymentProcessing = () => {
         carrinho: ProductCartType[],
     ) => {
         try {
-            const response = await axios.post('/api/process_payment', params.formData, {
+
+
+            const payerAddInfo = {
+                first_name: nameGenerator(user.nome).firstName,
+                last_name: nameGenerator(user.nome).lastName,
+                phone: {
+                    area_code: '92',
+                    number: '988065301',
+                },
+                address: {
+                    zip_code: user.address?.cep,
+                    street_name: user.address?.logradouro,
+                    street_number: user.address?.numero,
+                },
+            };
+
+            const payer = {
+                entity_type: 'individual',
+                type: 'customer',
+                email: user.email,
+                identification: {
+                    type: 'CPF',
+                    number: user.cpf,
+                },
+            };
+
+            const additionalInfo = {
+                items: carrinho.map((i) => {
+                    return {
+                        id: i.skuId,
+                        title: i.name,
+                        unit_price: i.value.promotionalPrice || i.value.price,
+                        quantity: i.quantidade,
+                    };
+                }),
+                payer: payerAddInfo,
+                // payer: {email: 'cafecafe51@hotmail.com'},
+                shipments: {
+                    receiver_address: {
+                        zip_code: user.address?.cep,
+                        state_name: user.address?.uf,
+                        city_name: user.address?.localidade,
+                        street_name: user.address?.logradouro,
+                        street_number: user.address?.numero,
+                    },
+                }, 
+                
+            };
+
+            const response = await axios.post('/api/payment', {
+                ...params.formData,
+                date_of_expiration: new Date(new Date().getTime() + 30 * 60 * 1000).toISOString(),
+                notification_url: process.env.NEXT_PUBLIC_URL_FOR_WEBHOOK,
+                external_reference: user.id,
+                payer: payer,
+                additional_info: additionalInfo,
+                // transaction_amount: 
+                // statement_descriptor: 'statement_descriptor_test',
+            }, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            const paymentId = response.data.id.toString();
+            const paymentResponse: PaymentResponse = response.data;
 
-            if (response.data.payment_method_id === 'pix') {
-                const pixPaymentResponse = {
-                    qrCode: response.data.point_of_interaction.transaction_data.qr_code,
-                    qrCodeBase64: response.data.point_of_interaction.transaction_data.qr_code_base64,
-                    ticketUrl: response.data.point_of_interaction.transaction_data.ticket_url,
-                };
-                try {
-                    await finishPayment(paymentId, response.data.payment_method_id, totalAmount, user, state, carrinho, pixPaymentResponse);
-                    router.push(`/pedido/${paymentId}`);
-                } catch (error) {
-                    console.error('Erro ao finalizar o pagamento:', error);
-                    await cancelPayment(paymentId);
-                }
-            } else {
-                try {
-                    await finishPayment(paymentId, response.data.payment_method_id, totalAmount, user, state, carrinho);
-                    router.push(`/pedido/${paymentId}`);
-                } catch (error) {
-                    console.error('Erro ao finalizar o pagamento:', error);
-                    await cancelPayment(paymentId);
-                }
+            if(!paymentResponse.id) {
+                throw new Error('Payment ID not found');
             }
+
+            if (!paymentResponse.status) {
+                throw new Error('Payment status not found');
+            }
+            
+            if (!paymentResponse.payment_method_id) {
+                throw new Error('Payment method not found');
+            }
+
+            if(paymentResponse.status === 'rejected') {
+                return;
+            }
+
+            const paymentId: string = paymentResponse.id.toString();
+
+            let orderStatus: StatusType = 'preparando para o envio';
+            if(['pending', 'in_process', 'authorized'].includes(paymentResponse.status)) {
+                orderStatus = 'aguardando pagamento';
+            }
+            const pixPaymentResponse = paymentResponse.point_of_interaction ? {
+                qrCode: paymentResponse.point_of_interaction.transaction_data?.qr_code || '',
+                qrCodeBase64: paymentResponse.point_of_interaction.transaction_data?.qr_code_base64 || '',
+                ticketUrl: paymentResponse.point_of_interaction.transaction_data?.ticket_url || '',
+            } : undefined;
+            try {
+                await finishPayment(
+                    orderStatus,
+                    paymentId,
+                    paymentResponse.payment_method_id,
+                    totalAmount,
+                    user,
+                    state,
+                    carrinho,
+                    pixPaymentResponse,
+                );
+                router.push(`/pedido/${paymentId}`);
+            } catch (error) {
+                console.error('Erro ao finalizar o pagamento:', error);
+                await cancelPayment(paymentId);
+            }
+
         } catch (error) {
             console.error('Erro ao processar o pagamento:', error);
         }

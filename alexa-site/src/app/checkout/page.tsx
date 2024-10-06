@@ -9,7 +9,7 @@ import AddressSection from './AddressSection/AddressSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
 // import PaymentSection from './PaymentSection/PaymentSection';
 import OrderSummarySection from './OrderSummarySection/OrderSummarySection';
-import PaymentBrick from '../components/PaymentBrick';
+import PaymentBrick from './PaymentSection/PaymentBrick';
 
 export default function Checkout() {
     const router = useRouter();
@@ -18,6 +18,7 @@ export default function Checkout() {
     const [cartPrice, setCartPrice] = useState(0);
     const [isCartLoading, setIsCartLoading] = useState(true);
     const [showPaymentSection, setShowPaymentSection] = useState(false);
+    const [preferenceId, setPreferenceId] = useState<string | undefined>(undefined);
 
     const {
         state,
@@ -86,10 +87,11 @@ export default function Checkout() {
                 handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
                 state={ state }
                 setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
+                setPreferenceId = { (preferenceId: string) => setPreferenceId(preferenceId) }
             />
             {
-                userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price &&
-                    <PaymentBrick totalAmount={ cartPrice + state.deliveryOption.price } user={ userInfo } state={ state }/>
+                userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price && preferenceId &&
+                    <PaymentBrick totalAmount={ cartPrice + state.deliveryOption.price } user={ userInfo } state={ state } preferenceId={ preferenceId }/>
                 // <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
             }
         </main>
