@@ -92,7 +92,8 @@ export default function OrderDetails({ pedido, user: { cpf, email, nome, tel }, 
                 <PixPayment
                     pixKey={ pedidoState.pixResponse.qrCode }
                     qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
-                    ticketUrl={ pedidoState.pixResponse.ticketUrl }
+                    startDate={ pedidoState.updatedAt.toDate() }
+                    // ticketUrl={ pedidoState.pixResponse.ticketUrl }
                 />
             }
             {
