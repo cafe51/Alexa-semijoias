@@ -40,7 +40,7 @@ export default function OrderList({ pedidos, handleRefreshProductList }: OrderLi
                 title="Detalhes do Pedido"
                 fullWidth
             >
-                <OrderDetails pedido={ selectedOrder } user={ userSelected }/>
+                <OrderDetails pedido={ selectedOrder } user={ userSelected } admin={ true }/>
             </SlideInModal>
         </div>
     );

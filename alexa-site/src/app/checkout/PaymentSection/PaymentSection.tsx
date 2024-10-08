@@ -47,7 +47,10 @@ export default function PaymentSection({ cartPrice, state, handleSelectedPayment
                 totalQuantity,
                 paymentOption: selectedPaymentOption,
                 deliveryOption: selectedDeliveryOption,
-                date: Timestamp.now(),
+
+                paymentId: 'paymentId',
+                createdAt: Timestamp.now(),
+                updatedAt: Timestamp.now(),
             };
 
             console.log(newOrder);

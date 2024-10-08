@@ -2,7 +2,8 @@
 import Image from 'next/image';
 import {  FireBaseDocument, OrderType } from '../utils/types';
 import { formatPrice } from '../utils/formatPrice';
-import { Dispatch, SetStateAction } from 'react';
+import Link from 'next/link';
+import { statusButtonTextColorMap } from '../utils/statusButtonTextColorMap';
 
 function CardImages({ pedido }: { pedido: OrderType & FireBaseDocument }) {
     return(
@@ -32,29 +33,20 @@ function CardImages({ pedido }: { pedido: OrderType & FireBaseDocument }) {
 
 interface CardOrderProps {
     pedido: OrderType & FireBaseDocument
-    setShowFullOrderModal: Dispatch<SetStateAction<{
-        pedido?: OrderType & FireBaseDocument;
-    }>>
 }
 
-
-export default function CardOrder({ pedido, setShowFullOrderModal }: CardOrderProps) {
+export default function CardOrder({ pedido }: CardOrderProps) {
     return (
-        <div
-            className='flex flex-col bg-white text-sm w-full gap-2 p-4  shadow-lg shadowColor rounded-lg '
-            onClick={ () => setShowFullOrderModal({
-                pedido: pedido,
-            }) }
-        >
-            <div className="mb-2 text-orange-500 font-semibold">
+        <div className='flex flex-col bg-white text-sm w-full gap-2 p-4  shadow-lg shadowColor rounded-lg ' >
+            <div className={ `mb-2 font-semibold ${ statusButtonTextColorMap[pedido.status] }` }>
                 { pedido.status }
             </div>
             <div className="font-bold">
                 <span className="">Nº </span>
-                { pedido.userId }
+                { pedido.id }
             </div>
             <div className="font-bold">
-                { pedido.date.toDate().toLocaleDateString('pt-BR', {
+                { pedido.updatedAt.toDate().toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',
@@ -73,9 +65,11 @@ export default function CardOrder({ pedido, setShowFullOrderModal }: CardOrderPr
             <div className="mb-4 text-green-500">
                 { pedido.paymentOption } { formatPrice(pedido.valor.total) }
             </div>
-            <button className="bg-green-500 text-white py-2 px-4 rounded">
-                Ver pedido
-            </button>
+            <Link href={ `/pedido/${pedido.id}` } className="flex justify-center">
+                <button className="bg-green-500 text-white py-2 px-4 rounded">
+                    Ver pedido
+                </button>
+            </Link>
         </div>
     );
 

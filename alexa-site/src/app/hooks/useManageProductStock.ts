@@ -1,3 +1,4 @@
+// app/hooks/useCollection.ts
 import { ProductBundleType } from '../utils/types';
 import { useCollection } from './useCollection';
 

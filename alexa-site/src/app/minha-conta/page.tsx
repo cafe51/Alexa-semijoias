@@ -4,22 +4,22 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import Link from 'next/link';
 import CardOrder from './CardOrder';
+import { LuRefreshCw } from 'react-icons/lu';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
-import { FireBaseDocument, OrderType } from '../utils/types';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import DeleteMySelfForm from './DeleteMySelfForm';
-import FullOrderModal from './FullOrderModal';
+import { useManageOrders } from '../hooks/useManageOrders';
+import LargeButton from '../components/LargeButton';
 
 export default function MyProfile() {
     const{ user } = useAuthContext();
     const [deleteUseForm, setDeleteUseForm] = useState(false);
-    const  { userInfo, pedidos } = useUserInfo();
+    const  { userInfo } = useUserInfo();
     const router = useRouter();
-    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: (OrderType & FireBaseDocument) }>({
-        pedido: undefined,
-    });
+    const { loadingPedidos, pedidos, refreshOrders } = useManageOrders();
+
     const { error: deleteUserError } = useDeleteUser();
 
     useEffect(() => {
@@ -37,10 +37,7 @@ export default function MyProfile() {
         if (!user) {
             console.warn('User not logged in.');
         }
-
         setDeleteUseForm(true);
-
-        
     };
 
     const realizeSuaCompra = (
@@ -52,13 +49,12 @@ export default function MyProfile() {
 
     const listaDeCompras = (
         pedidos?.map((pedido) => {
-            return (<CardOrder pedido={ pedido } key={ pedido.id } setShowFullOrderModal={ setShowFullOrderModal } />);
+            return (<CardOrder pedido={ pedido } key={ pedido.id } />);
         })
     );
 
     return (
         <main className='h-full'>
-            { showFullOrderModal.pedido ? <FullOrderModal setShowFullOrderModal={ setShowFullOrderModal } pedido={ showFullOrderModal.pedido } /> : '' }
             <div className='flex gap-2 h-full'>
                 <Link href={ '/' } className='font-normal'>Início</Link>
                 <span className='font-normal'>{ '>' }</span>
@@ -82,11 +78,19 @@ export default function MyProfile() {
                     </div>
                 </section>
 
-                <section className='flex flex-col w-full'>
-                    <h2>Minhas Compras</h2>
+                <section className='flex flex-col gap-2 w-full'>
+                    <div className='flex justify-between w-full'>
+                        <h2>Minhas Compras</h2>
+                        <div className='rounded-full'>
+                            <LargeButton color='blue' loadingButton={ loadingPedidos } onClick={ refreshOrders }><LuRefreshCw /></LargeButton>
+                        </div>
+                    </div>
                     <div className='w-full border-2 border-solid border-pink-100'></div>
                     <div className='flex flex-col gap-4 w-full'>
                         <div className='flex flex-col gap-4 justify-between w-full '>
+                            {
+                                loadingPedidos && <p>Carregando pedidos...</p>
+                            }
                             { pedidos && pedidos?.length > 0 ? listaDeCompras : realizeSuaCompra }
                         </div>
                         <button className='primColor rounded-full p-2 '>Ir para a loja</button>

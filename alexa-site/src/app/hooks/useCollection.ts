@@ -3,11 +3,16 @@
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy  } from 'firebase/firestore';
 import { FilterOption, FireBaseDocument } from '../utils/types';
+import { useCallback } from 'react';
 
 export const useCollection = <T>(collectionName: string) => {
     const addDocument = async(dataObj: T & { id?: string }, id?: string) => {
         if (id) {
             // Define o ID específico
+            console.log('projectFirestoreDataBase', projectFirestoreDataBase);
+            console.log('collectionName', collectionName);
+            console.log('dataObj', dataObj);
+            console.log('id', id);
             const docRef = doc(projectFirestoreDataBase, collectionName, id);
             await setDoc(docRef, dataObj);
         } else {
@@ -38,7 +43,7 @@ export const useCollection = <T>(collectionName: string) => {
         };
     };
 
-    const getAllDocuments = async(filterOptions?: FilterOption[] | null): Promise<(T & FireBaseDocument)[]> => {
+    const getAllDocuments = useCallback(async(filterOptions?: FilterOption[] | null): Promise<(T & FireBaseDocument)[]> => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
         if (filterOptions) {
@@ -64,7 +69,7 @@ export const useCollection = <T>(collectionName: string) => {
         }));
 
         return collectionSnapshotDocs;
-    };
+    }, [collectionName]);
     
     return { addDocument, deleteDocument, getDocumentById, updateDocumentField, getAllDocuments };
 };

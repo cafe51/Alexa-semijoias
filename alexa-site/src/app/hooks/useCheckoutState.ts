@@ -77,8 +77,8 @@ export function useCheckoutState() {
     const { userInfo } = useUserInfo();
   
     const deliveryOptions = [
-        { name: 'PAC', deliveryTime: 22, price: 29.45 },
-        { name: 'Sedex', deliveryTime: 1, price: 56.31 },
+        { name: 'PAC', deliveryTime: 22, price: 0.02 },
+        { name: 'Sedex', deliveryTime: 1, price: 0.01 },
     ];
 
     useEffect(() => {

@@ -1,7 +1,6 @@
 'use client';
 import { useCollection } from '@/app/hooks/useCollection';
 import CardOrder from '@/app/minha-conta/CardOrder';
-import FullOrderModal from '@/app/minha-conta/FullOrderModal';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,10 +13,6 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
     const [loadingOrders, setLoadingOrders] = useState(true);
     const { getDocumentById } = useCollection<UserType>('usuarios');
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
-
-    const [ showFullOrderModal, setShowFullOrderModal ] = useState<{ pedido?: OrderType & FireBaseDocument }>({
-        pedido: undefined,
-    });
 
     // const userQuery = useMemo<FilterOption[]>(() => 
     //     [{ field: 'userId', operator: '==', value: userData ? userData.userId : 'invalidId' }],
@@ -65,7 +60,7 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
     
     const listaDeCompras = (
         userOrders?.map((pedido, index: number) => {
-            return (<CardOrder pedido={ pedido } key={ index } setShowFullOrderModal={ setShowFullOrderModal } />);
+            return (<CardOrder pedido={ pedido } key={ index } />);
         })
     );
 
@@ -73,7 +68,6 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
 
     return (
         <main className='h-full'>
-            { showFullOrderModal.pedido ? <FullOrderModal setShowFullOrderModal={ setShowFullOrderModal } pedido={ showFullOrderModal.pedido } /> : '' }
             <Link href={ `${ removeLastSegment(pathname) }` }>Voltar</Link>
             <h1>Detalhes do cliente { userData.nome }</h1>
             <div className='flex flex-col w-full gap-4'>

@@ -2,14 +2,14 @@
 'use client';
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { CartInfoType, FilterOptionForUseSnapshot, FireBaseDocument, OrderType, ProductBundleType, ProductCartType, ProductVariation, UserType } from '../utils/types';
+import { CartInfoType, FilterOptionForUseSnapshot, FireBaseDocument, ProductBundleType, ProductCartType, ProductVariation, UserType } from '../utils/types';
 import { useSnapshot } from '../hooks/useSnapshot';
 import { useCart } from '../hooks/useCart';
 
 interface IUserInfoContext {
     carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null;
     userInfo: (UserType & FireBaseDocument) | null;
-    pedidos: (OrderType & FireBaseDocument)[] | null;
+    // pedidos: (OrderType & FireBaseDocument)[] | null;
     setCartLocalStorageState: Dispatch<SetStateAction<CartInfoType[]>>;
 }
 export const UserInfoContext = createContext<IUserInfoContext | null>(null);
@@ -44,10 +44,10 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         userQuery, 
     );
 
-    const { documents: pedidos } = useSnapshot<OrderType>(
-        'pedidos', 
-        userQuery, 
-    );
+    // const { documents: pedidos } = useSnapshot<OrderType>(
+    //     'pedidos', 
+    //     userQuery, 
+    // );
 
     const produtosDoCarrinhoQuery = useMemo<FilterOptionForUseSnapshot[]>(() => 
         [{ field: '__name__', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }],
@@ -122,7 +122,12 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     }, [cartInfos, user, cartLocalStorageState]);
 
     return (
-        <UserInfoContext.Provider value={ { carrinho: mappedProducts, userInfo: userInfo ? userInfo[0] : null, pedidos: pedidos, setCartLocalStorageState }  }>
+        <UserInfoContext.Provider value={ {
+            carrinho: mappedProducts,
+            userInfo: userInfo ? userInfo[0] : null,
+            // pedidos: pedidos,
+            setCartLocalStorageState,
+        }  }>
             { children }
         </UserInfoContext.Provider>
     );
