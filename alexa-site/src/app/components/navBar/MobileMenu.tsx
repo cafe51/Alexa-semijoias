@@ -47,7 +47,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, activeSection, m
                                                 variant="ghost"
                                                 className="w-full justify-between text-lg hover:bg-white/30 transition-colors duration-200"
                                                 onClick={ () => {
-                                                    if(section.subsections) {
+                                                    if(section.subsections && section.subsections.length > 0) {
                                                         handleSectionClick(section);
                                                     }
                                                     else {
@@ -58,7 +58,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, activeSection, m
                                             >
                                                 { section.sectionName.toUpperCase() }
                                                 {
-                                                    section.subsections && <ChevronRight className="h-5 w-5 ml-auto" />
+                                                    section.subsections && section.subsections.length > 0 && <ChevronRight className="h-5 w-5 ml-auto" />
                                                 }
                                             </Button>
                                         </li>
