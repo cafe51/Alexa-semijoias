@@ -2,10 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :focus-visible {
+    @apply outline-none ring-2 ring-[#f89fd2] ring-offset-2;
+  }
+}
+
+/* Importando a fonte Montserrat do Google Fonts */
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap'); */
+
 body {
   height: 100%;
   color: #2d2e32;
-  /* font-family: Mulish, Proxima Nova, sans-serif; */
+  font-family: '', sans-serif; /* Alterando a fonte para Montserrat */
 }
 
 html {
@@ -22,26 +31,26 @@ input:-webkit-autofill:active {
 }
 
 p {
-  /* font-family: Proxima Nova, sans-serif; */
   color: #555;
   font-weight: 500;
   line-height: 1.6;
+  font-family: 'Montserrat', sans-serif; /* Aplicando Montserrat aos parágrafos */
 }
 
 h1 {
   font-size: 2rem;
   font-weight: 500;
-  /* font-family: Proxima Nova, sans-serif; */
+  font-family: 'Montserrat', sans-serif; /* Aplicando Montserrat aos cabeçalhos */
 }
 
 h2 {
   font-size: 1.5rem;
   font-weight: bolder;
-  /* font-family: Proxima Nova, sans-serif; */
+  font-family: 'Montserrat', sans-serif; /* Aplicando Montserrat aos cabeçalhos */
 }
 
 a {
-  /* font-family: Proxima Nova, sans-serif; */
+  font-family: 'Montserrat', sans-serif; /* Aplicando Montserrat aos links */
 }
 
 .primColor {
@@ -87,7 +96,6 @@ a {
   --tw-ring-color: rgb(244 114 182 / var(--tw-ring-opacity));
 }
 
-
 .asset-enter {
   opacity: 0;
   max-height: 0;
@@ -110,9 +118,6 @@ a {
   transition: opacity 500ms, max-height 500ms;
 }
 
-
-
-
 .card-container {
   perspective: 1000px;
   transition: transform 0.5s;
@@ -134,7 +139,6 @@ a {
   transform: rotateY(180deg);
 }
 
-
 @media (max-width: 760px) {
   .nav-gradient {
     background: linear-gradient(to bottom, #f89fd2, rgba(255, 255, 255, 0.74));
@@ -146,7 +150,6 @@ a {
     height: 100%;
   }
 }
-
 
 @layer base {
   :root {
@@ -203,7 +206,6 @@ a {
     --chart-5: 340 75% 55%;
   }
 }
-
 
 @layer base {
   * {

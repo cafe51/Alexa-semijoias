@@ -2,10 +2,11 @@
 
 'use client';
 
-import FullHeader from './FullHeader';
+// import FullHeader from './FullHeader';
 import { usePathname } from 'next/navigation';
 import SimpleHeader from './SimpleHeader';
 import AdminHeader from './AdminHeader';
+import FullHeader2 from './FullHeader2';
 
 
 export default function Header() {
@@ -16,6 +17,6 @@ export default function Header() {
     if(pathSegment === 'login' || pathSegment === 'cadastro' || pathSegment === 'checkout') return <SimpleHeader />;
     if(pathSegment === 'admin') return <AdminHeader />;
     
-    return <FullHeader />;
+    return <FullHeader2 />;
 
 }

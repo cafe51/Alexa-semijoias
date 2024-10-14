@@ -23,6 +23,10 @@ const FullHeader = () => {
     };
 
     useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
         console.log('bem vindo', user);
         console.log('o estado do admin do user logado é', isAdmin);
 
@@ -36,12 +40,6 @@ const FullHeader = () => {
             setPathLoginAccount('minha-conta');
         }
     }, [user]);
-
-    
-  
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-    }, []);
 
     const opacity = isScrolled ? 'primColorTransparent' : '';
     const height = isScrolled ? 'py-2' : 'py-6';
@@ -70,7 +68,7 @@ const FullHeader = () => {
                 <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
                 <div className='flex gap-4'>
                     <Link className=""  href={ `/${pathLoginAccount}` }><FaRegUser className='' size={ 24 } data-testid='useIcon' /></Link>
-                    <CartIcon />
+                    <CartIcon isMobile={ false }/>
                 </div>
             </div>
             <SearchBar />
