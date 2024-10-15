@@ -11,8 +11,6 @@ import LoginForm from '../components/LoginForm';
 export default function Login() {
     const router = useRouter();
     const [loadingButton, setLoadingButton] = useState(true);
-
-    
     const{ user } = useAuthContext();
     const  { userInfo } = useUserInfo();
 

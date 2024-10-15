@@ -14,7 +14,7 @@ export default function PriceSummarySection({ subtotalPrice, frete, adminDashboa
             
             <div className="flex justify-between items-center mb-2">
                 <span className="text-sm">Subtotal</span>
-                <span className="text-sm font-medium">R$ { subtotalPrice ? formatPrice(subtotalPrice) : '--' }</span>
+                <span className="text-sm font-medium">R$ { subtotalPrice && subtotalPrice > 0 ? formatPrice(subtotalPrice) : '--' }</span>
             </div>
             <div className="flex justify-between items-center mb-2">
                 <span className="text-sm">Frete</span>
@@ -25,7 +25,7 @@ export default function PriceSummarySection({ subtotalPrice, frete, adminDashboa
                     <span className="text-sm font-semibold">Total</span>
                     <span className="text-lg font-semibold">
                         {
-                            subtotalPrice 
+                            subtotalPrice && subtotalPrice > 0 
                                 ?
                                 formatPrice(subtotalPrice + (frete ? frete : 0))
                                 :

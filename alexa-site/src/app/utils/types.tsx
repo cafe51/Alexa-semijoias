@@ -297,6 +297,8 @@ export type OrderType = {
     paymentOption: string,
     deliveryOption: string,
 
+    installments?: number | null,
+
     pixResponse?: PixPaymentResponseType | null;
     paymentId: string;
     createdAt: Timestamp;

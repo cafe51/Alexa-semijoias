@@ -1,10 +1,11 @@
-import LargeButton from '@/app/components/LargeButton';
 import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
 import { useCollection } from '@/app/hooks/useCollection';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { CartHistoryType, FireBaseDocument, ProductBundleType, ProductCartType } from '@/app/utils/types';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 
 interface TryNewOrderButtonProps {
     cartSnapShot: CartHistoryType[];
@@ -94,14 +95,13 @@ export default function TryNewOrderButton({ cartSnapShot }: TryNewOrderButtonPro
 
     return (
         <>
-            <LargeButton 
-                color='green' 
-                onClick={ handleTryNewOrder } 
-                loadingButton={ isLoadingButton } 
+            <Button
+                className="bg-[#D4AF37] text-white hover:bg-[#C48B9F] flex-1" onClick={ handleTryNewOrder }
                 disabled={ isLoadingButton }
             >
-                Refazer Pedido
-            </LargeButton>
+                <RefreshCw className="mr-2 h-4 w-4" />
+        Refazer
+            </Button>
             { error && <p style={ { color: 'red', marginTop: '10px' } }>{ error }</p> }
         </>
     );
