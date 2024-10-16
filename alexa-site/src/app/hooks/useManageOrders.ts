@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useCollection } from '@/app/hooks/useCollection';
-import { FireBaseDocument, OrderType } from '@/app/utils/types';
+import { FireBaseDocument, OrderType } from '../utils/types';
+import { useCollection } from './useCollection';
+import { User } from 'firebase/auth';
 
-export const useManageOrders = () => {
+export const useManageOrders = (user?: User | undefined) => {
     const [pedidos, setPedidos] = useState<(OrderType & FireBaseDocument)[] | undefined | null>(null);
     const [loadingPedidos, setLoadingPedidos] = useState(false);
     const [refreshOrders, setRefreshOrders] = useState(false);
@@ -12,15 +13,24 @@ export const useManageOrders = () => {
     useEffect(() => {
         async function getOrders() {
             setLoadingPedidos(true);
-            const res = await getAllDocuments([
-                { field: 'updatedAt', order: 'desc' },
-            ]);
+            let res;
+            if(user) {
+                res = await getAllDocuments([
+                    { field: 'userId', operator: '==', value: user?.uid }, // Filtrando pelos pedidos do usuário logado
+                    { field: 'updatedAt', order: 'desc' },
+                ]);
+            } else {
+                res = await getAllDocuments([
+                    { field: 'updatedAt', order: 'desc' },
+                ]);
+            }
+
             setPedidos(res);
             setLoadingPedidos(false);
             console.log('pedidos', res);
         }
         getOrders();
-    }, [refreshOrders, getAllDocuments]);
+    }, [refreshOrders, getAllDocuments, user?.uid]); // Adicionando user?.id como dependência
 
     const refresh = useCallback(() => setRefreshOrders(prev => !prev), []);
 
