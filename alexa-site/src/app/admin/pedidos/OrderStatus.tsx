@@ -4,18 +4,11 @@ import { Package } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { OrderType } from '@/app/utils/types';
+import { statusColors } from '@/app/utils/statusColors';
 
 interface OrderStatusProps {
   order: OrderType;
 }
-
-const statusColors: Record<string, string> = {
-    'aguardando pagamento': 'bg-yellow-500',
-    'preparando para o envio': 'bg-blue-500',
-    'pedido enviado': 'bg-green-500',
-    'cancelado': 'bg-red-500',
-    'entregue': 'bg-purple-500',
-};
 
 const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
     return (

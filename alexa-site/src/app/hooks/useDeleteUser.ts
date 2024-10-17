@@ -1,5 +1,3 @@
-// app/hooks/useDeleteUser.ts
-
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { deleteUser, signInWithEmailAndPassword } from 'firebase/auth';
@@ -20,7 +18,7 @@ export const useDeleteUser = () => {
     const deleteUserAccount = async(email: string, password: string) => {
         try {
             await signInUser(email, password);
-
+            
             if (!userInfo) throw new Error('Usuário não encontrado');
 
             const user = auth.currentUser;
@@ -37,12 +35,12 @@ export const useDeleteUser = () => {
             await deleteUserFromDb(userInfo.id);
 
             // 4. Deleta o usuário do Firebase Authentication
-
             await deleteUser(user);
 
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
+                throw err; // Lança o erro para que o componente possa lidar com ele
             }
         }
     };
