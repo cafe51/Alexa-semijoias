@@ -1,61 +1,101 @@
 // app/carrinho/page.tsx
 'use client';
+
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
-import { formatPrice } from '../utils/formatPrice';
-import CartItem from './CartItem';
+import CartItem from './CartItem3';
+import CartHeader from './CartHeader';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState, useMemo } from 'react';
+import { FireBaseDocument, ProductCartType } from '../utils/types';
+import OrderSummary from './OrderSummary';
+
+const shippingOptions = [
+    { id: 'pac', name: 'PAC', price: 15.90, days: 7 },
+    { id: 'sedex', name: 'Sedex', price: 25.50, days: 3 },
+];
+
+interface CartItem {
+  skuId: string;
+  quantidade: number;
+  value: {
+    promotionalPrice?: number;
+    price: number;
+  };
+}
 
 export default function Carrinho() {
+    const [shipping, setShipping] = useState<string | null>(null);
     const { carrinho } = useUserInfo();
     const router = useRouter();
 
-    console.log('CARRINHO', carrinho);
+    const selectShipping = (optionId: string) => {
+        setShipping(optionId);
+    };
 
-    if (!carrinho || carrinho.length < 0) return <p>Loading...</p>;
+    const subtotal = useMemo(() => {
+        if(!carrinho || carrinho.length === 0) return 0;
+        const subtotal = carrinho.map((item) => (Number(item.value.promotionalPrice || item.value.price) * item.quantidade)).reduce((a, b) => a + b, 0);
+        return subtotal;
+    }, [carrinho]);
+
+    const total = useMemo(() => {
+        const shippingPrice = shippingOptions.find((shippingOption) => shipping === shippingOption.id)?.price || 0;
+        console.log('shipping', shippingPrice);
+        return subtotal + shippingPrice;
+    }, [subtotal, shipping]);
+
+    if (!carrinho || carrinho.length === 0) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-xl">Seu carrinho está vazio.</p>
+            </div>
+        );
+    }
 
     return (
-        <section className='flex flex-col gap-1'>
-            <h2 className='text-center self-center'>FINALIZE SUA COMPRA</h2>
+        <div className="min-h-screen text-[#333333] pb-8 md:px-8 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+                <CartHeader cartItems={ carrinho } />
 
-            <section className='flex flex-col gap-1'>
-                {
-                    carrinho ? carrinho.map((produto) => {
-                        if(produto && produto.quantidade && produto.quantidade > 0) {
-                            return <CartItem key={ produto.skuId } produto={ produto } />;
-                        } else return false;
-                    }) : <span>Loading...</span>
-                }
-            </section>
-            <section className='flex flex-col gap-4 w-full p-6 bg-white shadow-lg rounded-lg shadowColor'>
-                <h2>Resumo</h2>
-                <div className='flex gap-2 w-full justify-between'>
-                    <p>Subtotal</p>
-                    <p>{ formatPrice(carrinho?.map((item) => (Number(item.quantidade) * ((item.value.promotionalPrice ? item.value.promotionalPrice : item.value.price)))).reduce((a, b) => a + b, 0)) }</p>
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <CartItemList cartItems={ carrinho } />
+                    <OrderSummary 
+                        subtotal={ subtotal }
+                        shipping={ shipping }
+                        total={ total }
+                        onSelectShipping={ selectShipping }
+                        onCheckout={ () => router.push('/checkout') }
+                        shippingOptions={ shippingOptions }
+                    />
                 </div>
-                <div className='flex gap-2 w-full justify-between'>
-                    <p>Frete</p>
-                    <p>Calcular</p>
-                </div>
-                <div className='flex gap-2 w-full justify-between'>
-                    <p>Total</p>
-                    <p>{ formatPrice(120) }</p>
-                </div>
-                <div className='flex flex-col text-end w-full'>
-                    <p>à vista com 10% OFF</p>
-                    <p>ou até 6x { formatPrice(50) } sem juros</p>
-                </div>
-                <button
-                    className='rounded-full bg-green-500 p-4 px-6 font-bold text-white'
-                    onClick={ () => router.push('/checkout') }
-                >
-            Finalizar compra
-                </button>
-                <button
-                    className='rounded-full bg-blue-500 p-4 px-6 font-bold text-white'
-                >
-            Continuar comprando
-                </button>
-            </section>
+
+                <ContinueShoppingButton className="mt-8 sm:hidden" />
+            </div>
+        </div>
+    );
+}
+
+function CartItemList({ cartItems }: { cartItems: (ProductCartType & FireBaseDocument)[] | ProductCartType[] }) {
+    return (
+        <section className='flex-grow'>
+            { cartItems.map((cartItem) => (
+                cartItem.quantidade > 0 && (
+                    <CartItem key={ cartItem.skuId } cartItem={ cartItem } />
+                )
+            )) }
         </section>
+    );
+}
+
+function ContinueShoppingButton({ className }: { className?: string }) {
+    return (
+        <div className={ className }>
+            <Button variant="outline" className="w-full text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white text-base">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Continuar Comprando
+            </Button>
+        </div>
     );
 }

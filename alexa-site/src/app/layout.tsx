@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={ `${inter.className} min-h-screen secColor` }>
+            <body className={ `${inter.className} min-h-screen bg-[#FAF9F6]` }>
                 <AuthContextProvider>
                     <UserInfoProvider>
                         <Header />

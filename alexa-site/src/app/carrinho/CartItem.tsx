@@ -12,13 +12,13 @@ import SelectingQuantityBox from '../components/SelectingQuantityBox';
 import { PiTrashSimpleBold } from 'react-icons/pi';
 import DisplayCustomProperties from '../components/DisplayCustomProperties';
 
-export default function CartItem({ produto }: { produto: ProductCartType | (ProductCartType & FireBaseDocument) }) {
+export default function CartItem({ cartItem }: { cartItem: ProductCartType | (ProductCartType & FireBaseDocument) }) {
     const { user } = useAuthContext();
     const { addOneToLocalStorage, removeOneFromLocalStorage, removeItemFromLocalStorageCart } = useLocalStorage();
 
     useEffect(() => {
-        console.log('PRODUTOOOOO', produto);
-    }, [produto]);
+        console.log('PRODUTOOOOO', cartItem);
+    }, [cartItem]);
 
     const { updateDocumentField, deleteDocument } = useCollection(
         'carrinhos',
@@ -27,20 +27,20 @@ export default function CartItem({ produto }: { produto: ProductCartType | (Prod
     let cartId: string;
 
     if(user) {
-        const { id } = produto as (ProductCartType & FireBaseDocument);
+        const { id } = cartItem as (ProductCartType & FireBaseDocument);
         cartId = id;
     }
 
     const addOne = () => {
-        return user ? updateDocumentField(cartId, 'quantidade', produto.quantidade +=1) : addOneToLocalStorage(produto);
+        return user ? updateDocumentField(cartId, 'quantidade', cartItem.quantidade +=1) : addOneToLocalStorage(cartItem);
     };
 
     const removeOne = () => {
-        return user ? updateDocumentField(cartId, 'quantidade', produto.quantidade -=1) : removeOneFromLocalStorage(produto);
+        return user ? updateDocumentField(cartId, 'quantidade', cartItem.quantidade -=1) : removeOneFromLocalStorage(cartItem);
     };
 
     const removeAll = () => {
-        return user ? deleteDocument(cartId) : removeItemFromLocalStorageCart(produto.skuId);
+        return user ? deleteDocument(cartId) : removeItemFromLocalStorageCart(cartItem.skuId);
     };
 
     return (
@@ -49,16 +49,16 @@ export default function CartItem({ produto }: { produto: ProductCartType | (Prod
                 <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0'>
                     <Image
                         className='rounded-lg object-cover scale-125'
-                        src={ produto.image ? produto.image : blankImage }
+                        src={ cartItem.image ? cartItem.image : blankImage }
                         alt="Foto da peça"
                         fill
                     />
                 </div>
                 <div className='flex flex-col justify-between h-full text-xs flex-grow'>
                     <div className='flex-grow'>
-                        <p>{ produto.name }</p>
+                        <p>{ cartItem.name }</p>
                     </div>
-                    { produto.customProperties && <DisplayCustomProperties customProperties={ produto.customProperties }/> }
+                    { cartItem.customProperties && <DisplayCustomProperties customProperties={ cartItem.customProperties }/> }
                 </div>
 
                 <div className='flex-shrink-0'>
@@ -70,13 +70,13 @@ export default function CartItem({ produto }: { produto: ProductCartType | (Prod
             </div>
             <div className="flex justify-between items-center w-full">
                 <SelectingQuantityBox
-                    quantity={ produto.quantidade }
+                    quantity={ cartItem.quantidade }
                     removeOne={ removeOne }
                     addOne={ addOne }
-                    stock={ produto.estoque }
+                    stock={ cartItem.estoque }
                 />
                 <div className="ml-4">
-                    <span className="font-semibold">{ formatPrice((produto.value.promotionalPrice ? produto.value.promotionalPrice : produto.value.price) * produto.quantidade) }</span>
+                    <span className="font-semibold">{ formatPrice((cartItem.value.promotionalPrice ? cartItem.value.promotionalPrice : cartItem.value.price) * cartItem.quantidade) }</span>
                 </div>
             </div>
         </div>
