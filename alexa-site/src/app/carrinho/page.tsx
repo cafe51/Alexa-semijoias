@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useState, useMemo } from 'react';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
 import OrderSummary from './OrderSummary';
+import ContinueShoppingButton from './ContinueShoppingButton';
 
 const shippingOptions = [
     { id: 'pac', name: 'PAC', price: 15.90, days: 7 },
@@ -50,6 +51,10 @@ export default function Carrinho() {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <p className="text-xl">Seu carrinho está vazio.</p>
+                <Button variant="outline" className="w-full text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white text-base">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Voltar para a loja
+                </Button>
             </div>
         );
     }
@@ -57,7 +62,7 @@ export default function Carrinho() {
     return (
         <div className="min-h-screen text-[#333333] pb-8 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
-                <CartHeader cartItems={ carrinho } />
+                <CartHeader cartItems={ carrinho } router={ router }/>
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     <CartItemList cartItems={ carrinho } />
@@ -71,7 +76,7 @@ export default function Carrinho() {
                     />
                 </div>
 
-                <ContinueShoppingButton className="mt-8 sm:hidden" />
+                <ContinueShoppingButton className="mt-8 sm:hidden" router={ router }/>
             </div>
         </div>
     );
@@ -89,13 +94,3 @@ function CartItemList({ cartItems }: { cartItems: (ProductCartType & FireBaseDoc
     );
 }
 
-function ContinueShoppingButton({ className }: { className?: string }) {
-    return (
-        <div className={ className }>
-            <Button variant="outline" className="w-full text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white text-base">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Continuar Comprando
-            </Button>
-        </div>
-    );
-}

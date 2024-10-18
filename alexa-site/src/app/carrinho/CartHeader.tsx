@@ -1,12 +1,13 @@
-import { Button } from '@/components/ui/button';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
-import { ArrowLeft } from 'lucide-react';
+import ContinueShoppingButton from './ContinueShoppingButton';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 interface CartHeaderProps {
     cartItems: (ProductCartType & FireBaseDocument)[] | ProductCartType[];
+    router: AppRouterInstance
 }
 
-export default function CartHeader({ cartItems }: CartHeaderProps) {
+export default function CartHeader({ cartItems, router }: CartHeaderProps) {
     const totalItems = cartItems.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0);
 
     return (
@@ -15,10 +16,7 @@ export default function CartHeader({ cartItems }: CartHeaderProps) {
                 Carrinho
                 <span className="text-lg sm:text-xl font-normal ml-2">({ totalItems + (totalItems > 1 ? ' itens' : ' item') })</span>
             </h1>
-            <Button variant="outline" className="text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white hidden sm:flex">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Continuar Comprando
-            </Button>
+            <ContinueShoppingButton className="mt-8 hidden sm:flex" router={ router }/>
         </section>
     );
 }
