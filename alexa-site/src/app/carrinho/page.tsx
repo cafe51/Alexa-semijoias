@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import CartItem from './CartItem3';
 import CartHeader from './CartHeader';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft,  ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useMemo } from 'react';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
@@ -49,12 +49,19 @@ export default function Carrinho() {
 
     if (!carrinho || carrinho.length === 0) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-xl">Seu carrinho está vazio.</p>
-                <Button variant="outline" className="w-full text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white text-base">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+            <div className="h-screen">
+                <div className='flex flex-col h-1/3 items-center justify-around '>
+                    <p className="text-xl md:text-2xl lg:text-3xl">Seu carrinho está vazio.</p>
+                    <ShoppingCart className="h-12 w-12 md:h-20 md:w-20 lg:h-24 lg:w-24" color='#C48B9F'/>
+                    <Button
+                        variant="outline"
+                        className=" text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white text-base w-48 md:text-lg lg:text-xl md:w-52 lg:w-60 md:p-6"
+                        onClick={ () => router.push('/') }
+                    >
+                        <ArrowLeft className="mr-2 h-4 w-4" />
                     Voltar para a loja
-                </Button>
+                    </Button>
+                </div>
             </div>
         );
     }
