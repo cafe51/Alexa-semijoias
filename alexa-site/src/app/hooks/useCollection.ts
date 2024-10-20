@@ -6,7 +6,7 @@ import { FilterOption, FireBaseDocument } from '../utils/types';
 import { useCallback } from 'react';
 
 export const useCollection = <T>(collectionName: string) => {
-    const addDocument = async(dataObj: T & { id?: string }, id?: string) => {
+    const addDocument = useCallback(async(dataObj: T & { id?: string }, id?: string) => {
         if (id) {
             // Define o ID específico
             console.log('projectFirestoreDataBase', projectFirestoreDataBase);
@@ -22,17 +22,17 @@ export const useCollection = <T>(collectionName: string) => {
             console.log('dataObj', dataObj);
             await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
         }
-    };
+    }, [collectionName]);
   
-    const deleteDocument = async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
+    const deleteDocument = useCallback(async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id)), [collectionName]);
 
-    const updateDocumentField = async(id: string, field: string, value: string | number | string[] | number[] | object) => {
+    const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object) => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id);
         console.log('chamou update', id, field, value, docRef);
         await updateDoc(docRef, { [field]: value });
-    };
+    }, [collectionName]);
 
-    const getDocumentById = async(id: string): Promise<T & FireBaseDocument> => {
+    const getDocumentById = useCallback(async(id: string): Promise<T & FireBaseDocument> => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id); // Referência ao documento com ID '12345'
         const docSnap = await getDoc(docRef); // Obtém o documento
 
@@ -41,7 +41,7 @@ export const useCollection = <T>(collectionName: string) => {
             exist: docSnap.exists(),
             ...(docSnap.data() as T),
         };
-    };
+    }, [collectionName]);
 
     const getAllDocuments = useCallback(async(filterOptions?: FilterOption[] | null): Promise<(T & FireBaseDocument)[]> => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);

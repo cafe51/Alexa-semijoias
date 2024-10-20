@@ -7,8 +7,8 @@ import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument 
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Image from 'next/image';
 import blankImage from '../../../../public/blankImage.jpg';
-import SelectingQuantityBox from '../SelectingQuantityBox';
 import PriceSection from '../PriceSection';
+import QuantitySelectionCartBox from '../QuantitySelectionCartBox';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;
@@ -117,7 +117,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                     <div className='flex gap-4 w-full h-[90px] '>
                         <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0'>
                             <Image
-                                className='rounded-lg object-cover scale-125'
+                                className='rounded-lg object-cover scale-100'
                                 src={ productVariationsSelected[0].image ? productVariationsSelected[0].image : blankImage }
                                 alt="Foto da peça"
                                 fill
@@ -126,7 +126,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                         <ProductSummary selectedOptions={ selectedOptions } />
                     </div>  
 
-                    <SelectingQuantityBox
+                    <QuantitySelectionCartBox
                         quantity={ quantity }
                         removeOne={ () =>  setQuantity((prevQuantity) => prevQuantity -= 1) }
                         addOne={ () => setQuantity((prevQuantity) => prevQuantity += 1) }

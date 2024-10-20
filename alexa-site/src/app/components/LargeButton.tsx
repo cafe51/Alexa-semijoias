@@ -11,12 +11,12 @@ interface LargeButtonProps {
 }
 
 export default function LargeButton({ disabled, loadingButton=false, color, children, onClick, type='button' }: LargeButtonProps) {
-    const bgColorClass = disabled || loadingButton ? 'bg-gray-300' : `bg-${color}-500`;
+    const bgColorClass = `bg-${color}-500`;
 
     
     return (
         <button
-            className={ `${bgColorClass} p-3 text-white flex justify-center items-center rounded w-full shadow-sm` }
+            className={ `${bgColorClass} p-3 text-white flex justify-center items-center rounded w-full shadow-sm disabled:pointer-events-none disabled:opacity-50` }
             type={ type }
             disabled={ disabled || loadingButton }
             onClick={ onClick }

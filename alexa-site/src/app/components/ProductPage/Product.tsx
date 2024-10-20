@@ -1,17 +1,16 @@
-//app/components/Product.tsx
 'use client';
-import { useEffect, useState } from 'react';
-import { FireBaseDocument, ProductBundleType } from '../../utils/types';
-import ResponsiveCarousel from '../ResponsiveCarousel';
-// import Link from 'next/link';
-// import { useUserInfo } from '../hooks/useUserInfo';
-import { useCollection } from '../../hooks/useCollection';
-import PriceSection from '../PriceSection';
+import { useEffect, useState, useCallback } from 'react';
+import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
+import { useCollection } from '@/app/hooks/useCollection';
+import PriceSection from '@/app/components/PriceSection';
 import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import PropertiesSelectionSection from './PropertiesSelectionSection';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
-import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
+import FinishBuyConfirmationModal from '@/app/components/FinishBuyConfirmationModal';
+import { Badge } from '@/components/ui/badge';
+import ImageCarousel from '@/app/components/ImageCarousel';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Product({ id }: { id: string }) {
     const { carrinho } = useUserInfo();
@@ -21,6 +20,7 @@ export default function Product({ id }: { id: string }) {
     const { handleAddToCart } = useAddNewItemCart();
     const [isLoading, setIsLoading] = useState(true);
     const [showModalFinishBuy, setShowModalFinishBuy] = useState(false);
+    const [localCartQuantity, setLocalCartQuantity] = useState<{ [key: string]: number }>({});
 
     const {
         currentPhase, setCurrentPhase,
@@ -31,100 +31,136 @@ export default function Product({ id }: { id: string }) {
         allOptions,
         productVariationsSelected,
         keys,
-    } = useDynamicObjectCardsLogic(product!, carrinho);
+    } = useDynamicObjectCardsLogic(product, carrinho);
 
     useEffect(() => {
         const updateProductsState = async() => {
+            setIsLoading(true);
             const productData = await getDocumentById(id);
             if (productData.exist) {
                 setProduct(productData);
                 setIsLoading(false);
-    
+                setIsloadingButton(false);
             } else {
                 console.log('Produto Não encontrado', productData);
+                setIsLoading(false);
             }
         };
 
         updateProductsState();
-    }, []);
+    }, [getDocumentById, id]);
 
     useEffect(() => {
-        setIsLoading(true);
-        try {
-            product && setIsLoading(false);
-            setIsloadingButton(false);
+        // Inicializa o localCartQuantity com as quantidades do carrinho
+        const initialQuantities: { [key: string]: number } = {};
+        carrinho?.forEach(item => {
+            initialQuantities[item.skuId] = item.quantidade;
+        });
+        setLocalCartQuantity(initialQuantities);
+    }, [carrinho]);
 
-        } catch (err) {
-            if (err instanceof Error) {
-                console.error(err.message);  
-            } else { console.log('erro desconhecido'); }
+    const isDisabled = useCallback(() => {
+        if (productVariationsSelected.length !== 1) return true;
+        const selectedVariation = productVariationsSelected[0];
+        const cartQuantity = localCartQuantity[selectedVariation.sku] || 0;
+        return selectedVariation.estoque <= cartQuantity;
+    }, [productVariationsSelected, localCartQuantity]);
+
+    const handleFinishBuyClick = useCallback(() => {
+        if (productVariationsSelected.length === 1) {
+            const selectedVariation = productVariationsSelected[0];
+            handleAddToCart(carrinho, selectedVariation, setIsloadingButton, quantity);
+            
+            // Atualiza o localCartQuantity imediatamente
+            setLocalCartQuantity(prev => ({
+                ...prev,
+                [selectedVariation.sku]: (prev[selectedVariation.sku] || 0) + quantity,
+            }));
+
+            const newCartQuantity = (localCartQuantity[selectedVariation.sku] || 0) + quantity;
+            const remainingQuantity = selectedVariation.estoque - newCartQuantity;
+
+            console.log('Remaining quantity:', remainingQuantity);
+
+            if (remainingQuantity > 0) {
+                setQuantity(1);
+            } else {
+                console.log('Acabou');
+                setCurrentPhase(0);
+                setSelectedOptions({});
+            }
         }
-    
-    }, [product]);
+        setShowModalFinishBuy(prev => !prev);
+    }, [handleAddToCart, carrinho, productVariationsSelected, quantity, setIsloadingButton, localCartQuantity, setQuantity, setCurrentPhase, setSelectedOptions]);
 
     if(isLoading || !product) {
         return <h1>Carregando...</h1>;
     }
 
-
-    const isDisabled = () => {
-        const cartItem = carrinho?.find(item => item.skuId === productVariationsSelected[0]?.sku);
-        if(!cartItem) {
-            return (productVariationsSelected.length !== 1);
-        } else {
-            return (
-                (cartItem && productVariationsSelected[0].estoque <= cartItem.quantidade)
-            );
-        }
-    };
-
-
     return (
-        <main className='flex flex-col gap-4'>
-            { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(!showModalFinishBuy) } /> }
+        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] md:px-8">
+            { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
+            <div className="max-w-6xl mx-auto">
+                <div className="flex flex-col md:flex-row gap-8 flex-shrink-0">
+                    <section className="md:w-1/2">
+                        <ImageCarousel productData={ product }/>
+                    </section>
+
+                    <section className="md:w-1/2 px-2">
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-bold mb-2">{ product.name.toUpperCase() }</h1>
+
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
+                                { product.categories.map((category, index) => (
+                                    <Badge key={ index } variant="secondary" className="bg-[#F8C3D3] text-[#333333]">{ category }</Badge>
+                                )) }
+                                { product.lancamento && <Badge variant="destructive" className="bg-[#C48B9F] text-white">Lançamento</Badge> }
+                            </div>
+
+                            <p className="text-gray-600 text-sm md:text-base mb-6">{ product.description }</p>
+                        </div>
+                        {
+                            !product.productVariations.some((pv) => pv.customProperties === undefined) && (
+                                <Card className='border-[#F8C3D3]'>
+                                    <CardContent className="p-4">
+                                        <PropertiesSelectionSection
+                                            carrinho={ carrinho }
+                                            handleAddToCart={ handleAddToCart }
+                                            setIsloadingButton={ setIsloadingButton }
+                                            selectedOptions={ selectedOptions }
+                                            currentPhase={ currentPhase }
+                                            setCurrentPhase={ setCurrentPhase }
+                                            setSelectedOptions={ setSelectedOptions }
+                                            errorMessage={ errorMessage }
+                                            setErrorMessage={ setErrorMessage }
+                                            quantity={ quantity }
+                                            setQuantity={ setQuantity }
+                                            availableOptions={ availableOptions }
+                                            allOptions={ allOptions }
+                                            productVariationsSelected={ productVariationsSelected }
+                                            keys={ keys }
+                                        />
+                                    </CardContent>
+                                </Card>
+                            )
+                        }
                         
-            <ResponsiveCarousel productData={ product }/>
+                        <PriceSection
+                            product={ product }
+                            isLoadingButton={ isLoadingButton }
+                            isDisabled={ isDisabled }
+                            quantity={ quantity }
+                            handleClick={ handleFinishBuyClick }
+                        />
 
-            <section>
-                <h2 className='font-normal'>{ product.name.toUpperCase() }</h2>
-                <p className='text-sm'>{ product.description }</p>
-            </section>
-
-            <PropertiesSelectionSection
-                object={ product }
-                carrinho={ carrinho }
-                handleAddToCart={ handleAddToCart }
-                setIsloadingButton={ setIsloadingButton }
-                selectedOptions={ selectedOptions }
-                currentPhase={ currentPhase }
-                setCurrentPhase={ setCurrentPhase }
-                setSelectedOptions={ setSelectedOptions }
-                errorMessage={ errorMessage }
-                setErrorMessage={ setErrorMessage }
-                quantity={ quantity }
-                setQuantity={ setQuantity }
-                availableOptions={ availableOptions }
-                allOptions={ allOptions }
-                productVariationsSelected={ productVariationsSelected }
-                keys={ keys }
-            />
-
-            <PriceSection
-                product={ product }
-                isLoadingButton={ isLoadingButton }
-                isDisabled={ isDisabled }
-                quantity={ quantity }
-                handleClick={ () => {
-                    productVariationsSelected.length === 1 && handleAddToCart(carrinho, productVariationsSelected[0], setIsloadingButton, quantity);
-                    setShowModalFinishBuy(!showModalFinishBuy);
-                } }
-            />
-
-            <div className='py-4 gap-4 border-solid border-2 border-x-0 borderColor'>
-                <p> Frete e prazo </p>
-                <div className='flex py-4 gap-4 '>
-                    <input className='px-2 w-full' placeholder='Insira seu CEP'></input>
-                    <button className='bg-black text-white p-4 rounded-full'>Calcular</button>
+                        <div className='py-4 gap-4 border-solid border-2 border-x-0 borderColor'>
+                            <p>Frete e prazo</p>
+                            <div className='flex py-4 gap-4'>
+                                <input className='px-2 w-full' placeholder='Insira seu CEP'></input>
+                                <button className='bg-black text-white p-4 rounded-full'>Calcular</button>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </main>

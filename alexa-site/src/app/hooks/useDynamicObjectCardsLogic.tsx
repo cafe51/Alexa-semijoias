@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 
-function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument, carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null) {
+function useDynamicObjectCardsLogic(object: (ProductBundleType & FireBaseDocument) | null, carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null) {
     const [currentPhase, setCurrentPhase] = useState(0);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
     const [availableOptions, setAvailableOptions] = useState<string[]>([]);
@@ -10,83 +10,74 @@ function useDynamicObjectCardsLogic(object: ProductBundleType & FireBaseDocument
     const [productVariationsSelected, setProductVariationsSelected] = useState<ProductVariation[]>([]);
     const [quantity, setQuantity] = useState(1);
 
-    const keys = object && object.productVariations[0].customProperties ? Object.keys(object.productVariations[0].customProperties).sort() : [''];
+    const keys = useMemo(() => {
+        if (object && object.productVariations[0].customProperties) {
+            return Object.keys(object.productVariations[0].customProperties).sort();
+        }
+        return [''];
+    }, [object]);
 
-    useEffect(() => {
-        const pv = filterProductVariations(object, selectedOptions);
-        setProductVariationsSelected(pv);
-    }, [object, selectedOptions]);
+    const filterProductVariations = useCallback((productBundle: ProductBundleType | null, selectedProperties: { [key: string]: string }): ProductVariation[] => {
+        if (!productBundle) {
+            return [];
+        }
+        return productBundle.productVariations
+            .filter(variation => {
+                return Object.keys(selectedProperties)
+                    .every((key) => {
+                        if (variation.customProperties) {
+                            return variation.customProperties[key] === selectedProperties[key];
+                        } else {
+                            return true;
+                        }
+                    });
+            });
+    }, []);
 
-    useEffect(() => {
-        updateAvailableOptions();
-    }, [currentPhase, selectedOptions, object]);
+    const updateAvailableOptions = useCallback(() => {
+        if (!object) return;
 
-    function updateAvailableOptions() {
-        if(!object) return '';
-            
-        const currentKey = keys[currentPhase] as string;
+        const currentKey = keys[currentPhase];
         const options = object.productVariations.map((variation) => {
-            if(variation.customProperties) {
+            if (variation.customProperties) {
                 return variation.customProperties[currentKey];
             } else {
                 return '';
             }
-                
         });
-        setAllOptions([...new Set(options)]);
+        const uniqueOptions = [...new Set(options)];
+        setAllOptions(uniqueOptions);
 
-        const filteredOptions = options.filter(option => {
+        const availableOptionsSet = new Set<string>();
+
+        uniqueOptions.forEach(option => {
             const potentialSelection = { ...selectedOptions, [currentKey]: option };
             const potentialVariations = filterProductVariations(object, potentialSelection);
-            return potentialVariations.some(variation => {
+            const isAvailable = potentialVariations.some(variation => {
                 const cartItem = carrinho?.find(item => item.skuId === variation.sku);
                 return cartItem ? variation.estoque > cartItem.quantidade : variation.estoque > 0;
             });
+
+            if (isAvailable) {
+                availableOptionsSet.add(option);
+            }
         });
 
-        setAvailableOptions([...new Set(filteredOptions)]);
+        setAvailableOptions(Array.from(availableOptionsSet));
+    }, [object, currentPhase, selectedOptions, keys, carrinho, filterProductVariations]);
 
-
-    }
-
-    function filterProductVariations(productBundle: ProductBundleType, selectedProperties: { [key: string]: string }): ProductVariation[] {
-        if(!productBundle) {
-            return [{
-                categories: [''],
-                barcode: 'string',
-                customProperties: {
-                    a: 'string',
-                },
-                dimensions: {
-                    largura: 1,
-                    altura: 1,
-                    comprimento: 1,
-                },
-                estoque: 1,
-                name: 'string',
-                peso: 1,
-                sku: 'string',
-                value: {
-                    price: 1,
-                    promotionalPrice: 1,
-                    cost: 1,
-                },
-                productId: 'string',
-                image: '',
-            }];
+    useEffect(() => {
+        if (object) {
+            const pv = filterProductVariations(object, selectedOptions);
+            setProductVariationsSelected(pv);
         }
-        return productBundle.productVariations
-            .filter(variation =>{
-                return Object.keys(selectedProperties)
-                    .every((key) => {
-                        if(variation.customProperties) {
-                            return variation.customProperties[key] === selectedProperties[key];
-                        } else {
-                            return '';
-                        }
-                    });
-            });
-    }
+    }, [object, selectedOptions, filterProductVariations]);
+
+    useEffect(() => {
+        if (object) {
+            updateAvailableOptions();
+        }
+    }, [object, updateAvailableOptions]);
 
     return {
         currentPhase,
