@@ -82,6 +82,8 @@ export default function ProductCard({ product }: { product: ProductBundleType & 
                         className='rounded-lg rounded-b-none object-cover scale-100'
                         src={ product.images && product.images[0] ? product?.images[0].localUrl : blankImage.src }
                         alt="Foto da peça"
+                        sizes="220px"
+                        priority
                         fill
                     />
                     <div className="absolute top-2 left-2 right-2 flex justify-between">
