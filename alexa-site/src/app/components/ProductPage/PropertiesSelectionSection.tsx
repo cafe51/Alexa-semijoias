@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 import ErrorMessage from '@/app/checkout/AddressSection/ErrorMessage';
-import OptionButton from '../ProductList/OptionButton';
-import ProductSummary from '../ProductList/ProductSummary';
+import OptionButton from '../ProductList/VariationSelection/OptionButton';
+import ProductSummary from '../ProductList/VariationSelection/ProductSummary';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import blankImage from '../../../../public/blankImage.jpg';
 import Image from 'next/image';

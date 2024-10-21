@@ -2,13 +2,13 @@ import React from 'react';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
 import OptionButton from './OptionButton';
 import ErrorMessage from './ErrorMessage';
-import ProductSummary from './ProductSummary';
 import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Image from 'next/image';
-import blankImage from '../../../../public/blankImage.jpg';
-import PriceSection from '../PriceSection';
-import QuantitySelectionCartBox from '../QuantitySelectionCartBox';
+import blankImage from '../../../../../public/blankImage.jpg';
+import PriceSection from '../../PriceSection';
+import QuantitySelectionCartBox from '../../QuantitySelectionCartBox';
+import ProductSummary from './ProductSummary';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;

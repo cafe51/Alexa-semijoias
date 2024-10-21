@@ -9,7 +9,7 @@ import { FireBaseDocument, ProductBundleType } from '../../utils/types';
 import { useAddNewItemCart } from '../../hooks/useAddNewItemCart';
 import blankImage from '../../../../public/blankImage.jpg';
 import ModalMaker from '../ModalMakers/ModalMaker';
-import DynamicObjectCards from './DynamicObjectCards';
+import DynamicObjectCards from './VariationSelection/DynamicObjectCards';
 import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
 
 interface CardProps {

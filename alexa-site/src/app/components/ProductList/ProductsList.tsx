@@ -1,9 +1,9 @@
 //app/components/ProductsList.tsx
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import Card from './Card';
 import { useSnapshot } from '../../hooks/useSnapshot';
 import { FilterOptionForUseSnapshot, ProductBundleType } from '../../utils/types';
+import ProductCard from './ProductCard';
 
 export default function ProductsList({ sectionName, subsection }: { sectionName: string, subsection?: string }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -51,13 +51,11 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
 
     return (
         <main>
-            <h2>{ sectionName.charAt(0).toUpperCase() + sectionName.slice(1) }</h2>
-            { subsection && <h3>{ subsection.charAt(0).toUpperCase() + subsection.slice(1) }</h3> }
             { documents && documents[0] && (
-                <div className=" flex flex-wrap justify-center gap-2 ">
-                    { documents.map((productData) => {
-                        return <Card key={ productData.id } productData={ productData }  />;
-                    }) }
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                    { documents.map((productData) => (
+                        <ProductCard key={ productData.id } product={ productData }  />
+                    )) }
                 </div>
             ) }
         </main>
