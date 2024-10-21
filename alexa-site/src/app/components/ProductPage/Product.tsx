@@ -98,7 +98,7 @@ export default function Product({ id }: { id: string }) {
     }
 
     return (
-        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] md:px-8">
+        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-2 md:px-8">
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row gap-8 flex-shrink-0">

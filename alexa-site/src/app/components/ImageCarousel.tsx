@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { FireBaseDocument, ProductBundleType } from '../utils/types';
 import {
     Carousel,
@@ -11,16 +12,17 @@ export default function ImageCarousel({ productData: { images } }: { productData
 
     return (
         <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
-            <CarouselContent>
+            <CarouselContent className='' >
                 { images.map((image, index) => (
-                    <CarouselItem key={ index }>
-                        <div className="">
-                            <img 
-                                src={ image.localUrl } 
-                                alt={ `Imagem do produto ${index + 1}` } 
-                                className="w-full h-auto rounded-lg shadow-md"
-                            />
-                        </div>
+                    <CarouselItem key={ index } className='w-full rounded-lg relative h-[330px]'>
+                        <Image
+                            className="w-full h-auto rounded-lg shadow-md"
+                            alt={ `Slide ${index + 1}` } 
+                            src={ image.localUrl }
+                            fill
+                            sizes='220px'
+                            priority
+                        />
                     </CarouselItem>
                 )) }
             </CarouselContent>

@@ -24,7 +24,7 @@ export default function RootLayout({
                 <AuthContextProvider>
                     <UserInfoProvider>
                         <Header />
-                        <div className="flex flex-col pt-40 p-4">
+                        <div className="flex flex-col pt-40">
                             { children }
                         </div>
                         <Footer />
