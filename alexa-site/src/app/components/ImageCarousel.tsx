@@ -20,7 +20,7 @@ export default function ImageCarousel({ productData: { images } }: { productData
                             alt={ `Slide ${index + 1}` } 
                             src={ image.localUrl }
                             fill
-                            sizes='220px'
+                            sizes='2200px'
                             priority
                         />
                     </CarouselItem>
