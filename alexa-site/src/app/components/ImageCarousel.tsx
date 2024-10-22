@@ -14,13 +14,13 @@ export default function ImageCarousel({ productData: { images } }: { productData
         <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
             <CarouselContent className='' >
                 { images.map((image, index) => (
-                    <CarouselItem key={ index } className='w-full rounded-lg relative h-[330px]'>
+                    <CarouselItem key={ index } className='aspect-square'>
                         <Image
                             className="w-full h-auto rounded-lg shadow-md"
                             alt={ `Slide ${index + 1}` } 
                             src={ image.localUrl }
                             fill
-                            sizes='220px'
+                            sizes='2200px'
                             priority
                         />
                     </CarouselItem>
