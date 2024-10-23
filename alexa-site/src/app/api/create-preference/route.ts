@@ -6,10 +6,6 @@ import { PreferenceRequest } from 'mercadopago/dist/clients/preference/commonTyp
 import { OrderType, UserType } from '@/app/utils/types';
 import { nameGenerator } from '@/app/utils/nameGenerator';
 import { convertArrayToString } from '@/app/utils/convertArrayToString';
-// import { ProductType } from '@/app/utils/types';
-
-// main = APP_USR-3347535765602982-091914-94de44dd70d353bb9b1eb275cb397e1f-609524119
-// test = APP_USR-670073434032123-092021-3b0dce4f8daf263a2c71f2f5669ecd8b-1998711731
 
 // Configure o Mercado Pago com seu token de acesso
 const client = new MercadoPagoConfig({ accessToken: process.env.NEXT_PUBLIC_MPAGOKEY! });

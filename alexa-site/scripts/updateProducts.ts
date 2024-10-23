@@ -4,7 +4,8 @@ import { projectFirestoreDataBase } from '../src/app/firebase/config'; // Import
 
 type ProductBundleType = {
   value: { price: number; promotionalPrice: number; cost: number };
-  finalPrice?: number; // Nova chave que vamos adicionar
+  finalPrice?: number;
+  promotional?: boolean;
 };
 
 // Função principal que irá atualizar os documentos
@@ -21,9 +22,15 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
           ? data.value.promotionalPrice
           : data.value.price;
 
-        // Atualiza o documento com a nova chave 'finalPrice'
+        // Determina se o produto está em promoção
+        const promotional = !!(data.value.promotionalPrice && data.value.promotionalPrice > 0);
+
+        // Atualiza o documento com as novas chaves 'finalPrice' e 'promotional'
         const docRef = doc(db, 'products', docSnap.id);
-        return updateDoc(docRef, { finalPrice });
+        return updateDoc(docRef, { 
+            finalPrice,
+            promotional, 
+        });
     });
 
     try {

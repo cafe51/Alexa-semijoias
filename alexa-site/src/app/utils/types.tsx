@@ -81,6 +81,9 @@ export type ProductBundleType = {
     name: string;
     productVariations: ProductVariation[];
 
+    promotional: boolean;
+    finalPrice: number;
+
     creationDate: Timestamp;
     updatingDate: Timestamp;
 
@@ -137,17 +140,6 @@ export type UseCheckoutStateType = {
     address: AddressType;
 };
 
-export type ProductType = {
-    categoria: string,
-    descricao: string,
-    desconto: number,
-    exist: boolean,
-    nome: string,
-    image: string[],
-    preco: number,
-    estoque: number,
-    lancamento: boolean,
-}
 
 export type DeliveryOptionType = {
     name: string;

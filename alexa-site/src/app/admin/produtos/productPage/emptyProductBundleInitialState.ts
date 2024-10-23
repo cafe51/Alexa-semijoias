@@ -28,6 +28,8 @@ export const emptyProductBundleInitialState = {
     freeShipping: false,
     lancamento: false,
     value: { cost: 0, price: 0, promotionalPrice: 0 },
+    finalPrice: 0,
+    promotional: false,
     creationDate: Timestamp.now(),
     updatingDate: Timestamp.now(),
 };
