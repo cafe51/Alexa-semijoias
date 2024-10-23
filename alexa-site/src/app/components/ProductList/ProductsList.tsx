@@ -22,7 +22,7 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
     const { documents, isLoading, hasMore, loadMore } = useSnapshotPag<ProductBundleType>(
         'products',
         pedidosFiltrados,
-        4,
+        10,
     );
 
     if (isLoading && !documents) return <LoadingIndicator />;
