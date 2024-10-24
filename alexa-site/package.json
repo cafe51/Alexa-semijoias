@@ -11,7 +11,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "emulators": "cd functions && npm run build && firebase emulators:start --only functions,firestore,storage,auth --import=../emulator_data",
-    "save-emulator-data": "firebase emulators:export ./emulator_data",
+    "save-emulator": "firebase emulators:export ./emulator_data",
     "clean": "rm -rf .next"
   },
   "dependencies": {
