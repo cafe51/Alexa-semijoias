@@ -58,7 +58,7 @@ const AdminDashboard: React.FC = () => {
                     description="Visualizar e gerenciar contas de clientes."
                 />
             </div>
-            <div className="mt-6 hidden">
+            <div className="mt-6">
                 <button
                     onClick={ handleUpdateProducts }
                     disabled={ isUpdating }
