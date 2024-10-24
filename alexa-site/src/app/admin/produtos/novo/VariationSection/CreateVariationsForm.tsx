@@ -21,16 +21,16 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
             setErrorMessage('Essa variação já existe');
             return;
         }
-        (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation.trim()]);
+        (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation.toLowerCase().trim()]);
         setProductVariationState((prevState) => ({
             ...prevState,
             customProperties: {
                 ...prevState.customProperties,
-                [newVariation]: '',
+                [newVariation.toLowerCase()]: '',
             },
 
         }));
-        handlers.handleAddNewVariationInAllProductVariations(newVariation.trim());
+        handlers.handleAddNewVariationInAllProductVariations(newVariation.toLowerCase().trim());
         setNewVariation('');
     }
 
@@ -50,9 +50,9 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
                         id="newVariation"
                         name="newVariation"
                         type="text"
-                        value={ newVariation }
+                        value={ newVariation.toLowerCase() }
                         onChange={ (e) => {
-                            setNewVariation(removePunctuationAndSpace(e.target.value));
+                            setNewVariation(removePunctuationAndSpace(e.target.value).toLowerCase());
                             setErrorMessage(undefined);
                         } }
                         placeholder='Insira a nova variação'

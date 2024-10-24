@@ -29,12 +29,12 @@ export default function SectionList({ firebaseSections, setNewSections, siteSect
                                 id='newSection'
                                 name='newSection'
                                 type="text"
-                                value={ newSectionName }
+                                value={ newSectionName.toLowerCase() }
                                 onChange={ (e) => {
-                                    setNewSectionName(removePunctuationAndSpace(e.target.value));
+                                    setNewSectionName(removePunctuationAndSpace(e.target.value).toLowerCase());
                                     setErrorMessage(undefined);
                                 } }
-                                placeholder="Nova Seção"
+                                placeholder="nova seção"
                             />
                             { errorMessage && <span className='text-sm text-red-500'>{ errorMessage }</span> }
                         </div>
@@ -45,7 +45,7 @@ export default function SectionList({ firebaseSections, setNewSections, siteSect
                                 if(firebaseSections.some((fbsection) => normalizeString(fbsection.sectionName) === normalizeString(newSectionName))) {
                                     setErrorMessage('Já existe uma seção com esse nome');
                                 } else {
-                                    setNewSections([{ sectionName: newSectionName.trim() }]);
+                                    setNewSections([{ sectionName: newSectionName.toLowerCase().trim() }]);
                                     setNewSectionName('');
                                     setShowSectionEditionModal(!showSectionEditionModal);
                                 }

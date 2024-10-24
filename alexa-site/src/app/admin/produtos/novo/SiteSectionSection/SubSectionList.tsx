@@ -57,13 +57,13 @@ export default function SubSectionList({ siteSectionManagement, setNewSubSection
                                 id='newSubSectionName'
                                 name='newSubSectionName'
                                 type="text"
-                                value={ newSubSectionName }
+                                value={ newSubSectionName.toLowerCase() }
                                 onChange={ (e) => {
                                     //Preciso de uma forma de remover sinais de pontuação do valor criado no onChange para o e.target.value.
-                                    setNewSubSectionName(removePunctuationAndSpace(e.target.value));
+                                    setNewSubSectionName(removePunctuationAndSpace(e.target.value.toLowerCase()));
                                     setErrorMessage(undefined);
                                 } }
-                                placeholder="Nova Sub Seção"
+                                placeholder="nova subseção"
                             />
                             { errorMessage && <span className='text-sm text-red-500'>{ errorMessage }</span> }
 
@@ -89,9 +89,9 @@ export default function SubSectionList({ siteSectionManagement, setNewSubSection
                 && isSubSectionSaved(siteSectionManagement.selectedSection.sectionName!, subsection)
                         ? 'bg-green-500 text-white'
                         : 'bg-gray-200'}` }
-                        onClick={ () => siteSectionManagement.handleSubSectionClick(subsection) }
+                        onClick={ () => siteSectionManagement.handleSubSectionClick(subsection.toLowerCase()) }
                     >
-                        { subsection }
+                        { subsection.toLowerCase() }
                     </p>
                 ))
             }
