@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, collection, query, where, limit, startAfter, onSnapshot } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, collection, query, where, limit, startAfter, onSnapshot, orderBy } from 'firebase/firestore';
 import { FilterOptionForUseSnapshot, FireBaseDocument } from '../utils/types';
+
+type OrderByOption = {
+    field: string;
+    direction: 'asc' | 'desc';
+} | null;
 
 export const useSnapshotPag = <T>(
     collectionName: string,
     filterOptions: FilterOptionForUseSnapshot[] | null,
     itemsPerPage: number = 10,
+    orderByOption: OrderByOption = null,
 ) => {
     const [documents, setDocuments] = useState<(T & FireBaseDocument)[] | null>(null);
     const [lastVisible, setLastVisible] = useState<DocumentData | null>(null);
@@ -22,6 +28,11 @@ export const useSnapshotPag = <T>(
                 where(option.field, option.operator, option.value),
             );
             ref = query(ref, ...whereConditions);
+        }
+
+        // Adiciona ordenação se especificada
+        if (orderByOption) {
+            ref = query(ref, orderBy(orderByOption.field, orderByOption.direction));
         }
 
         ref = query(ref, limit(itemsPerPage));
@@ -77,7 +88,7 @@ export const useSnapshotPag = <T>(
                 unsubscribeRef.current();
             }
         };
-    }, [collectionName, filterOptions, itemsPerPage]);
+    }, [collectionName, filterOptions, itemsPerPage, orderByOption]);
 
     useEffect(() => {console.log('documents AAAAAAAAAAAAAAAaa', documents); }, [documents]);
 

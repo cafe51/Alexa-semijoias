@@ -1,12 +1,20 @@
 'use client';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSnapshotPag } from '../../hooks/useSnapshotPag';
 import { FilterOptionForUseSnapshot, ProductBundleType } from '../../utils/types';
 import ProductCard from './ProductCard';
 import LoadingIndicator from '../LoadingIndicator';
 import ButtonPaginator from '../ButtonPaginator';
+import ProductSorter, { SortOption } from './ProductSorter';
 
 export default function ProductsList({ sectionName, subsection }: { sectionName: string, subsection?: string }) {
+    const [currentSort, setCurrentSort] = useState<SortOption>({ 
+        value: 'newest', 
+        label: 'Novidades', 
+        orderBy: 'creationDate', 
+        direction: 'desc', 
+    });
+
     const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[]>(() => {
         if (subsection) {
             return [
@@ -19,10 +27,16 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
         }
     }, [sectionName, subsection]);
 
+    const orderByOption = useMemo(() => ({
+        field: currentSort.orderBy,
+        direction: currentSort.direction,
+    }), [currentSort.orderBy, currentSort.direction]);
+
     const { documents, isLoading, hasMore, loadMore } = useSnapshotPag<ProductBundleType>(
         'products',
         pedidosFiltrados,
         10,
+        orderByOption,
     );
 
     if (isLoading && !documents) return <LoadingIndicator />;
@@ -33,6 +47,10 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
         <main>
             { documents && documents.length > 0 && (
                 <>
+                    <ProductSorter 
+                        currentSort={ currentSort.value }
+                        onSortChange={ (option) => setCurrentSort(option) }
+                    />
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                         { documents.map((productData) => (
                             <ProductCard key={ productData.id } product={ productData } />
