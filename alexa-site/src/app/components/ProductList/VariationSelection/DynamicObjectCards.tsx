@@ -91,6 +91,15 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
         }
     };
 
+    const availableStock = (totalStock: number) => {
+        const cartItem = carrinho?.find(item => item.skuId === productVariationsSelected[0]?.sku);
+        if(!cartItem) {
+            return totalStock;
+        } else {
+            return totalStock - cartItem.quantidade;
+        }
+    };
+
     return (
         <div className="p-4">
             <ErrorMessage message={ errorMessage } />
@@ -130,7 +139,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                         quantity={ quantity }
                         removeOne={ () =>  setQuantity((prevQuantity) => prevQuantity -= 1) }
                         addOne={ () => setQuantity((prevQuantity) => prevQuantity += 1) }
-                        stock={ productVariationsSelected[0].estoque }
+                        stock={ availableStock(productVariationsSelected[0].estoque) }
                     />
 
                     <PriceSection
