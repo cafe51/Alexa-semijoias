@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { FiEdit } from 'react-icons/fi';
 import { PiTrashSimpleBold } from 'react-icons/pi';
-import blankImage from '../../../../../public/blankImage.jpg';
+import blankImage from '../../../../../public/blankImage.png';
 import { formatPrice } from '@/app/utils/formatPrice';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import LargeButton from '@/app/components/LargeButton';

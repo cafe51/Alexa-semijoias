@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CartHistoryType } from '@/app/utils/types';
 import { formatPrice } from '@/app/utils/formatPrice';
 import Image from 'next/image';
-import blankImage from '../../../../public/blankImage.jpg';
+import blankImage from '../../../../public/blankImage.png';
 
 interface OrderItemsProps {
   cartSnapShot: CartHistoryType[]

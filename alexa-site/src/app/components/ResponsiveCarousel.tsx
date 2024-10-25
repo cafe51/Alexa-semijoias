@@ -4,7 +4,7 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { FireBaseDocument, ProductBundleType } from '../utils/types';
 import Image from 'next/image';
-import blankImage from '../../../public/blankImage.jpg';
+import blankImage from '../../../public/blankImage.png';
 
 
 export default function ResponsiveCarousel({ productData }: { productData: ProductBundleType & FireBaseDocument }) {

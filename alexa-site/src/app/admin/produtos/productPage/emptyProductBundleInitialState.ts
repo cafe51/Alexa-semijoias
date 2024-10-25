@@ -8,6 +8,7 @@ export const emptyProductBundleInitialState = {
     estoqueTotal: 0,
     images: [{ localUrl: '', index: 0 }],
     name: '',
+    randomIndex: '00',
     productVariations: [
         {
             barcode: '',

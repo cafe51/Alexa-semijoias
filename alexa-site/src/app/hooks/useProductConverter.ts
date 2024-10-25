@@ -4,7 +4,7 @@ import { useCollection } from './useCollection';
 import useFirebaseUpload from './useFirebaseUpload';
 import { getRandomBarCode } from '../utils/getRandomBarCode';
 import { getRandomSku } from '../utils/getRandomSku';
-import blankImage from '../../../public/blankImage.jpg';
+import blankImage from '../../../public/blankImage.png';
 import { Timestamp } from 'firebase/firestore';
 
 export function useProductConverter() {
@@ -29,8 +29,6 @@ export function useProductConverter() {
         deleteDocument: deleteProductVariationDocument,
     } = useCollection<ProductVariationsType>('productVariations');
 
-
-
     useEffect(() => {
         const fetchFromFirebase = async() => {
             const siteSectionsRes = await getSiteSectionsFromFirebase();
@@ -39,6 +37,12 @@ export function useProductConverter() {
 
         fetchFromFirebase();
     }, []);
+
+    const extractRandomIndex = (id: string): string => {
+        // Pega o antepenúltimo e penúltimo dígitos do ID
+        const digits = id.slice(-3, -1);
+        return digits;
+    };
     
     const hasProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
         let totalStock = 0;
@@ -51,6 +55,7 @@ export function useProductConverter() {
 
         return {
             name: name.trim(),
+            randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
             subsections,
@@ -99,6 +104,7 @@ export function useProductConverter() {
 
         return {
             name: name.trim(),
+            randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
             subsections,

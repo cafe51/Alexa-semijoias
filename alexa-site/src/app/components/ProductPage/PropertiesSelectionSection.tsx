@@ -4,7 +4,7 @@ import ErrorMessage from '@/app/checkout/AddressSection/ErrorMessage';
 import OptionButton from '../ProductList/VariationSelection/OptionButton';
 import ProductSummary from '../ProductList/VariationSelection/ProductSummary';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
-import blankImage from '../../../../public/blankImage.jpg';
+import blankImage from '../../../../public/blankImage.png';
 import Image from 'next/image';
 import QuantitySelectionCartBox from '../QuantitySelectionCartBox';
 

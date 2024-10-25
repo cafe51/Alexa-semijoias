@@ -1,9 +1,14 @@
 // app/hooks/useCollection.ts
 
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy  } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy, limit  } from 'firebase/firestore';
 import { FilterOption, FireBaseDocument } from '../utils/types';
 import { useCallback } from 'react';
+
+type OrderByOption = {
+    field: string;
+    direction: 'asc' | 'desc';
+} | null;
 
 export const useCollection = <T>(collectionName: string) => {
     const addDocument = useCallback(async(dataObj: T & { id?: string }, id?: string) => {
@@ -43,7 +48,11 @@ export const useCollection = <T>(collectionName: string) => {
         };
     }, [collectionName]);
 
-    const getAllDocuments = useCallback(async(filterOptions?: FilterOption[] | null): Promise<(T & FireBaseDocument)[]> => {
+    const getAllDocuments = useCallback(async(
+        filterOptions?: FilterOption[] | null,
+        itemsPerPage?: number,
+        orderByOption?: OrderByOption,
+    ): Promise<(T & FireBaseDocument)[]> => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
         if (filterOptions) {
@@ -59,6 +68,16 @@ export const useCollection = <T>(collectionName: string) => {
                     ref = query(ref, orderBy(option.field, option.order!));
                 });
             }
+        }
+
+        // Adiciona ordenação personalizada se especificada
+        if (orderByOption) {
+            ref = query(ref, orderBy(orderByOption.field, orderByOption.direction));
+        }
+
+        // Adiciona limite de documentos se itemsPerPage for especificado
+        if (itemsPerPage) {
+            ref = query(ref, limit(itemsPerPage));
         }
 
         const collectionSnapshot = await getDocs(ref);

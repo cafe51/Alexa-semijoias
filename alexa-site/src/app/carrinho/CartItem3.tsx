@@ -7,7 +7,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { formatPrice } from '../utils/formatPrice';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { X } from 'lucide-react';
-import blankImage from '../../../public/blankImage.jpg';
+import blankImage from '../../../public/blankImage.png';
 import Image from 'next/image';
 import DisplayCustomProperties from '../components/DisplayCustomProperties';
 import QuantitySelectionCartBox from '../components/QuantitySelectionCartBox';

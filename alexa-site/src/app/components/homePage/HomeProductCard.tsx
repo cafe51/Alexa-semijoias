@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import blankImage from '@/../public/blankImage.jpg';
+import blankImage from '@/../public/blankImage.png';
 import Image from 'next/image';
 
 export default function HomeProductCard({ product }: { product: number }){

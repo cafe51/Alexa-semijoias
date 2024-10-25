@@ -1,7 +1,7 @@
 // app/checkout/OrderSummarySection/SummaryCard.tsx
 import { CartHistoryType } from '@/app/utils/types';
 import Image from 'next/image';
-import blankImage from '../../../../public/blankImage.jpg';
+import blankImage from '../../../../public/blankImage.png';
 import { formatPrice } from '@/app/utils/formatPrice';
 
 

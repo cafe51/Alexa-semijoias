@@ -1,20 +1,22 @@
 import React from 'react';
 import HeroSection from './components/homePage/HeroSection';
-import CategoriesCarousel from './components/homePage/CategoriesCarousel';
+import SectionsCarousel from './components/homePage/SectionsCarousel';
 import FeaturedProducts from './components/homePage/FeaturedProducts';
 import Newsletter from './components/homePage/Newsletter';
+import { useCollection } from './hooks/useCollection';
+import { SectionType } from './utils/types';
 
-const categories = ['Anéis', 'Colares', 'Brincos', 'Pulseiras', 'Pingentes', 'Conjuntos'];
+export default async function HomePage() {
+    const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
 
-const HomePage = () => {
+    const sections = await getAllSections();
+    
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen">
             <HeroSection />
-            <CategoriesCarousel categories={ categories } />
+            <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />
             <FeaturedProducts />
             <Newsletter />
         </div>
     );
-};
-
-export default HomePage;
+}

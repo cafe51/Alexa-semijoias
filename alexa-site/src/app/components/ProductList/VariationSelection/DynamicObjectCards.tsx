@@ -5,7 +5,7 @@ import ErrorMessage from './ErrorMessage';
 import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Image from 'next/image';
-import blankImage from '../../../../../public/blankImage.jpg';
+import blankImage from '../../../../../public/blankImage.png';
 import PriceSection from '../../PriceSection';
 import QuantitySelectionCartBox from '../../QuantitySelectionCartBox';
 import ProductSummary from './ProductSummary';

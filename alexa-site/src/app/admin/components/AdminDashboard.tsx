@@ -58,7 +58,7 @@ const AdminDashboard: React.FC = () => {
                     description="Visualizar e gerenciar contas de clientes."
                 />
             </div>
-            <div className="mt-6 hidden">
+            { process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' && <div className="mt-6">
                 <button
                     onClick={ handleUpdateProducts }
                     disabled={ isUpdating }
@@ -71,7 +71,7 @@ const AdminDashboard: React.FC = () => {
                         { updateMessage }
                     </p>
                 ) }
-            </div>
+            </div> }
         </>
     );
 };

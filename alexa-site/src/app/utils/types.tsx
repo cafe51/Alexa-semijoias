@@ -81,6 +81,8 @@ export type ProductBundleType = {
     name: string;
     productVariations: ProductVariation[];
 
+    randomIndex: string;
+
     promotional: boolean;
     finalPrice: number;
 

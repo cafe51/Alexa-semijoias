@@ -9,7 +9,7 @@ import { formatPrice } from '@/app/utils/formatPrice';
 import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
 import ModalMaker from '../ModalMakers/ModalMaker';
 import DynamicObjectCards from './VariationSelection/DynamicObjectCards';
-import blankImage from '../../../../public/blankImage.jpg';
+import blankImage from '../../../../public/blankImage.png';
 import { ImSpinner9 } from 'react-icons/im';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -82,7 +82,7 @@ export default function ProductCard({ product }: { product: ProductBundleType & 
                         className='rounded-lg rounded-b-none object-cover scale-100'
                         src={ product.images && product.images[0] ? product?.images[0].localUrl : blankImage.src }
                         alt="Foto da peça"
-                        sizes="220px"
+                        sizes="2200px"
                         priority
                         fill
                     />

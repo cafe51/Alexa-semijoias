@@ -6,7 +6,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { formatPrice } from '../utils/formatPrice';
 import { useEffect } from 'react';
-import blankImage from '../../../public/blankImage.jpg';
+import blankImage from '../../../public/blankImage.png';
 import SelectingQuantityBox from '../components/SelectingQuantityBox';
 // import { FaRegTrashAlt } from 'react-icons/fa';
 import { PiTrashSimpleBold } from 'react-icons/pi';

@@ -1,4 +1,4 @@
-import blankImage from '../../../public/blankImage.jpg';
+import blankImage from '../../../public/blankImage.png';
 import { ImageProductDataType } from './types';
 
 export const findImage = (images: ImageProductDataType[], index: number) => {
