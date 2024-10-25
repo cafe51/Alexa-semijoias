@@ -2,13 +2,8 @@
 
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy, limit  } from 'firebase/firestore';
-import { FilterOption, FireBaseDocument } from '../utils/types';
+import { FilterOption, FireBaseDocument, OrderByOption } from '../utils/types';
 import { useCallback } from 'react';
-
-type OrderByOption = {
-    field: string;
-    direction: 'asc' | 'desc';
-} | null;
 
 export const useCollection = <T>(collectionName: string) => {
     const addDocument = useCallback(async(dataObj: T & { id?: string }, id?: string) => {

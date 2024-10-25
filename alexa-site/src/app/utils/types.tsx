@@ -7,6 +7,11 @@ export type FireBaseDocument = {
     id: string,
 }
 
+export type OrderByOption = {
+    field: string;
+    direction: 'asc' | 'desc';
+} | null;
+
 export type PaymentType = {
     id: string;
     userId: string,
