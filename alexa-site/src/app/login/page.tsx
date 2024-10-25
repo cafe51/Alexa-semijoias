@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
-import LoginForm from '../components/LoginForm';
+import LoginForm from '../components/LoginForm2';
+import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Login() {
     const router = useRouter();
@@ -33,12 +34,21 @@ export default function Login() {
 
 
     return (
-        <section className='flex flex-col gap-10 items-center self-center justify-center w-full h-full secColor md:w-2/5'>
-            <h1>Entre na sua conta</h1>
-            <LoginForm loadingButton={ loadingButton } setLoadingButton={ setLoadingButton } onClick={ () => null }/>
-            <div>
-                <p>Não tem uma conta? <a className='text-blue-500' href="/cadastro">Cadastre-se</a></p>
-            </div>
-        </section>
+        <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4 py-0" >
+            <Card className="w-full max-w-md bg-white shadow-lg">
+                <CardHeader className="text-center">
+                    <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Bem-vindo(a) de volta</CardTitle>
+                </CardHeader>
+                <LoginForm loadingButton={ loadingButton } setLoadingButton={ setLoadingButton } onClick={ () => null }/>
+                <CardFooter className="text-center py-4">
+                    <p className="text-base sm:text-lg md:text-xl font-medium text-[#333333]">
+            Não tem uma conta?{ ' ' }
+                        <a href="/cadastro" className="font-medium text-base sm:text-lg md:text-xl text-[#C48B9F] hover:text-[#D4AF37]">
+              Registre-se
+                        </a>
+                    </p>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }

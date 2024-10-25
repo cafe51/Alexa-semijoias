@@ -1,6 +1,6 @@
 // app/checkout/AccountSection/LoginSection.tsx
 import { useState } from 'react';
-import LoginForm from '@/app/components/LoginForm';
+import LoginForm from '@/app/components/LoginForm2';
 import { Dispatch, SetStateAction } from 'react';
 
 interface LoginSectionProps {
