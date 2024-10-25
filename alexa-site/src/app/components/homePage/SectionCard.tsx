@@ -3,10 +3,10 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
-import blankImage from '@/../public/blankImage.png';
 import { useEffect, useMemo, useState } from 'react';
 import { FilterOptionForUseSnapshot, ProductBundleType } from '@/app/utils/types';
 import { useCollection } from '@/app/hooks/useCollection';
+import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
 
 interface SectionCardProps {
     section: string;
@@ -42,15 +42,9 @@ export default function SectionCard({ section }: SectionCardProps) {
         fetchRandomProduct();
     }, [section, getAllProducts, pedidosFiltrados]);
 
-    function getImageUrl() {
-        if(randomProduct && randomProduct.images && randomProduct.images[0]) {
-            return randomProduct.images[0].localUrl;
-        } else {
-            return blankImage;
-        }
-    }
 
-    const imageUrl = getImageUrl();
+
+    const imageUrl = getImageUrlFromFirebaseProductDocument(randomProduct);
 
     return (
         <Card className="overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col">
