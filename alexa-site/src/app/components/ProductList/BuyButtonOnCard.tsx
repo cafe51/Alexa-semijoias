@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import ModalMaker from '../ModalMakers/ModalMaker';
 import DynamicObjectCards from './VariationSelection/DynamicObjectCards';

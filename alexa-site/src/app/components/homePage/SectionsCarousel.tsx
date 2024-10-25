@@ -10,7 +10,7 @@ import SectionCard from './SectionCard';
 export default function SectionsCarousel({ sections }: { sections: string[] }) {
     return (
         <section className="py-8 sm:py-12 md:py-16 px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-12">Nossas Categorias</h2>
+            <h2 className="text-2xl sm:text-3xl  text-center mb-6 sm:mb-8 md:mb-12">ESCOLHA POR SEÇÃO</h2>
             <Carousel
                 opts={ {
                     align: 'start',

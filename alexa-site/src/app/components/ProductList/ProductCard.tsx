@@ -11,7 +11,7 @@ const calculateDiscount = (original: number, promotional: number) => {
     return Math.round(((original - promotional) / original) * 100);
 };
 
-export default function ProductCard({ product }: { product: ProductBundleType & FireBaseDocument; }) { 
+export default function ProductCard({ product, homePage=false }: { product: ProductBundleType & FireBaseDocument; homePage?: boolean}) { 
     const displayPrice = product.value.promotionalPrice || product.value.price;
     const installmentValue = displayPrice / 6;
 
@@ -64,7 +64,9 @@ export default function ProductCard({ product }: { product: ProductBundleType & 
                         </p>
                     </div>
 
-                    <BuyButtonOnCard product={ product } />
+                    {
+                        !homePage && <BuyButtonOnCard product={ product } />
+                    }
                 </div>
             </CardContent>
         </Card>
