@@ -19,10 +19,12 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
         if (subsection) {
             return [
                 { field: 'subsections', operator: 'array-contains', value: subsection },
+                { field: 'estoqueTotal', operator: '>', value: 0 },
             ];
         } else {
             return [
                 { field: 'sections', operator: 'array-contains', value: sectionName },
+                { field: 'estoqueTotal', operator: '>', value: 0 },
             ];
         }
     }, [sectionName, subsection]);
