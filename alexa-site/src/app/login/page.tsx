@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
 import LoginForm from '../components/LoginForm2';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Login() {
     const router = useRouter();
@@ -39,7 +39,11 @@ export default function Login() {
                 <CardHeader className="text-center">
                     <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Bem-vindo(a) de volta</CardTitle>
                 </CardHeader>
-                <LoginForm loadingButton={ loadingButton } setLoadingButton={ setLoadingButton } onClick={ () => null }/>
+                <CardContent className="max-w-md mx-auto p-6 sm:p-8 md:p-10 lg:p-12 rounded-lg">
+
+                    <LoginForm loadingButton={ loadingButton } setLoadingButton={ setLoadingButton } onClick={ () => null }/>
+                </CardContent>
+
                 <CardFooter className="text-center py-4">
                     <p className="text-base sm:text-lg md:text-xl font-medium text-[#333333]">
             Não tem uma conta?{ ' ' }
