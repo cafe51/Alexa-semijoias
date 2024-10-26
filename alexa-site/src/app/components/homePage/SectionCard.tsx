@@ -44,7 +44,7 @@ export default function SectionCard({ section }: SectionCardProps) {
 
     return (
         <Card className="relative overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/40 via-25% to-transparent to-40% z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/20 via-25% to-transparent to-40% z-10" />
             <CardContent className="p-0 flex flex-col h-full z-0">
                 <Link href={ `/section/${section}` } className='relative aspect-square'>
                     <Image
