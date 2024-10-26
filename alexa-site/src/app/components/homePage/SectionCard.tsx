@@ -39,14 +39,12 @@ export default function SectionCard({ section }: SectionCardProps) {
     }, [section, getAllProducts, pedidosFiltrados]);
 
     const imageUrl = getImageUrlFromFirebaseProductDocument(randomProduct);
-
-
-
+    
     return (
         <Card className="relative overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/20 via-25% to-transparent to-40% z-10" />
+            <Link href={ `/section/${section}` } className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/25 via-25% to-transparent to-40% z-10" />
             <CardContent className="p-0 flex flex-col h-full z-0">
-                <Link href={ `/section/${section}` } className='relative aspect-square'>
+                <div className='relative aspect-square'>
                     <Image
                         className="rounded-lg rounded-b-none object-cover scale-100 z-0"
                         src={ imageUrl }
@@ -55,7 +53,7 @@ export default function SectionCard({ section }: SectionCardProps) {
                         priority
                         fill
                     />
-                </Link>
+                </div>
             </CardContent>
 
             <div className="relative text-center h-16">
