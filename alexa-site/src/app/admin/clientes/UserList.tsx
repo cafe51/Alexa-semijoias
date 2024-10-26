@@ -16,7 +16,7 @@ export default function UserList({ users, onEmailClick, onWhatsAppClick }: UserL
                     key={ user.id }
                     user={ user }
                     onEmailClick={ () => onEmailClick(user.email) }
-                    onWhatsAppClick={ () => onWhatsAppClick(user.tel) }
+                    onWhatsAppClick={ () => onWhatsAppClick(user.phone) }
                 />
             )) }
         </div>

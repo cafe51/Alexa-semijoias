@@ -21,7 +21,7 @@ interface OrderDetailsProps {
     admin?: boolean;
 }
 
-export default function OrderDetails({ pedido, user: { email, nome, tel }, admin=false }: OrderDetailsProps) {
+export default function OrderDetails({ pedido, user: { email, nome, phone }, admin=false }: OrderDetailsProps) {
     const { userInfo } = useUserInfo();
     const [modalConfirmationRetryOrder, setShowModalConfirmationRetryOrder] = useState(false);
     const [pedidoState, setPedidoState] = useState(pedido);
@@ -109,7 +109,7 @@ export default function OrderDetails({ pedido, user: { email, nome, tel }, admin
                 <CustomerInfo
                     email={ email }
                     name={ nome }
-                    phone={ tel }
+                    phone={ phone }
                 />
 
                 <DeliveryAddress address={ pedido.endereco } />

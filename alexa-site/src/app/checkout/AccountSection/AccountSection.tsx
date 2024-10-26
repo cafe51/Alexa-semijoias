@@ -16,7 +16,7 @@ interface AccountSectionProps {
 export default function AccountSection({ state, handleShowLoginSection, setIsCartLoading }: AccountSectionProps) {
     const { userInfo } = useUserInfo();
 
-    if (userInfo) return <AccountSectionFilled nome={ userInfo.nome } cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.tel }  />;
+    if (userInfo) return <AccountSectionFilled nome={ userInfo.nome } cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.phone }  />;
     
     if(state.showLoginSection && !userInfo) return <LoginSection setShowLogin={ handleShowLoginSection } setIsCartLoading={ setIsCartLoading }/>;
     

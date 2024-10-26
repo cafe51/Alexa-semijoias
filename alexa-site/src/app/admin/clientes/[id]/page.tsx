@@ -81,7 +81,7 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
                         <div className='flex flex-col gap-1'>
                             <h3>{ userData.nome }</h3>
                             <h3>{ userData.email }</h3>
-                            <h3>{ userData.tel }</h3>
+                            <h3>{ userData.phone }</h3>
                         </div>
                         <span className='textColored'>Editar</span>
                     </div>

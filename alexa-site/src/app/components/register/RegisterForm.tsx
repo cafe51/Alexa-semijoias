@@ -19,7 +19,7 @@ export default function RegisterForm({ loadingButton, setLoadingButton }: Regist
     const [registerValues, setRegisterValues] = useState({
         nome: '',
         email: '',
-        tel: '',
+        phone: '',
         password: '',
         confirmPassword: '',
     });
@@ -30,7 +30,7 @@ export default function RegisterForm({ loadingButton, setLoadingButton }: Regist
     }, []);
 
     const validateForm = () => {
-        const { nome, email, tel, password, confirmPassword } = registerValues;
+        const { nome, email, phone, password, confirmPassword } = registerValues;
         const errors = {} as any;
 
         if (!nome) errors.nome = 'Nome completo é obrigatório';
@@ -38,7 +38,7 @@ export default function RegisterForm({ loadingButton, setLoadingButton }: Regist
         if (!password) errors.password = 'Senha é obrigatória';
         if (password && password.length < 6) errors.password = 'A senha deve ter no mínimo 6 caracteres';
         if (password !== confirmPassword) errors.confirmPassword = 'As senhas devem ser iguais';
-        if (tel && !/^\d+$/.test(tel)) errors.tel = 'Telefone deve conter apenas números';
+        if (phone && !/^\d+$/.test(phone)) errors.phone = 'Telefone deve conter apenas números';
 
         return errors;
     };
@@ -117,7 +117,7 @@ export default function RegisterForm({ loadingButton, setLoadingButton }: Regist
                 disabled={ loadingComponent }
                 minLength={ 8 }
                 maxLength={ 16 }
-                value={ registerValues.tel }
+                value={ registerValues.phone }
                 onChange={ handleChange }
             />
             <InputField

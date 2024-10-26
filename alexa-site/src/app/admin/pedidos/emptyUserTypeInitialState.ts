@@ -5,7 +5,7 @@ export const emptyUserTypeInitialState = {
     email: '',
     userId: '',
     cpf: '',
-    tel: '',
+    phone: '',
     admin: false,
     address: {
         bairro: '',

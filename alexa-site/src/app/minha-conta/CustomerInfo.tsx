@@ -32,7 +32,7 @@ export default function CustomerInfo({ userInfo, onEdit }: CustomerInfoProps) {
                     </div>
                     <div>
                         <p className="font-semibold mb-1">Telefone:</p>
-                        <p>{ userInfo.tel }</p>
+                        <p>{ userInfo.phone }</p>
                     </div>
                     <div>
                         <p className="font-semibold mb-1">CPF:</p>
