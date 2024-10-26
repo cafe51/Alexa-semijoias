@@ -8,6 +8,7 @@ import { CartInfoType } from '../utils/types';
 import { useCollection } from './useCollection';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { getDoc, doc } from 'firebase/firestore';
+import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
 
 export const useLogin = () => {
     const { dispatch } = useAuthContext();
@@ -86,7 +87,7 @@ export const useLogin = () => {
 
         } catch (err) {
             if (err instanceof Error) {
-                setError(err.message);  
+                setError(getFirebaseErrorMessage(err.message));  
             } else { 
                 setError('Ocorreu um erro desconhecido durante o login.'); 
             }
