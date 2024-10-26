@@ -1,8 +1,8 @@
 // app/components/RegisterForm.tsx
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useSignUp } from '../hooks/useSignUp';
-import LargeButton from './LargeButton';
-import InputField from '../checkout/AddressSection/InputField';
+import { useSignUp } from '../../hooks/useSignUp';
+import LargeButton from '../LargeButton';
+import InputField from '../../checkout/AddressSection/InputField';
 import { useRouter } from 'next/navigation';
 
 interface RegisterFormProps {

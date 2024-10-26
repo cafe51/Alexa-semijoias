@@ -1,10 +1,11 @@
 // app/cadastro/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import RegisterForm from '../components/RegisterForm';
+import RegisterForm from '../components/register/RegisterForm2';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Register() {
     const router = useRouter();
@@ -13,13 +14,14 @@ export default function Register() {
     const [loadingButton, setLoadingButton] = useState(true);
 
     useEffect(() => {
-    
         try {
             if(userInfo) {
                 setLoadingButton(true);
                 console.log('user existe no login e é: ', user);
                 router.push('/minha-conta');
             }
+            setLoadingButton(false);
+
         } catch(err) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -29,16 +31,32 @@ export default function Register() {
         }
     }, [user, router, userInfo]);
 
-    return (
-        <section className='flex flex-col gap-10 items-center self-center justify-center w-full h-full secColor md:w-2/5'>
-            <h1>Cadastre-se</h1>
-            <RegisterForm
-                loadingButton={ loadingButton }
-                setLoadingButton={ setLoadingButton }
-            />
-            <div>
-                <p>Já possui uma conta? <a className='text-blue-500' href="/login">Iniciar sessão</a></p>
+    if(loadingButton) {
+        return (
+            <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4 py-8" style={ { fontFamily: 'Montserrat, sans-serif' } }>
+            Carregando...
             </div>
-        </section>
+        );
+    }   
+
+    return (
+        <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4 py-8" style={ { fontFamily: 'Montserrat, sans-serif' } }>
+            <Card className="w-full max-w-md bg-white shadow-lg">
+                <CardHeader className="text-center">
+                    <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Crie sua conta</CardTitle>
+                </CardHeader>
+                <CardContent className="max-w-md mx-auto p-6 sm:p-8 md:p-10 lg:p-12 rounded-lg">
+                    <RegisterForm/>
+                </CardContent>
+                <CardFooter className="text-center">
+                    <p className="text-sm text-[#333333]">
+                Já tem uma conta?{ ' ' }
+                        <a href="/login" className="font-medium text-[#C48B9F] hover:text-[#D4AF37]">
+                  Faça login
+                        </a>
+                    </p>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }

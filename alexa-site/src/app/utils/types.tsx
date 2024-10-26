@@ -309,7 +309,7 @@ export type UserType = {
     email: string,
     userId: string,
     cpf: string,
-    tel: string,
+    phone: string,
     admin: boolean,
     
     address?: AddressType | null
@@ -319,7 +319,7 @@ export type RegisterFormInputType = {
     password: string,
     nome: string,
     email: string,
-    tel: string
+    phone: string
 }
 
 export type SiteSectionManagementType = {

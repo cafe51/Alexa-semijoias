@@ -7,6 +7,7 @@ import { useCollection } from './useCollection';
 import { useLogin } from './useLogin';
 import { CartInfoType, UserType } from '../utils/types';
 import { useLocalStorage } from './useLocalStorage';
+import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
 
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
@@ -26,7 +27,7 @@ export const useSignUp = () => {
         setLocalCart([]);
     };
 
-    const signup = async(singInData : { email: string, password: string, nome: string, tel: string }) => {
+    const signup = async(singInData : { email: string, password: string, nome: string, phone: string }) => {
         try {
             const res = await createUserWithEmailAndPassword(auth, singInData.email, singInData.password);
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,7 +41,8 @@ export const useSignUp = () => {
 
         } catch (err) {
             if (err instanceof Error) {
-                setError(err.message);
+                setError(getFirebaseErrorMessage(err.message));
+                console.log(err.message);
             } else {
                 setError('Ocorreu um erro desconhecido.');
             }
