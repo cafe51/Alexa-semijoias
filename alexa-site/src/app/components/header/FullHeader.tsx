@@ -1,5 +1,3 @@
-'use client';
-// src/components/Header.tsx
 import React, { useState, useEffect } from 'react';
 import { User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,8 +20,6 @@ const FullHeader: React.FC = () => {
     const [menuSections, setMenuSections] = useState<(SectionType & FireBaseDocument)[] | never[]>([]);
     const [scrollPosition, setScrollPosition] = useState(0);
     const router = useRouter();
-      
-
       
     const UserIcon = () => (
         <Button 
@@ -70,7 +66,7 @@ const FullHeader: React.FC = () => {
     }, []);
 
     const headerHeight = Math.max(60, 100 - scrollPosition * 0.2);
-    const headerOpacity = Math.max(0.7, 1 - scrollPosition * 0.002);
+    const headerOpacity = Math.max(0.8, 1 - scrollPosition * 0.002);
 
     const handleSectionClick = (section: SectionType) => {
         setActiveSection(section);
@@ -80,62 +76,82 @@ const FullHeader: React.FC = () => {
         setActiveSection(null);
     };
 
-    const headerMobileStyle = 'fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 transition-all duration-300 ease-in-out';
-    const headerDesktopStyle = 'fixed top-0 left-0 right-0 z-50 bg-white shadow-lg';
+    const headerMobileStyle = 'flex items-center justify-between px-4';
+    const headerDesktopStyle = 'bg-white shadow-lg';
 
     return (
-        <header
-            className={ isMobile ? headerMobileStyle : headerDesktopStyle }
-            style={ isMobile ? {
-                height: `${headerHeight}px`,
-                backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
-                boxShadow: `0 2px 4px rgba(0,0,0,${0.1 * headerOpacity})`,
-            } : {} }>
-            <div className="container mx-auto">
-                <div className="flex items-center justify-between py-4">
-                    { isMobile ? (
-                        <>
-                            {
-                                menuSections && menuSections.length > 0 && <MobileMenu
-                                    userInfo={ userInfo }
-                                    activeSection={ activeSection }
-                                    menuSections={ menuSections }
-                                    isMenuOpen={ isMenuOpen }
-                                    setIsMenuOpen={ setIsMenuOpen }
-                                    handleSectionClick={ handleSectionClick }
-                                    handleBackToMain={ handleBackToMain }
-                                    router={ router }
-                                />
-                            }
-                            <div className="cursor-pointer" onClick={  () => router.push('/') }>
-                                <Logo isMobile={ isMobile } />
-                            </div>
-                            <div className="flex items-center space-x-4 pr-4">
-                                <UserIcon />
-                                <CartIcon isMobile={ isMobile }/>
-                            </div>
-
-                        </>
-                    ) : (
-                        <>
-                            <div className="cursor-pointer" onClick={  () => router.push('/') }>
-                                <Logo />
-                            </div>
-                            <SearchBar />
-                            <div className="flex items-center space-x-10">
-                                <UserIcon />
-                                <CartIcon isMobile={ isMobile }/>
-                            </div>
-                        </>
+        <>
+            <header
+                className={ `fixed top-0 left-0 right-0 z-50  ${ isMobile ? headerMobileStyle : headerDesktopStyle }` }
+                style={ {
+                    height: isMobile ? `${headerHeight}px` : 'auto',
+                    backgroundColor: isMobile ? `rgba(255,255,255, ${headerOpacity})` : 'white',
+                } }
+            >
+                <div className="container mx-auto">
+                    <div className="flex items-center justify-between py-4">
+                        { isMobile ? (
+                            <>
+                                { menuSections && menuSections.length > 0 && (
+                                    <MobileMenu
+                                        userInfo={ userInfo }
+                                        activeSection={ activeSection }
+                                        menuSections={ menuSections }
+                                        isMenuOpen={ isMenuOpen }
+                                        setIsMenuOpen={ setIsMenuOpen }
+                                        handleSectionClick={ handleSectionClick }
+                                        handleBackToMain={ handleBackToMain }
+                                        router={ router }
+                                    />
+                                ) }
+                                <div className="cursor-pointer" onClick={ () => router.push('/') }>
+                                    <Logo isMobile={ isMobile } />
+                                </div>
+                                <div className="flex items-center space-x-4 pr-4">
+                                    <UserIcon />
+                                    <CartIcon isMobile={ isMobile }/>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="cursor-pointer" onClick={ () => router.push('/') }>
+                                    <Logo />
+                                </div>
+                                <SearchBar />
+                                <div className="flex items-center space-x-10">
+                                    <UserIcon />
+                                    <CartIcon isMobile={ isMobile }/>
+                                </div>
+                            </>
+                        ) }
+                    </div>
+                    { !isMobile && (
+                        <div className="py-2 border-t border-[#C48B9F]">
+                            <DesktopMenu menuSections={ menuSections } router={ router }/>
+                        </div>
                     ) }
                 </div>
-                { !isMobile && (
-                    <div className="py-2 border-t border-[#C48B9F]">
-                        <DesktopMenu menuSections={ menuSections } router={ router }/>
-                    </div>
-                ) }
-            </div>
-        </header>
+            </header>
+            { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
+            <div 
+                style={ { 
+                    height: isMobile ? `${headerHeight + 64}px` : '160px',
+                } } 
+            />
+            { /* Container da SearchBar mobile */ }
+            { isMobile && (
+                <div 
+                    className="fixed left-0 right-0 z-40 px-4 shadow-lg"
+                    style={ {
+                        top: `${headerHeight}px`,
+                        backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
+                        // transition: 'top 0.3s ease-in-out',
+                    } }
+                >
+                    <SearchBar />
+                </div>
+            ) }
+        </>
     );
 };
 
