@@ -17,9 +17,9 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
         const productsPromises = productsSnapshot.docs.map(async(docSnap) => {
             const docRef = doc(db, 'products', docSnap.id);
             const name = docSnap.data().name;
-            const categories = docSnap.data().categories;
-            const sections = docSnap.data().sections;
-            const subsections = docSnap.data().subsections.map((sub: string) => sub.split(':')[1]);
+            const categories = docSnap.data().categories.map((cat: string) => keyWordsCreator(cat)).flat();
+            const sections = docSnap.data().sections.map((sec: string) => keyWordsCreator(sec)).flat();
+            const subsections = docSnap.data().subsections.map((sub: string) => keyWordsCreator(sub.split(':')[1])).flat();
 
             // Cria o array de keywords usando keyWordsCreator
             const keyWords = keyWordsCreator(name.toLowerCase());

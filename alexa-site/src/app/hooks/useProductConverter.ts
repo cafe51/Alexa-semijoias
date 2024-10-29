@@ -55,11 +55,18 @@ export function useProductConverter() {
 
         const { description, name, sections, value, variations, creationDate, subsections, categories } = editableProduct;
 
-        const subsectionsKeyWord = subsections ? subsections.map((sub: string) => sub.split(':')[1]) : [];
+        const categoriesKeyWords = categories.map((cat) => keyWordsCreator(cat)).flat();
+        const sectionsKeyWords = sections.map((sec) => keyWordsCreator(sec)).flat();
+        const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
 
         return {
             name: name.trim().toLowerCase(),
-            keyWords: [...keyWordsCreator(name.trim().toLowerCase()), ...categories, ...sections, ...subsectionsKeyWord],
+            keyWords: [
+                ...keyWordsCreator(name.trim().toLowerCase()),
+                ...categoriesKeyWords,
+                ...sectionsKeyWords,
+                ...subsectionsKeyWords,
+            ],
             randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
@@ -107,11 +114,18 @@ export function useProductConverter() {
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
-        const subsectionsKeyWord = subsections ? subsections.map((sub: string) => sub.split(':')[1]) : [];
+        const categoriesKeyWords = categories.map((cat) => keyWordsCreator(cat)).flat();
+        const sectionsKeyWords = sections.map((sec) => keyWordsCreator(sec)).flat();
+        const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
 
         return {
             name: name.trim().toLowerCase(),
-            keyWords: [...keyWordsCreator(name.trim().toLowerCase()), ...categories, ...sections, ...subsectionsKeyWord],
+            keyWords: [
+                ...keyWordsCreator(name.trim().toLowerCase()),
+                ...categoriesKeyWords,
+                ...sectionsKeyWords,
+                ...subsectionsKeyWords,
+            ],
             randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
