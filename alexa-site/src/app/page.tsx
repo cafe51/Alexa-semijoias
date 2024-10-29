@@ -18,9 +18,9 @@ export default async function HomePage() {
             const orderByNewest: OrderByOption = { field: 'creationDate', direction: 'desc' };
             const newFeaturedProducts = await getAllProducts(
                 [
-                    { field: 'sections', operator: 'array-contains', value: section },
+                    { field: 'estoqueTotal', operator: '>=', value: 1 },
                     { field: 'showProduct', operator: '==', value: true },
-                    { field: 'estoqueTotal', operator: '>', value: 0 },
+                    { field: 'sections', operator: 'array-contains', value: section },
 
                 ],
                 1,
@@ -29,7 +29,6 @@ export default async function HomePage() {
             featuredProducts.push(newFeaturedProducts[0]);
         }
         return featuredProducts;
-
     } 
 
     const featuredProducts = await getFirstNewestDocBySection(sections.map((section) => section.sectionName));
@@ -38,7 +37,7 @@ export default async function HomePage() {
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen">
             <HeroSection />
             <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />
-            <FeaturedProducts featuredProducts={ featuredProducts.filter((featProduct) => featProduct.estoqueTotal >= 0) }/>
+            <FeaturedProducts featuredProducts={ featuredProducts }/>
             <Newsletter />
         </div>
     );
