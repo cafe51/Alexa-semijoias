@@ -7,7 +7,13 @@ import LoadingIndicator from '../LoadingIndicator';
 import ButtonPaginator from '../ButtonPaginator';
 import ProductSorter, { SortOption } from './ProductSorter';
 
-export default function ProductsList({ sectionName, subsection }: { sectionName: string, subsection?: string }) {
+interface ProductsListProps {
+    sectionName?: string;
+    subsection?: string;
+    searchTerm?: string;
+}
+
+export default function ProductsList({ sectionName, subsection, searchTerm }: ProductsListProps) {
     const [currentSort, setCurrentSort] = useState<SortOption>({ 
         value: 'newest', 
         label: 'Novidades', 
@@ -16,18 +22,35 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
     });
 
     const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[]>(() => {
-        if (subsection) {
+        const baseFilters: FilterOptionForUseSnapshot[] = [
+            { field: 'showProduct', operator: '==', value: true },
+            { field: 'estoqueTotal', operator: '>', value: 0 },
+        ];
+
+        if (searchTerm) {
             return [
-                { field: 'subsections', operator: 'array-contains', value: subsection },
-                { field: 'estoqueTotal', operator: '>', value: 0 },
-            ];
-        } else {
-            return [
-                { field: 'sections', operator: 'array-contains', value: sectionName },
-                { field: 'estoqueTotal', operator: '>', value: 0 },
+                ...baseFilters,
+                { field: 'name', operator: '>=', value: searchTerm.toLowerCase() },
+                { field: 'name', operator: '<=', value: searchTerm.toLowerCase() + '\uf8ff' },
             ];
         }
-    }, [sectionName, subsection]);
+
+        if (subsection) {
+            return [
+                ...baseFilters,
+                { field: 'subsections', operator: 'array-contains', value: subsection },
+            ];
+        }
+
+        if (sectionName) {
+            return [
+                ...baseFilters,
+                { field: 'sections', operator: 'array-contains', value: sectionName },
+            ];
+        }
+
+        return baseFilters;
+    }, [sectionName, subsection, searchTerm]);
 
     const orderByOption = useMemo(() => ({
         field: currentSort.orderBy,
@@ -43,7 +66,12 @@ export default function ProductsList({ sectionName, subsection }: { sectionName:
 
     if (isLoading && !documents) return <LoadingIndicator />;
 
-    if (documents && documents.length <= 0) return <h1 className="text-center mt-8">Ainda não há produtos nessa categoria</h1>;
+    if (documents && documents.length <= 0) {
+        if (searchTerm) {
+            return <h1 className="text-center mt-8">Nenhum produto encontrado para &ldquo;{ searchTerm }&rdquo;</h1>;
+        }
+        return <h1 className="text-center mt-8">Ainda não há produtos nessa categoria</h1>;
+    }
 
     return (
         <main>

@@ -77,13 +77,13 @@ export type ProductVariation = {
 }
 
 export type ProductBundleType = {
+    name: string;
     categories: string[],
     showProduct: boolean,
     freeShipping: boolean,
     lancamento: boolean,
     description: string;
     estoqueTotal: number,
-    name: string;
     productVariations: ProductVariation[];
 
     randomIndex: string;
@@ -157,7 +157,7 @@ export type DeliveryOptionType = {
 export type FilterOptionForUseSnapshot = {
     field: string,
     operator: WhereFilterOp,
-    value: string | number | string[] | number[]
+    value: string | number | string[] | number[] | boolean
 };
 
 export type FilterOption = { 

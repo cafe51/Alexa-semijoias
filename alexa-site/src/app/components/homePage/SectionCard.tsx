@@ -3,7 +3,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
-import { FilterOptionForUseSnapshot, ProductBundleType } from '@/app/utils/types';
+import { FilterOption, ProductBundleType } from '@/app/utils/types';
 import { useCollection } from '@/app/hooks/useCollection';
 import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
 import Link from 'next/link';
@@ -16,7 +16,7 @@ export default function SectionCard({ section }: SectionCardProps) {
     const [randomProduct, setRandomProduct] = useState<ProductBundleType | null>(null);
     const { getAllDocuments: getAllProducts } = useCollection<ProductBundleType>('products');
 
-    const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[]>(() => {
+    const pedidosFiltrados = useMemo<FilterOption[]>(() => {
         return [
             { field: 'sections', operator: 'array-contains', value: section },
         ];
