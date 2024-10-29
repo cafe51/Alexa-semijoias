@@ -165,7 +165,7 @@ export type FilterOptionForUseSnapshot = {
 export type FilterOption = { 
     field: string; 
     operator?: WhereFilterOp; 
-    value?: string | number | string[] | number[]; 
+    value?: string | number | string[] | number[] | boolean; 
     order?: 'asc' | 'desc'; // Adiciona a opção de ordenação
 };
 

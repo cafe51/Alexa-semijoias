@@ -12,13 +12,16 @@ export default async function HomePage() {
 
     const sections = await getAllSections();
 
-    async function getFirstNewstDocBySection(sectionList: string[]) {
+    async function getFirstNewestDocBySection(sectionList: string[]) {
         const featuredProducts = [];
         for (const section of sectionList) {
             const orderByNewest: OrderByOption = { field: 'creationDate', direction: 'desc' };
             const newFeaturedProducts = await getAllProducts(
                 [
                     { field: 'sections', operator: 'array-contains', value: section },
+                    { field: 'showProduct', operator: '==', value: true },
+                    { field: 'estoqueTotal', operator: '>', value: 0 },
+
                 ],
                 1,
                 orderByNewest,
@@ -29,7 +32,7 @@ export default async function HomePage() {
 
     } 
 
-    const featuredProducts = await getFirstNewstDocBySection(sections.map((section) => section.sectionName));
+    const featuredProducts = await getFirstNewestDocBySection(sections.map((section) => section.sectionName));
 
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen">
