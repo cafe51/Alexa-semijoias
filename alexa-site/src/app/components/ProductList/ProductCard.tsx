@@ -6,6 +6,7 @@ import blankImage from '../../../../public/blankImage.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BuyButtonOnCard } from './BuyButtonOnCard';
+import toTitleCase from '@/app/utils/toTitleCase';
 
 const calculateDiscount = (original: number, promotional: number) => {
     return Math.round(((original - promotional) / original) * 100);
@@ -44,7 +45,7 @@ export default function ProductCard({ product, homePage=false }: { product: Prod
 
                 <div className="p-4 flex flex-col flex-grow">
                     <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2 text-[#333333] line-clamp-2">
-                        { product.name }
+                        { toTitleCase(product.name) }
                     </h3>
 
                     <div className="flex flex-col mb-3 flex-grow">

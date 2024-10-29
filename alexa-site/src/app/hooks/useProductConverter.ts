@@ -6,6 +6,8 @@ import { getRandomBarCode } from '../utils/getRandomBarCode';
 import { getRandomSku } from '../utils/getRandomSku';
 import blankImage from '../../../public/blankImage.png';
 import { Timestamp } from 'firebase/firestore';
+import toTitleCase from '../utils/toTitleCase';
+import keyWordsCreator from '../utils/keyWordsCreator';
 
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
@@ -51,10 +53,13 @@ export function useProductConverter() {
             totalStock += pv.defaultProperties.estoque;
         }
 
-        const { description, name, sections, value, variations, creationDate, subsections } = editableProduct;
+        const { description, name, sections, value, variations, creationDate, subsections, categories } = editableProduct;
+
+        const subsectionsKeyWord = subsections ? subsections.map((sub: string) => sub.split(':')[1]) : [];
 
         return {
-            name: name.trim(),
+            name: name.trim().toLowerCase(),
+            keyWords: [...keyWordsCreator(name.trim().toLowerCase()), ...categories, ...sections, ...subsectionsKeyWord],
             randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
@@ -67,7 +72,7 @@ export function useProductConverter() {
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imagesData,
-            categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
+            categories: [...categories, ...editableProduct.categoriesFromFirebase],
             estoqueTotal: totalStock,
             // images= images.map((image) => image.file),
     
@@ -97,13 +102,16 @@ export function useProductConverter() {
     };
 
     const hasNoProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
-        const { description, name, sections, value, creationDate, subsections } = editableProduct;
+        const { description, name, sections, value, creationDate, subsections, categories } = editableProduct;
 
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
+        const subsectionsKeyWord = subsections ? subsections.map((sub: string) => sub.split(':')[1]) : [];
+
         return {
-            name: name.trim(),
+            name: name.trim().toLowerCase(),
+            keyWords: [...keyWordsCreator(name.trim().toLowerCase()), ...categories, ...sections, ...subsectionsKeyWord],
             randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
@@ -116,7 +124,7 @@ export function useProductConverter() {
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imagesData,
-            categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
+            categories: [...categories, ...editableProduct.categoriesFromFirebase],
             estoqueTotal: editableProduct.estoque ? editableProduct.estoque : 0,
             productVariations: [
                 {   productId,
@@ -137,7 +145,7 @@ export function useProductConverter() {
                         },
                     sku: skuGenerated,
                     barcode: codigoDeBarra,
-                    categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
+                    categories: [...categories, ...editableProduct.categoriesFromFirebase],
                 },
             ],
         };
@@ -146,9 +154,13 @@ export function useProductConverter() {
     const finalTypeToEditableType = (finalProduct: ProductBundleType & FireBaseDocument): StateNewProductType => {
         const hasCustomProperties = finalProduct.variations && finalProduct.variations.length > 0;
         const theOnlyVariation = finalProduct.productVariations[0];
+
+        // const subsectionsKeyWord = finalProduct.subsections ? finalProduct.subsections.map((sub: string) => sub.split(':')[1]) : [];
+
         return {
             ...finalProduct,
-            name: finalProduct.name.trim(),
+            name: toTitleCase(finalProduct.name.trim()),
+
             description: finalProduct.description.trim(),
             moreOptions: [
                 { isChecked: finalProduct.showProduct, label: 'Exibir na minha loja', property: 'showProduct' },

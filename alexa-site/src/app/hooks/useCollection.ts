@@ -43,6 +43,50 @@ export const useCollection = <T>(collectionName: string) => {
         };
     }, [collectionName]);
 
+    const searchProducts = useCallback(async(
+        searchTerm: string,
+        itemsPerPage?: number,
+        orderByOption?: OrderByOption,
+    ): Promise<(T & FireBaseDocument)[]> => {
+        let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
+
+        // Converte o termo de pesquisa para minúsculas para busca case-insensitive
+        const searchTermLower = searchTerm.toLowerCase();
+
+        console.log('XXXXXXXXXXXXXXX', searchTermLower);
+
+        // Cria uma query que busca em múltiplos campos relevantes
+        ref = query(
+            ref,
+            // where('name', '==', searchTerm),
+
+            where('name', '>=', 'Navio'),
+            where('name', '<=', 'Navio' + '\uf8ff'),
+            where('showProduct', '==', true),
+            where('estoqueTotal', '>', 0),
+        );
+
+        // Adiciona ordenação personalizada se especificada
+        if (orderByOption) {
+            ref = query(ref, orderBy(orderByOption.field, orderByOption.direction));
+        }
+
+        // Adiciona limite de documentos se itemsPerPage for especificado
+        if (itemsPerPage) {
+            ref = query(ref, limit(itemsPerPage));
+        }
+
+        const querySnapshot = await getDocs(ref);
+        const results = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            exist: doc.exists(),
+            ...doc.data() as T,
+        }));
+
+        // Filtra os resultados também pelo termo na descrição
+        return results;
+    }, [collectionName]);
+
     const getAllDocuments = useCallback(async(
         filterOptions?: FilterOption[] | null,
         itemsPerPage?: number,
@@ -85,5 +129,5 @@ export const useCollection = <T>(collectionName: string) => {
         return collectionSnapshotDocs;
     }, [collectionName]);
     
-    return { addDocument, deleteDocument, getDocumentById, updateDocumentField, getAllDocuments };
+    return { addDocument, deleteDocument, getDocumentById, updateDocumentField, getAllDocuments, searchProducts };
 };

@@ -100,6 +100,8 @@ export type ProductBundleType = {
     variations?: string[],
     images: ImageProductDataType[],
 
+    keyWords?: string[],
+
 }
 
 export type MoreOptionsType = { isChecked: boolean, label: string, property: string }

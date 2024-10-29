@@ -1,81 +1,141 @@
-//app/components/FullHeader.tsx
-
 'use client';
-import { useEffect, useState } from 'react';
-import Navbar from '../navBar/Navbar';
-import { FaRegUser } from 'react-icons/fa';
-import SearchBar from '../SearchBar';
-import Link from 'next/link';
+// src/components/Header.tsx
+import React, { useState, useEffect } from 'react';
+import { User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { FireBaseDocument, SectionType } from '@/app/utils/types';
+import MobileMenu from '../navBar/MobileMenu';
+import DesktopMenu from '../navBar/DesktopMenu';
 import CartIcon from './CartIcon';
-import { useAuthContext } from '../../hooks/useAuthContext';
+import { useCollection } from '@/app/hooks/useCollection';
+import { useRouter } from 'next/navigation';
+import Logo from './Logo';
+import { useUserInfo } from '@/app/hooks/useUserInfo';
+import SearchBar from './SearchBar';
 
-
-const FullHeader = () => {
-    const{ user, isAdmin } = useAuthContext();
-
+const FullHeader: React.FC = () => {
+    const { userInfo } = useUserInfo();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [ pathLoginAccount, setPathLoginAccount] = useState('minha-conta');
-  
+    const [activeSection, setActiveSection] = useState<SectionType | null>(null);
+    const [isMobile, setIsMobile] = useState(true);
+    const { getAllDocuments } = useCollection<SectionType>('siteSections');
+    const [menuSections, setMenuSections] = useState<(SectionType & FireBaseDocument)[] | never[]>([]);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const router = useRouter();
+      
+
+      
+    const UserIcon = () => (
+        <Button 
+            variant="ghost"
+            size={ isMobile ? 'icon' : 'lg' }
+            className="text-[#C48B9F] h-fit w-fit p-1"
+            onClick={ () => userInfo ? router.push('/minha-conta') : router.push('/login') }
+        >
+            <User className={ `${isMobile ? 'h-6 w-6' : 'h-14 w-14'}` } />
+        </Button>
+    );
+
+    useEffect(() => {
+        async function getSectionsFromFireBase() {
+            const res = await getAllDocuments();
+            setMenuSections(res);
+        }
+        getSectionsFromFireBase();
+    }, []);
+
     const handleScroll = () => {
-        const offset = window.scrollY;
-        offset > 100 ? setIsScrolled(true) : setIsScrolled(false);
+        const position = window.pageYOffset;
+        setScrollPosition(position);
     };
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     useEffect(() => {
-        console.log('bem vindo', user);
-        console.log('o estado do admin do user logado é', isAdmin);
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
 
-        if (!user) {
-            try {
-                setPathLoginAccount('login');
-            } catch (e) {
-                console.error('Invalid JSON in localStorage:', e);
-            }
-        } else {
-            setPathLoginAccount('minha-conta');
-        }
-    }, [user]);
+        window.addEventListener('resize', handleResize);
+        handleResize();
 
-    const opacity = isScrolled ? 'primColorTransparent' : '';
-    const height = isScrolled ? 'py-2' : 'py-6';
-    
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const headerHeight = Math.max(60, 100 - scrollPosition * 0.2);
+    const headerOpacity = Math.max(0.7, 1 - scrollPosition * 0.002);
+
+    const handleSectionClick = (section: SectionType) => {
+        setActiveSection(section);
+    };
+
+    const handleBackToMain = () => {
+        setActiveSection(null);
+    };
+
+    const headerMobileStyle = 'fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 transition-all duration-300 ease-in-out';
+    const headerDesktopStyle = 'fixed top-0 left-0 right-0 z-50 bg-white shadow-lg';
+
     return (
-        <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity}` } data-testid='full-header'>
-            <div className={ `flex justify-between items-center px-8 md:px-16 ${height} md:py-0` }>
-                {
-                    !isMenuOpen
-                        ?
-                        <button
-                            className="md:hidden block"
-                            onClick={ () => setIsMenuOpen(!isMenuOpen) }
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={ 2 } d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
+        <header
+            className={ isMobile ? headerMobileStyle : headerDesktopStyle }
+            style={ isMobile ? {
+                height: `${headerHeight}px`,
+                backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
+                boxShadow: `0 2px 4px rgba(0,0,0,${0.1 * headerOpacity})`,
+            } : {} }>
+            <div className="container mx-auto">
+                <div className="flex items-center justify-between py-4">
+                    { isMobile ? (
+                        <>
+                            {
+                                menuSections && menuSections.length > 0 && <MobileMenu
+                                    userInfo={ userInfo }
+                                    activeSection={ activeSection }
+                                    menuSections={ menuSections }
+                                    isMenuOpen={ isMenuOpen }
+                                    setIsMenuOpen={ setIsMenuOpen }
+                                    handleSectionClick={ handleSectionClick }
+                                    handleBackToMain={ handleBackToMain }
+                                    router={ router }
+                                />
+                            }
+                            <div className="cursor-pointer" onClick={  () => router.push('/') }>
+                                <Logo isMobile={ isMobile } />
+                            </div>
+                            <div className="flex items-center space-x-4 pr-4">
+                                <UserIcon />
+                                <CartIcon isMobile={ isMobile }/>
+                            </div>
 
-                        :
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 ">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={ 2 } d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                }
-                <Navbar isMenuOpen={ isMenuOpen } setIsMenuOpen={ setIsMenuOpen } />
-                <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
-                <div className='flex gap-4'>
-                    <Link className=""  href={ `/${pathLoginAccount}` }><FaRegUser className='' size={ 24 } data-testid='useIcon' /></Link>
-                    <CartIcon isMobile={ false }/>
+                        </>
+                    ) : (
+                        <>
+                            <div className="cursor-pointer" onClick={  () => router.push('/') }>
+                                <Logo />
+                            </div>
+                            <SearchBar />
+                            <div className="flex items-center space-x-10">
+                                <UserIcon />
+                                <CartIcon isMobile={ isMobile }/>
+                            </div>
+                        </>
+                    ) }
                 </div>
+                { !isMobile && (
+                    <div className="py-2 border-t border-[#C48B9F]">
+                        <DesktopMenu menuSections={ menuSections } router={ router }/>
+                    </div>
+                ) }
             </div>
-            <SearchBar />
-            
         </header>
-
-
     );
 };
 

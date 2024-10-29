@@ -6,7 +6,7 @@
 import { usePathname } from 'next/navigation';
 import SimpleHeader from './SimpleHeader';
 import AdminHeader from './AdminHeader';
-import FullHeader2 from './FullHeader2';
+import FullHeader from './FullHeader';
 
 
 export default function Header() {
@@ -17,6 +17,6 @@ export default function Header() {
     if(pathSegment === 'login' || pathSegment === 'cadastro' || pathSegment === 'checkout') return <SimpleHeader />;
     if(pathSegment === 'admin') return <AdminHeader />;
     
-    return <FullHeader2 />;
+    return <FullHeader />;
 
 }

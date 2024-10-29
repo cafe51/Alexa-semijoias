@@ -7,5 +7,5 @@ export default function toTitleCase(str: string) {
 }
 
 // Exemplo de uso:
-const frase = 'javascript É incrível!';
-console.log(toTitleCase(frase)); // Output: "Javascript É Incrível!"
+// const frase = 'javascript É incrível!';
+// console.log(toTitleCase(frase)); // Output: "Javascript É Incrível!"

@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSnapshotPag } from '../../hooks/useSnapshotPag';
 import { FilterOptionForUseSnapshot, ProductBundleType } from '../../utils/types';
 import ProductCard from './ProductCard';
@@ -14,6 +14,8 @@ interface ProductsListProps {
 }
 
 export default function ProductsList({ sectionName, subsection, searchTerm }: ProductsListProps) {
+    useEffect(() => console.log('searchTerm', searchTerm), [searchTerm]);
+
     const [currentSort, setCurrentSort] = useState<SortOption>({ 
         value: 'newest', 
         label: 'Novidades', 
@@ -27,14 +29,15 @@ export default function ProductsList({ sectionName, subsection, searchTerm }: Pr
             { field: 'estoqueTotal', operator: '>', value: 0 },
         ];
 
+        // Se existe um termo de busca, verifica no campo keyWords
         if (searchTerm) {
             return [
                 ...baseFilters,
-                { field: 'name', operator: '>=', value: searchTerm.toLowerCase() },
-                { field: 'name', operator: '<=', value: searchTerm.toLowerCase() + '\uf8ff' },
+                { field: 'keyWords', operator: 'array-contains', value: searchTerm.toLowerCase() },
             ];
         }
 
+        // Filtro por subseção, se especificado
         if (subsection) {
             return [
                 ...baseFilters,
@@ -42,6 +45,7 @@ export default function ProductsList({ sectionName, subsection, searchTerm }: Pr
             ];
         }
 
+        // Filtro por seção, se especificado
         if (sectionName) {
             return [
                 ...baseFilters,
@@ -63,6 +67,10 @@ export default function ProductsList({ sectionName, subsection, searchTerm }: Pr
         10,
         orderByOption,
     );
+
+    useEffect(() => {
+        console.log('Filtros aplicados:', pedidosFiltrados);
+    }, [pedidosFiltrados]);
 
     if (isLoading && !documents) return <LoadingIndicator />;
 
