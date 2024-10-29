@@ -6,6 +6,7 @@ import ProductCard from './ProductCard';
 import LoadingIndicator from '../LoadingIndicator';
 import ButtonPaginator from '../ButtonPaginator';
 import ProductSorter, { SortOption } from './ProductSorter';
+import removeAccents from '@/app/utils/removeAccents';
 
 interface ProductsListProps {
     sectionName?: string;
@@ -31,9 +32,10 @@ export default function ProductsList({ sectionName, subsection, searchTerm }: Pr
 
         // Se existe um termo de busca, verifica no campo keyWords
         if (searchTerm) {
+            const normalizedTerm = removeAccents(searchTerm.toLowerCase());
             return [
                 ...baseFilters,
-                { field: 'keyWords', operator: 'array-contains', value: searchTerm.toLowerCase() },
+                { field: 'keyWords', operator: 'array-contains', value: normalizedTerm },
             ];
         }
 
