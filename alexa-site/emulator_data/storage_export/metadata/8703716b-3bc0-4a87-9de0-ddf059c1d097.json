@@ -1,0 +1,19 @@
+{
+  "name": "images/joia5.jpg",
+  "bucket": "alexa-semijoias.appspot.com",
+  "metageneration": 1,
+  "generation": 1730225899026,
+  "contentType": "image/jpeg",
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "downloadTokens": [
+    "20419979-1478-4878-aaff-0a03b18d3f6e"
+  ],
+  "etag": "iDNQscdUpu3lSOvuIAr/yimohU0",
+  "customMetadata": {},
+  "timeCreated": "2024-10-29T18:18:19.026Z",
+  "updated": "2024-10-29T18:18:19.026Z",
+  "size": 56837,
+  "md5Hash": "BSIeV6a1Et+a4UP4PlujaQ==",
+  "crc32c": "3714848623"
+}
