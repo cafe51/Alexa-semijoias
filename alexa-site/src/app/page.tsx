@@ -1,3 +1,4 @@
+//src/app/page.tsx
 import React from 'react';
 import HeroSection from './components/homePage/HeroSection';
 import SectionsCarousel from './components/homePage/SectionsCarousel';
@@ -34,7 +35,7 @@ export default async function HomePage() {
     const featuredProducts = await getFirstNewestDocBySection(sections.map((section) => section.sectionName));
 
     return (
-        <div className="bg-[#FAF9F6] text-[#333333] min-h-screen">
+        <div className="bg-[#FAF9F6] text-[#333333] min-h-screen absolute top-0 w-full h-screen">
             <HeroSection />
             <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />
             <FeaturedProducts featuredProducts={ featuredProducts }/>
