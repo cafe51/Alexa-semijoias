@@ -117,7 +117,7 @@ export default function ProductsDashboard() {
     }, [handleRefresh]);
 
     return (
-        <main className='w-full h-full'>
+        <main className='w-full h-full mt-24'>
             <ProductsHeader totalProducts={ products.length } onSearch={ handleSearch } />
             <SlideInModal
                 isOpen={ showEditionModal }
