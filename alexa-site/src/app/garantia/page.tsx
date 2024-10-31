@@ -214,7 +214,7 @@ const WarrantyPage = () => {
       
             <footer className="py-8 px-4 bg-[#333333] text-white text-center">
                 <p className="text-base">
-                    © 2024 Sua Joalheria. Todos os direitos reservados.
+                    © 2024 Alexa Semijoias. Todos os direitos reservados.
                 </p>
             </footer>
         </div>
