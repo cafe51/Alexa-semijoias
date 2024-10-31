@@ -30,7 +30,6 @@ export default function HeroSection() {
                         className='rounded-lg rounded-b-none object-cover scale-100'
                         src={ backgroundImage }
                         alt="Hero Banner"
-                        objectFit="cover"
                         priority
                         sizes="2200px"
                         fill
