@@ -65,11 +65,6 @@ const PrivacyPolicyPage = () => {
                 </PolicySection>
             </main>
 
-            <footer className="bg-[#C48B9F] text-white py-8 px-4 text-center">
-                <p className="text-sm">
-          © 2024 ALEXA SEMIJOIAS. Todos os direitos reservados.
-                </p>
-            </footer>
         </div>
     );
 };
