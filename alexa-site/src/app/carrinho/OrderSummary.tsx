@@ -11,7 +11,6 @@ export default function OrderSummary({
     total, 
     onSelectShipping, 
     onCheckout,
-    shippingOptions,
 }: { 
     subtotal: number;
     shipping: string | null;
@@ -37,7 +36,7 @@ export default function OrderSummary({
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-base md:text-lg lg:text-xl">Frete:</span>
-                            <ShippingCalculator onSelectShipping={ onSelectShipping } selectedShipping={ shipping } shippingOptions={ shippingOptions }/>
+                            <ShippingCalculator onSelectShipping={ onSelectShipping } selectedShipping={ shipping }/>
                         </div>
                     </div>
                     <Separator className="my-4 md:my-6" />

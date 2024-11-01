@@ -11,9 +11,11 @@ import FinishBuyConfirmationModal from '@/app/components/FinishBuyConfirmationMo
 import { Badge } from '@/components/ui/badge';
 import ImageCarousel from '@/app/components/ImageCarousel';
 import { Card, CardContent } from '@/components/ui/card';
+import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
 
 export default function Product({ id }: { id: string }) {
     const { carrinho } = useUserInfo();
+    const [shipping, setShipping] = useState<string | null>(null);
     const { getDocumentById } = useCollection<ProductBundleType>('products');
     const [product, setProduct] = useState<ProductBundleType & FireBaseDocument | null>(null);
     const [isLoadingButton, setIsloadingButton] = useState(true);
@@ -58,6 +60,10 @@ export default function Product({ id }: { id: string }) {
         });
         setLocalCartQuantity(initialQuantities);
     }, [carrinho]);
+
+    const selectShipping = (optionId: string) => {
+        setShipping(optionId);
+    };
 
     const isDisabled = useCallback(() => {
         if (productVariationsSelected.length !== 1) return true;
@@ -153,12 +159,8 @@ export default function Product({ id }: { id: string }) {
                             handleClick={ handleFinishBuyClick }
                         />
 
-                        <div className='py-4 gap-4 border-solid border-2 border-x-0 borderColor'>
-                            <p>Frete e prazo</p>
-                            <div className='flex py-4 gap-4'>
-                                <input className='px-2 w-full' placeholder='Insira seu CEP'></input>
-                                <button className='bg-black text-white p-4 rounded-full'>Calcular</button>
-                            </div>
+                        <div className='py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg *:text-lg *:uppercase borderColor text-center w-full flex justify-center mt-2'>
+                            <ShippingCalculator onSelectShipping={ selectShipping } selectedShipping={ shipping }/>
                         </div>
                     </section>
                 </div>

@@ -80,7 +80,7 @@ export default function Checkout() {
     if(loadingScreen) return <p>Loading...</p>;
 
     return (
-        <main className='flex flex-col w-full gap-2 relative'>
+        <main className='flex flex-col w-full gap-2 relative mt-32'>
             <OrderSummarySection carrinho={ carrinho } cartPrice={ cartPrice } handleShowFullOrderSummary={ handleShowFullOrderSummary }state={ state }/>
             <AccountSection handleShowLoginSection={ handleShowLoginSection } state={ state } setIsCartLoading={ setIsCartLoading }/>
             <AddressSection handleAddressChange={ handleAddressChange } handleEditingAddressMode={ handleEditingAddressMode } state={ state } />

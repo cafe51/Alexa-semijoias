@@ -5,26 +5,26 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { formatPrice } from '../utils/formatPrice';
+import fetchAddressFromCEP from '../utils/fetchAddressFromCEP';
+import { ShippingOptionType } from '../utils/types';
+import getShippingOptions from '../utils/getShippingOptions';
 
 interface ShippingCalculatorProps {
     onSelectShipping: (optionId: string) => void;
     selectedShipping: string | null;
-    shippingOptions: {
-        id: string;
-        name: string;
-        price: number;
-        days: number;
-    }[];
 }
 
-export default function ShippingCalculator({ onSelectShipping, selectedShipping, shippingOptions }: ShippingCalculatorProps) {
+export default function ShippingCalculator({ onSelectShipping, selectedShipping }: ShippingCalculatorProps) {
     const [cep, setCep] = useState('');
+    const [shippingOptions, setShippingOptions] = useState<ShippingOptionType[] | []>([]);
     const [showOptions, setShowOptions] = useState(false);
     const [tempSelectedShipping, setTempSelectedShipping] = useState(selectedShipping);
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleCalculate = (e: React.FormEvent) => {
+    const handleCalculate = async(e: React.FormEvent) => {
         e.preventDefault();
+        const fetchedAddress = await fetchAddressFromCEP(cep);
+        setShippingOptions(getShippingOptions(fetchedAddress.localidade, fetchedAddress.uf));
         // Adicione validação do CEP aqui
         setShowOptions(true);
     };

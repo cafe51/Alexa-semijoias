@@ -21,5 +21,8 @@ export const emptyUserTypeInitialState = {
         uf: '',
         unidade: '',
         referencia: '',
+
+        estado: '',
+        regiao: '',
     },
 };

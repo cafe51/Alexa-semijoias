@@ -228,21 +228,34 @@ type ValueType = {
     total: number
 }
 
-export type AddressType = {
-    bairro: string,
-    cep: string,
-    complemento: string,
-    ddd: string,
-    gia: string,
-    ibge: string,
-    localidade: string,
-    logradouro: string,
-    numero: string,
-    siafi: string,
-    uf: string,
-    unidade: string,
-    referencia: string,
+export type ShippingOptionType = {
+    id: string;
+    name: string;
+    price: number;
+    days: number;
 }
+
+
+export type ViaCepResponse = {
+    bairro: string;
+    cep: string;
+    complemento: string;
+    ddd: string;
+
+    estado: string;
+    gia: string;
+    ibge: string;
+    localidade: string;
+
+    logradouro: string;
+    regiao: string;
+    siafi: string;
+
+    uf: string;
+    unidade: string;
+};
+
+export type AddressType = { numero: string, referencia: string } & ViaCepResponse;
 
 export type StatusType = 'aguardando pagamento' | 'preparando para o envio' | 'pedido enviado' | 'cancelado' | 'entregue';
 

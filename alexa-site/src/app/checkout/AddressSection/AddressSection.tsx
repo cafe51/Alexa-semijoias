@@ -37,12 +37,8 @@ export default function AddressSection({ state: { address, editingAddressMode },
         setError('');
         try {
             const fetchedAddress = await fetchAddressFromCEP(cepToFetch);
-            if (fetchedAddress.erro) {
-                setError('CEP inválido ou não encontrado.');
-            } else {
-                handleAddressChange(fetchedAddress);
-                setCep(formatCep(cepToFetch));
-            }
+            handleAddressChange({ ...fetchedAddress, referencia: '', numero: '' });
+            setCep(formatCep(cepToFetch));
         } catch {
             setError('CEP inválido ou não encontrado.');
         } finally {

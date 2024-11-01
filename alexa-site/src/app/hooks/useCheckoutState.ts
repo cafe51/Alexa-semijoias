@@ -1,7 +1,8 @@
 // app/hooks/useCheckoutState.ts
-import { useEffect, useReducer, useCallback } from 'react';
+import { useEffect, useReducer, useCallback, useState } from 'react';
 import { AddressType, DeliveryOptionType, UseCheckoutStateType } from '../utils/types';
 import { useUserInfo } from '../hooks/useUserInfo';
+import getShippingOptions from '../utils/getShippingOptions';
 
 
 // const SET_SHOW_FULL_ORDER_SUMMARY = 'SET_SHOW_FULL_ORDER_SUMMARY'
@@ -45,6 +46,8 @@ const initialState: UseCheckoutStateType = {
         uf: '',
         unidade: '',
         referencia: '',
+        estado: '',
+        regiao: '',
     },
 };
 
@@ -73,13 +76,19 @@ function reducer(state: UseCheckoutStateType, action: ActionType): UseCheckoutSt
 // Custom hook
 export function useCheckoutState() {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [deliveryOptions, setDeliveryOptions] = useState<DeliveryOptionType[]>([]);
     
     const { userInfo } = useUserInfo();
   
-    const deliveryOptions = [
-        { name: 'PAC', deliveryTime: 22, price: 0.02 },
-        { name: 'Sedex', deliveryTime: 1, price: 0.01 },
-    ];
+    useEffect(() => {
+        function fetchDeliveryOptions() {
+            if(!state.address) return;
+            if(state.address.logradouro.length === 0) return;
+            const response = getShippingOptions(state.address.localidade, state.address.uf);
+            setDeliveryOptions(response.map((option) => ({ deliveryTime: option.days, name: option.name, price: option.price })));
+        }
+        fetchDeliveryOptions();
+    }, [state.address]);
 
     useEffect(() => {
         console.log('selectedDeliveryOption', state.selectedDeliveryOption);

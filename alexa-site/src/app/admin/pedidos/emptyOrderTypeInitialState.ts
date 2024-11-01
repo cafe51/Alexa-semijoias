@@ -26,6 +26,9 @@ export const emptyOrderTypeInitialState: OrderType & FireBaseDocument = {
         uf: '',
         unidade: '',
         referencia: '',
+
+        estado: '',
+        regiao: '',
     },
     updatedAt: Timestamp.now(),
     createdAt: Timestamp.now(),
