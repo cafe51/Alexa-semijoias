@@ -11,12 +11,6 @@ export default function getShippingOptions(cidade: string, uf: string): { id: st
     const isCapital = capitais[uf].toLowerCase() === cidade.toLowerCase();
     const frete = isCapital ? estado.capital : estado.interior;
 
-    console.log('AAAAAAAAA cidade', cidade);
-    console.log('AAAAAAAAA frete', frete);
-
-    console.log('AAAAAAAAA isCapital', isCapital);
-
-
     return [
         { id: 'sedex', name: 'Sedex', price: frete.sedex.price, days: frete.sedex.days },
         { id: 'pac', name: 'PAC', price: frete.pac.price, days: frete.pac.days },

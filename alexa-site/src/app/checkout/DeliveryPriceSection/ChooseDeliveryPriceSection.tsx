@@ -1,13 +1,13 @@
 // app/checkout/DeliveryPriceSection/ChooseDeliveryPriceSection.tsx
 import { formatPrice } from '@/app/utils/formatPrice';
-import FreeShippingSection from './FreeShippingSection';
+// import FreeShippingSection from './FreeShippingSection';
 import { DeliveryOptionType } from '@/app/utils/types';
 import axios from 'axios';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 
-const cartPrice = 189;
-const precoFaltanteParaFreteGratis = 250 - cartPrice;
-const precoFaltanteEmPorcentagem = (cartPrice / 250) * 100 + '%';
+// const cartPrice = 189;
+// const precoFaltanteParaFreteGratis = 250 - cartPrice;
+// const precoFaltanteEmPorcentagem = (cartPrice / 250) * 100 + '%';
 
 interface ChooseDeliveryPriceSectionProps {
     deliveryOptions: DeliveryOptionType[];
@@ -55,7 +55,7 @@ export default function ChooseDeliveryPriceSection({
                 <span className="mr-2">3</span>Forma de entrega
             </h3>
             {
-                (precoFaltanteParaFreteGratis > 0) ? <FreeShippingSection precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } /> : ''
+                // (precoFaltanteParaFreteGratis > 0) ? <FreeShippingSection precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } /> : ''
             }
             { deliveryOptions.map((option) => (
                 <label key={ option.name } className="flex justify-between items-center border-b py-2 last:border-b-0">
