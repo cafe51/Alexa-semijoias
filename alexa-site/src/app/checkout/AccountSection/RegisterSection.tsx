@@ -14,7 +14,7 @@ export default function RegisterSection({ setShowLogin }: RegisterSectionProps) 
                 <CardHeader className="flex justify-between w-full">
                     <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Crie sua conta</CardTitle>
                     <p
-                        className='text-blue-400 text-sm text-end'
+                        className='text-blue-400 text-sm text-end cursor-pointer'
                         onClick={ () => setShowLogin(true) }
                     >
         Fazer login

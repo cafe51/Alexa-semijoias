@@ -23,7 +23,7 @@ export default function LoginSection({ setShowLogin, setIsCartLoading }: LoginSe
                 <CardHeader className="flex justify-between w-full">
                     <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Login</CardTitle>
                     <p
-                        className='text-blue-400 text-sm text-end'
+                        className='text-blue-400 text-sm text-end cursor-pointer'
                         onClick={ () => setShowLogin(false) }
                     >
                             Cadastre-se
