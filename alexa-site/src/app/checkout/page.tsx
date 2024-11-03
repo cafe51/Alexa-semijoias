@@ -230,7 +230,8 @@ export default function Checkout() {
                                                 ( { carrinho.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) } )    
                                             </span> : null
                                         }
-                                    </h3>   
+                                    </h3>
+                                    <Link href={ '/carrinho' }><h3 className="text-center text-sm self-center text-[#D4AF37] md:text-lg">Editar produtos</h3></Link>
                                 </div>
                                 { carrinho ? carrinho.map((produto: ProductCartType) => {
                                     if (produto && produto.quantidade && produto.quantidade > 0) {
