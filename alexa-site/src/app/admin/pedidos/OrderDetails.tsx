@@ -52,7 +52,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
     }, [pedido]);
 
     return (
-        <div className="flex flex-col gap-2 h-min-h-screen text-sm md:text-lg justify-center items-center lg:my-16 px-4 md:px-8">
+        <div className="flex flex-col gap-2 h-min-h-screen text-sm md:text-lg justify-center items-center my-4 lg:my-16 px-4 md:px-8">
             {
                 modalConfirmationRetryOrder
                 && <ModalMaker closeModelClick={ () => setShowModalConfirmationRetryOrder(false) } title='Refazer Pedido'>
@@ -98,13 +98,16 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                             changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                         />
                     ) }
-                    { pedidoState.pixResponse && showPixPayment && (
-                        <PixPayment
-                            pixKey={ pedidoState.pixResponse.qrCode }
-                            qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
-                            startDate={ pedidoState.updatedAt.toDate() }
-                        />
-                    ) }
+                    {
+                        pedidoState.pixResponse && showPixPayment &&
+                        (
+                            <PixPayment
+                                pixKey={ pedidoState.pixResponse.qrCode }
+                                qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                                startDate={ pedidoState.updatedAt.toDate() }
+                            />
+                        )
+                    }
                     <PaymentSummary
                         frete={ pedido.valor.frete }
                         subtotalPrice={ pedido.valor.soma }
@@ -141,13 +144,16 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                                 installments={ pedido.installments }
                                 paymentOption={ pedido.paymentOption }
                             />
-                            { pedidoState.pixResponse && showPixPayment && (
-                                <PixPayment
-                                    pixKey={ pedidoState.pixResponse.qrCode }
-                                    qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
-                                    startDate={ pedidoState.updatedAt.toDate() }
-                                />
-                            ) }
+                            {
+                                pedidoState.pixResponse && showPixPayment &&
+                                (
+                                    <PixPayment
+                                        pixKey={ pedidoState.pixResponse.qrCode }
+                                        qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                                        startDate={ pedidoState.updatedAt.toDate() }
+                                    />
+                                )
+                            }
                             <DeliveryAddress address={ pedido.endereco } />
                             <CustomerInfo
                                 email={ email }
@@ -187,13 +193,16 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                             installments={ pedido.installments }
                             paymentOption={ pedido.paymentOption }
                         />
-                        { pedidoState.pixResponse && showPixPayment && (
-                            <PixPayment
-                                pixKey={ pedidoState.pixResponse.qrCode }
-                                qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
-                                startDate={ pedidoState.updatedAt.toDate() }
-                            />
-                        ) }
+                        {
+                            pedidoState.pixResponse && showPixPayment &&
+                            (
+                                <PixPayment
+                                    pixKey={ pedidoState.pixResponse.qrCode }
+                                    qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                                    startDate={ pedidoState.updatedAt.toDate() }
+                                />
+                            )
+                        }
                     </div>
                     <OrderItems cartSnapShot={ pedido.cartSnapShot } />
                 </div>
