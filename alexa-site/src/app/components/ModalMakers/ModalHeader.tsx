@@ -7,16 +7,19 @@ interface ModalHeaderProps {
 
 export default function ModalHeader({ title, closeModelClick }: ModalHeaderProps) {
     return (
-        <div className="flex justify-between mb-4 min-h-7 w-full">
-            <div className='self-center w-full'>
+        <div className="flex justify-center w-full mb-4 min-h-7 ">
+    
+            <div className="">
                 <h3 className="text-lg font-bold">{ title }</h3>
             </div>
+
             <button
-                className="px-2 rounded-md bg-gray-200"
+                className="absolute top-4 right-4 px-2 rounded-md "
                 onClick={ closeModelClick }
             >
-                <PiXBold />
+                <PiXBold size={ 24 } />
             </button>
         </div>
+
     );
 }
