@@ -104,15 +104,15 @@ export default function Product({ id }: { id: string }) {
     }
 
     return (
-        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-2 md:px-8">
+        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-0 md:px-8 mb-8 md:mt-16">
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row gap-8 flex-shrink-0">
-                    <section className="md:w-1/2">
+                    <section className="md:w-1/2 mx-0 px-0 flex items-center justify-center">
                         <ImageCarousel productData={ product }/>
                     </section>
 
-                    <section className="md:w-1/2 px-2">
+                    <section className="md:w-1/2 px-4">
                         <div>
                             <h1 className="text-2xl md:text-3xl font-bold mb-2">{ product.name.toUpperCase() }</h1>
 
