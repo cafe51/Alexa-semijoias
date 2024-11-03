@@ -1,9 +1,13 @@
 // app/checkout/DeliveryPriceSection/ChooseDeliveryPriceSection.tsx
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatPrice } from '@/app/utils/formatPrice';
 // import FreeShippingSection from './FreeShippingSection';
 import { DeliveryOptionType } from '@/app/utils/types';
 import axios from 'axios';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { cn } from '@/lib/utils';
 
 // const cartPrice = 189;
 // const precoFaltanteParaFreteGratis = 250 - cartPrice;
@@ -26,56 +30,87 @@ export default function ChooseDeliveryPriceSection({
 }: ChooseDeliveryPriceSectionProps) {
     const { carrinho, userInfo } = useUserInfo();
 
-    const handleOptionChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleOptionChange = async(value: string) => {
         const response = await axios.post('/api/create-preference', {
             items: carrinho,
             userInfo: userInfo,
         }, {
             headers: { 'Content-Type': 'application/json' },
         });
-        console.log('****************************************************************************');
-        console.log('CARINHO PASSADO PARA A REQUISIÇÃO DE CRIAÇÃO DE PREFERENCIA NO FRONTEND', carrinho);
-        console.log('                                                                                   ');
-        console.log('                                                                                   ');
-        console.log('RESPONSE RECEBIDA NO FRONT END APóS REQUISIÇÃO DE CREATE PREFERENCE', response.data);
-        console.log('                                                                                   ');
-        console.log('                                                                                   ');
-        console.log('PREFERENCE ID RECEBIDA NO FRONT END', response.data.id);
-        console.log('****************************************************************************');
-
         setPreferenceId(response.data.id);
-        setSelectedDeliveryOption(event.target.value);
+        setSelectedDeliveryOption(value);
         setShowPaymentSection(true);
         console.log(selectedDeliveryOption);
     };
 
     return (
-        <section className="border p-4 rounded-md shadow-md max-w-sm mx-auto bg-white w-full">
-            <h3 className="text-lg font-semibold mb-4">
-                <span className="mr-2">3</span>Forma de entrega
-            </h3>
-            {
-                // (precoFaltanteParaFreteGratis > 0) ? <FreeShippingSection precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } /> : ''
-            }
-            { deliveryOptions.map((option) => (
-                <label key={ option.name } className="flex justify-between items-center border-b py-2 last:border-b-0">
-                    <input
-                        type="radio"
-                        name="delivery"
-                        value={ option.name }
-                        checked={ selectedDeliveryOption === option.name }
-                        onChange={ handleOptionChange }
-                        className="form-radio h-6 w-6 text-green-500 border-gray-300 focus:ring-green-500"
-                    />
-                    <div className="ml-2">
-                        <p className="text-sm font-medium">{ option.name }</p>
-                        <p className="text-xs text-gray-500">{ 'Até ' + option.deliveryTime + (option.deliveryTime === 1 ? ' dia útil' : ' dias úteis') }</p>
-                    </div>
-                    <div className="ml-auto">
-                        <p className="text-sm font-medium">{ formatPrice(option.price) }</p>
-                    </div>
-                </label>
-            )) }
-        </section>
+        <Card className="border-[#F8C3D3] shadow-lg rounded-xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-pink-50 to-pink-100 border-b border-[#F8C3D3]/30 pb-4">
+                <CardTitle className="flex items-center justify-between">
+                    <span className="md:text-xl font-semibold text-[#333333]">
+                FORMA DE ENTREGA
+                    </span>
+                </CardTitle>
+            </CardHeader>
+          
+            <CardContent className="pt-6 px-4 sm:px-6">
+                {
+                // precoFaltanteParaFreteGratis > 0 && (
+                //     <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-100">
+                //         <p className="text-sm sm:text-base text-green-700">
+                //   Faltam { formatPrice(precoFaltanteParaFreteGratis) } para frete grátis!
+                //         </p>
+                //         <div className="mt-2 h-2 bg-green-100 rounded-full overflow-hidden">
+                //             <div 
+                //                 className="h-full bg-green-500 transition-all duration-500" 
+                //                 style={ { width: `${precoFaltanteEmPorcentagem}%` } }
+                //             />
+                //         </div>
+                //     </div>
+                // )
+                }
+    
+                <RadioGroup
+                    value={ selectedDeliveryOption ? selectedDeliveryOption : undefined }
+                    onValueChange={ handleOptionChange }
+                    className="space-y-4"
+                >
+                    { deliveryOptions.map((option) => (
+                        <div
+                            key={ option.name }
+                            className={ cn(
+                                'flex items-start space-x-4 p-4 rounded-lg transition-all duration-200',
+                                'hover:bg-[#F8C3D3]/10',
+                                'border border-gray-100',
+                                selectedDeliveryOption === option.name && 'border-[#F8C3D3] bg-pink-50/30',
+                            ) }
+                        >
+                            <RadioGroupItem
+                                value={ option.name }
+                                id={ option.name }
+                                className="mt-1"
+                            />
+                            <Label
+                                htmlFor={ option.name }
+                                className="flex-1 flex items-start justify-between cursor-pointer"
+                            >
+                                <div className="space-y-1">
+                                    <p className="font-medium text-gray-900 md:text-xl">
+                                        { option.name }
+                                    </p>
+                                    <p className=" text-gray-500 md:text-lg">
+                        Até { option.deliveryTime }
+                                        { option.deliveryTime === 1 ? ' dia útil' : ' dias úteis' }
+                                    </p>
+                                </div>
+                                <span className=" font-medium text-gray-900 ml-4 md:text-xl ">
+                                    { formatPrice(option.price) }
+                                </span>
+                            </Label>
+                        </div>
+                    )) }
+                </RadioGroup>
+            </CardContent>
+        </Card>
     );
 }

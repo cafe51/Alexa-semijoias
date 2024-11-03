@@ -14,9 +14,10 @@ interface AddressSectionProps {
     state: UseCheckoutStateType;
     handleAddressChange: (newAddress: AddressType) => void;
     handleEditingAddressMode: (mode: boolean) => void;
+    resetSelectedDeliveryOption: () => void;
 }
 
-export default function AddressSection({ state: { address, editingAddressMode }, handleAddressChange, handleEditingAddressMode }: AddressSectionProps) {
+export default function AddressSection({ state: { address, editingAddressMode }, handleAddressChange, handleEditingAddressMode, resetSelectedDeliveryOption }: AddressSectionProps) {
     const { updateDocumentField } = useCollection('usuarios');
     const { userInfo } = useUserInfo();
     const [cep, setCep] = useState('');
@@ -60,6 +61,7 @@ export default function AddressSection({ state: { address, editingAddressMode },
         if (isFormValid() && userInfo) {
             console.log(address);
             updateDocumentField(userInfo?.id, 'address', address);
+            resetSelectedDeliveryOption();
             handleEditingAddressMode(false);
             setFormError('');
         } else {

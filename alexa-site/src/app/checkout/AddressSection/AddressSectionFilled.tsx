@@ -1,4 +1,5 @@
 // app/checkout/AddressSection/AddressSectionFilled.tsx
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AddressType } from '@/app/utils/types';
 
 interface AddressSectionFilledProps {
@@ -8,24 +9,21 @@ interface AddressSectionFilledProps {
 
 export default function AddressSectionFilled({ address, handleEditingAddressMode  }: AddressSectionFilledProps) {
     return(
-        <section className='flex flex-col w-full bg-green-50 border-green-200 p-2 border-2 rounded-lg px-6'>
-            <div className='flex justify-between w-full'>
-                <p className="font-bold">ENDEREÇO</p>
-                {
-                    handleEditingAddressMode
-                        ?
-                        <p
-                            className='text-blue-400 text-sm w-full text-end'
-                            onClick={ () => handleEditingAddressMode(true) }
-                        >
-                            Trocar endereço
-                        </p>
-                        :
-                        ''
-                }
-               
-            </div>
-            <div className='flex flex-col p-2'>
+
+        <Card className="border-[#F8C3D3] shadow-md rounded">
+            <CardHeader className="secColor text-[#333333]">
+                <CardTitle className="flex justify-between">
+                    <span className="text-xl">ENDEREÇO</span>
+                    {
+                        handleEditingAddressMode &&
+                        <p className='text-[#D4AF37] text-sm w-full text-end md:text-lg cursor-pointer' onClick={ () => handleEditingAddressMode(true) }>
+                    Trocar endereço
+                        </p> 
+                    }
+                </CardTitle>
+    
+            </CardHeader>
+            <CardContent className="pt-4 md:text-lg">
                 <div className='flex gap-2'>
                     <span>{ address.bairro }</span>
                     <span> - </span>
@@ -44,8 +42,7 @@ export default function AddressSectionFilled({ address, handleEditingAddressMode
                     <span> - </span>
                     <span>{ address.uf }</span>
                 </div>
-            </div>
-
-        </section>
+            </CardContent>
+        </Card>
     );
 }

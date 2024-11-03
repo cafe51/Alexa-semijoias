@@ -13,9 +13,9 @@ export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
 
     return (
         <div className='flex flex-col gap-4 w-full h-full p-4 bg-white rounded-lg border-b' >
-            <div className='flex gap-4 w-full h-[90px] '>
+            <div className='flex gap-4 w-full h-[90px] md:h-[120px] '>
                 {
-                    <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0'>
+                    <div className='rounded-lg relative h-20 w-20 overflow-hidden flex-shrink-0 md:h-28 md:w-28'>
                         <Image
                             className='rounded-lg object-cover scale-100'
                             src={ image ? image : blankImage }
@@ -25,12 +25,12 @@ export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
                     </div>
                     // <img src={ image } alt={ name } className="w-20 h-20 object-cover rounded-md mr-4" />
                 }
-                <div className='rounded-lg relative w-3/4 overflow-hidden text-sm font-bold' >
+                <div className='rounded-lg relative w-3/4 overflow-hidden text-sm font-bold md:text-xl' >
                     <p >{ name }</p>
                 </div>
             </div>
             <div className="flex justify-between items-center w-full">
-                <p className='text-sm text-gray-500'>
+                <p className='text-sm text-gray-500 md:text-lg'>
                     <span className='font-bold'>{ quantidade }</span> { quantidade > 1 ? 'unidades' : 'unidade' } por <span className="font-bold">{ precoCheio }</span>
                 </p>
 

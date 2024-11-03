@@ -7,10 +7,13 @@ import { useRouter } from 'next/navigation';
 import AccountSection from './AccountSection/AccountSection';
 import AddressSection from './AddressSection/AddressSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
-// import PaymentSection from './PaymentSection/PaymentSection';
 import OrderSummarySection from './OrderSummarySection/OrderSummarySection';
-import PaymentBrick from './PaymentSection/PaymentBrick';
-import PaymentFailSection from './PaymentSection/PaymentFailSection';
+import PaymentSectionWithMercadoPago from './PaymentSection/PaymentSectionWithMercadoPago';
+import { useWindowSize } from '../hooks/useWindowSize';
+import PriceSummarySection from './OrderSummarySection/PriceSummarySection';
+import Link from 'next/link';
+import { ProductCartType } from '../utils/types';
+import SummaryCard from './OrderSummarySection/SummaryCard';
 
 export default function Checkout() {
     const router = useRouter();
@@ -22,6 +25,8 @@ export default function Checkout() {
     const [preferenceId, setPreferenceId] = useState<string | undefined>(undefined);
     const [showPaymentFailSection, setShowPaymentFailSection] = useState<boolean | string>(false);
 
+    const { screenSize } = useWindowSize();
+
     const {
         state,
         handleShowLoginSection,
@@ -32,6 +37,7 @@ export default function Checkout() {
         deliveryOptions,
         handleShowFullOrderSummary,
     } = useCheckoutState();
+
 
     useEffect(() => {
         if (!carrinho || carrinho.length < 1) {
@@ -75,42 +81,168 @@ export default function Checkout() {
     }, [carrinho]);
 
 
-    useEffect(() => {console.log(state);}, [state]);
-
     if(loadingScreen) return <p>Loading...</p>;
 
+    
     return (
-        <main className='flex flex-col w-full gap-2 relative mt-0'>
-            <OrderSummarySection carrinho={ carrinho } cartPrice={ cartPrice } handleShowFullOrderSummary={ handleShowFullOrderSummary }state={ state }/>
-            <AccountSection handleShowLoginSection={ handleShowLoginSection } state={ state } setIsCartLoading={ setIsCartLoading }/>
-            <AddressSection handleAddressChange={ handleAddressChange } handleEditingAddressMode={ handleEditingAddressMode } state={ state } />
-            <DeliveryPriceSection
-                deliveryOptions={ deliveryOptions }
-                handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
-                state={ state }
-                setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
-                setPreferenceId = { (preferenceId: string) => setPreferenceId(preferenceId) }
-            />
-            {
-                userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price && preferenceId && !showPaymentFailSection &&
-                    <PaymentBrick
-                        totalAmount={ cartPrice + state.deliveryOption.price }
-                        user={ userInfo }
+        <main className="container mx-auto px-4 min-h-[60vh] py-8">
+            { screenSize === 'mobile' ? (
+                // Layout Mobile
+                <div className="space-y-4">
+                    <OrderSummarySection 
+                        carrinho={ carrinho } 
+                        cartPrice={ cartPrice } 
+                        handleShowFullOrderSummary={ handleShowFullOrderSummary }
                         state={ state }
+                    />
+                    <AccountSection 
+                        handleShowLoginSection={ handleShowLoginSection } 
+                        state={ state } 
+                        setIsCartLoading={ setIsCartLoading }
+                    />
+                    <AddressSection 
+                        handleAddressChange={ handleAddressChange } 
+                        handleEditingAddressMode={ handleEditingAddressMode }
+                        resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) } 
+                        state={ state }
+                    />
+                    <DeliveryPriceSection
+                        deliveryOptions={ deliveryOptions }
+                        handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
+                        state={ state }
+                        setShowPaymentSection={ setShowPaymentSection }
+                        setPreferenceId={ setPreferenceId }
+                    />
+                    <PaymentSectionWithMercadoPago
+                        state={ state }
+                        cartPrice={ cartPrice }
+                        userInfo={ userInfo }
                         preferenceId={ preferenceId }
-                        setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
-                        setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
+                        showPaymentSection={ showPaymentSection }
+                        setShowPaymentSection={ setShowPaymentSection }
+                        showPaymentFailSection={ showPaymentFailSection }
+                        setShowPaymentFailSection={ setShowPaymentFailSection }
                     />
-            }
-            {
-                showPaymentFailSection && !showPaymentSection &&
-                    <PaymentFailSection
-                        setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
-                        setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
-                        showPaymentFailSection= { showPaymentFailSection }
-                    />
-                // <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
-            }
+                </div>
+            ) : screenSize === 'medium' ? (
+                // Layout Medium
+                <div className="space-y-6">
+                    { /* Order Summary no topo */ }
+                    <div className="w-full">
+                        <OrderSummarySection 
+                            carrinho={ carrinho } 
+                            cartPrice={ cartPrice } 
+                            handleShowFullOrderSummary={ handleShowFullOrderSummary }
+                            state={ state }
+                        />
+                    </div>
+                    
+                    { /* Duas colunas abaixo */ }
+                    <div className="grid grid-cols-2 gap-6">
+                        { /* Coluna 1 */ }
+                        <div className="space-y-4">
+                            <AccountSection 
+                                handleShowLoginSection={ handleShowLoginSection } 
+                                state={ state } 
+                                setIsCartLoading={ setIsCartLoading }
+                            />
+                            <AddressSection 
+                                handleAddressChange={ handleAddressChange } 
+                                handleEditingAddressMode={ handleEditingAddressMode }
+                                resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }  
+                                state={ state }
+                            />
+                        </div>
+                        
+                        { /* Coluna 2 */ }
+                        <div className="space-y-4">
+                            <DeliveryPriceSection
+                                deliveryOptions={ deliveryOptions }
+                                handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
+                                state={ state }
+                                setShowPaymentSection={ setShowPaymentSection }
+                                setPreferenceId={ setPreferenceId }
+                            />
+                            <PaymentSectionWithMercadoPago
+                                state={ state }
+                                cartPrice={ cartPrice }
+                                userInfo={ userInfo }
+                                preferenceId={ preferenceId }
+                                showPaymentSection={ showPaymentSection }
+                                setShowPaymentSection={ setShowPaymentSection }
+                                showPaymentFailSection={ showPaymentFailSection }
+                                setShowPaymentFailSection={ setShowPaymentFailSection }
+                            />
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                // Layout Desktop (3 colunas)
+                <div className="grid grid-cols-3 gap-8 max-w-7xl mx-auto">
+                    { /* Coluna 1: Conta e Endereço */ }
+                    <div className="space-y-8">
+                        <AccountSection 
+                            handleShowLoginSection={ handleShowLoginSection } 
+                            state={ state } 
+                            setIsCartLoading={ setIsCartLoading }
+                        />
+                        <AddressSection 
+                            handleAddressChange={ handleAddressChange } 
+                            handleEditingAddressMode={ handleEditingAddressMode }
+                            resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) } 
+                            state={ state }
+                        />
+                    </div>
+    
+                    { /* Coluna 2: Entrega e Pagamento */ }
+                    <div className="space-y-8">
+                        <DeliveryPriceSection
+                            deliveryOptions={ deliveryOptions }
+                            handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
+                            state={ state }
+                            setShowPaymentSection={ setShowPaymentSection }
+                            setPreferenceId={ setPreferenceId }
+                        />
+                        <PaymentSectionWithMercadoPago
+                            state={ state }
+                            cartPrice={ cartPrice }
+                            userInfo={ userInfo }
+                            preferenceId={ preferenceId }
+                            showPaymentSection={ showPaymentSection }
+                            setShowPaymentSection={ setShowPaymentSection }
+                            showPaymentFailSection={ showPaymentFailSection }
+                            setShowPaymentFailSection={ setShowPaymentFailSection }
+                        />
+                    </div>
+    
+                    { /* Coluna 3: Resumo do Pedido */ }
+                    <div>
+                        <div className="overflow-auto max-h-[calc(100vh-200px)] bg-white">
+                            <PriceSummarySection
+                                frete={ ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) }
+                                subtotalPrice={ cartPrice }
+                            />
+                            <section className="flex flex-col gap-1 w-full border border-gray-100 shadow-lg mt-4">
+                                <div className="flex justify-between w-full p-4">
+                                    <h3 className="text-center self-center md:text-2xl">
+                                        Produtos {
+                                            (carrinho && carrinho.length > 0) ? <span className="text-black">
+                                                ( { carrinho.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) } )    
+                                            </span> : null
+                                        }
+                                    </h3>   
+                                </div>
+                                { carrinho ? carrinho.map((produto: ProductCartType) => {
+                                    if (produto && produto.quantidade && produto.quantidade > 0) {
+                                        return <SummaryCard key={ produto.skuId } produto={ produto } />;
+                                    } else return false;
+                                }) : <span>Loading...</span> }
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            ) }
         </main>
     );
 }
+

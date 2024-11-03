@@ -9,12 +9,12 @@ interface RegisterSectionProps {
 export default function RegisterSection({ setShowLogin }: RegisterSectionProps) {
 
     return (
-        <section className=" bg-[#FAF9F6] flex items-center justify-center px-4 py-0" >
+        <section className=" bg-[#FAF9F6] flex items-center justify-center px-0 py-0" >
             <Card className="w-full max-w-md bg-white shadow-lg">
                 <CardHeader className="flex justify-between w-full">
-                    <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Crie sua conta</CardTitle>
+                    <CardTitle className="text-2xl md:text-3xl font-bold text-[#333333]">Crie sua conta</CardTitle>
                     <p
-                        className='text-blue-400 text-sm text-end cursor-pointer'
+                        className='text-[#D4AF37] text-sm text-end cursor-pointer md:text-lg'
                         onClick={ () => setShowLogin(true) }
                     >
         Fazer login

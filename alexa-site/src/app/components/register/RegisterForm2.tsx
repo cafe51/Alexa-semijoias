@@ -165,10 +165,11 @@ export default function RegisterForm2() {
     }
 
     return (
-        <form onSubmit={ handleSubmit } className="space-y-4">
+        <form onSubmit={ handleSubmit } className="w-full max-w-lg mx-auto space-y-6 sm:space-y-8 p-4 sm:p-6 rounded-xl bg-white shadow-sm">
+            { /* Nome Field */ }
             <InputField
                 label="Nome"
-                name='nome'
+                name="nome"
                 id="nome"
                 type="text"
                 placeholder="Seu nome completo"
@@ -176,9 +177,11 @@ export default function RegisterForm2() {
                 onChange={ handleChange }
                 error={ errors.nome }
             />
+
+            { /* Email Field */ }
             <InputField
                 label="E-mail"
-                name='email'
+                name="email"
                 id="email"
                 type="email"
                 placeholder="seu@email.com"
@@ -186,9 +189,11 @@ export default function RegisterForm2() {
                 onChange={ handleChange }
                 error={ errors.email }
             />
+
+            { /* Phone Field */ }
             <InputField
                 label="Telefone (opcional)"
-                name='phone'
+                name="phone"
                 id="phone"
                 type="tel"
                 placeholder="(00) 00000-0000"
@@ -196,9 +201,14 @@ export default function RegisterForm2() {
                 onChange={ handleChange }
                 error={ errors.phone }
             />
-            <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-[#333333]">
-                    Senha
+
+            { /* Password Field with Show/Hide */ }
+            <div className="space-y-3 sm:space-y-4 w-full">
+                <Label 
+                    htmlFor="password" 
+                    className="block text-sm sm:text-base font-medium text-[#333333] transition-all duration-200"
+                >
+            Senha
                 </Label>
                 <div className="relative">
                     <Input
@@ -208,18 +218,41 @@ export default function RegisterForm2() {
                         placeholder="••••••••"
                         value={ formData.password }
                         onChange={ handleChange }
-                        className={ `w-full px-3 py-2 border rounded-md text-[#333333] pr-10 ${errors.password ? 'border-red-500' : ''}` }
+                        className={ `
+                    w-full 
+                    px-4 
+                    py-2.5 
+                    sm:py-3 
+                    text-base 
+                    border 
+                    rounded-lg 
+                    text-[#333333] 
+                    pr-12
+                    placeholder:text-gray-400 
+                    focus:ring-2 
+                    focus:ring-[#D4AF37] 
+                    focus:border-transparent 
+                    transition-all 
+                    duration-200
+                    ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-200'}
+                ` }
                     />
                     <button
                         type="button"
                         onClick={ () => setShowPassword(!showPassword) }
-                        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600"
+                        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                     >
-                        { showPassword ? <EyeOff size={ 20 } /> : <Eye size={ 20 } /> }
+                        { showPassword ? <EyeOff size={ 24 } /> : <Eye size={ 24 } /> }
                     </button>
                 </div>
-                { errors.password && <p className="text-red-500 text-xs mt-1">{ errors.password }</p> }
+                { errors.password && (
+                    <p className="text-red-500 text-xs sm:text-sm mt-1.5 transition-all duration-200">
+                        { errors.password }
+                    </p>
+                ) }
             </div>
+
+            { /* Confirm Password Field */ }
             <InputField
                 label="Confirmar Senha"
                 id="confirmPassword"
@@ -230,17 +263,49 @@ export default function RegisterForm2() {
                 onChange={ handleChange }
                 error={ errors.confirmPassword }
             />
-            <Button 
-                type="submit" 
-                className="w-full bg-[#D4AF37] hover:bg-[#C48B9F] text-white font-bold py-2 px-4 rounded-md transition duration-300"
-                disabled={ isSubmitting }
-            >
-                { isSubmitting ? 'Cadastrando...' : 'Cadastrar' }
-            </Button>
+
+            { /* Submit Button */ }
+            <div className="pt-2 sm:pt-4">
+                <Button 
+                    type="submit" 
+                    className={ `
+                w-full 
+                bg-[#D4AF37] 
+                hover:bg-[#C48B9F] 
+                text-white 
+                font-semibold 
+                text-base 
+                sm:text-lg 
+                py-3 
+                sm:py-4 
+                px-6 
+                rounded-lg 
+                transition-all 
+                duration-300
+                disabled:opacity-50 
+                disabled:cursor-not-allowed
+                shadow-sm 
+                hover:shadow-md
+            ` }
+                    disabled={ isSubmitting }
+                >
+                    { isSubmitting ? (
+                        <span className="flex items-center justify-center space-x-2">
+                            <span className="animate-pulse">Cadastrando...</span>
+                        </span>
+                    ) : (
+                        'Cadastrar'
+                    ) }
+                </Button>
+            </div>
+
+            { /* Error Message */ }
             { (signupError || localError) && (
-                <p className="text-red-600 text-sm text-center" aria-live="assertive">
-                    { signupError || localError }
-                </p>
+                <div className="rounded-lg bg-red-50 p-3 sm:p-4 mt-4">
+                    <p className="text-red-600 text-sm sm:text-base text-center font-medium" aria-live="assertive">
+                        { signupError || localError }
+                    </p>
+                </div>
             ) }
         </form>
     );

@@ -1,4 +1,5 @@
 // app/checkout/AccountSection/AccountSectionFilled.tsx
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { useLogout } from '@/app/hooks/useLogout';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
@@ -32,26 +33,25 @@ export default function AccountSectionFilled({ nome, email, cpf, telefone, admin
     };
 
     return (
-        <section className='flex flex-col w-full bg-green-50 border-green-200 p-2 border-2 rounded-lg px-6'>
-            <div className='flex justify-between w-full'>
-
-                <p className="font-bold">CONTA</p>
-                { adminDashboard ||
-                    <p
-                        className='text-blue-400 text-sm w-full text-end'
-                        onClick={ () => changeAccount() }
-                    >
+        <Card className="border-[#F8C3D3] shadow-md rounded">
+            <CardHeader className="secColor text-[#333333]">
+                <CardTitle className="flex justify-between">
+                    <span className="text-xl">CONTA</span>
+                    {
+                        adminDashboard ||
+                    <p className='text-[#D4AF37] text-sm w-full text-end md:text-lg cursor-pointer' onClick={ () => changeAccount() }>
                 Trocar de conta
                     </p>    
-                }
-            </div>
+                    }
+                </CardTitle>
 
-            <div className='flex flex-col p-2'>
-                <p>{ nome }</p>
+            </CardHeader>
+            <CardContent className="pt-4 md:text-lg">
+                <p className="font-semibold">{ nome }</p>
                 <p>{ email }</p>
                 <p>{ cpf }</p>
                 <p>{ telefone }</p>
-            </div>
-        </section>
+            </CardContent>
+        </Card>
     );
 }

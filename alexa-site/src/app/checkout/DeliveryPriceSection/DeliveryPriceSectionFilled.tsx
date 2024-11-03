@@ -1,5 +1,5 @@
 // app/checkout/DeliveryPriceSection/DeliveryPriceSectionFilled.tsx
-
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatPrice } from '@/app/utils/formatPrice';
 
 interface DeliveryPriceSectionFilledProps {
@@ -25,30 +25,32 @@ export default function DeliveryPriceSectionFilled({
     };
 
     return(
-        <section className='flex flex-col w-full bg-green-50 text-green-700 border-green-200 p-2 border-2 rounded-lg px-6'>
-            <div className='flex justify-between w-full'>
-                <p className="font-bold text-green-700">FRETE</p>
-                <p
-                    className='text-blue-400 text-sm w-full text-end'
-                    onClick={ handleOptionChange }
-                >
-                            Alterar frete
-                </p>
-            </div>
-            <div className='flex flex-col p-2'>
-                <div className='flex gap-2 font-extrabold'>
-                    <span>{ type }</span>
-                    <span> - </span>
-                    <span>{ formatPrice(price) }</span>
-                </div>
-                <div className='flex gap-1'>
+        <Card className="border-[#F8C3D3] shadow-md rounded">
+            <CardHeader className="secColor text-[#333333]">
+                <CardTitle className="flex justify-between">
+                    <span className="text-xl">FRETE</span>
 
-                    <p className= 'text-green-700'>{ 'Até' }</p>
-                    <span className="font-extrabold" >{ term }</span>
-                    <p className= 'text-green-700'> { (term === 1 ? ' dia útil' : ' dias úteis') }</p>
-                </div>
-            </div>
+                    <p className='text-[#D4AF37] text-sm w-full text-end md:text-lg cursor-pointer' onClick={ handleOptionChange }>
+                    Alterar frete
+                    </p>    
+                </CardTitle>
+    
+            </CardHeader>
+            <CardContent className="pt-4 md:text-lg">
+                <div className='flex flex-col p-2'>
+                    <div className='flex gap-2'>
+                        <span className='font-semibold'>{ type }</span>
+                        <span> - </span>
+                        <span>{ formatPrice(price) }</span>
+                    </div>
+                    <div className='flex gap-1'>
 
-        </section>
+                        <p className= 'text-[#D4AF37]'>{ 'Até' }</p>
+                        <span className="font-semibold" >{ term }</span>
+                        <p className= 'text-[#D4AF37]'> { (term === 1 ? ' dia útil' : ' dias úteis') }</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
     );
 }
