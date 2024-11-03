@@ -38,6 +38,15 @@ export default function PaymentBrick({ totalAmount, user, state, preferenceId, s
             creditCard: 'all',
             maxInstallments: 6,
         },
+        visual: {
+            style: {
+                customVariables: {
+                    baseColor: '#D4AF37',
+                    fontSizeLarge: '1.125rem',
+                    successColor: '#D4AF37',
+                },
+            },
+        },
     };
 
     return (
