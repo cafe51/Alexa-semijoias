@@ -56,7 +56,7 @@ const FullHeader: React.FC = () => {
             { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
             <div 
                 style={ { 
-                    height: isMobile ? `${headerHeight + 64}px` : '160px',
+                    height: isMobile ? `${headerHeight + 10}px` : `${headerHeight + 64}px`,
                 } } 
             />
         </>
