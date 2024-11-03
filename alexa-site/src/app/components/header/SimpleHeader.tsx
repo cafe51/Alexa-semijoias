@@ -1,33 +1,66 @@
-//app/components/SimpleHeader.tsx
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Logo from './Logo';
 
-'use client';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
-const SimpleHeader = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-  
+const FullHeader: React.FC = () => {
+    const [isMobile, setIsMobile] = useState(true);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const router = useRouter();
+      
     const handleScroll = () => {
-        const offset = window.scrollY;
-        offset > 100 ? setIsScrolled(true) : setIsScrolled(false);
+        const position = window.pageYOffset;
+        setScrollPosition(position);
     };
-  
+
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
-    const opacity = isScrolled ? 'primColorTransparent' : '';
-    const height = isScrolled ? 'py-2' : 'py-6';
-    
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const headerHeight = Math.max(60, 100 - scrollPosition * 0.2);
+    const headerOpacity = Math.max(0.8, 1 - scrollPosition * 0.002);
+
+    const headerMobileStyle = 'flex items-center justify-between';
+    const headerDesktopStyle = 'shadow-lg';
+
     return (
-        <header id="japhe" className={ `primColor fixed w-full transition-all duration-500 z-50  ${opacity} flex justify-center items-center` } data-testid='simple-header'>
-            <div className={ `flex justify-center items-center px-8 md:px-16 ${height} md:py-0` }>
-                <Link className="text-2xl font-bold"  href={ '/' }>Alexa</Link>
-            </div>
-        </header>
+        <>
+            <header
+                className={ `fixed top-0 left-0 right-0 px-4 z-50 bg-white  ${ isMobile ? headerMobileStyle : headerDesktopStyle }` }
+                style={ {
+                    height: isMobile ? `${headerHeight}px` : 'auto',
+                    backgroundColor: isMobile ? `rgba(255,255,255, ${headerOpacity})` : 'white',
+                } }
+            >
 
+                <div className="cursor-pointer py-4 w-full flex items-center justify-center" onClick={ () => router.push('/') }>
+                    <Logo isMobile={ isMobile ? true : false } />
+                </div>
 
+            </header>
+            { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
+            <div 
+                style={ { 
+                    height: isMobile ? `${headerHeight + 64}px` : '160px',
+                } } 
+            />
+        </>
     );
 };
 
-export default SimpleHeader;
+export default FullHeader;
