@@ -77,12 +77,12 @@ const FullHeader: React.FC = () => {
     };
 
     const headerMobileStyle = 'flex items-center justify-between px-4';
-    const headerDesktopStyle = 'bg-white shadow-lg';
+    const headerDesktopStyle = 'shadow-lg';
 
     return (
         <>
             <header
-                className={ `fixed top-0 left-0 right-0 z-50  ${ isMobile ? headerMobileStyle : headerDesktopStyle }` }
+                className={ `fixed top-0 left-0 right-0 z-50 bg-white  ${ isMobile ? headerMobileStyle : headerDesktopStyle }` }
                 style={ {
                     height: isMobile ? `${headerHeight}px` : 'auto',
                     backgroundColor: isMobile ? `rgba(255,255,255, ${headerOpacity})` : 'white',

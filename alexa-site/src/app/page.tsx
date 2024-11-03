@@ -59,11 +59,11 @@ export default function HomePage() {
         return featuredProducts;
     }
 
-    if (loading) return <div className="text-center py-10">Carregando...</div>;
+    if (loading) return <div className="text-center py-10 h-screen">Carregando...</div>;
     if (error) return <div className="text-center py-10 text-red-500">{ error }</div>;
 
     return (
-        <div className="bg-[#FAF9F6] text-[#333333] min-h-screen absolute top-0 w-full h-screen">
+        <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full mt-[-170px]">
             <HeroSection />
             <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />
             <FeaturedProducts featuredProducts={ featuredProducts }/>

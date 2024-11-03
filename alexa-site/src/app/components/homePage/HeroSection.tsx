@@ -22,7 +22,7 @@ export default function HeroSection() {
             : heroBannerSmall;
 
     return (
-        <section className="relative overflow-hidden flex flex-col justify-center ">
+        <section className="relative flex flex-col justify-center ">
             { /* Seleciona a imagem com base no tamanho da tela */ }
             <div className="p-0 flex flex-col h-full z-0">
                 <div className='relative aspect-square md:h-[70vh]'>
