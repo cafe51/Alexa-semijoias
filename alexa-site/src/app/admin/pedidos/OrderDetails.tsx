@@ -14,6 +14,7 @@ import OrderItems from './OrderItems';
 import OrderStatus from './OrderStatus';
 import { Button } from '@/components/ui/button';
 import { XCircle, RefreshCw } from 'lucide-react';
+import { useWindowSize } from '@/app/hooks/useWindowSize';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -22,6 +23,7 @@ interface OrderDetailsProps {
 }
 
 export default function OrderDetails({ pedido, user: { email, nome, phone }, admin=false }: OrderDetailsProps) {
+    const { screenSize } = useWindowSize();
     const { userInfo } = useUserInfo();
     const [modalConfirmationRetryOrder, setShowModalConfirmationRetryOrder] = useState(false);
     const [pedidoState, setPedidoState] = useState(pedido);
@@ -50,7 +52,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
     }, [pedido]);
 
     return (
-        <div className="flex flex-col gap-2 text-sm md:text-lg">
+        <div className="flex flex-col gap-2 h-min-h-screen text-sm md:text-lg justify-center items-center lg:my-16 px-4 md:px-8">
             {
                 modalConfirmationRetryOrder
                 && <ModalMaker closeModelClick={ () => setShowModalConfirmationRetryOrder(false) } title='Refazer Pedido'>
@@ -76,7 +78,6 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                             </div>
                         </div>
                     </section>
-
                 </ModalMaker>
             }
             
@@ -86,43 +87,118 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                 && <TryNewOrderButton cartSnapShot={ pedidoState.cartSnapShot }/>
             }
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <OrderStatus order={ pedidoState } />
-                {
-                    pedidoState.pixResponse && showPixPayment &&
-                <PixPayment
-                    pixKey={ pedidoState.pixResponse.qrCode }
-                    qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
-                    startDate={ pedidoState.updatedAt.toDate() }
-                    // ticketUrl={ pedidoState.pixResponse.ticketUrl }
-                />
-                }
-
-                {
-                    admin && <ChangeStatus
-                        pedidoId={ pedido.id }
-                        initialStatus={ pedidoState.status }
-                        changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
+            { screenSize === 'mobile' ? (
+                // Layout Mobile - Uma coluna
+                <div className="flex flex-col space-y-6 w-full">
+                    <OrderStatus order={ pedidoState } />
+                    { admin && (
+                        <ChangeStatus
+                            pedidoId={ pedido.id }
+                            initialStatus={ pedidoState.status }
+                            changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
+                        />
+                    ) }
+                    { pedidoState.pixResponse && showPixPayment && (
+                        <PixPayment
+                            pixKey={ pedidoState.pixResponse.qrCode }
+                            qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                            startDate={ pedidoState.updatedAt.toDate() }
+                        />
+                    ) }
+                    <PaymentSummary
+                        frete={ pedido.valor.frete }
+                        subtotalPrice={ pedido.valor.soma }
+                        installments={ pedido.installments }
+                        paymentOption={ pedido.paymentOption }
                     />
-                }
+                    <OrderItems cartSnapShot={ pedido.cartSnapShot } />
+                    <DeliveryAddress address={ pedido.endereco } />
+                    <CustomerInfo
+                        email={ email }
+                        name={ nome }
+                        phone={ phone }
+                    />
+                </div>
+            ) : screenSize === 'medium' ? (
+                // Layout Medium - Duas colunas com OrderStatus no topo
+                <div className="flex flex-col space-y-6 w-full">
+                    <div className="w-full">
+                        <OrderStatus order={ pedidoState } />
+                    </div>
+                    <div className="grid grid-cols-2 gap-6">
+                        { /* Coluna 1 - Outros componentes */ }
+                        <div className="flex flex-col space-y-6">
+                            { admin && (
+                                <ChangeStatus
+                                    pedidoId={ pedido.id }
+                                    initialStatus={ pedidoState.status }
+                                    changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
+                                />
+                            ) }
+                            <PaymentSummary
+                                frete={ pedido.valor.frete }
+                                subtotalPrice={ pedido.valor.soma }
+                                installments={ pedido.installments }
+                                paymentOption={ pedido.paymentOption }
+                            />
+                            { pedidoState.pixResponse && showPixPayment && (
+                                <PixPayment
+                                    pixKey={ pedidoState.pixResponse.qrCode }
+                                    qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                                    startDate={ pedidoState.updatedAt.toDate() }
+                                />
+                            ) }
+                            <DeliveryAddress address={ pedido.endereco } />
+                            <CustomerInfo
+                                email={ email }
+                                name={ nome }
+                                phone={ phone }
+                            />
+                        </div>
+                        { /* Coluna 2 - OrderItems */ }
+                        <div>
+                            <OrderItems cartSnapShot={ pedido.cartSnapShot } />
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                // Layout Desktop - Mantendo o layout original em três colunas
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div className='flex flex-col lg:gap-8'>
+                        <OrderStatus order={ pedidoState } />
+                        <CustomerInfo
+                            email={ email }
+                            name={ nome }
+                            phone={ phone }
+                        />
+                        { admin && (
+                            <ChangeStatus
+                                pedidoId={ pedido.id }
+                                initialStatus={ pedidoState.status }
+                                changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
+                            />
+                        ) }
+                        <DeliveryAddress address={ pedido.endereco } />
+                    </div>
+                    <div className='flex flex-col lg:gap-8'>
+                        <PaymentSummary
+                            frete={ pedido.valor.frete }
+                            subtotalPrice={ pedido.valor.soma }
+                            installments={ pedido.installments }
+                            paymentOption={ pedido.paymentOption }
+                        />
+                        { pedidoState.pixResponse && showPixPayment && (
+                            <PixPayment
+                                pixKey={ pedidoState.pixResponse.qrCode }
+                                qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                                startDate={ pedidoState.updatedAt.toDate() }
+                            />
+                        ) }
+                    </div>
+                    <OrderItems cartSnapShot={ pedido.cartSnapShot } />
+                </div>
+            ) }
 
-                <CustomerInfo
-                    email={ email }
-                    name={ nome }
-                    phone={ phone }
-                />
-
-                <DeliveryAddress address={ pedido.endereco } />
-
-                <PaymentSummary
-                    frete={ pedido.valor.frete }
-                    subtotalPrice={ pedido.valor.soma }
-                    installments={ pedido.installments }
-                    paymentOption={ pedido.paymentOption }
-
-                />
-                <OrderItems cartSnapShot={ pedido.cartSnapShot } />
-            </div>
             {
                 admin && status !== 'entregue' && status !== 'cancelado' && <CancelOrderButton pedido={ pedido } changeStatus={ () => setStatus('cancelado') }/>
             }
@@ -131,7 +207,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                 && userInfo?.userId === pedido.userId 
                 && <Button className="bg-[#D4AF37] text-white hover:bg-[#C48B9F] flex-1 md:text-2xl" onClick={ () => setShowModalConfirmationRetryOrder(true) }>
                     <RefreshCw className="mr-2 h-4 w-4 md:h-6 md:w-6 lg:h-6 lg:w-6" />
-        Refazer Pedido
+                    Refazer Pedido
                 </Button>
             }
         </div>

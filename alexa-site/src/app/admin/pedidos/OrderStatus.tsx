@@ -12,7 +12,7 @@ interface OrderStatusProps {
 
 const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
     return (
-        <Card className="border-[#F8C3D3] shadow-md md:col-span-2 lg:col-span-3">
+        <Card className="border-[#F8C3D3] shadow-md rounded">
             <CardHeader className="bg-[#F8C3D3] text-[#333333]">
                 <CardTitle className="text-lg flex flex-col gap-2 justify-between w-full  ">
 
