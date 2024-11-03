@@ -147,7 +147,7 @@ export default function Footer() {
                     <div className="text-[#333333] text-base lg:text-lg">
                         <p className="mb-2 flex items-center justify-center sm:justify-start">
                             <Mail className="mr-2" size={ 18 } />
-                            contato@alexasemijoias.com
+                            alexa.artes@yahoo.com.br
                         </p>
                         <p className="flex items-center justify-center sm:justify-start">
                             <Phone className="mr-2" size={ 18 } />
