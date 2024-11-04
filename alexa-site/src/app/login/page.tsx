@@ -1,7 +1,5 @@
 //app/login/page.tsx
-
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -17,7 +15,6 @@ export default function Login() {
     const  { userInfo } = useUserInfo();
 
     useEffect(() => {
-    
         try {
             if(userInfo) {
                 setLoadingButton(true);
