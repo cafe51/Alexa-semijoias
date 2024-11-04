@@ -23,12 +23,12 @@ export default function Register() {
     }
 
     return (
-        <div className=" bg-[#FAF9F6] flex items-center justify-center px-4 py-16" >
+        <div className=" bg-[#FAF9F6] flex items-center justify-center px-4 py-2 md:py-4 lg:py-8" >
             <Card className="w-full max-w-md bg-white shadow-lg">
-                <CardHeader className="text-center">
-                    <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Crie sua conta</CardTitle>
+                <CardHeader className="text-center m-0 pb-2">
+                    <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333] p-0 m-0">Crie sua conta</CardTitle>
                 </CardHeader>
-                <CardContent className="max-w-md mx-auto p-6 sm:p-8 md:p-10 lg:p-12 rounded-lg">
+                <CardContent className="max-w-md mx-auto rounded-lg">
                     <RegisterForm/>
                 </CardContent>
                 <CardFooter className="text-center">
