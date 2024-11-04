@@ -34,7 +34,7 @@ export default function Login() {
 
 
     return (
-        <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4 py-0" >
+        <div className=" bg-[#FAF9F6] flex items-center justify-center py-16 px-4 " >
             <Card className="w-full max-w-md bg-white shadow-lg">
                 <CardHeader className="text-center">
                     <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Bem-vindo(a) de volta</CardTitle>
