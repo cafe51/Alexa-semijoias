@@ -1,8 +1,8 @@
-// app/hooks/useSnapshotPag.ts
+// app/hooks/usePaginatedQuery.ts
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, collection, query, where, limit, startAfter, onSnapshot, orderBy } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, collection, query, where, limit, startAfter, getDocs, orderBy } from 'firebase/firestore';
 import { FilterOptionForUseSnapshot, FireBaseDocument } from '../utils/types';
 
 type OrderByOption = {
@@ -10,7 +10,7 @@ type OrderByOption = {
     direction: 'asc' | 'desc';
 } | null;
 
-export const useSnapshotPag = <T>(
+export const usePaginatedQuery = <T>(
     collectionName: string,
     filterOptions: FilterOptionForUseSnapshot[] | null,
     itemsPerPage: number = 10,
@@ -20,7 +20,6 @@ export const useSnapshotPag = <T>(
     const [lastVisible, setLastVisible] = useState<DocumentData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const unsubscribeRef = useRef<(() => void) | null>(null);
 
     const getQuery = (lastDoc?: DocumentData) => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
@@ -46,53 +45,48 @@ export const useSnapshotPag = <T>(
         return ref;
     };
 
-    const loadData = (isInitial: boolean = true) => {
+    const loadData = async(isInitial: boolean = true) => {
         setIsLoading(true);
-        const q = getQuery(isInitial ? undefined : (lastVisible || undefined));
+        const q = getQuery(isInitial ? undefined : lastVisible);
 
-        if (unsubscribeRef.current) {
-            unsubscribeRef.current();
-        }
-
-        unsubscribeRef.current = onSnapshot(q, (snapshot) => {
+        try {
+            const snapshot = await getDocs(q);
             const results = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 exist: doc.exists(),
                 ...doc.data() as T,
             }));
 
-            const remainingTime = Math.max(0, 1000);
+            if (isInitial) {
+                setDocuments(results);
+            } else {
+                setDocuments(prev => prev ? [...prev, ...results] : results);
+            }
 
-            setTimeout(() => {
-                if (isInitial) {
-                    setDocuments(results);
-                } else {
-                    setDocuments(prev => prev ? [...prev, ...results] : results);
-                }
-
-                setLastVisible(snapshot.docs[snapshot.docs.length - 1] || null);
-                setHasMore(snapshot.docs.length === itemsPerPage);
-                setIsLoading(false);
-            }, remainingTime);
-        });
+            setLastVisible(snapshot.docs[snapshot.docs.length - 1] || null);
+            setHasMore(snapshot.docs.length === itemsPerPage);
+        } catch (error) {
+            console.error('Error fetching paginated documents:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const loadMore = () => {
-        if (!lastVisible || isLoading) return;
+        if (!lastVisible || isLoading || !hasMore) return;
         loadData(false);
     };
 
     useEffect(() => {
         loadData();
 
+        // Limpeza de dados quando mudar a coleção ou filtros
         return () => {
-            if (unsubscribeRef.current) {
-                unsubscribeRef.current();
-            }
+            setDocuments(null);
+            setLastVisible(null);
+            setHasMore(true);
         };
     }, [collectionName, filterOptions, itemsPerPage, orderByOption]);
-
-    useEffect(() => {console.log('documents AAAAAAAAAAAAAAAaa', documents); }, [documents]);
 
     return { documents, isLoading, hasMore, loadMore };
 };
