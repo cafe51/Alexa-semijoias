@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 export default function Register() {
     const router = useRouter();
@@ -33,14 +34,12 @@ export default function Register() {
 
     if(loadingButton) {
         return (
-            <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4 py-8" style={ { fontFamily: 'Montserrat, sans-serif' } }>
-            Carregando...
-            </div>
+            <LoadingIndicator />
         );
     }   
 
     return (
-        <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4 py-8" style={ { fontFamily: 'Montserrat, sans-serif' } }>
+        <div className=" bg-[#FAF9F6] flex items-center justify-center px-4 py-16" >
             <Card className="w-full max-w-md bg-white shadow-lg">
                 <CardHeader className="text-center">
                     <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333]">Crie sua conta</CardTitle>
