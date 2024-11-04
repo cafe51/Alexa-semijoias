@@ -1,6 +1,6 @@
 // app/hooks/usePaginatedQuery.ts
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, collection, query, where, limit, startAfter, getDocs, orderBy } from 'firebase/firestore';
 import { FilterOptionForUseSnapshot, FireBaseDocument } from '../utils/types';
@@ -21,7 +21,8 @@ export const usePaginatedQuery = <T>(
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
-    const getQuery = (lastDoc?: DocumentData) => {
+    // Define a função para construir a query com base nas dependências
+    const getQuery = useCallback((lastDoc?: DocumentData) => {
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
         if (filterOptions && filterOptions.length > 0) {
@@ -31,7 +32,6 @@ export const usePaginatedQuery = <T>(
             ref = query(ref, ...whereConditions);
         }
 
-        // Adiciona ordenação se especificada
         if (orderByOption) {
             ref = query(ref, orderBy(orderByOption.field, orderByOption.direction));
         }
@@ -43,11 +43,12 @@ export const usePaginatedQuery = <T>(
         }
 
         return ref;
-    };
+    }, [collectionName, filterOptions, itemsPerPage, orderByOption]);
 
-    const loadData = async(isInitial: boolean = true) => {
+    // Define a função para carregar dados, com controle de timeout
+    const loadData = useCallback(async(isInitial: boolean = true) => {
         setIsLoading(true);
-        const q = getQuery(isInitial ? undefined : lastVisible);
+        const q = getQuery(isInitial ? undefined : (lastVisible || undefined));
 
         try {
             const snapshot = await getDocs(q);
@@ -57,30 +58,45 @@ export const usePaginatedQuery = <T>(
                 ...doc.data() as T,
             }));
 
-            if (isInitial) {
-                setDocuments(results);
-            } else {
-                setDocuments(prev => prev ? [...prev, ...results] : results);
-            }
+            // Define um tempo de espera arbitrário (exemplo: 1 segundo)
+            const remainingTime = Math.max(0, 1000);
 
-            setLastVisible(snapshot.docs[snapshot.docs.length - 1] || null);
-            setHasMore(snapshot.docs.length === itemsPerPage);
+            setTimeout(() => {
+                if (isInitial) {
+                    setDocuments(results);
+                } else {
+                    setDocuments(prev => prev ? [...prev, ...results] : results);
+                }
+
+                setLastVisible(snapshot.docs[snapshot.docs.length - 1] || null);
+                setHasMore(snapshot.docs.length === itemsPerPage);
+                setIsLoading(false);
+            }, remainingTime);
         } catch (error) {
             console.error('Error fetching paginated documents:', error);
-        } finally {
-            setIsLoading(false);
         }
-    };
+    }, [getQuery, itemsPerPage, lastVisible]);
 
-    const loadMore = () => {
+
+    // Função de carregar mais documentos
+    const loadMore = useCallback(() => {
         if (!lastVisible || isLoading || !hasMore) return;
         loadData(false);
-    };
+    }, [lastVisible, isLoading, hasMore, loadData]);
 
+    // Função para resetar o estado e carregar dados do início
+    const refresh = useCallback(() => {
+        setDocuments(null);
+        setLastVisible(null);
+        setHasMore(true);
+        loadData(true);
+    }, [loadData]);
+
+    // useEffect para carregar dados iniciais somente na primeira renderização ou quando os filtros mudarem
     useEffect(() => {
-        loadData();
+        loadData(true);
 
-        // Limpeza de dados quando mudar a coleção ou filtros
+        // Limpeza de dados ao desmontar
         return () => {
             setDocuments(null);
             setLastVisible(null);
@@ -88,5 +104,7 @@ export const usePaginatedQuery = <T>(
         };
     }, [collectionName, filterOptions, itemsPerPage, orderByOption]);
 
-    return { documents, isLoading, hasMore, loadMore };
+    useEffect(() => {console.log('documents AAAAAAAAAAAAAAAaa', documents); }, [documents]);
+
+    return { documents, isLoading, hasMore, loadMore, refresh };
 };
