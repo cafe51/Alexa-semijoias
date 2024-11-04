@@ -160,7 +160,7 @@ export default function Product({ id }: { id: string }) {
                         />
 
                         <div className='py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg *:text-lg *:uppercase borderColor text-center w-full flex justify-center mt-2'>
-                            <ShippingCalculator onSelectShipping={ selectShipping } selectedShipping={ shipping }/>
+                            <ShippingCalculator onSelectShipping={ selectShipping } selectedShipping={ Number(shipping) }/>
                         </div>
                     </section>
                 </div>
