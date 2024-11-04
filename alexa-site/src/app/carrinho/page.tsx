@@ -1,6 +1,5 @@
 // app/carrinho/page.tsx
 'use client';
-
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import CartItem from './CartItem';
@@ -60,7 +59,7 @@ export default function Carrinho() {
     }
 
     return (
-        <div className="min-h-screen text-[#333333] pb-8 md:px-8 lg:px-12">
+        <div className="min-h-screen text-[#333333] px-4 py-8 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
                 <CartHeader cartItems={ carrinho } router={ router }/>
 
