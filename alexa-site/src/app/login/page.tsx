@@ -8,6 +8,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useUserInfo } from '../hooks/useUserInfo';
 import LoginForm from '../components/LoginForm2';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 export default function Login() {
     const router = useRouter();
@@ -32,6 +33,9 @@ export default function Login() {
         }
     }, [user, router, userInfo]);
 
+    if (userInfo === null || userInfo) {
+        return <LoadingIndicator />; 
+    }
 
     return (
         <div className=" bg-[#FAF9F6] flex items-center justify-center py-16 px-4 " >
