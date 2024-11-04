@@ -12,11 +12,6 @@ import { FireBaseDocument, ProductCartType } from '../utils/types';
 import OrderSummary from './OrderSummary';
 import ContinueShoppingButton from './ContinueShoppingButton';
 
-const shippingOptions = [
-    { id: 'pac', name: 'PAC', price: 15.90, days: 7 },
-    { id: 'sedex', name: 'Sedex', price: 25.50, days: 3 },
-];
-
 interface CartItem {
   skuId: string;
   quantidade: number;
@@ -27,12 +22,12 @@ interface CartItem {
 }
 
 export default function Carrinho() {
-    const [shipping, setShipping] = useState<string | null>(null);
+    const [shipping, setShipping] = useState<number | null>(null);
     const { carrinho } = useUserInfo();
     const router = useRouter();
 
-    const selectShipping = (optionId: string) => {
-        setShipping(optionId);
+    const selectShipping = (price: string) => {
+        setShipping(Number(price)); // Parse para número
     };
 
     const subtotal = useMemo(() => {
@@ -42,9 +37,7 @@ export default function Carrinho() {
     }, [carrinho]);
 
     const total = useMemo(() => {
-        const shippingPrice = shippingOptions.find((shippingOption) => shipping === shippingOption.id)?.price || 0;
-        console.log('shipping', shippingPrice);
-        return subtotal + shippingPrice;
+        return subtotal + (shipping || 0);
     }, [subtotal, shipping]);
 
     if (!carrinho || carrinho.length === 0) {
@@ -79,7 +72,6 @@ export default function Carrinho() {
                         total={ total }
                         onSelectShipping={ selectShipping }
                         onCheckout={ () => router.push('/checkout') }
-                        shippingOptions={ shippingOptions }
                     />
                 </div>
 

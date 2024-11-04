@@ -13,16 +13,10 @@ export default function OrderSummary({
     onCheckout,
 }: { 
     subtotal: number;
-    shipping: string | null;
+    shipping: number | null;
     total: number;
     onSelectShipping: (optionId: string) => void;
     onCheckout: () => void;
-    shippingOptions: {
-        id: string;
-        name: string;
-        price: number;
-        days: number;
-    }[];
 }) {
     return (
         <div className="w-full md:max-w-2xl md:mx-auto flex-grow">

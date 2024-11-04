@@ -11,14 +11,14 @@ import getShippingOptions from '../utils/getShippingOptions';
 
 interface ShippingCalculatorProps {
     onSelectShipping: (optionId: string) => void;
-    selectedShipping: string | null;
+    selectedShipping: number | null;
 }
 
 export default function ShippingCalculator({ onSelectShipping, selectedShipping }: ShippingCalculatorProps) {
     const [cep, setCep] = useState('');
     const [shippingOptions, setShippingOptions] = useState<ShippingOptionType[] | []>([]);
     const [showOptions, setShowOptions] = useState(false);
-    const [tempSelectedShipping, setTempSelectedShipping] = useState(selectedShipping);
+    const [tempSelectedShipping, setTempSelectedShipping] = useState<string | null>(selectedShipping ? selectedShipping.toString() : null);
     const [isOpen, setIsOpen] = useState(false);
 
     const handleCalculate = async(e: React.FormEvent) => {
@@ -31,7 +31,10 @@ export default function ShippingCalculator({ onSelectShipping, selectedShipping 
 
     const handleConfirm = () => {
         if (tempSelectedShipping) {
-            onSelectShipping(tempSelectedShipping);
+            const selectedOption = shippingOptions.find(option => option.price.toString() === tempSelectedShipping);
+            if (selectedOption) {
+                onSelectShipping(selectedOption.price.toString()); // Passando o preço como string
+            }
         }
         setIsOpen(false);
     };
@@ -41,7 +44,7 @@ export default function ShippingCalculator({ onSelectShipping, selectedShipping 
             <DialogTrigger asChild>
                 { selectedShipping ? (
                     <Button variant="link" className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
-                        { formatPrice(shippingOptions.find(option => option.id === selectedShipping)?.price || 0) }
+                        { formatPrice(shippingOptions.find(option => option.price === selectedShipping)?.price || 0) }
                     </Button>
                 ) : (
                     <Button variant="link" className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] text-sm md:text-base lg:text-lg">
@@ -76,10 +79,10 @@ export default function ShippingCalculator({ onSelectShipping, selectedShipping 
                             <div
                                 key={ option.id }
                                 className="flex items-center justify-between space-x-2 md:space-x-4 border p-2 md:p-3 lg:p-4 rounded cursor-pointer hover:bg-gray-100"
-                                onClick={ () => setTempSelectedShipping(option.id) }
+                                onClick={ () => setTempSelectedShipping(option.price.toString()) }
                             >
                                 <div className="flex items-center flex-1">
-                                    <RadioGroupItem value={ option.id } id={ option.id } />
+                                    <RadioGroupItem value={ option.price.toString() } id={ option.id } />
                                     <Label htmlFor={ option.id } className="ml-2 md:ml-3 flex-1 cursor-pointer text-sm md:text-base lg:text-lg">{ option.name }</Label>
                                 </div>
                                 <div className="text-right">
