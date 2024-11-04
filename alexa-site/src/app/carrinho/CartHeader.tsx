@@ -12,7 +12,7 @@ export default function CartHeader({ cartItems, router }: CartHeaderProps) {
 
     return (
         <section className="flex justify-between items-center mb-8 text">
-            <h1 className="text-2xl sm:text-3xl text-center w-full ">
+            <h1 className="text-2xl sm:text-3xl text-center md:text-start w-full ">
                 CARRINHO
                 <span className="text-lg sm:text-xl font-normal ml-2">({ totalItems + (totalItems > 1 ? ' itens' : ' item') })</span>
             </h1>
