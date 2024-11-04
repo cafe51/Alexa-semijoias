@@ -60,7 +60,7 @@ export default function MyProfile() {
     }
 
     return (
-        <main className='min-h-screen text-[#333333] md:py-6 px-2 md:px-8'>
+        <main className='min-h-screen text-[#333333] px-4 py-8 md:px-8 lg:px-12'>
             <div className="max-w-4xl mx-auto">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
                     <h1 className="text-3xl sm:text-4xl font-bold">Minha Conta</h1>
