@@ -13,6 +13,7 @@ import PurchaseCard from './PurchaseCard';
 import { FilterOptionForUseSnapshot, OrderType } from '../utils/types';
 import ButtonPaginator from '../components/ButtonPaginator';
 import { usePaginatedQuery } from '../hooks/usePaginatedQuery';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 export default function MyProfile() {
     const { user } = useAuthContext();
@@ -51,7 +52,7 @@ export default function MyProfile() {
     }, []);
 
     useEffect(() => {
-        if (!userInfo) {
+        if (userInfo === undefined) {
             router.push('/login');
         }
     }, [userInfo, router]);
@@ -71,8 +72,8 @@ export default function MyProfile() {
         </div>
     );
 
-    if (!userInfo) {
-        return <h1>Loading...</h1>;
+    if (userInfo === null || !userInfo) {
+        return <LoadingIndicator />; // Mostra um estado de carregamento enquanto userInfo é null
     }
 
     return (
