@@ -6,7 +6,7 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, LogOut, RefreshCw } from 'lucide-react';
 import CustomerInfo from './CustomerInfo';
 import DeleteAccountDialog from './DeleteAccountDialog';
 import PurchaseCard from './PurchaseCard';
@@ -14,10 +14,12 @@ import { FilterOptionForUseSnapshot, OrderType } from '../utils/types';
 import ButtonPaginator from '../components/ButtonPaginator';
 import { usePaginatedQuery } from '../hooks/usePaginatedQuery';
 import LoadingIndicator from '../components/LoadingIndicator';
+import { useLogout } from '../hooks/useLogout';
 
 export default function MyProfile() {
     const { user } = useAuthContext();
     const { userInfo } = useUserInfo();
+    const { logout } = useLogout();
     const router = useRouter();
 
     const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[]>(() => 
@@ -115,7 +117,25 @@ export default function MyProfile() {
                         ) }
                     </section>
                 </div>
-                { userInfo && <div className='bg-yellow w-full flex justify-end'><DeleteAccountDialog userInfo={ userInfo } /></div> }
+                {
+                    userInfo
+                    && <div className='bg-yellow w-full flex justify-between'>
+                        <div>
+                            <DeleteAccountDialog userInfo={ userInfo } />
+                        </div>
+                        <Button
+                            className="text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white w-full hidden md:flex sm:w-auto text-lg md:text-xl lg:text-2xl p-4 md:p-6"
+                            onClick={ () => {
+                                logout();
+                                router.push('/');
+                            } } // Chama a função refresh do hook
+                            variant="outline"
+                        >
+                            <LogOut className="mr-2 h-4 w-4" />
+                                Sair
+                        </Button>
+                    </div>
+                }
             </div>
         </main>
     );
