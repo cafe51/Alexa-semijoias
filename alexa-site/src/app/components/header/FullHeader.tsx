@@ -119,7 +119,14 @@ const FullHeader: React.FC = () => {
                                 </div>
                                 <SearchBar />
                                 <div className="flex items-center space-x-10">
-                                    <UserIcon />
+                                    <div className='flex items-center space-x-2'>
+                                        <UserIcon />
+                                        {
+                                            userInfo
+                                                ? <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">{ userInfo?.nome }</span>
+                                                : <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">Entrar</span>
+                                        }
+                                    </div>
                                     <CartIcon isMobile={ isMobile }/>
                                 </div>
                             </>
