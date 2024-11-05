@@ -30,7 +30,7 @@ const validEmailDomains = [
 ];
 
 export default function RegisterForm2() {
-    const { signup, error: signupError } = useSignUp();
+    const { signup, error: signupError, message } = useSignUp();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
@@ -160,7 +160,7 @@ export default function RegisterForm2() {
     };
 
     // Efeito para redirecionar apenas quando shouldRedirect for true
-    if (shouldRedirect && !isSubmitting && !signupError && !localError) {
+    if (shouldRedirect && !isSubmitting && !signupError && !localError && !message) {
         router.push('/');
     }
 
@@ -307,6 +307,7 @@ export default function RegisterForm2() {
                     </p>
                 </div>
             ) }
+            { message && <p className='text-center text-green-600 mt-4'>{ message }</p> }
         </form>
     );
 }

@@ -9,7 +9,6 @@ import LoadingIndicator from '../components/LoadingIndicator';
 
 export default function Register() {
     const router = useRouter();
-    // const{ user } = useAuthContext();
     const  { userInfo } = useUserInfo();
 
     useEffect(() => {

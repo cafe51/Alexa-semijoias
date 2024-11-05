@@ -49,6 +49,10 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const unsubscribe = auth.onAuthStateChanged(async(user) => {
             if (user) {
                 try {
+                    if (!user.emailVerified) {
+                        return; // Interrompe o fluxo para impedir o login
+                    }
+
                     const [userDoc, idTokenResult] = await Promise.all([
                         getDoc(doc(projectFirestoreDataBase, 'usuarios', user.uid)),
                         getIdTokenResult(user, true),
@@ -59,6 +63,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
                     const hasAdminClaim = idTokenResult.claims.admin === true;
                     
                     const isAdmin = isAdminInFirestore && hasAdminClaim;
+
                     
                     dispatch({ type: 'AUTH_IS_READY', payload: { ...user } });
                     dispatch({ type: 'SET_ADMIN', payload: isAdmin });

@@ -79,9 +79,21 @@ export const useLogin = () => {
         setError(null); 
 
         try {
-            const res = await signInWithEmailAndPassword(auth, email, password); 
+            const res = await signInWithEmailAndPassword(auth, email, password);
+
+            // Bloqueia o login se o e-mail não estiver verificado
+            if (!res.user.emailVerified) {
+                setError('Por favor, verifique o e-mail para ativar sua conta.');
+                return; // Interrompe o fluxo para impedir o login
+            }
+
+            //console.log para debugar se o email não verficado causou interrupção no fluxo
+            console.log('XXXXXXXXXXXXXXXXXXXXX chegou até aqui XXXXXXXXXXXXXXXXXxx', res.user.emailVerified);
+
+            // Despacha o login apenas se o e-mail estiver verificado
             dispatch({ type: 'LOGIN', payload: res.user });
 
+            // Sincroniza o carrinho e define a permissão de admin
             await syncLocalCartToFirebase(res.user.uid); 
             await checkAndSetAdminClaim(res.user);
 

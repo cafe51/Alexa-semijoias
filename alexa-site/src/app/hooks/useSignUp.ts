@@ -1,31 +1,16 @@
 // app/hooks/useSignUp.ts
 
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from './useCollection';
-import { useLogin } from './useLogin';
-import { CartInfoType, UserType } from '../utils/types';
-import { useLocalStorage } from './useLocalStorage';
 import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
+import { UserType } from '../utils/types';
 
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
+    const [message, setMessage] = useState<null | string>(null); // Adiciona o estado para mensagens de feedback ao usuário
     const { addDocument: createNewUser } = useCollection<UserType>('usuarios');
-    const { addDocument: createNewCart } = useCollection<CartInfoType>('carrinhos');
-    const { getLocalCart, setLocalCart } = useLocalStorage();
-
-    const { login } = useLogin();
-
-    const syncLocalCartToFirebase = async(userId: string) => {
-        const localCart: CartInfoType[] = getLocalCart();
-        await Promise.all(localCart.map((item) => {
-            item.userId = userId;
-            return createNewCart(item);
-        }));
-    
-        setLocalCart([]);
-    };
 
     const signup = async(singInData : { email: string, password: string, nome: string, phone: string }) => {
         try {
@@ -35,9 +20,8 @@ export const useSignUp = () => {
 
             await createNewUser({ ...sigInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' }, res.user.uid);
 
-            await syncLocalCartToFirebase(res.user.uid);
-
-            await login(singInData.email, singInData.password);
+            await sendEmailVerification(res.user);
+            setMessage('Cadastro realizado com sucesso! Verifique sua caixa de entrada para confirmar seu e-mail e ativar sua conta.');
 
         } catch (err) {
             if (err instanceof Error) {
@@ -49,5 +33,5 @@ export const useSignUp = () => {
         }
     };
 
-    return { error, signup };
+    return { error, message, signup };
 };
