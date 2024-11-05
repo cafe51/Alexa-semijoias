@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
 
 interface LoginFormProps {
     loadingButton: boolean;
@@ -99,9 +100,9 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="text-sm sm:text-base">
-                        <a href="#" className="font-medium text-[#C48B9F] hover:text-[#D4AF37] transition-colors duration-300">
+                        <Link href="/recuperar-senha" className="font-medium text-[#C48B9F] hover:text-[#D4AF37] transition-colors duration-300">
                                 Esqueceu a senha?
-                        </a>
+                        </Link>
                     </div>
                 </div>
                 { loginErrorMessage && (
