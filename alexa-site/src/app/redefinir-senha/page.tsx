@@ -1,11 +1,11 @@
 // app/(seu-diretório-de-páginas)/redefinir-senha/page.tsx
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { auth } from '../firebase/config';
 
-const ResetPasswordPage = () => {
+const ResetPasswordPageContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const oobCode = searchParams.get('oobCode');
@@ -15,16 +15,13 @@ const ResetPasswordPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
-    // Verificação do código de redefinição ao carregar a página
     const verifyCode = async() => {
         if (!oobCode) {
-            console.log('AAAAAAAAAAA', oobCode);
             router.push('/');
             return;
         }
 
         try {
-            // Verifica se o código é válido e obtém o e-mail do usuário
             const userEmail = await verifyPasswordResetCode(auth, oobCode);
             setEmail(userEmail);
         } catch (err) {
@@ -58,13 +55,10 @@ const ResetPasswordPage = () => {
             <div className="max-w-md p-6 bg-white border border-gray-300 shadow-lg">
                 <h2 className="text-2xl font-semibold mb-4">Redefinir Senha</h2>
                 
-                { /* Renderiza erro se o link expirou ou é inválido */ }
                 { error && <p className="text-red-500 mb-4">{ error }</p> }
 
-                { /* Renderiza sucesso se a senha foi redefinida */ }
                 { success && <p className="text-green-500 mb-4">{ success }</p> }
 
-                { /* Renderiza o formulário se o link é válido e não há sucesso */ }
                 { !error && !success && email && (
                     <>
                         <p className="mb-4 text-gray-700">Redefina a senha para o e-mail: <strong>{ email }</strong></p>
@@ -98,7 +92,6 @@ const ResetPasswordPage = () => {
                     </>
                 ) }
 
-                { /* Renderiza mensagem de erro se o link for inválido */ }
                 { !oobCode && (
                     <p className="text-gray-700">
                         O código de redefinição é inválido ou expirou. Por favor, solicite uma nova redefinição de senha.
@@ -108,5 +101,11 @@ const ResetPasswordPage = () => {
         </div>
     );
 };
+
+const ResetPasswordPage = () => (
+    <Suspense fallback={ <p>Carregando...</p> }>
+        <ResetPasswordPageContent />
+    </Suspense>
+);
 
 export default ResetPasswordPage;
