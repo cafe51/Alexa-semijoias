@@ -1,4 +1,4 @@
-// app/(seu-diretório-de-páginas)/redefinir-senha/[...authAction]/page.tsx
+// app/redefinir-senha/[...authAction]/page.tsx
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
