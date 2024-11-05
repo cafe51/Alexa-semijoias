@@ -4,25 +4,23 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
+import Link from 'next/link';
 import { auth } from '../../firebase/config';
 
 const ResetPasswordPageContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // Extrai o código e o modo da URL
     const oobCode = searchParams.get('oobCode');
     const mode = searchParams.get('mode');
-    
+
     const [email, setEmail] = useState<string | null>(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
+    const [success, setSuccess] = useState<boolean>(false);
 
-    // Verifica o código de redefinição ao carregar a página
     const verifyCode = async() => {
-        // Redireciona para a página inicial se não houver um código ou o modo não for de redefinição de senha
         if (!oobCode || mode !== 'resetPassword') {
             router.push('/');
             return;
@@ -50,8 +48,7 @@ const ResetPasswordPageContent = () => {
 
         try {
             await confirmPasswordReset(auth, oobCode as string, newPassword);
-            setSuccess('Senha redefinida com sucesso! Você pode fazer login agora.');
-            setTimeout(() => router.push('/login'), 3000);
+            setSuccess(true);
         } catch (err) {
             setError('Ocorreu um erro ao redefinir a senha.');
         }
@@ -59,54 +56,55 @@ const ResetPasswordPageContent = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="max-w-md p-6 bg-white border border-gray-300 shadow-lg">
+            <div className="max-w-md p-6 bg-white border border-gray-300 shadow-lg rounded-lg text-center">
                 <h2 className="text-2xl font-semibold mb-4">Redefinir Senha</h2>
 
-                { /* Renderiza erro se o link expirou ou é inválido */ }
                 { error && <p className="text-red-500 mb-4">{ error }</p> }
 
-                { /* Renderiza sucesso se a senha foi redefinida */ }
-                { success && <p className="text-green-500 mb-4">{ success }</p> }
-
-                { /* Renderiza o formulário se o link é válido e não há sucesso */ }
-                { !error && !success && email && (
-                    <>
-                        <p className="mb-4 text-gray-700">Redefina a senha para o e-mail: <strong>{ email }</strong></p>
-                        <form onSubmit={ handleSubmit } className="flex flex-col space-y-4">
-                            <div>
-                                <label htmlFor="newPassword" className="block font-medium mb-1">Nova Senha</label>
-                                <input
-                                    type="password"
-                                    id="newPassword"
-                                    value={ newPassword }
-                                    onChange={ (e) => setNewPassword(e.target.value) }
-                                    required
-                                    className="p-2 border border-gray-400 rounded w-full"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="confirmPassword" className="block font-medium mb-1">Confirmar Nova Senha</label>
-                                <input
-                                    type="password"
-                                    id="confirmPassword"
-                                    value={ confirmPassword }
-                                    onChange={ (e) => setConfirmPassword(e.target.value) }
-                                    required
-                                    className="p-2 border border-gray-400 rounded w-full"
-                                />
-                            </div>
-                            <button type="submit" className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                Redefinir Senha
-                            </button>
-                        </form>
-                    </>
-                ) }
-
-                { /* Renderiza mensagem de erro se o link for inválido */ }
-                { !oobCode && (
-                    <p className="text-gray-700">
-                        O código de redefinição é inválido ou expirou. Por favor, solicite uma nova redefinição de senha.
-                    </p>
+                { success ? (
+                    <div className="flex flex-col items-center">
+                        <p className="text-green-600 font-medium mb-4">
+                            Senha redefinida com sucesso! Agora você pode fazer login com sua nova senha.
+                        </p>
+                        <Link href="/login" className="mt-4 inline-block bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition duration-200">
+                                Ir para Login
+                        </Link>
+                    </div>
+                ) : (
+                    !error && email && (
+                        <>
+                            <p className="mb-4 text-gray-700">
+                                Redefina a senha para o e-mail: <strong>{ email }</strong>
+                            </p>
+                            <form onSubmit={ handleSubmit } className="flex flex-col space-y-4">
+                                <div>
+                                    <label htmlFor="newPassword" className="block font-medium mb-1">Nova Senha</label>
+                                    <input
+                                        type="password"
+                                        id="newPassword"
+                                        value={ newPassword }
+                                        onChange={ (e) => setNewPassword(e.target.value) }
+                                        required
+                                        className="p-2 border border-gray-400 rounded w-full"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="confirmPassword" className="block font-medium mb-1">Confirmar Nova Senha</label>
+                                    <input
+                                        type="password"
+                                        id="confirmPassword"
+                                        value={ confirmPassword }
+                                        onChange={ (e) => setConfirmPassword(e.target.value) }
+                                        required
+                                        className="p-2 border border-gray-400 rounded w-full"
+                                    />
+                                </div>
+                                <button type="submit" className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">
+                                    Redefinir Senha
+                                </button>
+                            </form>
+                        </>
+                    )
                 ) }
             </div>
         </div>
