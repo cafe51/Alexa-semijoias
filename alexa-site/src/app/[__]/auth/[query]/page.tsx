@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import ConfirmEmail from '@/app/components/ConfirmEmail';
+import EmailConfirmationPage from '@/app/components/EmailConfirmationPage';
 import ResetPassword from '@/app/components/ResetPassword';
 import { useEffect } from 'react';
 
@@ -36,9 +36,9 @@ export default function AuthActionPage({ params }: AuthActionPageProps) {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center py-8 bg-gray-100">
             <div className="max-w-md p-6 bg-white border border-gray-300 shadow-lg rounded-lg text-center">
-                { mode === 'verifyEmail' && <ConfirmEmail oobCode={ oobCode } /> }
+                { mode === 'verifyEmail' && <EmailConfirmationPage oobCode={ oobCode } /> }
                 { mode === 'resetPassword' && <ResetPassword oobCode={ oobCode } /> }
             </div>
         </div>
