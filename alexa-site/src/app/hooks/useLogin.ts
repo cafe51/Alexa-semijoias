@@ -75,16 +75,18 @@ export const useLogin = () => {
         }
     };
 
-    const login = async(email: string, password: string) => {
-        setError(null); 
+    const login = async(email: string, password: string, onUnverifiedEmail?: (email: string) => void) => {
+        setError(null);
 
         try {
             const res = await signInWithEmailAndPassword(auth, email, password);
 
             // Bloqueia o login se o e-mail não estiver verificado
             if (!res.user.emailVerified) {
-                setError('Por favor, verifique o e-mail para ativar sua conta.');
-                return; // Interrompe o fluxo para impedir o login
+                if (onUnverifiedEmail) {
+                    onUnverifiedEmail(email);
+                }
+                return;
             }
 
             //console.log para debugar se o email não verficado causou interrupção no fluxo

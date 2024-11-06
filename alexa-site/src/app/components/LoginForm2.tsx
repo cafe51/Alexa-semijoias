@@ -1,7 +1,6 @@
-// app/components/LoginForm.tsx
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -10,15 +9,15 @@ import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 
 interface LoginFormProps {
-    loadingButton: boolean;
-    setLoadingButton: Dispatch<SetStateAction<boolean>>;
+    onUnverifiedEmail: (email: string) => void;
     onClick: () => void;
 }
 
-export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps) {
+export default function LoginForm({ onUnverifiedEmail, onClick }: LoginFormProps) {
     const { error, login } = useLogin();
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [registerValues, setRegisterValues] = useState({
         email: '',
         password: '',
@@ -26,26 +25,29 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-    useEffect(() => {
-        setLoadingButton(false);
-    }, []);
-
     const isButtonDisabled = () => {
-        return !(registerValues.email.length > 0 && registerValues.password.length > 0);
+        return !(registerValues.email.length > 0 && registerValues.password.length > 0) || isSubmitting;
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setRegisterValues({ ...registerValues, [name]: value });
+        // Limpa as mensagens de erro quando o usuário começa a digitar
+        setLoginErrorMessage('');
     };
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setLoadingButton(true);
+        setIsSubmitting(true);
         setLoginErrorMessage('');
 
         try {
-            login(registerValues.email, registerValues.password);
+            // Passa o callback onUnverifiedEmail para o hook de login
+            await login(
+                registerValues.email, 
+                registerValues.password,
+                onUnverifiedEmail,
+            );
         } catch (error) {
             if (error instanceof Error) {
                 console.log(error.message);
@@ -54,7 +56,7 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
             }
             setLoginErrorMessage('Usuário ou senha inválidos');
         } finally {
-            setLoadingButton(false);
+            setIsSubmitting(false);
         }
     };
 
@@ -62,8 +64,11 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
         <form onSubmit={ handleSubmit } className="space-y-4">
             <div className="space-y-5">
                 <div className="space-y-2">
-                    <Label htmlFor="email" className="text-base sm:text-lg md:text-xl font-medium text-[#333333]">
-                            E-mail
+                    <Label 
+                        htmlFor="email" 
+                        className="text-base sm:text-lg md:text-xl font-medium text-[#333333]"
+                    >
+                        E-mail
                     </Label>
                     <Input
                         id="email"
@@ -72,12 +77,17 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
                         placeholder="seu@email.com"
                         className="w-full px-3 py-2 sm:py-2.5 md:py-3 lg:py-3.5 text-sm sm:text-base md:text-lg border border-gray-300 rounded-md text-[#333333] focus:ring-2 focus:ring-[#C48B9F]"
                         onChange={ handleChange }
+                        value={ registerValues.email }
+                        disabled={ isSubmitting }
                         required
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="password" className="text-base sm:text-lg md:text-xl font-medium text-[#333333]">
-                            Senha
+                    <Label 
+                        htmlFor="password" 
+                        className="text-base sm:text-lg md:text-xl font-medium text-[#333333]"
+                    >
+                        Senha
                     </Label>
                     <div className="relative">
                         <Input
@@ -87,12 +97,15 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
                             placeholder="••••••••"
                             className="w-full px-3 py-2 sm:py-2.5 md:py-3 lg:py-3.5 text-sm sm:text-base md:text-lg border border-gray-300 rounded-md text-[#333333] pr-10 focus:ring-2 focus:ring-[#C48B9F]"
                             onChange={ handleChange }
+                            value={ registerValues.password }
+                            disabled={ isSubmitting }
                             required
                         />
                         <button
                             type="button"
                             onClick={ togglePasswordVisibility }
                             className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-[#333333] transition duration-200"
+                            disabled={ isSubmitting }
                         >
                             { showPassword ? <EyeOff size={ 20 } /> : <Eye size={ 20 } /> }
                         </button>
@@ -100,8 +113,11 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="text-sm sm:text-base">
-                        <Link href="/recuperar-senha" className="font-medium text-[#C48B9F] hover:text-[#D4AF37] transition-colors duration-300">
-                                Esqueceu a senha?
+                        <Link 
+                            href="/recuperar-senha" 
+                            className="font-medium text-[#C48B9F] hover:text-[#D4AF37] transition-colors duration-300"
+                        >
+                            Esqueceu a senha?
                         </Link>
                     </div>
                 </div>
@@ -114,9 +130,9 @@ export default function LoginForm({ setLoadingButton, onClick }: LoginFormProps)
                     disabled={ isButtonDisabled() }
                     onClick={ onClick }
                     type="submit"
-                    className="w-full bg-[#D4AF37] hover:bg-[#C48B9F] text-white font-semibold py-2.5 sm:py-3 md:py-3.5 px-4 rounded-md text-sm sm:text-base md:text-lg transition-all duration-300"
+                    className="w-full bg-[#D4AF37] hover:bg-[#C48B9F] text-white font-semibold py-2.5 sm:py-3 md:py-3.5 px-4 rounded-md text-sm sm:text-base md:text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                        Entrar
+                    { isSubmitting ? 'Entrando...' : 'Entrar' }
                 </Button>
                 { error && <p className="text-red-500 text-sm sm:text-base md:text-lg">{ error }</p> }
             </div>
