@@ -1,7 +1,7 @@
 // src/app/components/register/RegisterForm2.tsx
 import { useState } from 'react';
 import { useSignUp } from '@/app/hooks/useSignUp';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import InputField from './InputField';
 import { Eye, EyeOff } from 'lucide-react';
@@ -29,12 +29,12 @@ const validEmailDomains = [
     'us', 'uk', 'ca', 'au', 'de', 'fr', 'jp',
 ];
 
-export default function RegisterForm2() {
-    const { signup, error: signupError, message } = useSignUp();
-    const router = useRouter();
-    const [isSubmitting, setIsSubmitting] = useState(false);
+export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (email: string | undefined) => void}) {
+    const { signup, error: signupError, isLoading } = useSignUp();
+    // const router = useRouter();
     const [localError, setLocalError] = useState<string | null>(null);
-    const [shouldRedirect, setShouldRedirect] = useState(false);
+    // const [isSubmitting, setIsSubmitting] = useState(false);
+    // const [shouldRedirect, setShouldRedirect] = useState(false);
 
     const [formData, setFormData] = useState<FormData>({
         nome: '',
@@ -111,7 +111,7 @@ export default function RegisterForm2() {
 
         // Reseta os estados de erro e redirecionamento quando o usuário começa a digitar
         setLocalError(null);
-        setShouldRedirect(false);
+        // setShouldRedirect(false);
     };
     
     const formatPhoneNumber = (value: string) => {
@@ -124,28 +124,34 @@ export default function RegisterForm2() {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
-        if (!validateForm() || isSubmitting) {
+        // if (!validateForm() || isSubmitting) {
+        //     return;
+        // }
+
+        if (!validateForm()|| isLoading) {
             return;
         }
 
-        setIsSubmitting(true);
+        // setIsSubmitting(true);
         setLocalError(null);
-        setShouldRedirect(false);
+        // setShouldRedirect(false);
         
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { confirmPassword, ...dataObj } = formData;
             
-            await signup(dataObj).catch(error => {
-                throw error;
-            });
+            const result = await signup(dataObj);
+
+            if (result.success && result.verificationEmailSent) {
+                setSignedEmail(result.email ? result.email : undefined);
+            }
 
             // Aguarda um momento para garantir que o estado de erro foi atualizado
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            if (!signupError && !localError) {
-                setShouldRedirect(true);
-            }
+            // if (!signupError && !localError) {
+            //     setShouldRedirect(true);
+            // }
         } catch (error) {
             console.error('Erro no cadastro:', error);
             if (error instanceof Error) {
@@ -153,16 +159,17 @@ export default function RegisterForm2() {
             } else {
                 setLocalError('Ocorreu um erro desconhecido.');
             }
-            setShouldRedirect(false);
-        } finally {
-            setIsSubmitting(false);
+            // setShouldRedirect(false);
+        // } finally {
+        //     setIsSubmitting(false);
+        // }
         }
     };
 
     // Efeito para redirecionar apenas quando shouldRedirect for true
-    if (shouldRedirect && !isSubmitting && !signupError && !localError && !message) {
-        router.push('/');
-    }
+    // if (shouldRedirect && !isSubmitting && !signupError && !localError && !message) {
+    //     router.push('/');
+    // }
 
     return (
         <form onSubmit={ handleSubmit } className="w-full max-w-lg mx-auto space-y-6 sm:space-y-8 p-4 sm:p-6 rounded-xl bg-white shadow-sm">
@@ -287,9 +294,9 @@ export default function RegisterForm2() {
                 shadow-sm 
                 hover:shadow-md
             ` }
-                    disabled={ isSubmitting }
+                    disabled={ isLoading }
                 >
-                    { isSubmitting ? (
+                    { isLoading ? (
                         <span className="flex items-center justify-center space-x-2">
                             <span className="animate-pulse">Cadastrando...</span>
                         </span>
@@ -307,7 +314,7 @@ export default function RegisterForm2() {
                     </p>
                 </div>
             ) }
-            { message && <p className='text-center text-green-600 mt-4'>{ message }</p> }
+            { /* { message && <p className='text-center text-green-600 mt-4'>{ message }</p> } */ }
         </form>
     );
 }

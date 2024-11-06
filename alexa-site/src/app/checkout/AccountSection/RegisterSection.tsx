@@ -1,12 +1,16 @@
 // app/checkout/AccountSection/RegisterSection.tsx
+'use client';
+import EmailVerification from '@/app/components/EmailVerification';
 import RegisterForm from '@/app/components/register/RegisterForm2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
 
 interface RegisterSectionProps {
     setShowLogin: (isLogin: boolean) => void;
 }
 
 export default function RegisterSection({ setShowLogin }: RegisterSectionProps) {
+    const [signedEmail, setSignedEmail] = useState<string | undefined>(undefined);
 
     return (
         <section className=" bg-[#FAF9F6] flex items-center justify-center px-0 py-0" >
@@ -21,7 +25,15 @@ export default function RegisterSection({ setShowLogin }: RegisterSectionProps) 
                     </p>
                 </CardHeader>
                 <CardContent>
-                    <RegisterForm/>
+                    { signedEmail ? (
+                        <EmailVerification
+                            email={ signedEmail }
+                            onBackToLogin={ () => setShowLogin(true) }
+                        />
+                    ) : (
+                        <RegisterForm setSignedEmail={ (email) => setSignedEmail(email) }/>
+                    ) }
+                    
                 </CardContent>
             </Card>
         </section>

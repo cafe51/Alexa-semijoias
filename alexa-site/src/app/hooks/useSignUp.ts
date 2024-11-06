@@ -7,21 +7,44 @@ import { useCollection } from './useCollection';
 import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
 import { UserType } from '../utils/types';
 
+export interface SignUpResult {
+    success: boolean;
+    verificationEmailSent?: boolean;
+    email?: string;
+}
+
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
-    const [message, setMessage] = useState<null | string>(null); // Adiciona o estado para mensagens de feedback ao usuário
+    const [isLoading, setIsLoading] = useState(false);
     const { addDocument: createNewUser } = useCollection<UserType>('usuarios');
 
-    const signup = async(singInData : { email: string, password: string, nome: string, phone: string }) => {
+    const signup = async(signInData: { 
+        email: string, 
+        password: string, 
+        nome: string, 
+        phone: string 
+    }): Promise<SignUpResult> => {
+        setError(null);
+        setIsLoading(true);
         try {
-            const res = await createUserWithEmailAndPassword(auth, singInData.email, singInData.password);
+            const res = await createUserWithEmailAndPassword(auth, signInData.email, signInData.password);
+
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { password, ...sigInDataWithoutPassword } = singInData;
+            const { password, ...signInDataWithoutPassword } = signInData;
 
-            await createNewUser({ ...sigInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' }, res.user.uid);
+            await createNewUser(
+                { ...signInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' }, 
+                res.user.uid,
+            );
 
+            
             await sendEmailVerification(res.user);
-            setMessage('Cadastro realizado com sucesso! Verifique sua caixa de entrada para confirmar seu e-mail e ativar sua conta.');
+            
+            return {
+                success: true,
+                verificationEmailSent: true,
+                email: signInData.email,
+            };
 
         } catch (err) {
             if (err instanceof Error) {
@@ -30,8 +53,11 @@ export const useSignUp = () => {
             } else {
                 setError('Ocorreu um erro desconhecido.');
             }
+            return { success: false };
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    return { error, message, signup };
+    return { error, isLoading, signup };
 };

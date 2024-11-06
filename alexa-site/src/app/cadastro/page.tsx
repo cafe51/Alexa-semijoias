@@ -1,13 +1,15 @@
 // app/cadastro/page.tsx
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import RegisterForm from '../components/register/RegisterForm2';
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import LoadingIndicator from '../components/LoadingIndicator';
+import EmailVerification from '../components/EmailVerification';
 
 export default function Register() {
+    const [signedEmail, setSignedEmail] = useState<string | undefined>(undefined);
     const router = useRouter();
     const  { userInfo } = useUserInfo();
 
@@ -28,16 +30,25 @@ export default function Register() {
                     <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333] p-0 m-0">Crie sua conta</CardTitle>
                 </CardHeader>
                 <CardContent className="max-w-md mx-auto rounded-lg">
-                    <RegisterForm/>
+                    { signedEmail ? (
+                        <EmailVerification
+                            email={ signedEmail }
+                        />
+                    ) : (
+                        <RegisterForm setSignedEmail={ (email) => setSignedEmail(email) }/>
+                    ) }
+                    
                 </CardContent>
-                <CardFooter className="text-center">
-                    <p className="text-sm text-[#333333]">
+                { !signedEmail && (
+                    <CardFooter className="text-center">
+                        <p className="text-sm text-[#333333]">
                 Já tem uma conta?{ ' ' }
-                        <a href="/login" className="font-medium text-[#C48B9F] hover:text-[#D4AF37]">
+                            <a href="/login" className="font-medium text-[#C48B9F] hover:text-[#D4AF37]">
                   Faça login
-                        </a>
-                    </p>
-                </CardFooter>
+                            </a>
+                        </p>
+                    </CardFooter>
+                ) }
             </Card>
         </div>
     );

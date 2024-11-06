@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { auth } from '../firebase/config';
 import { sendEmailVerification } from 'firebase/auth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Clock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface EmailVerificationProps {
   email: string;
-  onBackToLogin: () => void;
+  onBackToLogin?: () => void;
 }
 
 const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => {
+    const router = useRouter();
     const [sending, setSending] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [cooldown, setCooldown] = useState(0);
+
+    useEffect(() => {
+        startCooldown();
+    }, []);
+
 
     const startCooldown = () => {
         setCooldown(60); // 60 segundos de cooldown
@@ -80,7 +87,7 @@ const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => 
                 </Alert>
             ) }
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col gap-4 justify-center items-center">
                 <Button
                     onClick={ handleResendVerification }
                     disabled={ sending || cooldown > 0 }
@@ -89,7 +96,7 @@ const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => 
                     { cooldown > 0 ? (
                         <span className="flex items-center gap-2">
                             <Clock size={ 16 } />
-              Aguarde { cooldown }s
+                            Reenviar Email de Verificação { cooldown }s
                         </span>
                     ) : sending ? (
                         'Enviando...'
@@ -99,11 +106,11 @@ const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => 
                 </Button>
         
                 <Button
-                    onClick={ onBackToLogin }
+                    onClick={ onBackToLogin ? onBackToLogin : () => { router.push('/login'); } }
                     variant="outline"
                     className="w-full sm:w-auto border-[#C48B9F] text-[#C48B9F] hover:bg-[#C48B9F] hover:text-white"
                 >
-          Voltar para Login
+                    { onBackToLogin ? 'Voltar para Login' : 'Ir para sua conta' }
                 </Button>
             </div>
 
