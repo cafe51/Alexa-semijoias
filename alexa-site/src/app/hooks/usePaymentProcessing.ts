@@ -115,8 +115,8 @@ export const usePaymentProcessing = () => {
                 first_name: nameGenerator(user.nome).firstName,
                 last_name: nameGenerator(user.nome).lastName,
                 phone: {
-                    area_code: '92',
-                    number: '988065301',
+                    area_code: user.phone[0] + user.phone[1],
+                    number: user.phone.split('').slice(2).join(''),
                 },
                 address: {
                     zip_code: user.address?.cep,
