@@ -1,23 +1,31 @@
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
 import { IPaymentBrickCustomization } from '@mercadopago/sdk-react/bricks/payment/type';
-import { FireBaseDocument, UseCheckoutStateType, UserType } from '../../utils/types';
-import { useUserInfo } from '../../hooks/useUserInfo';
-import { usePaymentProcessing } from '../../hooks/usePaymentProcessing';
+import { FireBaseDocument, UseCheckoutStateType, UserType } from '../../../app/utils/types';
+import { useUserInfo } from '../../../app/hooks/useUserInfo';
+import { usePaymentProcessing } from '../../../app/hooks/usePaymentProcessing';
 import { useEffect } from 'react';
-import { nameGenerator } from '@/app/utils/nameGenerator';
-import { convertArrayToString } from '@/app/utils/convertArrayToString';
-// import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';
+import { nameGenerator } from '../../../app/utils/nameGenerator';
+import { convertArrayToString } from '../../../app/utils/convertArrayToString';
 
 interface PaymentBrickProps {
   totalAmount: number;
   user: UserType & FireBaseDocument;
   state: UseCheckoutStateType;
-  preferenceId: string,
-  setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void
-  setShowPaymentSection: (showPaymentSection: boolean) => void
+  preferenceId: string;
+  setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void;
+  setShowPaymentSection: (showPaymentSection: boolean) => void;
+  setIsProcessingPayment: (isProcessing: boolean) => void;
 }
 
-export default function PaymentBrick({ totalAmount, user, state, preferenceId, setShowPaymentFailSection, setShowPaymentSection }: PaymentBrickProps) {
+export default function PaymentBrick({ 
+    totalAmount, 
+    user, 
+    state, 
+    preferenceId, 
+    setShowPaymentFailSection, 
+    setShowPaymentSection,
+    setIsProcessingPayment, 
+}: PaymentBrickProps) {
     const { carrinho } = useUserInfo();
 
     useEffect(() => {
@@ -65,7 +73,6 @@ export default function PaymentBrick({ totalAmount, user, state, preferenceId, s
                             units: i.quantidade,
                             value: i.value.promotionalPrice || i.value.price,
                             description: i.name + ' ' + convertArrayToString(i.categories),
-
                         };
                     }) : [{
                         name: '',
@@ -110,7 +117,6 @@ export default function PaymentBrick({ totalAmount, user, state, preferenceId, s
                     },
                 },
                 // payer: {
-
                 //     email: user.email,
                 //     firstName: user.nome.split(' ')[0],
                 //     lastName: user.nome.split(' ')[1],
@@ -124,10 +130,12 @@ export default function PaymentBrick({ totalAmount, user, state, preferenceId, s
                 //         zipCode: user.address?.cep,
                 //     },
                 // },
-
             } }
             customization={ customization }
-            onSubmit={ (params) => onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection) }
+            onSubmit={ async(params) => {
+                setIsProcessingPayment(true);
+                return onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection);
+            } }
             onReady={ onReady }
             onError={ onError }
         />

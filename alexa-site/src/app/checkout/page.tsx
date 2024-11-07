@@ -24,6 +24,7 @@ export default function Checkout() {
     const [showPaymentSection, setShowPaymentSection] = useState(false);
     const [preferenceId, setPreferenceId] = useState<string | undefined>(undefined);
     const [showPaymentFailSection, setShowPaymentFailSection] = useState<boolean | string>(false);
+    const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
     const { screenSize } = useWindowSize();
 
@@ -53,14 +54,14 @@ export default function Checkout() {
     }, [carrinho]);
 
     useEffect(() => {
-        if (!isCartLoading) {
+        if (!isCartLoading && !isProcessingPayment) {
             if (carrinho && carrinho.length > 0) {
                 setLoadingScreen(false);
             } else {
                 router.push('/carrinho');
             }
         }
-    }, [carrinho, isCartLoading, router]);
+    }, [carrinho, isCartLoading, router, isProcessingPayment]);
 
     useEffect(() => {
         if (!userInfo?.address) {
@@ -122,6 +123,7 @@ export default function Checkout() {
                         setShowPaymentSection={ setShowPaymentSection }
                         showPaymentFailSection={ showPaymentFailSection }
                         setShowPaymentFailSection={ setShowPaymentFailSection }
+                        setIsProcessingPayment={ setIsProcessingPayment }
                     />
                 </div>
             ) : screenSize === 'medium' ? (
@@ -172,6 +174,7 @@ export default function Checkout() {
                                 setShowPaymentSection={ setShowPaymentSection }
                                 showPaymentFailSection={ showPaymentFailSection }
                                 setShowPaymentFailSection={ setShowPaymentFailSection }
+                                setIsProcessingPayment={ setIsProcessingPayment }
                             />
                         </div>
                     </div>
@@ -212,6 +215,7 @@ export default function Checkout() {
                             setShowPaymentSection={ setShowPaymentSection }
                             showPaymentFailSection={ showPaymentFailSection }
                             setShowPaymentFailSection={ setShowPaymentFailSection }
+                            setIsProcessingPayment={ setIsProcessingPayment }
                         />
                     </div>
     
@@ -246,4 +250,3 @@ export default function Checkout() {
         </main>
     );
 }
-

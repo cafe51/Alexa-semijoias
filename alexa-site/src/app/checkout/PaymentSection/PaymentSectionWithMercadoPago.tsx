@@ -12,6 +12,7 @@ interface PaymentSectionWithMercadoPagoProps {
     setShowPaymentSection: (showPaymentSection: boolean) => void;
     showPaymentFailSection: boolean | string;
     setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void;
+    setIsProcessingPayment: (isProcessing: boolean) => void;
 }
 
 export default function PaymentSectionWithMercadoPago({
@@ -23,6 +24,7 @@ export default function PaymentSectionWithMercadoPago({
     setShowPaymentSection,
     showPaymentFailSection,
     setShowPaymentFailSection,
+    setIsProcessingPayment,
 }: PaymentSectionWithMercadoPagoProps) {
     return (
         <>
@@ -38,6 +40,7 @@ export default function PaymentSectionWithMercadoPago({
                 preferenceId={ preferenceId }
                 setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
                 setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
+                setIsProcessingPayment={ setIsProcessingPayment }
             />
             }
             {
@@ -47,7 +50,8 @@ export default function PaymentSectionWithMercadoPago({
                 setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
                 showPaymentFailSection= { showPaymentFailSection }
             />
-                // <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
+            // <PaymentSection cartPrice={ cartPrice } handleSelectedPaymentOption={ handleSelectedPaymentOption } state={ state }/>
+
             }
         </>
     );

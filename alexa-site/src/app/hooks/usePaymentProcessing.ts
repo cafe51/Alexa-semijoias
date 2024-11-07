@@ -92,6 +92,8 @@ export const usePaymentProcessing = () => {
                 }),
             );
 
+            router.push(`/pedido/${paymentId}`);
+
             console.log('Pedido finalizado com sucesso');
         } catch (error) {
             console.error('Erro ao criar o pedido:', error);
@@ -107,16 +109,14 @@ export const usePaymentProcessing = () => {
         carrinho: ProductCartType[],
         setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void,
         setShowPaymentSection: (showPaymentSection: boolean) => void,
-    ) => {
+    ): Promise<void> => {
         try {
-
-
             const payerAddInfo = {
                 first_name: nameGenerator(user.nome).firstName,
                 last_name: nameGenerator(user.nome).lastName,
                 phone: {
-                    area_code: user.phone[0] + user.phone[1],
-                    number: user.phone.split('').slice(2).join(''),
+                    area_code: user.phone ? user.phone[0] + user.phone[1] : '',
+                    number: user.phone ? user.phone.split('').slice(2).join('') : '',
                 },
                 address: {
                     zip_code: user.address?.cep,
@@ -146,7 +146,6 @@ export const usePaymentProcessing = () => {
                     };
                 }),
                 payer: payerAddInfo,
-                // payer: {email: 'cafecafe51@hotmail.com'},
                 shipments: {
                     receiver_address: {
                         zip_code: user.address?.cep,
@@ -156,7 +155,6 @@ export const usePaymentProcessing = () => {
                         street_number: user.address?.numero,
                     },
                 }, 
-                
             };
 
             const response = await axios.post('/api/payment', {
@@ -166,8 +164,6 @@ export const usePaymentProcessing = () => {
                 external_reference: user.id,
                 payer: payer,
                 additional_info: additionalInfo,
-                // transaction_amount: 
-                // statement_descriptor: 'statement_descriptor_test',
             }, {
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -268,26 +264,22 @@ export const usePaymentProcessing = () => {
                 qrCodeBase64: paymentResponse.point_of_interaction.transaction_data?.qr_code_base64 || '',
                 ticketUrl: paymentResponse.point_of_interaction.transaction_data?.ticket_url || '',
             } : undefined;
-            try {
-                await finishPayment(
-                    orderStatus,
-                    paymentId,
-                    paymentResponse.payment_method_id,
-                    paymentResponse.installments ? paymentResponse.installments : null,
-                    totalAmount,
-                    user,
-                    state,
-                    carrinho,
-                    pixPaymentResponse,
-                );
-                router.push(`/pedido/${paymentId}`);
-            } catch (error) {
-                console.error('Erro ao finalizar o pagamento:', error);
-                await cancelPayment(paymentId);
-            }
+
+            await finishPayment(
+                orderStatus,
+                paymentId,
+                paymentResponse.payment_method_id,
+                paymentResponse.installments ? paymentResponse.installments : null,
+                totalAmount,
+                user,
+                state,
+                carrinho,
+                pixPaymentResponse,
+            );
 
         } catch (error) {
             console.error('Erro ao processar o pagamento:', error);
+            throw error; // Propaga o erro para ser tratado pelo componente
         }
     };
 
