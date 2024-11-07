@@ -38,6 +38,26 @@ export const usePaymentProcessing = () => {
         }
     };
 
+    const sendEmail = async(paymentId: string) => {
+        try {
+            const response = await axios.post(
+                '/api/send_email_confirmation/',
+                { paymentId: paymentId }, 
+                { headers: { 'Content-Type': 'application/json' } },
+            );
+
+            if (response.status === 200) {
+                console.log('Email enviado com sucesso:', paymentId);
+            } else {
+                console.error('Falha ao enviar o email:', paymentId);
+                throw new Error('Falha ao enviar o email');
+            }
+        } catch (error) {
+            console.error('Erro ao enviar o email:', error);
+            throw error;
+        }
+    };
+
     const finishPayment = async(
         orderStatus: StatusType,
         paymentId: string,
@@ -276,6 +296,8 @@ export const usePaymentProcessing = () => {
                 carrinho,
                 pixPaymentResponse,
             );
+
+            await sendEmail(paymentId);
 
         } catch (error) {
             console.error('Erro ao processar o pagamento:', error);
