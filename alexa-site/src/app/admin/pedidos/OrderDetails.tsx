@@ -6,7 +6,6 @@ import PixPayment from '@/app/components/PixPayment';
 import TryNewOrderButton from './TryNewOrderButton';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { usePaymentProcessing } from '@/app/hooks/usePaymentProcessing';
 import CustomerInfo from './CustomerInfo';
 import PaymentSummary from './PaymentSummary';
 import DeliveryAddress from './DeliveryAddress';
@@ -15,6 +14,7 @@ import OrderStatus from './OrderStatus';
 import { Button } from '@/components/ui/button';
 import { XCircle, RefreshCw } from 'lucide-react';
 import { useWindowSize } from '@/app/hooks/useWindowSize';
+import { cancelPayment } from '@/app/utils/apiCall';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -29,8 +29,6 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
     const [pedidoState, setPedidoState] = useState(pedido);
     const [status, setStatus] = useState<StatusType>(pedido.status);
     const [showPixPayment, setShowPixPayment] = useState(false);
-    const { cancelPayment } = usePaymentProcessing();
-
 
     useEffect(() => {
         const conditionsToShowPixPayment = pedidoState.status === 'aguardando pagamento'

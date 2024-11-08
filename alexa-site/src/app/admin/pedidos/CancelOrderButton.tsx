@@ -1,6 +1,6 @@
 import LargeButton from '@/app/components/LargeButton';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import { usePaymentProcessing } from '@/app/hooks/usePaymentProcessing';
+import { cancelPayment } from '@/app/utils/apiCall';
 // import { useCollection } from '@/app/hooks/useCollection';
 // import { useManageProductStock } from '@/app/hooks/useManageProductStock';
 import { FireBaseDocument, OrderType } from '@/app/utils/types';
@@ -13,7 +13,6 @@ interface CancelOrderButtonProps {
 
 export default function CancelOrderButton({ pedido, changeStatus }: CancelOrderButtonProps) {
     const [confirmCancelModal, setConfirmCancelModal] = useState(false);
-    const { cancelPayment } = usePaymentProcessing();
 
     const cancelOrder = async() => {
         cancelPayment(pedido.id);
