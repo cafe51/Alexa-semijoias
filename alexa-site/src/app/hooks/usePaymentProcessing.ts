@@ -83,9 +83,9 @@ export const usePaymentProcessing = () => {
             status: orderStatus,
             userId: user.id,
             valor: {
-                frete: deliveryPrice,
-                soma: (totalAmount - deliveryPrice) || 0,
-                total: (totalAmount || 0) + deliveryPrice,
+                frete: deliveryPrice || 0,
+                soma: ((totalAmount || 0) - (deliveryPrice || 0)) || 0,
+                total: totalAmount || 0,
             },
             totalQuantity,
             paymentOption: selectedPaymentOption,
