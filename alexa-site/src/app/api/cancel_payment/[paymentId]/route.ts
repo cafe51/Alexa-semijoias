@@ -11,6 +11,18 @@ export async function PUT(
 ) {
     try {
         const { paymentId } = params;
+        console.log('**********************************');
+        console.log('**********************************');
+        console.log('**********************************');
+        console.log('                                  ');
+        console.log('paymentId a ser cancelado:', paymentId);
+        console.log('                                  ');
+        console.log('                                  ');
+        console.log('                                  ');
+        console.log('**********************************');
+        console.log('**********************************');
+        console.log('**********************************');
+    
         const body = await req.json();
 
         if (body.status !== 'cancelled') {

@@ -18,6 +18,7 @@ const DashboardLink: React.FC<DashboardLinkProps> = ({ href, title, description 
 const AdminDashboard: React.FC = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateMessage, setUpdateMessage] = useState('');
+    console.log('webhook address: ', process.env.NEXT_PUBLIC_URL_FOR_WEBHOOK);
 
     const handleUpdateProducts = async() => {
         setIsUpdating(true);
