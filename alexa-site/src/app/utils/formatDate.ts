@@ -1,4 +1,4 @@
-export const formatDate = (date: Date, isLargeScreen: boolean) => {
+export const formatDate = (date: Date, isLargeScreen: boolean = false) => {
     if (isLargeScreen) {
         return date.toLocaleDateString('pt-BR', { 
             day: 'numeric', 

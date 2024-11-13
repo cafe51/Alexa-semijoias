@@ -7,7 +7,7 @@ import { FireBaseDocument, OrderType, PixPaymentResponseType, ProductCartType, S
 import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
-import { createPayment, sendEmail } from '../utils/apiCall';
+import { createPayment, sendEmailConfirmation } from '../utils/apiCall';
 import { handlePaymentFailure } from '../utils/paymentStatusHandler';
 import { createAdditionalInfo, createNewOrderObject, createPayer, createPayerAddInfo } from '../utils/orderHelpers';
 
@@ -122,11 +122,15 @@ export const usePaymentProcessing = () => {
                 qrCodeBase64: paymentResponse.point_of_interaction.transaction_data?.qr_code_base64 || '',
                 ticketUrl: paymentResponse.point_of_interaction.transaction_data?.ticket_url || '',
             } : undefined;
-
+            // "payment_type_id": "credit_card"
             await finishPayment(
                 orderStatus,
                 paymentId,
-                paymentResponse.payment_method_id,
+                (
+                    paymentResponse.payment_type_id 
+                        ? ((paymentResponse.payment_type_id === 'credit_card') ? 'cartão de crédito' : 'pix')
+                        : 'error'
+                ) ,
                 paymentResponse.installments ? paymentResponse.installments : null,
                 totalAmount,
                 user,
@@ -135,7 +139,9 @@ export const usePaymentProcessing = () => {
                 pixPaymentResponse,
             );
 
-            await sendEmail(paymentId);
+            if(paymentResponse.payment_type_id && paymentResponse.payment_type_id !== 'credit_card') {
+                await sendEmailConfirmation(paymentId);
+            }
 
         } catch (error) {
             console.error('Erro ao processar o pagamento:', error);

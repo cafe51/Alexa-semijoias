@@ -9,7 +9,20 @@ export default function getShippingOptions(cidade: string, uf: string): { id: st
 
     // Verifica se a cidade é capital ou interior
     const isCapital = capitais[uf].toLowerCase() === cidade.toLowerCase();
-    const frete = isCapital ? estado.capital : estado.interior;
+    let frete = isCapital ? estado.capital : estado.interior;
+
+    if(cidade === 'Fernandópolis' && uf === 'SP') {
+        frete = {
+            sedex: {
+                price: 10,
+                days: 3,
+            },
+            pac: {
+                price: 10,
+                days: 3,
+            },
+        };
+    }
 
     return [
         { id: 'sedex', name: 'Sedex', price: frete.sedex.price, days: frete.sedex.days },

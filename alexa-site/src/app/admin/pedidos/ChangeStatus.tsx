@@ -3,6 +3,7 @@
 import LargeButton from '@/app/components/LargeButton';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { useCollection } from '@/app/hooks/useCollection';
+import { sendEmailApprovedPayment, sendEmailOrderSent } from '@/app/utils/apiCall';
 import { OrderType } from '@/app/utils/types';
 import { useState, useEffect } from 'react';
 
@@ -58,8 +59,19 @@ export default function ChangeStatus({ pedidoId, changeStatus, initialStatus }: 
         setChangeStatusModal(true);
     };
 
-    const handleStatusUpdate = () => {
+    const handleStatusUpdate = async() => {
         if (nextStatus) {
+            if(nextStatus === 'preparando para o envio') {
+                console.log('CHEGOU AQUI E O EMAIL FOI ENVIADO paymentApproved foi enviado');
+                console.log('nextStatus é: ', nextStatus);
+                await sendEmailApprovedPayment(pedidoId);
+            }
+            if(nextStatus === 'pedido enviado') {
+                console.log('CHEGOU AQUI E O EMAIL FOI ENVIADO paymentSent foi enviado');
+                console.log('nextStatus é: ', nextStatus);
+                await sendEmailOrderSent(pedidoId);
+            }
+            
             updateDocumentField(pedidoId, 'status', nextStatus);
             changeStatus(nextStatus);
             setCurrentStatus(nextStatus);

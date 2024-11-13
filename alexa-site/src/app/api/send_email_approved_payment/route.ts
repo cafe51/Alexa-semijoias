@@ -1,18 +1,16 @@
-// src/app/api/send_email_confirmation/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { doc, getDoc } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { OrderType, UserType } from '@/app/utils/types';
 import sendgrid from '@sendgrid/mail';
-import { sendOrderConfirmationEmail } from '@/app/utils/emailHandler/sendOrderConfirmationEmail';
+import { sendOrderApprovedPaymentEmail } from '@/app/utils/emailHandler/sendOrderApprovedPaymentEmail';
 
 async function getDocumentById<T>(collection: string, id: string) {
     const docRef = doc(projectFirestoreDataBase, collection, id);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
         return NextResponse.json(
-            { error: `Dados de ${collection} não encontrados ao tentar enviar email de confirmação de compra` },
+            { error: `Dados de ${collection} não encontrados ao tentar enviar email de confirmação de pagamento aprovado` },
             { status: 404 },
         );
     }
@@ -40,21 +38,21 @@ export async function POST(request: NextRequest) {
         const userData = await getDocumentById<UserType>('usuarios', orderData.userId);
         if(userData instanceof NextResponse) return userData;
 
-        // Envia o e-mail de confirmação
-        const message = sendOrderConfirmationEmail(userData, orderId, orderData);
+        // Envia o e-mail de confirmação de pagamento aprovado
+        const message = sendOrderApprovedPaymentEmail(userData, orderId, orderData);
 
         if(!message) {
             return NextResponse.json(
-                { error: 'Falha ao gerar mensagem de e-mail de confirmação' },
+                { error: 'Falha ao gerar mensagem de e-mail de confirmação de pagamento aprovado' },
                 { status: 500 },
             );
         }
         
         await sendgrid.send(message);
 
-        return NextResponse.json({  message: 'E-mail de confirmação enviado' }, { status: 200 });
+        return NextResponse.json({  message: 'E-mail de confirmação de pagamento aprovado enviado' }, { status: 200 });
     } catch (error) {
-        console.error('Erro ao processar confirmação do pedido:', error);
+        console.error('Erro ao processar confirmação de pagamento aprovado:', error);
         return NextResponse.json(
             { error: error },
             { status: 500 },

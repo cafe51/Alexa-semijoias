@@ -1,12 +1,18 @@
+// src/app/api/webhookListener/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { doc, getDoc, updateDoc, runTransaction } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
-import { OrderType, StatusType } from '@/app/utils/types';
+import { OrderType, StatusType, UserType } from '@/app/utils/types';
 import { consoleLogPaymentResponseData, consoleLogWebHookResponse } from '@/app/utils/consoleLogPaymentResponseData';
+import sendgrid from '@sendgrid/mail';
+import { sendCancelOrderEmail } from '@/app/utils/emailHandler/sendCancelOrderEmail';
+import { sendOrderApprovedPaymentEmail } from '@/app/utils/emailHandler/sendOrderApprovedPaymentEmail';
 
 const client = new MercadoPagoConfig({ accessToken: process.env.NEXT_PUBLIC_MPAGOKEY! });
 const mpPayment = new Payment(client);
+
+sendgrid.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY as string);
 
 async function updateProductStock(productId: string, skuId: string, quantity: number, operation: '+' | '-') {
     const productRef = doc(projectFirestoreDataBase, 'products', productId);
@@ -59,33 +65,62 @@ export async function POST(req: NextRequest) {
 
         const orderRef = doc(projectFirestoreDataBase, 'pedidos', orderId);
 
+
         const orderSnap = await getDoc(orderRef);
+
 
         if (orderSnap.exists()) {
             const orderData = orderSnap.data() as OrderType;
+            const userRef = doc(projectFirestoreDataBase, 'usuarios', orderData.userId);
+            const userSnap = await getDoc(userRef);
+            if(userSnap.exists()) {
+                const userData = userSnap.data() as UserType;
+                const cancelMessageEmail = sendCancelOrderEmail(userData, orderId, orderData);
+                const approvedMessageEmail = sendOrderApprovedPaymentEmail(userData, orderId, orderData);
 
-            let newStatus: StatusType;
-            switch (paymentInfo.status) {
-            case 'approved':
-                newStatus = 'preparando para o envio';
-                break;
-            case 'cancelled':
-            case 'rejected':
-                newStatus = 'cancelado';
-                // Return items to stock
-                for (const item of orderData.cartSnapShot) {
-                    await updateProductStock(item.productId, item.skuId, item.quantidade, '+');
+
+                let newStatus: StatusType;
+                switch (paymentInfo.status) {
+                case 'approved':
+                    newStatus = 'preparando para o envio';
+                    console.log('*******************************');
+                    console.log('*******************************');
+                    console.log('status atual:', orderData.status);
+                    console.log('*******************************');
+                    console.log('*******************************');
+
+                    if (approvedMessageEmail && orderData.status !== 'entregue' && orderData.status !== 'cancelado') {
+                        console.log('*******************************');
+                        console.log('*******************************');
+                        console.log('CHEGOU AQUI E O EMAIL FOI ENVIADO');
+                        console.log('*******************************');
+                        console.log('*******************************');
+                        await sendgrid.send(approvedMessageEmail);
+                    }
+                    break;
+                case 'cancelled':
+                case 'rejected':
+                    newStatus = 'cancelado';
+                    // Return items to stock
+                    for (const item of orderData.cartSnapShot) {
+                        await updateProductStock(item.productId, item.skuId, item.quantidade, '+');
+                    }
+                
+                    if (cancelMessageEmail && orderData.status !== 'entregue' && orderData.status !== 'cancelado') {
+                        await sendgrid.send(cancelMessageEmail);
+                    }
+                    break;
+                default:
+                    newStatus = 'aguardando pagamento';
                 }
-                break;
-            default:
-                newStatus = 'aguardando pagamento';
-            }
-            await updateDoc(orderRef, { 
-                status: newStatus,
-                updatedAt: new Date(),
-            });
+                await updateDoc(orderRef, { 
+                    status: newStatus,
+                    updatedAt: new Date(),
+                });
         
-            console.log(`Updated order ${orderId} status to ${newStatus}`);
+                console.log(`Updated order ${orderId} status to ${newStatus}`);
+            }
+
         }
 
         return NextResponse.json({ success: true });

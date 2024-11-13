@@ -15,7 +15,7 @@ export default function CancelOrderButton({ pedido, changeStatus }: CancelOrderB
     const [confirmCancelModal, setConfirmCancelModal] = useState(false);
 
     const cancelOrder = async() => {
-        cancelPayment(pedido.id);
+        await cancelPayment(pedido.id);
         changeStatus();
         setConfirmCancelModal(false);
     };

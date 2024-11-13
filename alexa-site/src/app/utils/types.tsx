@@ -222,7 +222,7 @@ export type CartHistoryType = {
     skuId: string,
 }
 
-type ValueType = {
+export type ValueType = {
     soma: number,
     frete: number,
     total: number
@@ -259,44 +259,7 @@ export type AddressType = { numero: string, referencia: string } & ViaCepRespons
 
 export type StatusType = 'aguardando pagamento' | 'preparando para o envio' | 'pedido enviado' | 'cancelado' | 'entregue';
 
-export type PaymentResponseType = {
-    id: number,
-    shipping_amount: number,
-    statement_descriptor: string,
-    status: 'rejected' | 'approved' | 'in_process pending' | 'pending' | 'authorized',
-    transaction_amount: number,
-    installments: number,
-    date_created: string,
-    date_last_updated: string,
-    date_of_expiration: string,
-    transaction_details: {
-        installment_amount: number,
-        overpaid_amount: number,
-        total_paid_amount: number
-    },
-    payment_method_id: string,
-    payment_type_id: string,
-    payer: {
-        identification: { number: string | null, type: string | null },
-        entity_type: null,
-        phone: { number: string | null, extension: string | null, area_code: string | null },
-        last_name: string | null,
-        id: string,
-        type: string | null,
-        first_name: string | null,
-        email: string | null
-    },
-    notification_url: string,
-    operation_type: string,
-    point_of_interaction: {
-        transaction_data: {
-            qr_code: string,
-            qr_code_base64: string,
-            ticket_url: string,
-        },
-    }
 
-}
 
 export type PixPaymentResponseType = { qrCode: string, qrCodeBase64: string, ticketUrl: string }
 
@@ -335,6 +298,45 @@ export type RegisterFormInputType = {
     nome: string,
     email: string,
     phone: string
+}
+
+export type PaymentResponseType = {
+    id: number,
+    shipping_amount: number,
+    statement_descriptor: string,
+    status: 'rejected' | 'approved' | 'in_process pending' | 'pending' | 'authorized',
+    transaction_amount: number,
+    installments: number,
+    date_created: string,
+    date_last_updated: string,
+    date_of_expiration: string,
+    transaction_details: {
+        installment_amount: number,
+        overpaid_amount: number,
+        total_paid_amount: number
+    },
+    payment_method_id: string,
+    payment_type_id: string,
+    payer: {
+        identification: { number: string | null, type: string | null },
+        entity_type: null,
+        phone: { number: string | null, extension: string | null, area_code: string | null },
+        last_name: string | null,
+        id: string,
+        type: string | null,
+        first_name: string | null,
+        email: string | null
+    },
+    notification_url: string,
+    operation_type: string,
+    point_of_interaction: {
+        transaction_data: {
+            qr_code: string,
+            qr_code_base64: string,
+            ticket_url: string,
+        },
+    }
+
 }
 
 export type SiteSectionManagementType = {

@@ -57,8 +57,8 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                     <section className='flex flex-col *:text-center *:p-2 w-full'>
                         <p>Deseja cancelar esse pedido e refazê-lo?</p>
                         <div className='flex justify-between w-full p-4'>
-                            <div onClick={ () => {
-                                cancelPayment(pedido.id);
+                            <div onClick={ async() => {
+                                await cancelPayment(pedido.id);
                                 setStatus('cancelado');
                                 setShowModalConfirmationRetryOrder(false);
                             } }>
@@ -80,7 +80,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
             }
             
             {
-                (pedidoState.status === 'cancelado')
+                (pedidoState.status === 'cancelado' || pedidoState.status === 'entregue')
                 && userInfo?.userId === pedido.userId 
                 && <TryNewOrderButton cartSnapShot={ pedidoState.cartSnapShot }/>
             }
@@ -217,6 +217,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                     Refazer Pedido
                 </Button>
             }
+
         </div>
     );
 }
