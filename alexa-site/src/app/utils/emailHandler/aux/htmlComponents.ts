@@ -108,26 +108,42 @@ function formatPriceSummary(value: ValueType, totalItensQuantity: number): strin
 
 function formatProductItem(product: CartHistoryType): string {
     return `
-    <table width="100%" cellpadding="20" cellspacing="0" border="0" style="border: 1px solid #E9ECEF; border-radius: 8px; margin-bottom: 15px;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #E9ECEF; border-radius: 8px; margin-bottom: 15px; background-color: white;">
         <tr>
-            <td width="100">
-                <img src="${product.image}" alt="${product.name}" width="100" height="100" style="border-radius: 8px; object-fit: cover;">
+            <td align="center" style="padding: 20px 20px 0 20px;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 200px; height: 200px;">
+                    <tr>
+                        <td align="center" style="width: 200px; height: 200px; background-color: #F8F9FA; border-radius: 8px;">
+                            <img src="${product.image}" alt="${product.name}" width="180" height="180" style="display: block; border-radius: 8px; object-fit: cover;">
+                        </td>
+                    </tr>
+                </table>
             </td>
-            <td style="padding-left: 20px;">
-                <h4 style="margin: 0 0 8px 0; font-size: 18px; color: #333;">${product.name}</h4>
-                <p style="margin: 0; font-size: 16px; color: #666;">Quantidade: ${product.quantidade}</p>
-                ${product.customProperties ? `
-                <p style="margin: 8px 0 0 0; font-size: 16px; color: #666;">
-                    ${Object.entries(product.customProperties).map(([key, value]) => `${toTitleCase(key)}: ${value}`).join('<br>')}
-                </p>` : ''}
-            </td>
-            <td width="120" align="right">
-                ${product.value.promotionalPrice ? `
-                    <div style="color: #C48B9F; font-weight: 600; font-size: 18px;">${formatPrice(product.value.promotionalPrice)}</div>
-                    <div style="text-decoration: line-through; color: #666; font-size: 16px;">${formatPrice(product.value.price)}</div>
-                ` : `
-                    <div style="color: #C48B9F; font-weight: 600; font-size: 18px;">${formatPrice(product.value.price)}</div>
-                `}
+        </tr>
+        <tr>
+            <td style="padding: 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td>
+                            <h4 style="margin: 0 0 8px 0; font-size: 18px; color: #333;">${product.name}</h4>
+                            <p style="margin: 0; font-size: 16px; color: #666;">Quantidade: ${product.quantidade}</p>
+                            ${product.customProperties ? `
+                            <p style="margin: 8px 0 0 0; font-size: 16px; color: #666;">
+                                ${Object.entries(product.customProperties).map(([key, value]) => `${toTitleCase(key)}: ${value}`).join('<br>')}
+                            </p>` : ''}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="padding-top: 15px;">
+                            ${product.value.promotionalPrice ? `
+                                <div style="color: #C48B9F; font-weight: 600; font-size: 20px;">${formatPrice(product.value.promotionalPrice)}</div>
+                                <div style="text-decoration: line-through; color: #666; font-size: 16px;">${formatPrice(product.value.price)}</div>
+                            ` : `
+                                <div style="color: #C48B9F; font-weight: 600; font-size: 20px;">${formatPrice(product.value.price)}</div>
+                            `}
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>`;
