@@ -17,6 +17,7 @@ export default function OrderList({ pedidos, handleRefreshProductList }: OrderLi
     const [selectedOrder, setSelectedProduct] = useState<OrderType & FireBaseDocument>(emptyOrderTypeInitialState);
     const [showOrderDetailModal, setShowOrderDetailModal] = useState<boolean>(false);
     const [userSelected, setUserSelected] = useState<UserType & FireBaseDocument>(emptyUserTypeInitialState);
+    const [loadingState, setLoadingState] = useState(true);
 
     const handleSelectOrder = (order: OrderType & FireBaseDocument, user: UserType & FireBaseDocument) => {
         setSelectedProduct(order);
@@ -40,7 +41,7 @@ export default function OrderList({ pedidos, handleRefreshProductList }: OrderLi
                 title="Detalhes do Pedido"
                 fullWidth
             >
-                <OrderDetails pedido={ selectedOrder } user={ userSelected } admin={ true }/>
+                <OrderDetails pedido={ selectedOrder } user={ userSelected } admin={ true } setLoadingState={ setLoadingState } loadingState={ loadingState }/>
             </SlideInModal>
         </div>
     );
