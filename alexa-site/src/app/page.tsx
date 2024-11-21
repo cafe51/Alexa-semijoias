@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import HeroSection from './components/homePage/HeroSection';
 import SectionsCarousel from './components/homePage/SectionsCarousel';
 import FeaturedProducts from './components/homePage/FeaturedProducts';
-import Newsletter from './components/homePage/Newsletter';
+// import Newsletter from './components/homePage/Newsletter';
 import { useCollection } from './hooks/useCollection';
 import { FireBaseDocument, OrderByOption, ProductBundleType, SectionType } from './utils/types';
 
@@ -67,7 +67,9 @@ export default function HomePage() {
             <HeroSection />
             <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />
             <FeaturedProducts featuredProducts={ featuredProducts }/>
-            <Newsletter />
+            {
+            /* <Newsletter /> */
+            }
         </div>
     );
 }
