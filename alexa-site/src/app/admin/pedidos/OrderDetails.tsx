@@ -1,6 +1,6 @@
 import { FireBaseDocument, OrderType,  StatusType, UserType } from '@/app/utils/types';
 import ChangeStatus from './ChangeStatus';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import CancelOrderButton from './CancelOrderButton';
 import PixPayment from '@/app/components/PixPayment';
 import TryNewOrderButton from './TryNewOrderButton';
@@ -14,15 +14,17 @@ import OrderStatus from './OrderStatus';
 import { Button } from '@/components/ui/button';
 import { XCircle, RefreshCw } from 'lucide-react';
 import { useWindowSize } from '@/app/hooks/useWindowSize';
-import { cancelPayment } from '@/app/utils/apiCall';
+import LoadingIndicator from '@/app/components/LoadingIndicator';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
     user: UserType & FireBaseDocument;
     admin?: boolean;
+    setLoadingState: Dispatch<SetStateAction<boolean>>;
+    loadingState: boolean
 }
 
-export default function OrderDetails({ pedido, user: { email, nome, phone }, admin=false }: OrderDetailsProps) {
+export default function OrderDetails({ pedido, user: { email, nome, phone }, setLoadingState, loadingState, admin=false }: OrderDetailsProps) {
     const { screenSize } = useWindowSize();
     const { userInfo } = useUserInfo();
     const [modalConfirmationRetryOrder, setShowModalConfirmationRetryOrder] = useState(false);
@@ -49,6 +51,12 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
         setPedidoState(pedido);
     }, [pedido]);
 
+    if(loadingState) return (
+        <section className='flex flex-col items-center justify-center h-3/6'>
+            <LoadingIndicator />
+        </section>
+    );
+
     return (
         <div className="flex flex-col gap-2 h-min-h-screen text-sm md:text-lg justify-center items-center my-4 lg:my-16 px-4 md:px-8">
             {
@@ -58,11 +66,10 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                         <p>Deseja cancelar esse pedido e refazê-lo?</p>
                         <div className='flex justify-between w-full p-4'>
                             <div onClick={ async() => {
-                                await cancelPayment(pedido.id);
                                 setStatus('cancelado');
                                 setShowModalConfirmationRetryOrder(false);
                             } }>
-                                <TryNewOrderButton cartSnapShot={ pedidoState.cartSnapShot }/>
+                                <TryNewOrderButton pedidoState={ pedidoState } setLoadingState={ setLoadingState } />
                             </div>
                             <div>
                                 <Button
@@ -82,7 +89,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
             {
                 (pedidoState.status === 'cancelado' || pedidoState.status === 'entregue')
                 && userInfo?.userId === pedido.userId 
-                && <TryNewOrderButton cartSnapShot={ pedidoState.cartSnapShot }/>
+                && <TryNewOrderButton pedidoState={ pedidoState } setLoadingState={ setLoadingState }/>
             }
 
             { screenSize === 'mobile' ? (

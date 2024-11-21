@@ -1,7 +1,6 @@
 // src/app/pedidos/[orderId]/page.tsx
 'use client';
 import OrderDetails from '@/app/admin/pedidos/OrderDetails';
-import LoadingIndicator from '@/app/components/LoadingIndicator';
 import { useCollection } from '@/app/hooks/useCollection';
 import { useSnapshotById } from '@/app/hooks/useSnapshotById';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
@@ -36,11 +35,6 @@ export default function OrderPage({ params: { orderId } }: { params: { orderId: 
         fetchUser();
     }, [pedidoState]);
 
-    if(loadingState) return (
-        <section className='flex flex-col items-center justify-center h-3/6'>
-            <LoadingIndicator />
-        </section>
-    );
     if(!pedidoState || !user) return (
         <section className='flex flex-col items-center justify-center h-3/6'>
             <p>Pedido não encontrado</p>
@@ -48,6 +42,6 @@ export default function OrderPage({ params: { orderId } }: { params: { orderId: 
     );
 
     return (
-        <OrderDetails pedido={ pedidoState } user={ user }/>
+        <OrderDetails pedido={ pedidoState } user={ user } setLoadingState={ setLoadingState } loadingState={ loadingState }/>
     );
 }

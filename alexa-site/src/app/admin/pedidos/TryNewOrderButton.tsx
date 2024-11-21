@@ -1,24 +1,25 @@
 import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
 import { useCollection } from '@/app/hooks/useCollection';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
-import { CartHistoryType, FireBaseDocument, ProductBundleType, ProductCartType } from '@/app/utils/types';
+import { FireBaseDocument, OrderType, ProductBundleType, ProductCartType } from '@/app/utils/types';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
+import { cancelPayment } from '@/app/utils/apiCall';
 
 interface TryNewOrderButtonProps {
-    cartSnapShot: CartHistoryType[];
+    pedidoState: OrderType & FireBaseDocument;
+    setLoadingState: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function TryNewOrderButton({ cartSnapShot }: TryNewOrderButtonProps) {
+export default function TryNewOrderButton({ pedidoState: { cartSnapShot, id }, setLoadingState }: TryNewOrderButtonProps) {
     const router = useRouter();
     const { carrinho } = useUserInfo();
     const { handleAddToCart } = useAddNewItemCart();
     const { getDocumentById } = useCollection<ProductBundleType>('products');
     const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinhos');
     const [carrinhoState, setCarrinhoState] = useState<(ProductCartType & FireBaseDocument)[] | ProductCartType[] | null>(carrinho);
-    const [isLoadingButton, setIsLoadingButton] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -50,17 +51,22 @@ export default function TryNewOrderButton({ cartSnapShot }: TryNewOrderButtonPro
                 const productVariation = productData.productVariations.find(item => item.sku === cartSnapshotItem.skuId) || null;
 
                 if (productVariation) {
-                    await handleAddToCart(updatedCarrinho, productVariation, setIsLoadingButton, cartSnapshotItem.quantidade);
-                    updatedCarrinho.push({
-                        ...cartSnapshotItem,
-                        skuId: productVariation.sku,
-                        productId: productVariation.productId,
-                        quantidade: cartSnapshotItem.quantidade,
-                    } as ProductCartType & FireBaseDocument);
+                    setTimeout(async() => {
+                        await handleAddToCart(updatedCarrinho, productVariation, setLoadingState, cartSnapshotItem.quantidade);
+                        updatedCarrinho.push({
+                            ...cartSnapshotItem,
+                            skuId: productVariation.sku,
+                            productId: productVariation.productId,
+                            quantidade: cartSnapshotItem.quantidade,
+                        } as ProductCartType & FireBaseDocument);
+                        setTimeout(() => router.push('/carrinho'), 0);
+                    }, productVariation.estoque === 0 ? 5000 : 0);
                 } else {
+                    setLoadingState(false);
                     console.error('Variação do produto não encontrada:', cartSnapshotItem);
                 }
             } catch (error) {
+                setLoadingState(false);
                 console.error('Erro ao adicionar item ao carrinho:', error);
                 throw error;
             }
@@ -74,10 +80,11 @@ export default function TryNewOrderButton({ cartSnapShot }: TryNewOrderButtonPro
         console.log('Iniciando handleTryNewOrder');
         console.log('Estado do carrinho antes de esvaziar:', carrinhoState);
         
-        setIsLoadingButton(true);
+        setLoadingState(true);
         setError(null);
 
         try {
+            await cancelPayment(id);
             await deleteCartItems();
             console.log('deleteCartItems concluído');
             await addItemsToCart();
@@ -86,10 +93,9 @@ export default function TryNewOrderButton({ cartSnapShot }: TryNewOrderButtonPro
             console.error('Erro ao processar o novo pedido:', error);
             setError('Ocorreu um erro ao processar o pedido. Por favor, tente novamente.');
         } finally {
-            setIsLoadingButton(false);
+            // setLoadingState(false);
         }
 
-        router.push('/carrinho');
 
     };
 
@@ -97,7 +103,7 @@ export default function TryNewOrderButton({ cartSnapShot }: TryNewOrderButtonPro
         <>
             <Button
                 className="bg-[#D4AF37] text-white hover:bg-[#C48B9F] flex-1" onClick={ handleTryNewOrder }
-                disabled={ isLoadingButton }
+                disabled={ false }
             >
                 <RefreshCw className="mr-2 h-4 w-4" />
         Refazer
