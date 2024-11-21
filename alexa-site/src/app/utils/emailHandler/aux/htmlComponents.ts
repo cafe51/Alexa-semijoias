@@ -1,3 +1,5 @@
+// src/app/utils/emailHandler/aux/htmlComponents.tsx
+
 import { formatDate } from '../../formatDate';
 import { formatPrice } from '../../formatPrice';
 import toTitleCase from '../../toTitleCase';
@@ -55,12 +57,23 @@ export function ProductList(products: CartHistoryType[]): string {
 }
 
 export function Header(): string {
+    const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/alexa-semijoias.appspot.com/o/logo%2FverticalLogo.png?alt=media&token=dab5e38f-cb5f-41fa-9667-d205a2fc6a0f';
+    
     return `
     <table width="100%" cellpadding="35" cellspacing="0" border="0" style="background-color: white; border-radius: 12px 12px 0 0;">
         <tr>
             <td align="center">
-                <h1 style="font-size: 38px; font-weight: 700; color: #C48B9F; margin: 0; letter-spacing: 2px;">ALEXA</h1>
-                <p style="font-size: 16px; font-weight: 500; color: #666; letter-spacing: 3px; margin-top: 8px; text-transform: uppercase;">SEMIJOIAS</p>
+                ${logoUrl ? `
+                    <img 
+                        src="${logoUrl}" 
+                        alt="Alexa Semijoias" 
+                        width="286"
+                        style="display: block; margin: 0 auto; max-width: 286px; width: 100%; height: auto; object-fit: contain;"
+                    >
+                ` : `
+                    <h1 style="font-size: 38px; font-weight: 700; color: #C48B9F; margin: 0; letter-spacing: 2px;">ALEXA</h1>
+                    <p style="font-size: 16px; font-weight: 500; color: #666; letter-spacing: 3px; margin-top: 8px; text-transform: uppercase;">SEMIJOIAS</p>
+                `}
             </td>
         </tr>
     </table>`;
@@ -86,19 +99,19 @@ function formatPriceSummary(value: ValueType, totalItensQuantity: number): strin
             <td>
                 <table width="100%" cellpadding="8" cellspacing="0" border="0">
                     <tr>
-                        <td style="font-size: 16px; color: #666;">Subtotal (${ totalItensQuantity + (totalItensQuantity > 1 ? ' itens' : ' item') }):</td>
-                        <td align="right" style="font-size: 16px; color: #666;">${formatPrice(value.soma)}</td>
+                        <td style="font-size: 14px; color: #666;">Subtotal (${ totalItensQuantity + (totalItensQuantity > 1 ? ' itens' : ' item') }):</td>
+                        <td align="right" style="font-size: 14px; color: #666;">${formatPrice(value.soma)}</td>
                     </tr>
                     <tr>
-                        <td style="font-size: 16px; color: #666;">Frete:</td>
-                        <td align="right" style="font-size: 16px; color: #666;">${formatPrice(value.frete)}</td>
+                        <td style="font-size: 14px; color: #666;">Frete:</td>
+                        <td align="right" style="font-size: 14px; color: #666;">${formatPrice(value.frete)}</td>
                     </tr>
                     <tr>
                         <td colspan="2" style="border-top: 2px solid #E9ECEF; padding-top: 15px;"></td>
                     </tr>
                     <tr>
-                        <td style="font-size: 18px; font-weight: 600; color: #333;">Total:</td>
-                        <td align="right" style="font-size: 24px; font-weight: 600; color: #C48B9F;">${formatPrice(value.total)}</td>
+                        <td style="font-size: 16px; font-weight: 600; color: #333;">Total:</td>
+                        <td align="right" style="font-size: 18px; font-weight: 600; color: #C48B9F;">${formatPrice(value.total)}</td>
                     </tr>
                 </table>
             </td>

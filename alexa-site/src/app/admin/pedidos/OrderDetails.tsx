@@ -91,7 +91,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                     <OrderStatus order={ pedidoState } />
                     { admin && (
                         <ChangeStatus
-                            pedidoId={ pedido.id }
+                            pedido={ pedido }
                             initialStatus={ pedidoState.status }
                             changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                         />
@@ -131,7 +131,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                         <div className="flex flex-col space-y-6">
                             { admin && (
                                 <ChangeStatus
-                                    pedidoId={ pedido.id }
+                                    pedido={ pedido }
                                     initialStatus={ pedidoState.status }
                                     changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                                 />
@@ -177,7 +177,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, adm
                         />
                         { admin && (
                             <ChangeStatus
-                                pedidoId={ pedido.id }
+                                pedido={ pedido }
                                 initialStatus={ pedidoState.status }
                                 changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                             />

@@ -1,7 +1,7 @@
 // src/app/utils/apiCall.ts
 import { IPaymentFormData } from '@mercadopago/sdk-react/bricks/payment/type';
 import axios from 'axios';
-import { FireBaseDocument, UserType } from './types';
+import { FireBaseDocument, OrderType, UserType } from './types';
 
 type PayerType = {
     entity_type: string;
@@ -69,26 +69,6 @@ export const cancelPayment = async(paymentId: string) => {
     }
 };
 
-export const sendEmailConfirmation = async(paymentId: string) => {
-    try {
-        const response = await axios.post(
-            '/api/send_email_confirmation/',
-            { paymentId: paymentId }, 
-            { headers: { 'Content-Type': 'application/json' } },
-        );
-
-        if (response.status === 200) {
-            console.log('Email enviado com sucesso:', paymentId);
-        } else {
-            console.log('STATUS DA CHAMADA DE ENVIO DE EMAIL:', response.status);
-            console.error('Falha ao enviar o email:', paymentId);
-            throw new Error('Falha ao enviar o email');
-        }
-    } catch (error) {
-        console.error('Erro ao enviar o email:', error);
-        throw error;
-    }
-};
 
 export const createPayment = async(params: IPaymentFormData, user: UserType & FireBaseDocument, payer: PayerType, additionalInfo: AdditionalInfoType) => {
     try {
@@ -122,44 +102,44 @@ export const createPayment = async(params: IPaymentFormData, user: UserType & Fi
     }
 };
 
-export const sendEmailApprovedPayment = async(paymentId: string) => {
+const sendEmail = async(
+    endpoint: string,
+    order: OrderType & FireBaseDocument,
+    user: UserType & FireBaseDocument,
+) => {
     try {
         const response = await axios.post(
-            '/api/send_email_approved_payment/',
-            { paymentId: paymentId }, 
+            endpoint,
+            {
+                orderData: order,
+                userData: user,
+            },
             { headers: { 'Content-Type': 'application/json' } },
         );
 
         if (response.status === 200) {
-            console.log('Email enviado com sucesso:', paymentId);
+            console.log('Email enviado com sucesso:', order.paymentId);
         } else {
             console.log('STATUS DA CHAMADA DE ENVIO DE EMAIL:', response.status);
-            console.error('Falha ao enviar o email:', paymentId);
+            console.error('Falha ao enviar o email:', order.paymentId);
             throw new Error('Falha ao enviar o email');
         }
+
+        return response;
     } catch (error) {
         console.error('Erro ao enviar o email:', error);
         throw error;
     }
 };
 
-export const sendEmailOrderSent = async(paymentId: string) => {
-    try {
-        const response = await axios.post(
-            '/api/send_email_order_sent/',
-            { paymentId: paymentId }, 
-            { headers: { 'Content-Type': 'application/json' } },
-        );
+export const sendEmailConfirmation = (order: OrderType & FireBaseDocument, user: UserType & FireBaseDocument) =>
+    sendEmail('/api/send_email_confirmation/', order, user);
 
-        if (response.status === 200) {
-            console.log('Email enviado com sucesso:', paymentId);
-        } else {
-            console.log('STATUS DA CHAMADA DE ENVIO DE EMAIL:', response.status);
-            console.error('Falha ao enviar o email:', paymentId);
-            throw new Error('Falha ao enviar o email');
-        }
-    } catch (error) {
-        console.error('Erro ao enviar o email:', error);
-        throw error;
-    }
-};
+export const sendEmailApprovedPayment = (order: OrderType & FireBaseDocument, user: UserType & FireBaseDocument) =>
+    sendEmail('/api/send_email_approved_payment/', order, user);
+
+export const sendEmailOrderSent = (order: OrderType & FireBaseDocument, user: UserType & FireBaseDocument) =>
+    sendEmail('/api/send_email_order_sent/', order, user);
+
+export const sendEmailOrderCanceled = (order: OrderType & FireBaseDocument, user: UserType & FireBaseDocument) =>
+    sendEmail('/api/send_email_canceled', order, user);

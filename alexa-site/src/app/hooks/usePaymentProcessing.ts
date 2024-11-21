@@ -13,7 +13,7 @@ import { createAdditionalInfo, createNewOrderObject, createPayer, createPayerAdd
 
 export const usePaymentProcessing = () => {
     const router = useRouter();
-    const { addDocument: createNewOrder } = useCollection<OrderType>('pedidos');
+    const { addDocument: createNewOrder, getDocumentById: getOrderById } = useCollection<OrderType>('pedidos');
     const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinhos');
     const { updateTheProductDocumentStock } = useManageProductStock();
 
@@ -140,7 +140,8 @@ export const usePaymentProcessing = () => {
             );
 
             if(paymentResponse.payment_type_id && paymentResponse.payment_type_id !== 'credit_card') {
-                await sendEmailConfirmation(paymentId);
+                const order = await getOrderById(paymentId);
+                await sendEmailConfirmation(order, user);
             }
 
         } catch (error) {

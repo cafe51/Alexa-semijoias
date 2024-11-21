@@ -4,13 +4,13 @@ import LargeButton from '@/app/components/LargeButton';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import { useCollection } from '@/app/hooks/useCollection';
 import { sendEmailApprovedPayment, sendEmailOrderSent } from '@/app/utils/apiCall';
-import { OrderType } from '@/app/utils/types';
+import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import { useState, useEffect } from 'react';
 
 type StatusType = OrderType['status'];
 
 interface ChangeStatusProps {
-    pedidoId: string;
+    pedido: OrderType & FireBaseDocument;
     changeStatus: (newStatus: StatusType) => void;
     initialStatus: StatusType;
 }
@@ -37,12 +37,14 @@ const getNextStatus = (currentStatus: StatusType): StatusType | null => {
     return nextStatusMap[currentStatus] || null;
 };
 
-export default function ChangeStatus({ pedidoId, changeStatus, initialStatus }: ChangeStatusProps) {
+export default function ChangeStatus({ pedido, changeStatus, initialStatus }: ChangeStatusProps) {
     const [changeStatusModal, setChangeStatusModal] = useState(false);
     const [currentStatus, setCurrentStatus] = useState<StatusType>(initialStatus);
     const [nextStatus, setNextStatus] = useState<StatusType | null>(getNextStatus(initialStatus));
     const [showButton, setShowButton] = useState(true);
     const { updateDocumentField } = useCollection<OrderType>('pedidos');
+    const { getDocumentById: getUserById } = useCollection<UserType>('usuarios');
+
 
     useEffect(() => {
         setNextStatus(getNextStatus(currentStatus));
@@ -60,19 +62,26 @@ export default function ChangeStatus({ pedidoId, changeStatus, initialStatus }: 
     };
 
     const handleStatusUpdate = async() => {
+        const user = await getUserById(pedido.userId);
+
+        if (!user) {
+            console.error('Usuário não encontrado');
+            return;
+        }
+
         if (nextStatus) {
             if(nextStatus === 'preparando para o envio') {
                 console.log('CHEGOU AQUI E O EMAIL FOI ENVIADO paymentApproved foi enviado');
                 console.log('nextStatus é: ', nextStatus);
-                await sendEmailApprovedPayment(pedidoId);
+                await sendEmailApprovedPayment(pedido, user);
             }
             if(nextStatus === 'pedido enviado') {
                 console.log('CHEGOU AQUI E O EMAIL FOI ENVIADO paymentSent foi enviado');
                 console.log('nextStatus é: ', nextStatus);
-                await sendEmailOrderSent(pedidoId);
+                await sendEmailOrderSent(pedido, user);
             }
             
-            updateDocumentField(pedidoId, 'status', nextStatus);
+            updateDocumentField(pedido.id, 'status', nextStatus);
             changeStatus(nextStatus);
             setCurrentStatus(nextStatus);
             setChangeStatusModal(false);
