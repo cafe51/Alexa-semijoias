@@ -14,6 +14,7 @@ import PriceSummarySection from './OrderSummarySection/PriceSummarySection';
 import Link from 'next/link';
 import { ProductCartType } from '../utils/types';
 import SummaryCard from './OrderSummarySection/SummaryCard';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 export default function Checkout() {
     const router = useRouter();
@@ -82,7 +83,11 @@ export default function Checkout() {
     }, [carrinho]);
 
 
-    if(loadingScreen) return <p>Loading...</p>;
+    if(loadingScreen) return (
+        <section className='flex flex-col items-center justify-center h-3/6'>
+            <LoadingIndicator />
+        </section>
+    );
 
     
     return (
