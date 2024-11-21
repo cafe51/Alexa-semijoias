@@ -12,7 +12,7 @@ export function emailConfirmationHtmlGenerator(
     user: UserType & FireBaseDocument,
     order: OrderType & FireBaseDocument,
 ): string {
-    const { cartSnapShot, paymentOption, installments, valor, createdAt, status, paymentId } = order;
+    const { cartSnapShot, paymentOption, installments, valor, createdAt, paymentId } = order;
 
     return `
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -47,8 +47,8 @@ export function emailConfirmationHtmlGenerator(
                                 <tr>
                                     <td>
                                         ${OrderInfo(paymentId, convertToDate(createdAt))}
-                                        ${formatOrderTimeline(status)}
-                                        ${formatNextSteps(status)}
+                                        ${formatOrderTimeline('aguardando pagamento')}
+                                        ${formatNextSteps('aguardando pagamento')}
                                         ${ProductList(cartSnapShot)}
                                         ${ShippingInfo(order.endereco)}
                                         ${PaymentInfo(paymentOption, installments)}
@@ -74,7 +74,7 @@ export function emailPaymentConfirmationHtmlGenerator(
     user: UserType & FireBaseDocument,
     order: OrderType & FireBaseDocument,
 ): string {
-    const { cartSnapShot, paymentOption, installments, valor, createdAt, status, paymentId } = order;
+    const { cartSnapShot, paymentOption, installments, valor, createdAt, paymentId } = order;
 
     return `
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -105,7 +105,7 @@ export function emailPaymentConfirmationHtmlGenerator(
                                 <tr>
                                     <td>
                                         ${OrderInfo(paymentId, convertToDate(createdAt))}
-                                        ${formatOrderTimeline(status)}
+                                        ${formatOrderTimeline('preparando para o envio')}
                                         ${ProductList(cartSnapShot)}
                                         ${ShippingInfo(order.endereco)}
                                         ${PaymentInfo(paymentOption, installments)}
@@ -131,7 +131,7 @@ export function emailShippingConfirmationHtmlGenerator(
     user: UserType & FireBaseDocument,
     order: OrderType & FireBaseDocument,
 ): string {
-    const { cartSnapShot, valor, createdAt, status, paymentId } = order;
+    const { cartSnapShot, valor, createdAt, paymentId } = order;
 
     return `
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -163,7 +163,7 @@ export function emailShippingConfirmationHtmlGenerator(
                                 <tr>
                                     <td>
                                         ${OrderInfo(paymentId, convertToDate(createdAt))}
-                                        ${formatOrderTimeline(status)}
+                                        ${formatOrderTimeline('pedido enviado')}
                                         ${ProductList(cartSnapShot)}
                                         ${ShippingInfo(order.endereco)}
                                         ${PriceSummary(valor, cartSnapShot.reduce((acc, item) => acc + item.quantidade, 0))}
@@ -188,7 +188,7 @@ export function emailOrderCancellationHtmlGenerator(
     user: UserType & FireBaseDocument,
     order: OrderType & FireBaseDocument,
 ): string {
-    const { cartSnapShot, paymentOption, installments, valor, createdAt, status, paymentId } = order;
+    const { cartSnapShot, paymentOption, installments, valor, createdAt, paymentId } = order;
 
     return `
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -220,7 +220,7 @@ export function emailOrderCancellationHtmlGenerator(
                                 <tr>
                                     <td>
                                         ${OrderInfo(paymentId, convertToDate(createdAt))}
-                                        ${formatOrderTimeline(status)}
+                                        ${formatOrderTimeline('cancelado')}
                                         ${ProductList(cartSnapShot)}
                                         ${PaymentInfo(paymentOption, installments)}
                                         ${PriceSummary(valor, cartSnapShot.reduce((acc, item) => acc + item.quantidade, 0))}
