@@ -3,11 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { doc, getDoc, updateDoc, runTransaction } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
-import { OrderType, StatusType, UserType } from '@/app/utils/types';
+import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/types';
 import { consoleLogPaymentResponseData, consoleLogWebHookResponse } from '@/app/utils/consoleLogPaymentResponseData';
 import sendgrid from '@sendgrid/mail';
-import { sendCancelOrderEmail } from '@/app/utils/emailHandler/sendCancelOrderEmail';
-import { sendOrderApprovedPaymentEmail } from '@/app/utils/emailHandler/sendOrderApprovedPaymentEmail';
+import { sendEmail } from '@/app/utils/emailHandler/sendEmailFunctions';
 
 const client = new MercadoPagoConfig({ accessToken: process.env.NEXT_PUBLIC_MPAGOKEY! });
 const mpPayment = new Payment(client);
@@ -70,14 +69,13 @@ export async function POST(req: NextRequest) {
 
 
         if (orderSnap.exists()) {
-            const orderData = orderSnap.data() as OrderType;
+            const orderData = orderSnap.data() as OrderType & FireBaseDocument;
             const userRef = doc(projectFirestoreDataBase, 'usuarios', orderData.userId);
             const userSnap = await getDoc(userRef);
             if(userSnap.exists()) {
-                const userData = userSnap.data() as UserType;
-                const cancelMessageEmail = sendCancelOrderEmail(userData, orderId, orderData);
-                const approvedMessageEmail = sendOrderApprovedPaymentEmail(userData, orderId, orderData);
-
+                const userData = userSnap.data() as UserType & FireBaseDocument;
+                const cancelMessageEmail = sendEmail('orderCancellation', userData, orderId, orderData);
+                const approvedMessageEmail = sendEmail('paymentConfirmation', userData, orderId, orderData);
 
                 let newStatus: StatusType;
                 switch (paymentInfo.status) {
