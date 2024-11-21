@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import sendgrid from '@sendgrid/mail';
-import { sendEmail } from '@/app/utils/emailHandler/sendEmailFunctions';
+import { generateEmailMessage } from '@/app/utils/emailHandler/sendEmailFunctions';
 
 sendgrid.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY as string);
 
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     
 
         // Envia o e-mail de confirmação
-        const message = sendEmail('orderConfirmation', userData, orderId, orderData);
+        const message = generateEmailMessage('orderConfirmation', userData, orderId, orderData);
 
         if(!message) {
             return NextResponse.json(

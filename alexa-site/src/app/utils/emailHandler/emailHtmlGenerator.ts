@@ -37,11 +37,9 @@ export function emailConfirmationHtmlGenerator(
                                 <tr>
                                     <td style="padding-bottom: 25px;">
                                         <p style="margin: 0; font-size: 16px;">Ol&aacute;, ${user.nome}!</p>
-                                        <p style="margin: 15px 0 0 0; font-size: 16px;">Que alegria ter voc&ecirc; conosco!${
-    status === 'aguardando pagamento' 
-        ? ' Seu pedido foi registrado e est&aacute; aguardando confirma&ccedil;&atilde;o de pagamento.'
-        : ' Seu pedido foi confirmado com sucesso e j&aacute; est&aacute; sendo processado com todo o carinho que voc&ecirc; merece.'
-}</p>
+                                        <p style="margin: 15px 0 0 0; font-size: 16px;">
+                                            Que alegria ter voc&ecirc; conosco! Seu pedido foi registrado e est&aacute; aguardando confirma&ccedil;&atilde;o de pagamento.
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -53,7 +51,7 @@ export function emailConfirmationHtmlGenerator(
                                         ${ShippingInfo(order.endereco)}
                                         ${PaymentInfo(paymentOption, installments)}
                                         ${PriceSummary(valor, cartSnapShot.reduce((acc, item) => acc + item.quantidade, 0))}
-                                        ${ActionButton(paymentId, status === 'aguardando pagamento' ? 'Realizar Pagamento' : 'Ver Pedido')}
+                                        ${ActionButton(paymentId, 'Realizar Pagamento')}
                                     </td>
                                 </tr>
                             </table>

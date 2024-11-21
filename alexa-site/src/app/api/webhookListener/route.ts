@@ -6,7 +6,7 @@ import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/types';
 import { consoleLogPaymentResponseData, consoleLogWebHookResponse } from '@/app/utils/consoleLogPaymentResponseData';
 import sendgrid from '@sendgrid/mail';
-import { sendEmail } from '@/app/utils/emailHandler/sendEmailFunctions';
+import { generateEmailMessage } from '@/app/utils/emailHandler/sendEmailFunctions';
 
 const client = new MercadoPagoConfig({ accessToken: process.env.NEXT_PUBLIC_MPAGOKEY! });
 const mpPayment = new Payment(client);
@@ -74,8 +74,8 @@ export async function POST(req: NextRequest) {
             const userSnap = await getDoc(userRef);
             if(userSnap.exists()) {
                 const userData = userSnap.data() as UserType & FireBaseDocument;
-                const cancelMessageEmail = sendEmail('orderCancellation', userData, orderId, orderData);
-                const approvedMessageEmail = sendEmail('paymentConfirmation', userData, orderId, orderData);
+                const cancelMessageEmail = generateEmailMessage('orderCancellation', userData, orderId, orderData);
+                const approvedMessageEmail = generateEmailMessage('paymentConfirmation', userData, orderId, orderData);
 
                 let newStatus: StatusType;
                 switch (paymentInfo.status) {

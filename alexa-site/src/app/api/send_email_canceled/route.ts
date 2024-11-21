@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import sendgrid from '@sendgrid/mail';
-import { sendEmail } from '@/app/utils/emailHandler/sendEmailFunctions';
+import { generateEmailMessage } from '@/app/utils/emailHandler/sendEmailFunctions';
 
 sendgrid.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY as string);
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         const orderId = orderData.paymentId.toString();
 
         // Envia o e-mail de cancelamento
-        const message = sendEmail('orderCancellation', userData, orderId, orderData);
+        const message = generateEmailMessage('orderCancellation', userData, orderId, orderData);
 
         if(!message) {
             return NextResponse.json(

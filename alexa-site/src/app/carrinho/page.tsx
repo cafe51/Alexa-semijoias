@@ -6,10 +6,11 @@ import CartItem from './CartItem';
 import CartHeader from './CartHeader';
 import { ArrowLeft,  ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
 import OrderSummary from './OrderSummary';
 import ContinueShoppingButton from './ContinueShoppingButton';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 interface CartItem {
   skuId: string;
@@ -22,8 +23,13 @@ interface CartItem {
 
 export default function Carrinho() {
     const [shipping, setShipping] = useState<number | null>(null);
+    const [loadingComponent, setLoadingComponent] = useState(true);
     const { carrinho } = useUserInfo();
     const router = useRouter();
+
+    useEffect(() => {
+        setLoadingComponent(false);
+    }, []);
 
     const selectShipping = (price: string) => {
         setShipping(Number(price)); // Parse para número
@@ -39,6 +45,13 @@ export default function Carrinho() {
         return subtotal + (shipping || 0);
     }, [subtotal, shipping]);
 
+    if(loadingComponent) return (
+        <section className='flex flex-col items-center justify-center h-3/6'>
+            <LoadingIndicator />
+        </section>
+    );
+
+
     if (!carrinho || carrinho.length === 0) {
         return (
             <div className="h-screen">
@@ -48,7 +61,10 @@ export default function Carrinho() {
                     <Button
                         variant="outline"
                         className=" text-[#C48B9F] border-[#C48B9F] hover:bg-[#C48B9F] hover:text-white text-base w-48 md:text-lg lg:text-xl md:w-52 lg:w-60 md:p-6"
-                        onClick={ () => router.push('/') }
+                        onClick={ () => {
+                            setLoadingComponent(true);
+                            router.push('/');
+                        } }
                     >
                         <ArrowLeft className="mr-2 h-4 w-4" />
                     Voltar para a loja
