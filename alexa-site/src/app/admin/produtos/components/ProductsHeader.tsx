@@ -1,18 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 interface ProductsHeaderProps {
     totalProducts: number;
-    onSearch: (query: string) => void;
 }
 
-const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts, onSearch }) => {
-    const [searchQuery, setSearchQuery] = useState('');
+const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts }) => {
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSearch(searchQuery);
-    };
 
     return (
         <div className="bg-white shadow-md p-4 mb-4 rounded-lg w-full">
@@ -22,18 +16,6 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts, onSearch
                     Adicionar Produto
                 </Link>
             </div>
-            <form onSubmit={ handleSearch } className="flex flex-col md:flex-row gap-2 w-full">
-                <input
-                    className="p-2 border border-gray-300 rounded w-full md:w-auto"
-                    type="text"
-                    value={ searchQuery }
-                    onChange={ (e) => setSearchQuery(e.target.value) }
-                    placeholder="Buscar produtos..."
-                />
-                <button type="submit" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded w-full md:w-auto">
-                    Buscar
-                </button>
-            </form>
         </div>
     );
 };

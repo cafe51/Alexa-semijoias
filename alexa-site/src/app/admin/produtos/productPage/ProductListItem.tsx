@@ -95,6 +95,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                     loading="lazy"
                     placeholder="blur"
                     blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/+F9PQAI8wNPvd7POQAAAABJRU5ErkJggg=="
+                    sizes="400px"
                 />
             </div>
 
