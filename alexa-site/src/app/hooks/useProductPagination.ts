@@ -1,13 +1,20 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNumberedPagination } from './useNumberedPagination';
 import { ProductBundleType } from '@/app/utils/types';
+import { SortOption } from '@/app/components/ProductList/ProductSorter';
 
 export const useProductPagination = () => {
     const [error, setError] = useState<string | null>(null);
+    const [currentSort, setCurrentSort] = useState<SortOption>({ 
+        value: 'newest', 
+        label: 'Novidades', 
+        orderBy: 'updatingDate', 
+        direction: 'desc',
+    });
 
-    const ordination = useMemo<{field: string, direction: 'desc' | 'asc'}>(() => 
-        ({ field: 'updatingDate', direction: 'desc' }),
-    []);
+    const ordination = useMemo<{field: string, direction: 'asc' | 'desc'}>(() => 
+        ({ field: currentSort.orderBy, direction: currentSort.direction }),
+    [currentSort]);
 
     const ITEMS_PER_PAGE = useMemo(() => 20, []);
 
@@ -39,6 +46,16 @@ export const useProductPagination = () => {
         }
     }, [goToPage]);
 
+    const handleSortChange = useCallback((sortOption: SortOption) => {
+        try {
+            setCurrentSort(sortOption);
+            goToPage(1); // Volta para a primeira página ao mudar a ordenação
+        } catch (error) {
+            console.error('Erro ao mudar ordenação:', error);
+            setError('Falha ao ordenar produtos. Por favor, tente novamente.');
+        }
+    }, [goToPage]);
+
     const handleRefresh = useCallback(() => {
         try {
             refresh();
@@ -56,7 +73,9 @@ export const useProductPagination = () => {
         currentPage,
         totalPages,
         totalDocuments,
+        currentSort: currentSort.value,
         goToPage: handlePageChange,
+        onSortChange: handleSortChange,
         refresh: handleRefresh,
     };
 };

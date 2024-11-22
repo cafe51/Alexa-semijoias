@@ -13,6 +13,7 @@ import { useCollection } from '@/app/hooks/useCollection';
 import Notification from '@/app/components/Notification';
 import { useProductPagination } from '@/app/hooks/useProductPagination';
 import { Pagination } from '@/app/components/Pagination';
+import ProductSorter from '@/app/components/ProductList/ProductSorter';
 
 interface NotificationState {
     message: string;
@@ -32,9 +33,11 @@ export default function ProductsDashboard() {
         error, 
         currentPage, 
         totalPages, 
-        goToPage, 
-        refresh,
         totalDocuments,
+        currentSort,
+        goToPage, 
+        onSortChange,
+        refresh,
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
@@ -79,6 +82,10 @@ export default function ProductsDashboard() {
     return (
         <main className='w-full h-full mt-24'>
             <ProductsHeader totalProducts={ totalDocuments } />
+            <ProductSorter
+                currentSort={ currentSort }
+                onSortChange={ onSortChange }
+            />
             <SlideInModal
                 isOpen={ showEditionModal }
                 closeModelClick={ () => setShowEditionModal(false) }
