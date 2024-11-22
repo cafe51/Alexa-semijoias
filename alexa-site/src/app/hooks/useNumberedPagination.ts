@@ -18,6 +18,7 @@ export const useNumberedPagination = <T>(
     const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalDocuments, setTotalDocuments] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [allDocumentRefs, setAllDocumentRefs] = useState<DocumentData[]>([]);
 
@@ -36,6 +37,7 @@ export const useNumberedPagination = <T>(
             const q = query(ref, ...queryConstraints);
             const snapshot = await getCountFromServer(q);
             const total = snapshot.data().count;
+            setTotalDocuments(total);
             setTotalPages(Math.ceil(total / itemsPerPage));
 
             // Busca todas as referências dos documentos ordenados
@@ -116,15 +118,16 @@ export const useNumberedPagination = <T>(
     useEffect(() => {
         fetchPage(currentPage);
     }, [currentPage, fetchPage]);
-
+    
     useEffect(() => {console.log('documents AAAAAAAAAAAAAAAaa', documents); }, [documents]);
-
+    
     return {
         documents,
         isLoading,
         error,
         currentPage,
         totalPages,
+        totalDocuments,
         goToPage,
         refresh: () => {
             fetchTotalPages();

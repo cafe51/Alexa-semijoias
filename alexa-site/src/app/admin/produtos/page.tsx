@@ -34,6 +34,7 @@ export default function ProductsDashboard() {
         totalPages, 
         goToPage, 
         refresh,
+        totalDocuments,
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
@@ -77,7 +78,7 @@ export default function ProductsDashboard() {
 
     return (
         <main className='w-full h-full mt-24'>
-            <ProductsHeader totalProducts={ products.length } />
+            <ProductsHeader totalProducts={ totalDocuments } />
             <SlideInModal
                 isOpen={ showEditionModal }
                 closeModelClick={ () => setShowEditionModal(false) }

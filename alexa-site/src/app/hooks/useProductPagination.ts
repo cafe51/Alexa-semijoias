@@ -18,6 +18,7 @@ export const useProductPagination = () => {
         isLoading, 
         currentPage,
         totalPages,
+        totalDocuments,
         goToPage,
         refresh,
         error: paginationError,
@@ -54,6 +55,7 @@ export const useProductPagination = () => {
         error: error || paginationError,
         currentPage,
         totalPages,
+        totalDocuments,
         goToPage: handlePageChange,
         refresh: handleRefresh,
     };
