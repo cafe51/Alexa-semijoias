@@ -95,7 +95,8 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                     src={ product.images?.[0]?.localUrl || blankImage }
                     alt="Foto do produto"
                     fill
-                    loading="lazy"
+                    // loading="lazy"
+                    priority
                     sizes='300px'
                 />
             </div>
