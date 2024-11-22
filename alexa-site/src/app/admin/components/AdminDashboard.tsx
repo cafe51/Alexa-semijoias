@@ -38,7 +38,7 @@ const AdminDashboard: React.FC = () => {
                 />
             </div>
             {
-                process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'false'
+                process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true'
             &&
             <div className='flex flex-col gap-4'>
                 <ChangeDataBaseButton />
