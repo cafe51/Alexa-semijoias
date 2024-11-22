@@ -12,10 +12,18 @@ export type SortOption = {
 const sortOptions: SortOption[] = [
     { value: 'newest', label: 'Novidades', orderBy: 'creationDate', direction: 'desc' },
     { value: 'oldest', label: 'Mais antigos', orderBy: 'creationDate', direction: 'asc' },
+    
     { value: 'price-high', label: 'Maiores preços', orderBy: 'finalPrice', direction: 'desc' },
     { value: 'price-low', label: 'Menores preços', orderBy: 'finalPrice', direction: 'asc' },
+
+    { value: 'stock-asc', label: 'Estoque - Altos', orderBy: 'estoqueTotal', direction: 'desc' },
+    { value: 'stock-desc', label: 'Estoque - Baixos', orderBy: 'estoqueTotal', direction: 'asc' },
+
     { value: 'name-asc', label: 'A - Z', orderBy: 'name', direction: 'asc' },
     { value: 'name-desc', label: 'Z - A', orderBy: 'name', direction: 'desc' },
+
+
+
 ];
 
 type ProductSorterProps = {
