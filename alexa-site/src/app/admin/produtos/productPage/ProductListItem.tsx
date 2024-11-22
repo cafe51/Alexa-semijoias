@@ -7,6 +7,7 @@ import { formatPrice } from '@/app/utils/formatPrice';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import LargeButton from '@/app/components/LargeButton';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
+import toTitleCase from '@/app/utils/toTitleCase';
 
 interface ProductListItemProps {
     product: ProductBundleType & FireBaseDocument;
@@ -76,35 +77,33 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
     }, [product.id, deleteDocument, setRefreshProducts]);
 
     return (
-        <div className='flex flex-col text-xs w-full p-2 border-b pb-4 gap-4 bg-white shadow-md rounded-lg'>
+        <div className="flex flex-col gap-4 p-4 bg-white shadow-lg rounded-lg transition transform hover:scale-105">
             <DeleteConfirmationModal isOpen={ showDeleteModal } onClose={ () => setShowDeleteModal(false) } onConfirm={ handleDeleteConfirm } />
-            <div className='flex justify-between flex-grow'>
-                <p className='font-bold'>{ product.name }</p>
-                
-                <button className='text-blue-500' onClick={ handleEditClick }>
+            <div className="flex justify-between items-center">
+                <p className="font-bold text-[#333333]">{ toTitleCase(product.name) }</p>
+                <button className="text-[#C48B9F]" onClick={ handleEditClick }>
                     <FiEdit size={ 20 } />
                 </button>
             </div>
             
-            <div className='rounded-lg h-20 w-20 relative overflow-hidden flex-shrink-0' onClick={ handleProductImageClick }>
+            <div
+                className="relative rounded-lg h-28 w-28 overflow-hidden bg-gray-100"
+                onClick={ handleProductImageClick }
+            >
                 <Image
-                    className='rounded-lg object-cover scale-100'
-                    src={ product.images && product.images.length > 0 && product.images[0].localUrl ? product.images[0].localUrl : blankImage }
-                    alt="Foto da peça"
+                    className="object-cover w-full h-full"
+                    src={ product.images?.[0]?.localUrl || blankImage }
+                    alt="Foto do produto"
                     fill
                     loading="lazy"
-                    placeholder="blur"
-                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/+F9PQAI8wNPvd7POQAAAABJRU5ErkJggg=="
-                    sizes="400px"
+                    sizes='300px'
                 />
             </div>
 
-            <div className='flex items-center justify-between min-w-7 h-full'>
-                <p>estoque: <span className='font-bold'>{ product.estoqueTotal }</span></p>
-
-                <p>{ formatPrice(product.value.price) }</p>
-
-                <button className='text-red-500' onClick={ handleDeleteClick }>
+            <div className="flex justify-between items-center">
+                <p className="text-[#333333]">Estoque: <span className="font-bold">{ product.estoqueTotal }</span></p>
+                <p className="text-[#D4AF37] font-bold">{ formatPrice(product.value.price) }</p>
+                <button className="text-red-500" onClick={ handleDeleteClick }>
                     <PiTrashSimpleBold size={ 20 } />
                 </button>
             </div>

@@ -1,4 +1,5 @@
-import React from 'react';
+// src/app/admin/produtos/componentes/ProductsHeader.tsx
+
 import Link from 'next/link';
 
 interface ProductsHeaderProps {
@@ -6,25 +7,29 @@ interface ProductsHeaderProps {
 }
 
 const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts }) => {
-
-
     return (
-        <div className="bg-white shadow-md p-4 mb-4 rounded-lg w-full">
-            <div className="flex gap-2 justify-between items-center mb-4">
-                <h1 className="text-xl font-bold">Produtos ({ totalProducts })</h1>
-                <Link href="/admin/produtos/novo" className="bg-blue-500 hover:bg-blue-600 text-white text-center font-bold p-2 rounded">
+        <div className="bg-white shadow-md p-6 mb-6 rounded-lg w-full">
+            <div className="flex flex-wrap justify-between items-center gap-4">
+                <h1 className="text-2xl font-bold text-[#333333]">Produtos ({ totalProducts })</h1>
+                <Link
+                    href="/admin/produtos/novo"
+                    className="bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition"
+                >
                     Adicionar Produto
                 </Link>
             </div>
-            <form onSubmit={ () => { } } className="flex flex-col md:flex-row gap-2 w-full">
+            <form onSubmit={ () => {} } className="flex flex-col md:flex-row gap-4 mt-4">
                 <input
-                    className="p-2 border border-gray-300 rounded w-full md:w-auto"
+                    className="p-3 border border-[#C48B9F] rounded-lg flex-grow text-[#333333] placeholder-[#C48B9F] focus:outline-none"
                     type="text"
-                    value={ '' }
+                    value=""
                     onChange={ () => {} }
                     placeholder="Buscar produtos..."
                 />
-                <button type="submit" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded w-full md:w-auto">
+                <button
+                    type="submit"
+                    className="bg-[#F8C3D3] text-[#333333] font-medium py-3 px-6 rounded-lg hover:bg-[#C48B9F] hover:text-white transition"
+                >
                     Buscar
                 </button>
             </form>

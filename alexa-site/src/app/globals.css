@@ -215,3 +215,12 @@ a {
     @apply bg-background text-foreground;
   }
 }
+
+/* Esconde a barra de rolagem horizontal em navegadores */
+.scrollbar-thin::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-thin {
+  -ms-overflow-style: none; /* Para IE 10+ */
+  scrollbar-width: none; /* Para Firefox */
+}

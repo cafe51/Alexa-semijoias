@@ -80,7 +80,7 @@ export default function ProductsDashboard() {
     }, [refresh]);
 
     return (
-        <main className='w-full h-full mt-24'>
+        <main className="w-full mt-24 px-4 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
             <ProductsHeader totalProducts={ totalDocuments } />
             <ProductSorter
                 currentSort={ currentSort }
@@ -107,9 +107,9 @@ export default function ProductsDashboard() {
             >
                 <DashboardProductDetails product={ selectedProduct } />
             </SlideInModal>
-            <section className='flex flex-col gap-2 w-full h-full'>
+            <section className="flex flex-col gap-4 w-full">
                 { isLoading && products.length === 0 ? (
-                    <div className="text-center py-4">Carregando produtos...</div>
+                    <div className="text-center py-4 text-[#333333]">Carregando produtos...</div>
                 ) : error ? (
                     <div className="text-center py-4 text-red-500">{ error }</div>
                 ) : products.length > 0 ? (
@@ -131,7 +131,7 @@ export default function ProductsDashboard() {
                         />
                     </>
                 ) : (
-                    <div className="text-center py-4">Nenhum produto encontrado.</div>
+                    <div className="text-center py-4 text-[#333333]">Nenhum produto encontrado.</div>
                 ) }
             </section>
             { notification && (
