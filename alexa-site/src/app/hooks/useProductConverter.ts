@@ -84,12 +84,14 @@ export function useProductConverter() {
             // images= images.map((image) => image.file),
     
             productVariations: editableProduct.productVariations.map((pv, index) => {
-                const codigoDeBarra = (pv.defaultProperties.barCode && pv.defaultProperties.barCode.length > 0) ? pv.defaultProperties.barCode : getRandomBarCode(index);
-
-                const skuGenerated = pv.defaultProperties.sku ? pv.defaultProperties.sku : getRandomSku(editableProduct.sections, codigoDeBarra, pv.customProperties);
-
+                
+                
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { imageIndex, ...restOfDefaultProperties } = pv.defaultProperties;
+                const { imageIndex, barCode, sku, ...restOfDefaultProperties } = pv.defaultProperties;
+                
+                const finalBarCode = (barCode && barCode.length > 0) ? barCode : getRandomBarCode(index);
+                const skuGenerated = sku ? sku : getRandomSku(editableProduct.sections, finalBarCode, pv.customProperties);
+                
                 const imageVariation = imagesData.find((imageData) => imageData.index === imageIndex);
                 return {
 
@@ -101,7 +103,7 @@ export function useProductConverter() {
                     value: editableProduct.value,
                     categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
                     sku: skuGenerated,
-                    barcode: codigoDeBarra,
+                    barcode: finalBarCode,
 
                 };
             }),
