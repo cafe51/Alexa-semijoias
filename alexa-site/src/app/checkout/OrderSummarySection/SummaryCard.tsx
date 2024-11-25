@@ -20,6 +20,7 @@ export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
                             className='rounded-lg object-cover scale-100'
                             src={ image ? image : blankImage }
                             alt="Foto da peça"
+                            sizes="200px"
                             fill
                         />
                     </div>
