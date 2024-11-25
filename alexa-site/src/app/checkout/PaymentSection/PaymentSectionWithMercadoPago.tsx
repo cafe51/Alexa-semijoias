@@ -13,6 +13,8 @@ interface PaymentSectionWithMercadoPagoProps {
     showPaymentFailSection: boolean | string;
     setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void;
     setIsProcessingPayment: (isProcessing: boolean) => void;
+    setIsPaymentFinished: (isPaymentFinished: boolean) => void;
+
 }
 
 export default function PaymentSectionWithMercadoPago({
@@ -25,6 +27,7 @@ export default function PaymentSectionWithMercadoPago({
     showPaymentFailSection,
     setShowPaymentFailSection,
     setIsProcessingPayment,
+    setIsPaymentFinished,
 }: PaymentSectionWithMercadoPagoProps) {
     return (
         <>
@@ -41,6 +44,7 @@ export default function PaymentSectionWithMercadoPago({
                 setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
                 setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
                 setIsProcessingPayment={ setIsProcessingPayment }
+                setIsPaymentFinished={ setIsPaymentFinished }
             />
             }
             {

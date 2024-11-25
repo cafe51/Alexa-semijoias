@@ -15,6 +15,7 @@ interface PaymentBrickProps {
   setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void;
   setShowPaymentSection: (showPaymentSection: boolean) => void;
   setIsProcessingPayment: (isProcessing: boolean) => void;
+  setIsPaymentFinished: (isPaymentFinished: boolean) => void;
 }
 
 export default function PaymentBrick({ 
@@ -24,7 +25,8 @@ export default function PaymentBrick({
     preferenceId, 
     setShowPaymentFailSection, 
     setShowPaymentSection,
-    setIsProcessingPayment, 
+    setIsProcessingPayment,
+    setIsPaymentFinished,
 }: PaymentBrickProps) {
     const { carrinho } = useUserInfo();
 
@@ -38,7 +40,7 @@ export default function PaymentBrick({
     });
 
     // Usa o hook personalizado
-    const { onSubmit, onError, onReady } = usePaymentProcessing();
+    const { onSubmit, onError, onReady } = usePaymentProcessing(setIsPaymentFinished);
 
     const customization: IPaymentBrickCustomization = {
         paymentMethods: {

@@ -11,10 +11,9 @@ import { createPayment, sendEmailConfirmation } from '../utils/apiCall';
 import { handlePaymentFailure } from '../utils/paymentStatusHandler';
 import { createAdditionalInfo, createNewOrderObject, createPayer, createPayerAddInfo } from '../utils/orderHelpers';
 
-export const usePaymentProcessing = () => {
+export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: boolean) => void) => {
     const router = useRouter();
     const { addDocument: createNewOrder, getDocumentById: getOrderById } = useCollection<OrderType>('pedidos');
-    const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinhos');
     const { updateTheProductDocumentStock } = useManageProductStock();
 
     const finishPayment = async(
@@ -50,25 +49,20 @@ export const usePaymentProcessing = () => {
 
         try {
             await createNewOrder(newOrder, paymentId);
-            await Promise.all(
-                carrinho.map((item) =>
-                    updateTheProductDocumentStock(item.productId, item.skuId, item.quantidade, '-'),
-                ),
-            );
 
-            await Promise.all(
-                carrinho.map((item) => {
-                    const { id } = item as ProductCartType & FireBaseDocument;
-                    return deleteCartItemFromDb(id);
-                }),
-            );
+            for (const cartItem of carrinho) {
+                const { productId, skuId, quantidade } = cartItem as ProductCartType & FireBaseDocument;
+                await updateTheProductDocumentStock(productId, skuId, quantidade, '-');
+            }
 
-            router.push(`/pedido/${paymentId}`);
 
             console.log('Pedido finalizado com sucesso');
         } catch (error) {
             console.error('Erro ao criar o pedido:', error);
             throw error;
+        } finally {
+            setIsPaymentFinished(true);
+            router.push(`/pedido/${paymentId}`);
         }
     };
 

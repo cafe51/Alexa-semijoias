@@ -12,13 +12,15 @@ import PaymentSectionWithMercadoPago from './PaymentSection/PaymentSectionWithMe
 import { useWindowSize } from '../hooks/useWindowSize';
 import PriceSummarySection from './OrderSummarySection/PriceSummarySection';
 import Link from 'next/link';
-import { ProductCartType } from '../utils/types';
+import { FireBaseDocument, ProductCartType } from '../utils/types';
 import SummaryCard from './OrderSummarySection/SummaryCard';
 import LoadingIndicator from '../components/LoadingIndicator';
+import { useCollection } from '../hooks/useCollection';
 
 export default function Checkout() {
     const router = useRouter();
     const { userInfo, carrinho } = useUserInfo();
+    const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinho');
     const [ loadingScreen, setLoadingScreen ] = useState(true);
     const [cartPrice, setCartPrice] = useState(0);
     const [isCartLoading, setIsCartLoading] = useState(true);
@@ -26,6 +28,8 @@ export default function Checkout() {
     const [preferenceId, setPreferenceId] = useState<string | undefined>(undefined);
     const [showPaymentFailSection, setShowPaymentFailSection] = useState<boolean | string>(false);
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+    const [isPaymentFinished, setIsPaymentFinished] = useState(false);
+
 
     const { screenSize } = useWindowSize();
 
@@ -40,6 +44,17 @@ export default function Checkout() {
         handleShowFullOrderSummary,
     } = useCheckoutState();
 
+    useEffect(() => {
+        if(isPaymentFinished) {
+            if(carrinho && carrinho.length > 0) {
+                for (const cartItem  of carrinho) {
+                    const { id } = cartItem as ProductCartType & FireBaseDocument;
+                    deleteCartItemFromDb(id);
+                }
+            }
+            setIsPaymentFinished(false);
+        }
+    }, [isPaymentFinished, deleteCartItemFromDb, carrinho]);
 
     useEffect(() => {
         if (!carrinho || carrinho.length < 1) {
@@ -129,6 +144,7 @@ export default function Checkout() {
                         showPaymentFailSection={ showPaymentFailSection }
                         setShowPaymentFailSection={ setShowPaymentFailSection }
                         setIsProcessingPayment={ setIsProcessingPayment }
+                        setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                     />
                 </div>
             ) : screenSize === 'medium' ? (
@@ -180,6 +196,7 @@ export default function Checkout() {
                                 showPaymentFailSection={ showPaymentFailSection }
                                 setShowPaymentFailSection={ setShowPaymentFailSection }
                                 setIsProcessingPayment={ setIsProcessingPayment }
+                                setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                             />
                         </div>
                     </div>
@@ -221,6 +238,7 @@ export default function Checkout() {
                             showPaymentFailSection={ showPaymentFailSection }
                             setShowPaymentFailSection={ setShowPaymentFailSection }
                             setIsProcessingPayment={ setIsProcessingPayment }
+                            setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                         />
                     </div>
     
