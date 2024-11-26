@@ -28,9 +28,9 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
         setLoadingPayment: (isPaymentLoading: boolean) => void,
         pixPaymentResponse?: PixPaymentResponseType,
     ) => {
-        const { address, deliveryOption, selectedDeliveryOption } = state;
+        const { address, deliveryOption } = state;
 
-        if (!user || !carrinho || !address || !deliveryOption || !selectedDeliveryOption) {
+        if (!user || !carrinho || !address || !deliveryOption) {
             throw new Error('Dados de pagamento incompletos');
         }
 
@@ -44,7 +44,6 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             carrinho,
             address,
             deliveryOption,
-            selectedDeliveryOption,
             pixPaymentResponse,
         );
 

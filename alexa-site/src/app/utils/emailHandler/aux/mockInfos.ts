@@ -48,7 +48,7 @@ export const mockOrderPix: OrderType = {
     },
     totalQuantity: 2,
     paymentOption: 'pix',
-    deliveryOption: 'PAC',
+    deliveryOption: { deliveryTime: 2, name: 'PAC', price: 10 },
     installments: 1,
     paymentId: '1234567890123',
     createdAt: {

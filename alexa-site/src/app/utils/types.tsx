@@ -272,7 +272,7 @@ export type OrderType = {
 
     totalQuantity: number,
     paymentOption: string,
-    deliveryOption: string,
+    deliveryOption: DeliveryOptionType,
 
     installments?: number | null,
 

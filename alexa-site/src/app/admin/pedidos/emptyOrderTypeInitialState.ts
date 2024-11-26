@@ -35,5 +35,5 @@ export const emptyOrderTypeInitialState: OrderType & FireBaseDocument = {
     paymentId: 'mockPaymentId',
     totalQuantity: 0,
     paymentOption: '',
-    deliveryOption: '',
+    deliveryOption: { deliveryTime: 0, name: '', price: 0 },
 };

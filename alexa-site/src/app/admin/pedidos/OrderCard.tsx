@@ -55,7 +55,7 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
                 </div>
                 <div className='flex flex-col'>
                     <p>{ pedido.paymentOption }</p>
-                    <p>{ pedido.deliveryOption }</p>
+                    <p>{ pedido.deliveryOption.name }</p>
                 </div>
             </div>
         </div>
