@@ -2,7 +2,6 @@ import { FireBaseDocument, OrderType,  StatusType, UserType } from '@/app/utils/
 import ChangeStatus from './ChangeStatus';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import CancelOrderButton from './CancelOrderButton';
-import PixPayment from '@/app/components/PixPayment';
 import TryNewOrderButton from './TryNewOrderButton';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
@@ -15,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { XCircle, RefreshCw } from 'lucide-react';
 import { useWindowSize } from '@/app/hooks/useWindowSize';
 import LoadingIndicator from '@/app/components/LoadingIndicator';
+import PixPayment from './pixPaymentSection/PixPayment';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -33,9 +33,9 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
     const [showPixPayment, setShowPixPayment] = useState(false);
 
     useEffect(() => {
-        const conditionsToShowPixPayment = pedidoState.status === 'aguardando pagamento'
+        const conditionsToShowPixPayment = (pedidoState.status === 'aguardando pagamento' || pedidoState.status === 'cancelado')
         && pedidoState.pixResponse && pedidoState.pixResponse.qrCode.length > 0
-        && status === 'aguardando pagamento';
+        && (status === 'aguardando pagamento' || status === 'cancelado');
         if (conditionsToShowPixPayment) {
             setShowPixPayment(true);
         } else {
@@ -63,7 +63,12 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                 modalConfirmationRetryOrder
                 && <ModalMaker closeModelClick={ () => setShowModalConfirmationRetryOrder(false) } title='Refazer Pedido'>
                     <section className='flex flex-col *:text-center *:p-2 w-full'>
-                        <p>Deseja cancelar esse pedido e refazê-lo?</p>
+                        {
+                            status === 'cancelado'
+                                ? <p>Deseja refazer esse pedido?</p>
+                                :
+                                <p>Deseja cancelar esse pedido e refazê-lo?</p>
+                        }
                         <div className='flex justify-between w-full p-4'>
                             <div onClick={ async() => {
                                 setStatus('cancelado');
@@ -99,7 +104,7 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                     { admin && (
                         <ChangeStatus
                             pedido={ pedido }
-                            initialStatus={ pedidoState.status }
+                            initialStatus={ status }
                             changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                         />
                     ) }
@@ -109,7 +114,11 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                             <PixPayment
                                 pixKey={ pedidoState.pixResponse.qrCode }
                                 qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
-                                startDate={ pedidoState.updatedAt.toDate() }
+                                startDate={ pedidoState.createdAt.toDate() }
+                                cancelStatus={ () => {
+                                    console.log('chamou o cancelar');
+                                    setStatus('cancelado');
+                                } }
                             />
                         )
                     }
@@ -156,6 +165,10 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                                         pixKey={ pedidoState.pixResponse.qrCode }
                                         qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
                                         startDate={ pedidoState.updatedAt.toDate() }
+                                        cancelStatus={ () => {
+                                            console.log('chamou o cancelar');
+                                            setStatus('cancelado');
+                                        } }
                                     />
                                 )
                             }
@@ -205,6 +218,10 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                                     pixKey={ pedidoState.pixResponse.qrCode }
                                     qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
                                     startDate={ pedidoState.updatedAt.toDate() }
+                                    cancelStatus={ () => {
+                                        console.log('chamou o cancelar');
+                                        setStatus('cancelado');
+                                    } }
                                 />
                             )
                         }

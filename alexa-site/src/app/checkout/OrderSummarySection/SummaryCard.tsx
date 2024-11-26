@@ -3,6 +3,7 @@ import { CartHistoryType } from '@/app/utils/types';
 import Image from 'next/image';
 import blankImage from '../../../../public/blankImage.png';
 import { formatPrice } from '@/app/utils/formatPrice';
+import toTitleCase from '@/app/utils/toTitleCase';
 
 
 export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
@@ -27,7 +28,7 @@ export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
                     // <img src={ image } alt={ name } className="w-20 h-20 object-cover rounded-md mr-4" />
                 }
                 <div className='rounded-lg relative w-3/4 overflow-hidden text-sm font-bold md:text-xl' >
-                    <p >{ name }</p>
+                    <p >{ toTitleCase(name) }</p>
                 </div>
             </div>
             <div className="flex justify-between items-center w-full">
