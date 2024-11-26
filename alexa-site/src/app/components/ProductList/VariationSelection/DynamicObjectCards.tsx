@@ -130,6 +130,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                                 src={ productVariationsSelected[0].image ? productVariationsSelected[0].image : blankImage }
                                 alt="Foto da peça"
                                 fill
+                                sizes='200px'
                             />
                         </div>
                         <ProductSummary selectedOptions={ selectedOptions } />
