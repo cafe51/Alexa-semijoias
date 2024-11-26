@@ -116,7 +116,6 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                                 qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
                                 startDate={ pedidoState.createdAt.toDate() }
                                 cancelStatus={ () => {
-                                    console.log('chamou o cancelar');
                                     setStatus('cancelado');
                                 } }
                             />
@@ -166,7 +165,6 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                                         qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
                                         startDate={ pedidoState.updatedAt.toDate() }
                                         cancelStatus={ () => {
-                                            console.log('chamou o cancelar');
                                             setStatus('cancelado');
                                         } }
                                     />
@@ -219,7 +217,6 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                                     qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
                                     startDate={ pedidoState.updatedAt.toDate() }
                                     cancelStatus={ () => {
-                                        console.log('chamou o cancelar');
                                         setStatus('cancelado');
                                     } }
                                 />
