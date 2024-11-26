@@ -46,13 +46,15 @@ export default function Checkout() {
 
     useEffect(() => {
         if(isPaymentFinished) {
-            if(carrinho && carrinho.length > 0) {
-                for (const cartItem  of carrinho) {
-                    const { id } = cartItem as ProductCartType & FireBaseDocument;
-                    deleteCartItemFromDb(id);
+            setTimeout(() => {
+                if(carrinho && carrinho.length > 0) {
+                    for (const cartItem  of carrinho) {
+                        const { id } = cartItem as ProductCartType & FireBaseDocument;
+                        deleteCartItemFromDb(id);
+                    }
                 }
-            }
-            setIsPaymentFinished(false);
+                setIsPaymentFinished(false);
+            }, 500);
         }
     }, [isPaymentFinished, deleteCartItemFromDb, carrinho]);
 
