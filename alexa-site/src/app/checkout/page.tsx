@@ -20,7 +20,7 @@ import { useCollection } from '../hooks/useCollection';
 export default function Checkout() {
     const router = useRouter();
     const { userInfo, carrinho } = useUserInfo();
-    const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinho');
+    const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinhos');
     const [ loadingScreen, setLoadingScreen ] = useState(true);
     const [cartPrice, setCartPrice] = useState(0);
     const [isCartLoading, setIsCartLoading] = useState(true);
