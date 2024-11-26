@@ -8,14 +8,15 @@ import { nameGenerator } from '../../../app/utils/nameGenerator';
 import { convertArrayToString } from '../../../app/utils/convertArrayToString';
 
 interface PaymentBrickProps {
-  totalAmount: number;
-  user: UserType & FireBaseDocument;
-  state: UseCheckoutStateType;
-  preferenceId: string;
-  setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void;
-  setShowPaymentSection: (showPaymentSection: boolean) => void;
-  setIsProcessingPayment: (isProcessing: boolean) => void;
-  setIsPaymentFinished: (isPaymentFinished: boolean) => void;
+    totalAmount: number;
+    user: UserType & FireBaseDocument;
+    state: UseCheckoutStateType;
+    preferenceId: string;
+    setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void;
+    setShowPaymentSection: (showPaymentSection: boolean) => void;
+    setIsProcessingPayment: (isProcessing: boolean) => void;
+    setIsPaymentFinished: (isPaymentFinished: boolean) => void;
+    setLoadingPayment: (isPaymentLoading: boolean) => void;
 }
 
 export default function PaymentBrick({ 
@@ -27,6 +28,7 @@ export default function PaymentBrick({
     setShowPaymentSection,
     setIsProcessingPayment,
     setIsPaymentFinished,
+    setLoadingPayment,
 }: PaymentBrickProps) {
     const { carrinho } = useUserInfo();
 
@@ -136,7 +138,8 @@ export default function PaymentBrick({
             customization={ customization }
             onSubmit={ async(params) => {
                 setIsProcessingPayment(true);
-                return onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection);
+                setLoadingPayment(true);
+                return onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection, setLoadingPayment);
             } }
             onReady={ onReady }
             onError={ onError }

@@ -25,6 +25,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
         user: UserType & FireBaseDocument,
         state: UseCheckoutStateType,
         carrinho: ProductCartType[],
+        setLoadingPayment: (isPaymentLoading: boolean) => void,
         pixPaymentResponse?: PixPaymentResponseType,
     ) => {
         const { address, deliveryOption, selectedDeliveryOption } = state;
@@ -62,6 +63,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             throw error;
         } finally {
             setIsPaymentFinished(true);
+            setLoadingPayment(false);
             router.push(`/pedido/${paymentId}`);
         }
     };
@@ -74,6 +76,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
         carrinho: ProductCartType[],
         setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void,
         setShowPaymentSection: (showPaymentSection: boolean) => void,
+        setLoadingPayment: (isPaymentLoading: boolean) => void,
     ): Promise<void> => {
 
         try {
@@ -101,6 +104,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
 
             if (paymentResponse.status === 'rejected') {
                 // Chama a função para lidar com o erro
+                setLoadingPayment(false);
                 handlePaymentFailure(paymentResponse.status_detail, setShowPaymentFailSection, setShowPaymentSection);
                 return;
             }
@@ -130,6 +134,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
                 user,
                 state,
                 carrinho,
+                setLoadingPayment,
                 pixPaymentResponse,
             );
 
