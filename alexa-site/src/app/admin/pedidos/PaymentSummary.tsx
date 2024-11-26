@@ -49,7 +49,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({ subtotalPrice, frete, p
                     {
                         (paymentOption.toLowerCase() !== 'pix')
                         &&
-                        (<p>{ installments }x de <span className='font-bold'>{ formatPrice((subtotalPrice || 0) + (frete || 0) / (installments || 0)) }</span></p>)
+                        (<p>{ installments }x de <span className='font-bold'>{ formatPrice(((subtotalPrice || 0) + (frete || 0)) / (installments || 0)) }</span></p>)
                     }
                 </div>
             </CardContent>
