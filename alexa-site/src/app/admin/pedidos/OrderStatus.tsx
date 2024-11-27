@@ -1,10 +1,10 @@
 // src/components/OrderStatus.tsx
 import React from 'react';
-import { Package } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { OrderType } from '@/app/utils/types';
 import { statusColors } from '@/app/utils/statusColors';
+import DeliveryTimeSection from './DeliveryTimeSection';
 
 interface OrderStatusProps {
   order: OrderType;
@@ -29,14 +29,9 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
                     </div>
                 </CardTitle>
             </CardHeader>
+
             <CardContent className="pt-4">
-                <div className="flex items-center text-sm mb-2">
-                    <Package className="mr-2 h-4 w-4" />
-          Estimativa de entrega: 5-7 dias úteis
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-[#D4AF37] h-2.5 rounded-full" style={ { width: '45%' } }></div>
-                </div>
+                <DeliveryTimeSection deliveryDays={ order.deliveryOption.deliveryTime } orderCreationDate={ order.createdAt.toDate() } />
             </CardContent>
         </Card>
     );
