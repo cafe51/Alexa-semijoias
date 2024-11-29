@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCollection } from '../hooks/useCollection';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { formatPrice } from '../utils/formatPrice';
@@ -19,6 +19,7 @@ interface CartItemProps {
 
 export default function CartItem({ cartItem }: CartItemProps) {
     const { user } = useAuthContext();
+    const [isLoadingButton, setIsLoadingButton] = useState(false);
     const { addOneToLocalStorage, removeOneFromLocalStorage, removeItemFromLocalStorageCart } = useLocalStorage();
     useEffect(() => {
         console.log('PRODUTOOOOO', cartItem);
@@ -83,9 +84,18 @@ export default function CartItem({ cartItem }: CartItemProps) {
                         <div className="flex justify-between items-center">
                             <QuantitySelectionCartBox
                                 quantity={ cartItem.quantidade }
-                                removeOne={ removeOne }
-                                addOne={ addOne }
+                                removeOne={ () => {
+                                    setIsLoadingButton(true);
+                                    removeOne();
+                                    setTimeout(() => setIsLoadingButton(false), 400);
+                                } }
+                                addOne={ () => {
+                                    setIsLoadingButton(true);
+                                    addOne();
+                                    setTimeout(() => setIsLoadingButton(false), 400);
+                                } }
                                 stock={ cartItem.estoque }
+                                isLoadingButton={ isLoadingButton }
                             />
                             <p className="font-semibold text-sm md:text-lg lg:text-xl xl:text-2xl">
                                 { formatPrice((cartItem.value.promotionalPrice || cartItem.value.price) * cartItem.quantidade) }

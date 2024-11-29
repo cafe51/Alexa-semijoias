@@ -130,9 +130,9 @@ export default function Product({ id }: { id: string }) {
                                 <Card className='border-[#F8C3D3]'>
                                     <CardContent className="p-4">
                                         <PropertiesSelectionSection
+                                            isLoadingButton={ isLoadingButton }
                                             carrinho={ carrinho }
                                             handleAddToCart={ handleAddToCart }
-                                            setIsloadingButton={ setIsloadingButton }
                                             selectedOptions={ selectedOptions }
                                             currentPhase={ currentPhase }
                                             setCurrentPhase={ setCurrentPhase }

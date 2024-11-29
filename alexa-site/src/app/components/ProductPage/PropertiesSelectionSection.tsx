@@ -10,7 +10,7 @@ import QuantitySelectionCartBox from '../QuantitySelectionCartBox';
 
 interface PropertiesSelectionSectionProps {
     carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
-    setIsloadingButton: React.Dispatch<React.SetStateAction<boolean>>;
+    isLoadingButton: boolean;
     handleAddToCart: (
         carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null,
         productData: ProductVariation | null,
@@ -19,12 +19,8 @@ interface PropertiesSelectionSectionProps {
     ) => void;
     currentPhase: number;
     setCurrentPhase: React.Dispatch<React.SetStateAction<number>>;
-    selectedOptions: {
-        [key: string]: string;
-    };
-    setSelectedOptions: Dispatch<SetStateAction<{
-        [key: string]: string;
-    }>>;
+    selectedOptions: { [key: string]: string };
+    setSelectedOptions: Dispatch<SetStateAction<{ [key: string]: string }>>;
     errorMessage: string | null;
     setErrorMessage: Dispatch<SetStateAction<string | null>>;
     quantity: number;
@@ -36,6 +32,7 @@ interface PropertiesSelectionSectionProps {
 }
 
 const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
+    isLoadingButton,
     currentPhase, setCurrentPhase,
     selectedOptions, setSelectedOptions,
     errorMessage, setErrorMessage,
@@ -155,6 +152,7 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
                         removeOne={ removeOne }
                         addOne={ addOne }
                         stock={ maxAvailableQuantity }
+                        isLoadingButton={ isLoadingButton }
                     />
                 </div>
             ) }

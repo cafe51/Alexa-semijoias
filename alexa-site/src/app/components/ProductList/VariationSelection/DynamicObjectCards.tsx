@@ -43,6 +43,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
         productVariationsSelected,
         keys,
     } = useDynamicObjectCardsLogic(object, carrinho);
+    
 
     if (object.productVariations.some((pv) => pv.customProperties === undefined)) {
         return <p>Olá</p>;
@@ -141,6 +142,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                         removeOne={ () =>  setQuantity((prevQuantity) => prevQuantity -= 1) }
                         addOne={ () => setQuantity((prevQuantity) => prevQuantity += 1) }
                         stock={ availableStock(productVariationsSelected[0].estoque) }
+                        isLoadingButton={ isLoadingButton }
                     />
 
                     <PriceSection
