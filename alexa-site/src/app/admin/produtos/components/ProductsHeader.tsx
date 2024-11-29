@@ -4,9 +4,11 @@ import Link from 'next/link';
 
 interface ProductsHeaderProps {
     totalProducts: number;
+    setSearchTerm: (searchTerm: string) => void;
+    searchTerm: string;
 }
 
-const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts }) => {
+const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts, setSearchTerm, searchTerm }) => {
     return (
         <div className="bg-white shadow-md p-6 mb-6 rounded-lg w-full">
             <div className="flex flex-wrap justify-between items-center gap-4">
@@ -22,8 +24,8 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts }) => {
                 <input
                     className="p-3 border border-[#C48B9F] rounded-lg flex-grow text-[#333333] placeholder-[#C48B9F] focus:outline-none"
                     type="text"
-                    value=""
-                    onChange={ () => {} }
+                    value={ searchTerm }
+                    onChange={ (e) => setSearchTerm(e.target.value) }
                     placeholder="Buscar produtos..."
                 />
                 <button

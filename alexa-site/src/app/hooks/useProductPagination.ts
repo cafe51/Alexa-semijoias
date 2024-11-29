@@ -1,9 +1,11 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNumberedPagination } from './useNumberedPagination';
-import { ProductBundleType } from '@/app/utils/types';
+import { FilterOptionForUseSnapshot, ProductBundleType } from '@/app/utils/types';
 import { SortOption } from '@/app/components/ProductList/ProductSorter';
+import removeAccents from '../utils/removeAccents';
 
 export const useProductPagination = () => {
+    const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [currentSort, setCurrentSort] = useState<SortOption>({ 
         value: 'newest', 
@@ -20,6 +22,45 @@ export const useProductPagination = () => {
 
     const collectionName = useMemo(() => 'products', []);
 
+    const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[] | null>(() => {
+        // const baseFilters: FilterOptionForUseSnapshot[] = [
+        //     { field: 'showProduct', operator: '==', value: true },
+        //     { field: 'estoqueTotal', operator: '>', value: 0 },
+        // ];
+
+        // Se existe um termo de busca, verifica no campo keyWords
+        if (searchTerm) {
+            const normalizedTerm = removeAccents(searchTerm.toLowerCase());
+            return [
+                // ...baseFilters,
+                { field: 'keyWords', operator: 'array-contains', value: normalizedTerm },
+            ];
+        }
+
+        // // Filtro por subseção, se especificado
+        // if (subsection) {
+        //     return [
+        //         ...baseFilters,
+        //         { field: 'subsections', operator: 'array-contains', value: subsection },
+        //     ];
+        // }
+
+        // // Filtro por seção, se especificado
+        // if (sectionName) {
+        //     return [
+        //         ...baseFilters,
+        //         { field: 'sections', operator: 'array-contains', value: sectionName },
+        //     ];
+        // }
+
+        // return baseFilters;
+        return null;
+    }, [
+        // sectionName,
+        // subsection,
+        searchTerm,
+    ]);
+
     const { 
         documents: products, 
         isLoading, 
@@ -31,7 +72,7 @@ export const useProductPagination = () => {
         error: paginationError,
     } = useNumberedPagination<ProductBundleType>(
         collectionName,
-        null,
+        pedidosFiltrados,
         ITEMS_PER_PAGE,
         ordination,
     );
@@ -77,5 +118,7 @@ export const useProductPagination = () => {
         goToPage: handlePageChange,
         onSortChange: handleSortChange,
         refresh: handleRefresh,
+        setSearchTerm,
+        searchTerm,
     };
 };
