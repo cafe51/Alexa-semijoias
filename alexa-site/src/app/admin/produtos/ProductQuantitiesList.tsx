@@ -1,5 +1,4 @@
-import { FilterOptionForUseSnapshot, ProductBundleType, SectionType } from '@/app/utils/types';
-import { FireBaseDocument } from '../../../../functions/src/types';
+import { FilterOptionForUseSnapshot, FireBaseDocument, ProductBundleType, SectionType } from '@/app/utils/types';
 import { useNumberedPagination } from '@/app/hooks/useNumberedPagination';
 import { useMemo } from 'react';
 
