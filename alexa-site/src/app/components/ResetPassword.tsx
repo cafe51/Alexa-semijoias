@@ -1,11 +1,13 @@
-//src/app/components/ResetPassword.tsx
+// src/app/components/ResetPassword.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { auth } from '../firebase/config';
-
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 export default function ResetPassword({ oobCode }: { oobCode: string }) {
     const [email, setEmail] = useState<string | null>(null);
@@ -43,44 +45,67 @@ export default function ResetPassword({ oobCode }: { oobCode: string }) {
     };
 
     return (
-        <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-4">Redefinir Senha</h2>
-            { error && <p className="text-red-500 mb-4">{ error }</p> }
+        <div className="max-w-lg mx-auto p-6 bg-[#FAF9F6] shadow-lg rounded-lg border border-[#F8C3D3]">
+            <h2 className="text-2xl font-semibold text-center mb-4 text-[#333333]">Redefinir Senha</h2>
+            { error && (
+                <Alert variant="destructive" className="mb-4 border-l-4 border-[#C48B9F] bg-[#F8C3D3] text-[#333333]">
+                    <AlertTitle>Erro</AlertTitle>
+                    <AlertDescription>{ error }</AlertDescription>
+                </Alert>
+            ) }
             { success ? (
-                <>
-                    <p className="text-green-600 mb-4">Senha redefinida com sucesso! Agora você pode fazer login com sua nova senha.</p>
-                    <Link href="/login" className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600">
-                        Ir para Login
-                    </Link>
-                </>
+                <div className="text-center">
+                    <p className="text-[#333333] mb-4">
+                        Senha redefinida com sucesso! Agora você pode fazer login com sua nova senha.
+                    </p>
+                    <Button asChild className="bg-[#D4AF37] text-white hover:bg-opacity-90">
+                        <Link href="/login">Ir para Login</Link>
+                    </Button>
+                </div>
             ) : (
-                !error && email && (
-                    <form onSubmit={ handleSubmit } className="flex flex-col space-y-4">
+                !error &&
+                email && (
+                    <form onSubmit={ handleSubmit } className="space-y-6">
                         <div>
-                            <label htmlFor="newPassword" className="block font-medium mb-1">Nova Senha</label>
-                            <input
+                            <label
+                                htmlFor="newPassword"
+                                className="block font-medium text-[#333333] mb-2"
+                            >
+                                Nova Senha
+                            </label>
+                            <Input
                                 type="password"
                                 id="newPassword"
                                 value={ newPassword }
                                 onChange={ (e) => setNewPassword(e.target.value) }
                                 required
-                                className="p-2 border border-gray-400 rounded w-full"
+                                placeholder="Digite sua nova senha"
+                                className="bg-[#FAF9F6] border-[#F8C3D3] text-[#333333] focus:ring-[#D4AF37]"
                             />
                         </div>
                         <div>
-                            <label htmlFor="confirmPassword" className="block font-medium mb-1">Confirmar Nova Senha</label>
-                            <input
+                            <label
+                                htmlFor="confirmPassword"
+                                className="block font-medium text-[#333333] mb-2"
+                            >
+                                Confirmar Nova Senha
+                            </label>
+                            <Input
                                 type="password"
                                 id="confirmPassword"
                                 value={ confirmPassword }
                                 onChange={ (e) => setConfirmPassword(e.target.value) }
                                 required
-                                className="p-2 border border-gray-400 rounded w-full"
+                                placeholder="Confirme sua nova senha"
+                                className="bg-[#FAF9F6] border-[#F8C3D3] text-[#333333] focus:ring-[#D4AF37]"
                             />
                         </div>
-                        <button type="submit" className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        <Button
+                            type="submit"
+                            className="w-full bg-[#D4AF37] text-white py-2 px-4 rounded hover:bg-opacity-90"
+                        >
                             Redefinir Senha
-                        </button>
+                        </Button>
                     </form>
                 )
             ) }
