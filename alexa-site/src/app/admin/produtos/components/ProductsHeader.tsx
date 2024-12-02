@@ -6,13 +6,19 @@ interface ProductsHeaderProps {
     totalProducts: number;
     setSearchTerm: (searchTerm: string) => void;
     searchTerm: string;
+    showProductQuantitiesModal: () => void;
 }
 
-const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts, setSearchTerm, searchTerm }) => {
+export default function ProductsHeader({ totalProducts, setSearchTerm, searchTerm, showProductQuantitiesModal }: ProductsHeaderProps) {
     return (
         <div className="bg-white shadow-md p-6 mb-6 rounded-lg w-full">
             <div className="flex flex-wrap justify-between items-center gap-4">
-                <h1 className="text-2xl font-bold text-[#333333]">Produtos ({ totalProducts })</h1>
+                <button
+                    className='text-2xl font-bold text-[#333333] p-4 border-2 border-[#C48B9F] hover:border-[#D4AF37] transition rounded-xl'
+                    onClick={ showProductQuantitiesModal }
+                >
+                    Produtos ({ totalProducts })
+                </button>
                 <Link
                     href="/admin/produtos/novo"
                     className="bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition"
@@ -37,6 +43,4 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({ totalProducts, setSearc
             </form>
         </div>
     );
-};
-
-export default ProductsHeader;
+}

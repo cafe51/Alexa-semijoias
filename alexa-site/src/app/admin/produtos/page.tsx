@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { FireBaseDocument, ProductBundleType, ProductVariationsType, StateNewProductType } from '@/app/utils/types';
+import { FireBaseDocument, ProductBundleType, ProductVariationsType, SectionType, StateNewProductType } from '@/app/utils/types';
 import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
 import DashboardProductDetails from './productPage/DashboardProductDetails';
 import DashboardProductEdition from './productPage/DashboardProductEdition';
@@ -14,6 +14,8 @@ import Notification from '@/app/components/Notification';
 import { useProductPagination } from '@/app/hooks/useProductPagination';
 import { Pagination } from '@/app/components/Pagination';
 import ProductSorter from '@/app/components/ProductList/ProductSorter';
+import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
+import ProductQuantitiesList from './ProductQuantitiesList';
 
 interface NotificationState {
     message: string;
@@ -26,6 +28,8 @@ export default function ProductsDashboard() {
     const [productBundleEditable, setProductBundleEditable] = useState<StateNewProductType>(initialEmptyState);
     const [selectedProduct, setSelectedProduct] = useState<ProductBundleType & FireBaseDocument>(emptyProductBundleInitialState);
     const [notification, setNotification] = useState<NotificationState | null>(null);
+    const [showProductQuantitiesModal, setShowProductQuantitiesModal] = useState(false);
+    const [siteSections, setSiteSections] = useState<(SectionType & FireBaseDocument)[]>([]);
 
     const { 
         products, 
@@ -45,6 +49,16 @@ export default function ProductsDashboard() {
     const { useProductDataHandlers } = useProductConverter();
     const { deleteDocument: deleteProductBundle } = useCollection<ProductBundleType>('products');
     const { deleteDocument: deleteProductVariation, getAllDocuments: getAllProductVariations } = useCollection<ProductVariationsType>('productVariations');
+    const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
+
+    useEffect(() => {
+        const fetchSections = async() => {
+            const sections = await getAllSections();
+            setSiteSections(sections);
+        };
+        fetchSections();
+    }, []);
+
 
     useEffect(() => {
         if (selectedProduct.exist) {
@@ -83,11 +97,28 @@ export default function ProductsDashboard() {
 
     return (
         <main className="md:m-auto md:mt-24 md:w-2/3 lg:w-1/2 mt-24 px-4 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
-            <ProductsHeader totalProducts={ totalDocuments } setSearchTerm={ (searchTerm: string) => setSearchTerm(searchTerm) } searchTerm={ searchTerm } /> 
+            <ProductsHeader
+                totalProducts={ totalDocuments }
+                setSearchTerm={ (searchTerm: string) => setSearchTerm(searchTerm) }
+                searchTerm={ searchTerm }
+                showProductQuantitiesModal={ () => setShowProductQuantitiesModal(true) }
+            /> 
             <ProductSorter
                 currentSort={ currentSort }
                 onSortChange={ onSortChange }
             />
+            {
+                showProductQuantitiesModal && <ModalMaker
+                    closeModelClick={ () => setShowProductQuantitiesModal(false) }
+                    title="Quantidades de Produtos"
+                >
+                    {
+                        siteSections && siteSections.length > 0 &&
+                     <ProductQuantitiesList siteSections={ siteSections } />
+                    }
+                </ModalMaker>
+            }
+                
             <SlideInModal
                 isOpen={ showEditionModal }
                 closeModelClick={ () => setShowEditionModal(false) }
