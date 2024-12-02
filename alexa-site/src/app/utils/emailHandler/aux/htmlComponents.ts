@@ -120,6 +120,9 @@ function formatPriceSummary(value: ValueType, totalItensQuantity: number): strin
 }
 
 function formatProductItem(product: CartHistoryType): string {
+    const unitPrice = product.value.promotionalPrice || product.value.price;
+    const totalPrice = unitPrice * product.quantidade;
+
     return `
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #E9ECEF; border-radius: 8px; margin-bottom: 15px; background-color: white;">
         <tr>
@@ -127,7 +130,7 @@ function formatProductItem(product: CartHistoryType): string {
                 <table cellpadding="0" cellspacing="0" border="0" style="width: 200px; height: 200px;">
                     <tr>
                         <td align="center" style="width: 200px; height: 200px; background-color: #F8F9FA; border-radius: 8px;">
-                            <img src="${product.image}" alt="${product.name}" width="180" height="180" style="display: block; border-radius: 8px; object-fit: cover;">
+                            <img src="${product.image}" alt="${toTitleCase(product.name)}" width="180" height="180" style="display: block; border-radius: 8px; object-fit: cover;">
                         </td>
                     </tr>
                 </table>
@@ -148,12 +151,15 @@ function formatProductItem(product: CartHistoryType): string {
                     </tr>
                     <tr>
                         <td align="right" style="padding-top: 15px;">
-                            ${product.value.promotionalPrice ? `
-                                <div style="color: #C48B9F; font-weight: 600; font-size: 20px;">${formatPrice(product.value.promotionalPrice)}</div>
-                                <div style="text-decoration: line-through; color: #666; font-size: 16px;">${formatPrice(product.value.price)}</div>
-                            ` : `
-                                <div style="color: #C48B9F; font-weight: 600; font-size: 20px;">${formatPrice(product.value.price)}</div>
-                            `}
+                            <div style="margin-bottom: 5px;">
+                                ${product.value.promotionalPrice ? `
+                                    <div style="color: #C48B9F; font-weight: 600; font-size: 20px;">${formatPrice(product.value.promotionalPrice)} <small style="color: #666; font-size: 14px;">(unitário)</small></div>
+                                    <div style="text-decoration: line-through; color: #666; font-size: 16px;">${formatPrice(product.value.price)}</div>
+                                ` : `
+                                    <div style="color: #C48B9F; font-weight: 600; font-size: 20px;">${formatPrice(product.value.price)} <small style="color: #666; font-size: 14px;">(unitário)</small></div>
+                                `}
+                            </div>
+                            <div style="color: #333; font-size: 18px; font-weight: 700;">Total: ${formatPrice(totalPrice)}</div>
                         </td>
                     </tr>
                 </table>
@@ -161,6 +167,7 @@ function formatProductItem(product: CartHistoryType): string {
         </tr>
     </table>`;
 }
+
 
 function formatAddress(address: AddressType): string {
     let formattedAddress = `${address.logradouro}, ${address.numero}`;
