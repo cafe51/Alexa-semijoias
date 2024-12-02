@@ -34,12 +34,14 @@ export default function ProductsHeader({ totalProducts, setSearchTerm, searchTer
                     onChange={ (e) => setSearchTerm(e.target.value) }
                     placeholder="Buscar produtos..."
                 />
-                <button
-                    type="submit"
-                    className="bg-[#F8C3D3] text-[#333333] font-medium py-3 px-6 rounded-lg hover:bg-[#C48B9F] hover:text-white transition"
-                >
-                    Buscar
-                </button>
+                {
+                    // <button
+                    //     type="submit"
+                    //     className="bg-[#F8C3D3] text-[#333333] font-medium py-3 px-6 rounded-lg hover:bg-[#C48B9F] hover:text-white transition"
+                    // >
+                    // Buscar
+                    // </button>
+                }
             </form>
         </div>
     );
