@@ -48,7 +48,7 @@ const AdminHeader = () => {
     if (!user || !isAdmin) return null;
 
     return (
-        <header className={ `primColor fixed w-full transition-all duration-500 z-50 ${opacity}` } data-testid='full-header'>
+        <header className={ `primColor fixed w-full transition-all duration-500 z-50 ${opacity} mb-20` } data-testid='full-header'>
             <div className={ `flex justify-between items-center px-8 md:px-16 ${height} md:py-0 w-full` }>
                 <div className='flex justify-evenly w-full'>
                     <IoHomeSharp className='cursor-pointer' size={ size } onClick={ () => router.push('/admin') }/>

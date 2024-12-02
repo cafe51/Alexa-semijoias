@@ -17,6 +17,8 @@ export default function NewProductPage() {
     const handleGoToProductPage = useCallback(() => setGoToProductPage(prev => !prev), []);
 
     return(
-        <ProductEditionForm useProductDataHandlers={ useProductDataHandlers } goToProductPage={ handleGoToProductPage } />
+        <div className='mt-24 w-full h-full'>
+            <ProductEditionForm useProductDataHandlers={ useProductDataHandlers } goToProductPage={ handleGoToProductPage } />
+        </div>
     );
 }
