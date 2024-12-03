@@ -16,6 +16,7 @@ import { useWindowSize } from '@/app/hooks/useWindowSize';
 import LoadingIndicator from '@/app/components/LoadingIndicator';
 import PixPayment from './pixPaymentSection/PixPayment';
 import GenerateRomaneioButton from '@/app/components/GenerateRomaneioButton';
+import { detalhesDaEmpresa } from '@/app/utils/detalhesDaEmpresa';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -105,11 +106,18 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
             { screenSize === 'mobile' ? (
                 // Layout Mobile - Uma coluna
                 <div className="flex flex-col space-y-6 w-full">
+                    { admin && (
+                        <GenerateRomaneioButton
+                            order={ pedidoState }
+                            user={ user }
+                            dadosDaEmpresa={ detalhesDaEmpresa }
+                        />
+                    ) }
                     <OrderStatus order={ pedidoState } />
                     { admin && (
                         <ChangeStatus
                             pedido={ pedido }
-                            initialStatus={ status }
+                            initialStatus={ pedidoState.status }
                             changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                         />
                     ) }
@@ -156,6 +164,13 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                     changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                                 />
                             ) }
+                            { admin && (
+                                <GenerateRomaneioButton
+                                    order={ pedidoState }
+                                    user={ user }
+                                    dadosDaEmpresa={ detalhesDaEmpresa }
+                                />
+                            ) }
                             <PaymentSummary
                                 frete={ pedido.valor.frete }
                                 subtotalPrice={ pedido.valor.soma }
@@ -192,6 +207,13 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                 // Layout Desktop - Mantendo o layout original em três colunas
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     <div className='flex flex-col lg:gap-8'>
+                        { admin && (
+                            <GenerateRomaneioButton
+                                order={ pedidoState }
+                                user={ user }
+                                dadosDaEmpresa={ detalhesDaEmpresa }
+                            />
+                        ) }
                         <OrderStatus order={ pedidoState } />
                         <CustomerInfo
                             email={ email }
@@ -205,38 +227,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                 changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
                             />
                         ) }
-                        { admin && (
-                            <GenerateRomaneioButton
-                                order={ pedidoState }
-                                user={ user }
-                                dadosDaEmpresa={
-                                    {
-                                        cep: '30.772.232/0001-29',
-                                        endereco: {
-                                            logradouro: 'Rua das Siriemas',
-                                            numero: '747',
-                                            bairro: 'Jardim Araguaia',
-                                            localidade: 'Fernandópolis',
-                                            uf: 'SP',
-                                            cep: '30.772.232/0001-29',
-                                            referencia: 'Próximo à APAE',
-                                            complemento: 'CASA',
-                                            ddd: '17',
-                                            estado: 'SP',
-                                            gia: 'SP',
-                                            ibge: 'SP',
-                                            regiao: 'SP',
-                                            siafi: 'SP',
-                                            unidade: 'SP',
-                                        },
-                                        nome: 'Alexa Semijoias',
-                                        telefone: '(17) 98165-0632',
-                                        cnpj: '30.772.232/0001-29',
-                                        razaoSocial: 'ALEXA SEMIJOIAS',
-                                    }
-                                }
-                            />
-                        ) }
+
                         <DeliveryAddress address={ pedido.endereco } />
                     </div>
                     <div className='flex flex-col lg:gap-8'>
