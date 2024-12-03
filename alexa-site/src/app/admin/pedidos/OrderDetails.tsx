@@ -15,6 +15,7 @@ import { XCircle, RefreshCw } from 'lucide-react';
 import { useWindowSize } from '@/app/hooks/useWindowSize';
 import LoadingIndicator from '@/app/components/LoadingIndicator';
 import PixPayment from './pixPaymentSection/PixPayment';
+import GenerateRomaneioButton from '@/app/components/GenerateRomaneioButton';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -24,7 +25,8 @@ interface OrderDetailsProps {
     loadingState: boolean
 }
 
-export default function OrderDetails({ pedido, user: { email, nome, phone }, setLoadingState, loadingState, admin=false }: OrderDetailsProps) {
+export default function OrderDetails({ pedido, user, setLoadingState, loadingState, admin=false }: OrderDetailsProps) {
+    const { email, nome, phone } = user;
     const { screenSize } = useWindowSize();
     const { userInfo } = useUserInfo();
     const [modalConfirmationRetryOrder, setShowModalConfirmationRetryOrder] = useState(false);
@@ -48,7 +50,10 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
     }, [pedido.status]);
 
     useEffect(() => {
+        setLoadingState(true);
         setPedidoState(pedido);
+        setLoadingState(false);
+
     }, [pedido]);
 
     if(loadingState) return (
@@ -198,6 +203,38 @@ export default function OrderDetails({ pedido, user: { email, nome, phone }, set
                                 pedido={ pedido }
                                 initialStatus={ pedidoState.status }
                                 changeStatus={ (newStatus: StatusType) => setStatus(newStatus) }
+                            />
+                        ) }
+                        { admin && (
+                            <GenerateRomaneioButton
+                                order={ pedidoState }
+                                user={ user }
+                                dadosDaEmpresa={
+                                    {
+                                        cep: '30.772.232/0001-29',
+                                        endereco: {
+                                            logradouro: 'Rua das Siriemas',
+                                            numero: '747',
+                                            bairro: 'Jardim Araguaia',
+                                            localidade: 'Fernandópolis',
+                                            uf: 'SP',
+                                            cep: '30.772.232/0001-29',
+                                            referencia: 'Próximo à APAE',
+                                            complemento: 'CASA',
+                                            ddd: '17',
+                                            estado: 'SP',
+                                            gia: 'SP',
+                                            ibge: 'SP',
+                                            regiao: 'SP',
+                                            siafi: 'SP',
+                                            unidade: 'SP',
+                                        },
+                                        nome: 'Alexa Semijoias',
+                                        telefone: '(17) 98165-0632',
+                                        cnpj: '30.772.232/0001-29',
+                                        razaoSocial: 'ALEXA SEMIJOIAS',
+                                    }
+                                }
                             />
                         ) }
                         <DeliveryAddress address={ pedido.endereco } />

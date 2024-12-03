@@ -2,6 +2,15 @@
 import { Timestamp, WhereFilterOp } from 'firebase/firestore';
 import { SavedSubSectionType } from '../hooks/useSectionManagement';
 
+export type DadosDaEmpresaType = {
+    nome: string;
+    cnpj: string;
+    razaoSocial: string;
+    endereco: AddressType;
+    cep: string;
+    telefone: string;
+}
+
 export type FireBaseDocument = {
     exist: boolean,
     id: string,
