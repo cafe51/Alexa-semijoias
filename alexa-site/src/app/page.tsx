@@ -54,7 +54,7 @@ export default function HomePage() {
                 1,
                 orderByNewest,
             );
-            featuredProducts.push(newFeaturedProducts[0]);
+            newFeaturedProducts[0] && featuredProducts.push(newFeaturedProducts[0]);
         }
         return featuredProducts;
     }
