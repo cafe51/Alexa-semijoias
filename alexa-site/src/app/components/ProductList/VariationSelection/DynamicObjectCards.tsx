@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
 import OptionButton from './OptionButton';
 import ErrorMessage from './ErrorMessage';
@@ -43,6 +43,13 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
         productVariationsSelected,
         keys,
     } = useDynamicObjectCardsLogic(object, carrinho);
+
+
+    useEffect(() => {
+        console.log('KEEEEYS', keys);
+        console.log('CURRENTPHASE', currentPhase);
+        console.log('SELECTEDOPTIONS', selectedOptions);
+    }, [keys, currentPhase]);
     
 
     if (object.productVariations.some((pv) => pv.customProperties === undefined)) {
@@ -51,6 +58,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
   
 
     const handleOptionSelect = (option: string) => {
+        console.log('clicou', option);
         if (!availableOptions.includes(option)) {
             setErrorMessage(
                 currentPhase === 0
@@ -100,6 +108,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
             return totalStock - cartItem.quantidade;
         }
     };
+
 
     return (
         <div className="p-4">
