@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import ImageCarousel from '@/app/components/ImageCarousel';
 import { Card, CardContent } from '@/components/ui/card';
 import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
+import LoadingIndicator from '../LoadingIndicator';
 
 export default function Product({ id }: { id: string }) {
     const { carrinho } = useUserInfo();
@@ -99,9 +100,7 @@ export default function Product({ id }: { id: string }) {
         setShowModalFinishBuy(prev => !prev);
     }, [handleAddToCart, carrinho, productVariationsSelected, quantity, setIsloadingButton, localCartQuantity, setQuantity, setCurrentPhase, setSelectedOptions]);
 
-    if(isLoading || !product) {
-        return <h1>Carregando...</h1>;
-    }
+    if(isLoading || !product) return <LoadingIndicator />;
 
     return (
         <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-0 md:px-8 mb-8 md:mt-16">
