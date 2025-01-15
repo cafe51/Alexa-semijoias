@@ -16,6 +16,7 @@ import { Pagination } from '@/app/components/Pagination';
 import ProductSorter from '@/app/components/ProductList/ProductSorter';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import ProductQuantitiesList from './ProductQuantitiesList';
+import ProductEditionForm from './ProductEditionForm';
 
 interface NotificationState {
     message: string;
@@ -24,6 +25,7 @@ interface NotificationState {
 
 export default function ProductsDashboard() {
     const [showEditionModal, setShowEditionModal] = useState(false);
+    const [showCreateNewProductModal, setShowCreateNewProductModal] = useState(false);
     const [showProductDetailModal, setShowProductDetailModal] = useState(false);
     const [productBundleEditable, setProductBundleEditable] = useState<StateNewProductType>(initialEmptyState);
     const [selectedProduct, setSelectedProduct] = useState<ProductBundleType & FireBaseDocument>(emptyProductBundleInitialState);
@@ -92,6 +94,7 @@ export default function ProductsDashboard() {
 
     const handleProductEdited = useCallback(() => {
         setShowEditionModal(false);
+        setShowCreateNewProductModal(false);
         refresh();
     }, [refresh]);
 
@@ -102,6 +105,7 @@ export default function ProductsDashboard() {
                 setSearchTerm={ (searchTerm: string) => setSearchTerm(searchTerm) }
                 searchTerm={ searchTerm }
                 showProductQuantitiesModal={ () => setShowProductQuantitiesModal(true) }
+                setShowCreateNewProductModal={ () => setShowCreateNewProductModal(true) }
             /> 
             <ProductSorter
                 currentSort={ currentSort }
@@ -131,6 +135,15 @@ export default function ProductsDashboard() {
                     setRefreshProducts={ handleProductEdited }
                 />
             </SlideInModal>
+
+            <SlideInModal
+                isOpen={ showCreateNewProductModal }
+                closeModelClick={ () => setShowCreateNewProductModal(false) }
+                title="Criar Novo Produto"
+            >
+                <ProductEditionForm useProductDataHandlers={ useProductDataHandlers } goToProductPage={ handleProductEdited } />
+            </SlideInModal>
+
             <SlideInModal
                 isOpen={ showProductDetailModal }
                 closeModelClick={ () => setShowProductDetailModal(false) }

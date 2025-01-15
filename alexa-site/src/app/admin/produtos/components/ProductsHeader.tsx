@@ -1,15 +1,14 @@
 // src/app/admin/produtos/componentes/ProductsHeader.tsx
 
-import Link from 'next/link';
-
 interface ProductsHeaderProps {
     totalProducts: number;
     setSearchTerm: (searchTerm: string) => void;
     searchTerm: string;
     showProductQuantitiesModal: () => void;
+    setShowCreateNewProductModal: () => void;
 }
 
-export default function ProductsHeader({ totalProducts, setSearchTerm, searchTerm, showProductQuantitiesModal }: ProductsHeaderProps) {
+export default function ProductsHeader({ totalProducts, setSearchTerm, searchTerm, showProductQuantitiesModal, setShowCreateNewProductModal }: ProductsHeaderProps) {
     return (
         <div className="bg-white shadow-md p-6 mb-6 rounded-lg w-full">
             <div className="flex flex-wrap justify-between items-center gap-4">
@@ -19,12 +18,13 @@ export default function ProductsHeader({ totalProducts, setSearchTerm, searchTer
                 >
                     Produtos ({ totalProducts })
                 </button>
-                <Link
-                    href="/admin/produtos/novo"
+                <button
                     className="bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition"
+                    type="button"
+                    onClick={ setShowCreateNewProductModal }
                 >
                     Adicionar Produto
-                </Link>
+                </button>
             </div>
             <form onSubmit={ () => {} } className="flex flex-col md:flex-row gap-4 mt-4">
                 <input
