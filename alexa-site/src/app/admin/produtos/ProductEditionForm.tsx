@@ -95,7 +95,7 @@ export default function ProductEditionForm({
 
     return (
         <section className='flex flex-col gap-2 w-full'>
-            <h1 className='font-bold'>{ product ? 'Editar Produto': 'Novo Produto' }</h1>
+            { /* <h1 className='font-bold'>{ product ? 'Editar Produto': 'Novo Produto' }</h1> */ }
             <NameAndDescriptionSection state={ state } handlers={ handlers } />
             <PhotosSection state={ state } handleSetImages={ handlers.handleSetImages } />
             <PricesSection state={ state } handleValueChange={ handlers.handleValueChange } />
