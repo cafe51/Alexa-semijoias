@@ -6,6 +6,7 @@ import Header from './components/header/Header';
 import { AuthContextProvider } from './context/AuthContext';
 import { UserInfoProvider } from './context/UserInfoContext';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Montserrat({ subsets: ['latin'] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
                     </UserInfoProvider>
                 </AuthContextProvider>
                 <Analytics />
+                <SpeedInsights />
             </body>
         </html>
     );
