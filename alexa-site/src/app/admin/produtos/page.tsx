@@ -145,6 +145,7 @@ export default function ProductsDashboard() {
             </SlideInModal>
 
             <SlideInModal
+                slideDirection='left'
                 isOpen={ showProductDetailModal }
                 closeModelClick={ () => setShowProductDetailModal(false) }
                 title="Detalhes do produto"
