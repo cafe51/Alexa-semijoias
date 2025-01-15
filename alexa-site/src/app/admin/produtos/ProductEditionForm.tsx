@@ -122,7 +122,7 @@ export default function ProductEditionForm({
             { finishFormError && <p className='text-red-500'>{ finishFormError }</p> }
 
             <LargeButton color='blue' loadingButton={ loadingButton } onClick={ handleCreateNewProductClick }>
-            Criar Produto
+                { product ? 'Salvar': 'Criar' }
             </LargeButton>
             <LargeButton color='green hidden' loadingButton={ false } onClick={ () => {
                 console.log('state', state);
