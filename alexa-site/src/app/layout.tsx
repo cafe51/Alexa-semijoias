@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Header from './components/header/Header';
 import { AuthContextProvider } from './context/AuthContext';
 import { UserInfoProvider } from './context/UserInfoContext';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Montserrat({ subsets: ['latin'] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
                         <Footer />
                     </UserInfoProvider>
                 </AuthContextProvider>
+                <Analytics />
             </body>
         </html>
     );
