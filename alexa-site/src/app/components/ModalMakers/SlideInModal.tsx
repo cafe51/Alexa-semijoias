@@ -46,9 +46,9 @@ export default function SlideInModal({ children, closeModelClick, title, isOpen,
                 onClick={ handleBackdropClick }
             ></div>
             <div
-                className={ `${fullWidth ? 'w-full' : ''} fixed inset-y-0 ${slideDirection === 'left' ? 'left-0' : 'right-0'} z-50 transform transition-transform duration-300 ${slideInClass}` }
+                className={ `${fullWidth ? 'w-full' : 'md:w-1/3'} fixed inset-y-0 ${slideDirection === 'left' ? 'left-0' : 'right-0'} z-50 transform transition-transform duration-300 ${slideInClass}` }
             >
-                <div className="bg-white p-6 rounded-l-md shadow-md w-full max-h-screen overflow-hidden h-screen">
+                <div className="bg-white p-0 rounded-l-md shadow-md w-full max-h-screen overflow-hidden h-screen">
                     <ModalHeader closeModelClick={ closeModelClick } title={ title } />
                     <div className="overflow-auto max-h-[calc(80vh)] w-full">
                         { children }

@@ -123,7 +123,6 @@ export default function ProductsDashboard() {
                 isOpen={ showEditionModal }
                 closeModelClick={ () => setShowEditionModal(false) }
                 title="Editar Produto"
-                fullWidth
             >
                 <DashboardProductEdition
                     product={ productBundleEditable }
@@ -136,7 +135,6 @@ export default function ProductsDashboard() {
                 isOpen={ showProductDetailModal }
                 closeModelClick={ () => setShowProductDetailModal(false) }
                 title="Detalhes do produto"
-                fullWidth
             >
                 <DashboardProductDetails product={ selectedProduct } />
             </SlideInModal>
