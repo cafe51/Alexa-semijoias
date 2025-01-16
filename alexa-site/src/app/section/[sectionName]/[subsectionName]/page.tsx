@@ -15,10 +15,10 @@ export default function SubSection({ params: { sectionName, subsectionName } }: 
     useEffect(() => {
         async function fetchDataFromFb() {
             setLoading(true);
-            const sectionOnFirebase = await getAllSections([{ field: 'sectionName', operator: '==', value: decodeURIComponent(sectionName) }]);
-            console.log('SEEEEEEECTION', sectionOnFirebase);
 
-            if (sectionOnFirebase.length === 0 || !sectionOnFirebase[0].subsections?.includes(subsectionName)) {
+            const sectionOnFirebase = await getAllSections([{ field: 'sectionName', operator: '==', value: decodeURIComponent(sectionName) }]);
+            
+            if (sectionOnFirebase.length === 0 || !sectionOnFirebase[0].subsections?.includes(decodeURIComponent(subsectionName))) {
                 router.push('/');
             }
             setLoading(false);
