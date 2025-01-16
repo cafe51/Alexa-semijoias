@@ -6,12 +6,13 @@ import { formatPrice } from '@/app/utils/formatPrice';
 
 export default function DashboardProductDetails({ product }: {product:  ProductBundleType & FireBaseDocument}) {
     return (
-        <section className='flex flex-col gap-4 w-full'>
+        <section className='flex flex-col gap-4 w-full px-4 '>
             <div className='flex flex-wrap gap-2'>
                 { product.categories.map((category) => <div key={ category } className='p-2 bg-green-600 rounded'><p className='text-white'>{ category }</p></div>) }
             </div>
 
             <p className='text-2xl font-semibold w-full'>{ product.name }</p>
+            <p className='text-xl font-semibold w-full'>{ product.id }</p>
 
             <ResponsiveCarousel productData={ product } />
 
