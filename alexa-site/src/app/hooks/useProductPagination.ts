@@ -6,6 +6,10 @@ import removeAccents from '../utils/removeAccents';
 
 export const useProductPagination = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [showStoreProducts, setShowStoreProducts] = useState(true);
+    const [showOutStoreProducts, setShowOutStoreProducts] = useState(true);
+    const [estoqueRange, setEstoqueRange] = useState<[number, number]>([0, 20]);
+    const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
     const [error, setError] = useState<string | null>(null);
     const [currentSort, setCurrentSort] = useState<SortOption>({ 
         value: 'newest', 
@@ -23,43 +27,47 @@ export const useProductPagination = () => {
     const collectionName = useMemo(() => 'products', []);
 
     const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[] | null>(() => {
-        // const baseFilters: FilterOptionForUseSnapshot[] = [
-        //     { field: 'showProduct', operator: '==', value: true },
-        //     { field: 'estoqueTotal', operator: '>', value: 0 },
-        // ];
+        const baseFilters: FilterOptionForUseSnapshot[] = [
+            { field: 'estoqueTotal', operator: '>=', value: estoqueRange[0] },
+            { field: 'estoqueTotal', operator: '<=', value: estoqueRange[1] },
+            { field: 'value.price', operator: '>=', value: priceRange[0] },
+            { field: 'value.price', operator: '<=', value: priceRange[1] },
+        ];
 
         // Se existe um termo de busca, verifica no campo keyWords
         if (searchTerm) {
             const normalizedTerm = removeAccents(searchTerm.toLowerCase());
             return [
-                // ...baseFilters,
+                ...baseFilters,
                 { field: 'keyWords', operator: 'array-contains', value: normalizedTerm },
             ];
         }
 
-        // // Filtro por subseção, se especificado
-        // if (subsection) {
-        //     return [
-        //         ...baseFilters,
-        //         { field: 'subsections', operator: 'array-contains', value: subsection },
-        //     ];
-        // }
-
-        // // Filtro por seção, se especificado
-        // if (sectionName) {
-        //     return [
-        //         ...baseFilters,
-        //         { field: 'sections', operator: 'array-contains', value: sectionName },
-        //     ];
-        // }
-
-        // return baseFilters;
-        return null;
+        return baseFilters;
     }, [
-        // sectionName,
-        // subsection,
         searchTerm,
+        estoqueRange,
+        priceRange,
     ]);
+
+    const filtrosFinais = useMemo<FilterOptionForUseSnapshot[] | null>(() => {
+        if (!pedidosFiltrados) return null;
+
+        const filtrosShowProduct: FilterOptionForUseSnapshot[] = [];
+
+        if (showStoreProducts && showOutStoreProducts) {
+            // Não adiciona filtro, mostra todos
+        } else if (showStoreProducts) {
+            filtrosShowProduct.push({ field: 'showProduct', operator: '==', value: true });
+        } else if (showOutStoreProducts) {
+            filtrosShowProduct.push({ field: 'showProduct', operator: '==', value: false });
+        } else {
+            // Nenhum produto deve ser mostrado
+            return [{ field: 'showProduct', operator: '==', value: 'none' }];
+        }
+
+        return [...pedidosFiltrados, ...filtrosShowProduct];
+    }, [pedidosFiltrados, showStoreProducts, showOutStoreProducts]);
 
     const { 
         documents: products, 
@@ -72,7 +80,7 @@ export const useProductPagination = () => {
         error: paginationError,
     } = useNumberedPagination<ProductBundleType>(
         collectionName,
-        pedidosFiltrados,
+        filtrosFinais,
         ITEMS_PER_PAGE,
         ordination,
     );
@@ -120,5 +128,13 @@ export const useProductPagination = () => {
         refresh: handleRefresh,
         setSearchTerm,
         searchTerm,
+        showStoreProducts,
+        setShowStoreProducts,
+        showOutStoreProducts,
+        setShowOutStoreProducts,
+        estoqueRange,
+        setEstoqueRange,
+        priceRange,
+        setPriceRange,
     };
 };

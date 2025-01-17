@@ -17,6 +17,7 @@ import ProductSorter from '@/app/components/ProductList/ProductSorter';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import ProductQuantitiesList from './ProductQuantitiesList';
 import ProductEditionForm from './ProductEditionForm';
+import ProductFilter from './components/ProductFilter';
 
 interface NotificationState {
     message: string;
@@ -31,6 +32,7 @@ export default function ProductsDashboard() {
     const [selectedProduct, setSelectedProduct] = useState<ProductBundleType & FireBaseDocument>(emptyProductBundleInitialState);
     const [notification, setNotification] = useState<NotificationState | null>(null);
     const [showProductQuantitiesModal, setShowProductQuantitiesModal] = useState(false);
+    const [showFilterModal, setShowFilterModal] = useState(false);
     const [siteSections, setSiteSections] = useState<(SectionType & FireBaseDocument)[]>([]);
 
     const { 
@@ -46,6 +48,14 @@ export default function ProductsDashboard() {
         refresh,
         setSearchTerm,
         searchTerm,
+        showStoreProducts,
+        setShowStoreProducts,
+        showOutStoreProducts,
+        setShowOutStoreProducts,
+        estoqueRange,
+        setEstoqueRange,
+        priceRange,
+        setPriceRange,
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
@@ -107,9 +117,30 @@ export default function ProductsDashboard() {
                 showProductQuantitiesModal={ () => setShowProductQuantitiesModal(true) }
                 setShowCreateNewProductModal={ () => setShowCreateNewProductModal(true) }
             /> 
-            <ProductSorter
-                currentSort={ currentSort }
-                onSortChange={ onSortChange }
+            <div className="flex justify-between items-center mb-4 gap-4">
+                <ProductSorter
+                    currentSort={ currentSort }
+                    onSortChange={ onSortChange }
+                />
+                <button
+                    onClick={ () => setShowFilterModal(true) }
+                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium transition-colors"
+                >
+                    Filtros
+                </button>
+            </div>
+
+            <ProductFilter
+                showStoreProducts={ showStoreProducts }
+                setShowStoreProducts={ setShowStoreProducts }
+                showOutStoreProducts={ showOutStoreProducts }
+                setShowOutStoreProducts={ setShowOutStoreProducts }
+                estoqueRange={ estoqueRange }
+                setEstoqueRange={ setEstoqueRange }
+                priceRange={ priceRange }
+                setPriceRange={ setPriceRange }
+                isOpen={ showFilterModal }
+                onClose={ () => setShowFilterModal(false) }
             />
             {
                 showProductQuantitiesModal && <ModalMaker
