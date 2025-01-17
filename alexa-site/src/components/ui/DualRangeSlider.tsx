@@ -25,12 +25,12 @@ const DualRangeSlider = ({
     const minThumbPosition = getPercentage(value[0]);
     const maxThumbPosition = getPercentage(value[1]);
 
-    const handleMouseMove = React.useCallback(
-        (event: MouseEvent) => {
+    const handleMove = React.useCallback(
+        (clientX: number) => {
             if (!isDragging || !sliderRef.current) return;
 
             const rect = sliderRef.current.getBoundingClientRect();
-            const percentage = Math.min(Math.max(0, ((event.clientX - rect.left) / rect.width) * 100), 100);
+            const percentage = Math.min(Math.max(0, ((clientX - rect.left) / rect.width) * 100), 100);
             const newValue = min + ((max - min) * percentage) / 100;
             const roundedValue = Math.round(newValue / step) * step;
 
@@ -45,20 +45,75 @@ const DualRangeSlider = ({
         [isDragging, min, max, step, value, onChange],
     );
 
+    // Mouse event handlers
+    const handleMouseMove = React.useCallback(
+        (event: MouseEvent) => {
+            handleMove(event.clientX);
+        },
+        [handleMove],
+    );
+
     const handleMouseUp = React.useCallback(() => {
+        setIsDragging(null);
+    }, []);
+
+    // Touch event handlers
+    const handleTouchMove = React.useCallback(
+        (event: TouchEvent) => {
+            event.preventDefault(); // Prevent scrolling while dragging
+            handleMove(event.touches[0].clientX);
+        },
+        [handleMove],
+    );
+
+    const handleTouchEnd = React.useCallback(() => {
         setIsDragging(null);
     }, []);
 
     React.useEffect(() => {
         if (isDragging) {
+            // Mouse events
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
+            // Touch events
+            window.addEventListener('touchmove', handleTouchMove, { passive: false });
+            window.addEventListener('touchend', handleTouchEnd);
+            window.addEventListener('touchcancel', handleTouchEnd);
+
             return () => {
+                // Cleanup mouse events
                 window.removeEventListener('mousemove', handleMouseMove);
                 window.removeEventListener('mouseup', handleMouseUp);
+                // Cleanup touch events
+                window.removeEventListener('touchmove', handleTouchMove);
+                window.removeEventListener('touchend', handleTouchEnd);
+                window.removeEventListener('touchcancel', handleTouchEnd);
             };
         }
-    }, [isDragging, handleMouseMove, handleMouseUp]);
+    }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
+
+    const handleInteractionStart = (thumb: 'min' | 'max') => (e: React.MouseEvent | React.TouchEvent) => {
+        e.preventDefault();
+        setIsDragging(thumb);
+    };
+
+    const handleTrackClick = (e: React.MouseEvent) => {
+        if (isDragging) return;
+        const rect = sliderRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        const percentage = ((e.clientX - rect.left) / rect.width) * 100;
+        const clickedValue = min + ((max - min) * percentage) / 100;
+        const roundedValue = Math.round(clickedValue / step) * step;
+        
+        // Decide which thumb to move based on which is closer
+        const distToMin = Math.abs(value[0] - roundedValue);
+        const distToMax = Math.abs(value[1] - roundedValue);
+        if (distToMin <= distToMax) {
+            onChange([roundedValue, value[1]]);
+        } else {
+            onChange([value[0], roundedValue]);
+        }
+    };
 
     return (
         <div className="flex flex-col gap-2">
@@ -68,26 +123,10 @@ const DualRangeSlider = ({
             <div
                 ref={ sliderRef }
                 className={ cn(
-                    'relative w-full h-2 bg-secondary rounded-full cursor-pointer',
+                    'relative w-full h-2 bg-secondary rounded-full cursor-pointer touch-none',
                     className,
                 ) }
-                onClick={ (e) => {
-                    if (isDragging) return;
-                    const rect = sliderRef.current?.getBoundingClientRect();
-                    if (!rect) return;
-                    const percentage = ((e.clientX - rect.left) / rect.width) * 100;
-                    const clickedValue = min + ((max - min) * percentage) / 100;
-                    const roundedValue = Math.round(clickedValue / step) * step;
-                    
-                    // Decide which thumb to move based on which is closer
-                    const distToMin = Math.abs(value[0] - roundedValue);
-                    const distToMax = Math.abs(value[1] - roundedValue);
-                    if (distToMin <= distToMax) {
-                        onChange([roundedValue, value[1]]);
-                    } else {
-                        onChange([value[0], roundedValue]);
-                    }
-                } }
+                onClick={ handleTrackClick }
             >
                 { /* Track fill */ }
                 <div
@@ -100,16 +139,18 @@ const DualRangeSlider = ({
                 
                 { /* Min thumb */ }
                 <div
-                    className="absolute w-4 h-4 -mt-1 -ml-2 bg-primary rounded-full shadow-md hover:shadow-lg transition-shadow"
+                    className="absolute w-4 h-4 -mt-1 -ml-2 bg-primary rounded-full shadow-md hover:shadow-lg transition-shadow touch-none"
                     style={ { left: `${minThumbPosition}%` } }
-                    onMouseDown={ () => setIsDragging('min') }
+                    onMouseDown={ handleInteractionStart('min') }
+                    onTouchStart={ handleInteractionStart('min') }
                 />
                 
                 { /* Max thumb */ }
                 <div
-                    className="absolute w-4 h-4 -mt-1 -ml-2 bg-primary rounded-full shadow-md hover:shadow-lg transition-shadow"
+                    className="absolute w-4 h-4 -mt-1 -ml-2 bg-primary rounded-full shadow-md hover:shadow-lg transition-shadow touch-none"
                     style={ { left: `${maxThumbPosition}%` } }
-                    onMouseDown={ () => setIsDragging('max') }
+                    onMouseDown={ handleInteractionStart('max') }
+                    onTouchStart={ handleInteractionStart('max') }
                 />
             </div>
         </div>
