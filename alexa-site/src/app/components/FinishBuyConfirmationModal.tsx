@@ -9,7 +9,7 @@ interface FinishBuyConfirmationProps {
 export default function FinishBuyConfirmationModal({ closeModelClick }: FinishBuyConfirmationProps) {
     const router = useRouter();
     return (
-        <ModalMaker closeModelClick={ closeModelClick } title='Produto Adicionado ao carrinho'>
+        <ModalMaker closeModelClick={ closeModelClick } title='Produto Adicionado ao Carrinho'>
             <section className='flex flex-col gap-4 p-4 text-center'>
                 <h3 className='p-4 md:text-xl'>O que você deseja fazer agora?</h3>
                 <Button

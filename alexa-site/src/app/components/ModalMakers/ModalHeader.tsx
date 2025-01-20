@@ -8,7 +8,7 @@ interface ModalHeaderProps {
 export default function ModalHeader({ title, closeModelClick }: ModalHeaderProps) {
     return (
         <div className="flex justify-center w-full mb-4 min-h-7 ">
-            <div className="">
+            <div className="text-center">
                 <h3 className="text-lg md:text-xl lg:text-2xl font-bold px-8 pt-4">{ title }</h3>
             </div>
 
