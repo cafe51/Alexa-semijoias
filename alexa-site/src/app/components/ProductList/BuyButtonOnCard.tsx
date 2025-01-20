@@ -41,6 +41,7 @@ export function BuyButtonOnCard({ product }: { product: ProductBundleType & Fire
             setShowModalOptionsVariation(!showModalOptionsVariation);
         } else {
             handleAddToCart(carrinho, product.productVariations[0], setIsloadingButton);
+            setShowModalFinishBuy(prev => !prev);
         }
     };
 
