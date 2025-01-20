@@ -1,4 +1,3 @@
-// app/checkout/DeliveryPriceSection/ChooseDeliveryPriceSection.tsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatPrice } from '@/app/utils/formatPrice';
 import FreeShippingSection from './FreeShippingSection';
@@ -13,10 +12,10 @@ interface ChooseDeliveryPriceSectionProps {
     userInfo: (UserType & FireBaseDocument) | null;
     cartPrice: number;
     deliveryOptions: DeliveryOptionType[];
-    selectedDeliveryOption:string | null;
+    selectedDeliveryOption: string | null;
     setSelectedDeliveryOption: (option: string | null) => void;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
-    setPreferenceId: (preferenceId: string) => void
+    setPreferenceId: (preferenceId: string) => void;
 }
 
 export default function ChooseDeliveryPriceSection({
@@ -29,9 +28,13 @@ export default function ChooseDeliveryPriceSection({
     setShowPaymentSection,
     setPreferenceId,
 }: ChooseDeliveryPriceSectionProps) {
-
     const precoFaltanteParaFreteGratis = 300 - cartPrice;
     const precoFaltanteEmPorcentagem = (cartPrice / 300) * 100 + '%';
+    
+    // Encontra a opção de frete mais barata
+    const cheapestOption = deliveryOptions.reduce((prev, current) => 
+        prev.price < current.price ? prev : current,
+    );
 
     const handleOptionChange = async(value: string) => {
         const response = await axios.post('/api/create-preference', {
@@ -43,7 +46,6 @@ export default function ChooseDeliveryPriceSection({
         setPreferenceId(response.data.id);
         setSelectedDeliveryOption(value);
         setShowPaymentSection(true);
-        console.log(selectedDeliveryOption);
     };
 
     return (
@@ -51,29 +53,17 @@ export default function ChooseDeliveryPriceSection({
             <CardHeader className="bg-gradient-to-r from-pink-50 to-pink-100 border-b border-[#F8C3D3]/30 pb-4">
                 <CardTitle className="flex items-center justify-between">
                     <span className="md:text-xl font-semibold text-[#333333]">
-                FORMA DE ENTREGA
+                        FORMA DE ENTREGA
                     </span>
                 </CardTitle>
             </CardHeader>
           
             <CardContent className="pt-6 px-4 sm:px-6">
-                {
-                // precoFaltanteParaFreteGratis > 0 && (
-                //     <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-100">
-                //         <p className="text-sm sm:text-base text-green-700">
-                //   Faltam { formatPrice(precoFaltanteParaFreteGratis) } para frete grátis!
-                //         </p>
-                //         <div className="mt-2 h-2 bg-green-100 rounded-full overflow-hidden">
-                //             <div 
-                //                 className="h-full bg-green-500 transition-all duration-500" 
-                //                 style={ { width: `${precoFaltanteEmPorcentagem}%` } }
-                //             />
-                //         </div>
-                //     </div>
-                // )
-                    <FreeShippingSection precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } />
-                }
-    
+                <FreeShippingSection 
+                    precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } 
+                    precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } 
+                />
+
                 <RadioGroup
                     value={ selectedDeliveryOption ? selectedDeliveryOption : undefined }
                     onValueChange={ handleOptionChange }
@@ -102,14 +92,25 @@ export default function ChooseDeliveryPriceSection({
                                     <p className="font-medium text-gray-900 md:text-xl">
                                         { option.name }
                                     </p>
-                                    <p className=" text-gray-500 md:text-lg">
-                        Até { option.deliveryTime }
+                                    <p className="text-gray-500 md:text-lg">
+                                        Até { option.deliveryTime }
                                         { option.deliveryTime === 1 ? ' dia útil' : ' dias úteis' }
                                     </p>
                                 </div>
-                                <span className=" font-medium text-gray-900 ml-4 md:text-xl ">
-                                    { formatPrice(option.price) }
-                                </span>
+                                <div className="font-medium text-gray-900 ml-4 md:text-xl">
+                                    { precoFaltanteParaFreteGratis <= 0 && option.name === cheapestOption.name ? (
+                                        <div className="flex flex-col items-end">
+                                            <span className="line-through text-sm text-gray-400">
+                                                { formatPrice(option.price) }
+                                            </span>
+                                            <span className="text-[#D4AF37] text-base font-bold">
+                                                GRÁTIS
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        formatPrice(option.price)
+                                    ) }
+                                </div>
                             </Label>
                         </div>
                     )) }
