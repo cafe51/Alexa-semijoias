@@ -28,6 +28,10 @@ export default function Carrinho() {
     const router = useRouter();
 
     useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth', // Adiciona uma animação suave
+        });
         setLoadingComponent(false);
     }, []);
 

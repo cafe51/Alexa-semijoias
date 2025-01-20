@@ -45,6 +45,13 @@ export default function Checkout() {
     } = useCheckoutState();
 
     useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth', // Adiciona uma animação suave
+        });
+    }, []);
+
+    useEffect(() => {
         if(isPaymentFinished) {
             setTimeout(() => {
                 if(carrinho && carrinho.length > 0) {
