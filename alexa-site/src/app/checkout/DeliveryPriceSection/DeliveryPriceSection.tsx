@@ -1,10 +1,13 @@
 // app/checkout/DeliveryPriceSection/DeliveryPriceSection.tsx
 import DeliveryPriceSectionFilled from './DeliveryPriceSectionFilled';
 import DeliveryPriceSectionPending from './DeliveryPriceSectionPending';
+import { DeliveryOptionType, UseCheckoutStateType, FireBaseDocument, ProductCartType, UserType } from '@/app/utils/types';
 import ChooseDeliveryPriceSection from './ChooseDeliveryPriceSection';
-import { DeliveryOptionType, UseCheckoutStateType } from '@/app/utils/types';
 
 interface DeliveryPriceSectionProps {
+    carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
+    userInfo: (UserType & FireBaseDocument) | null;
+    cartPrice: number;
     state: UseCheckoutStateType;
     deliveryOptions: DeliveryOptionType[];
     handleSelectedDeliveryOption:  (option: string | null) => void;
@@ -13,7 +16,11 @@ interface DeliveryPriceSectionProps {
 }
 
 export default function DeliveryPriceSection(
-    { state: { editingAddressMode, deliveryOption, selectedDeliveryOption },
+    {
+        state: { editingAddressMode, deliveryOption, selectedDeliveryOption },
+        carrinho,
+        userInfo,
+        cartPrice,
         handleSelectedDeliveryOption,
         deliveryOptions,
         setShowPaymentSection,
@@ -36,6 +43,9 @@ export default function DeliveryPriceSection(
     } 
     return (
         <ChooseDeliveryPriceSection
+            carrinho={ carrinho }
+            userInfo={ userInfo }
+            cartPrice={ cartPrice }
             deliveryOptions={ deliveryOptions }
             setShowPaymentSection={ setShowPaymentSection }
             selectedDeliveryOption={ selectedDeliveryOption }

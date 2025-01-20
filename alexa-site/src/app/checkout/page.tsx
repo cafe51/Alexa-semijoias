@@ -137,6 +137,9 @@ export default function Checkout() {
                         state={ state }
                     />
                     <DeliveryPriceSection
+                        carrinho={ carrinho }
+                        userInfo={ userInfo }
+                        cartPrice={ cartPrice } 
                         deliveryOptions={ deliveryOptions }
                         handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
                         state={ state }
@@ -189,6 +192,9 @@ export default function Checkout() {
                         { /* Coluna 2 */ }
                         <div className="space-y-4">
                             <DeliveryPriceSection
+                                cartPrice={ cartPrice } 
+                                carrinho={ carrinho }
+                                userInfo={ userInfo }
                                 deliveryOptions={ deliveryOptions }
                                 handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
                                 state={ state }
@@ -231,6 +237,9 @@ export default function Checkout() {
                     { /* Coluna 2: Entrega e Pagamento */ }
                     <div className="space-y-8">
                         <DeliveryPriceSection
+                            cartPrice={ cartPrice } 
+                            carrinho={ carrinho }
+                            userInfo={ userInfo }
                             deliveryOptions={ deliveryOptions }
                             handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
                             state={ state }

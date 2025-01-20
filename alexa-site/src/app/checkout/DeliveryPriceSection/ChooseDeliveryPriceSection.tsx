@@ -1,34 +1,37 @@
 // app/checkout/DeliveryPriceSection/ChooseDeliveryPriceSection.tsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatPrice } from '@/app/utils/formatPrice';
-// import FreeShippingSection from './FreeShippingSection';
-import { DeliveryOptionType } from '@/app/utils/types';
+import FreeShippingSection from './FreeShippingSection';
+import { DeliveryOptionType, FireBaseDocument, ProductCartType, UserType } from '@/app/utils/types';
 import axios from 'axios';
-import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
 
-// const cartPrice = 189;
-// const precoFaltanteParaFreteGratis = 250 - cartPrice;
-// const precoFaltanteEmPorcentagem = (cartPrice / 250) * 100 + '%';
-
 interface ChooseDeliveryPriceSectionProps {
+    carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
+    userInfo: (UserType & FireBaseDocument) | null;
+    cartPrice: number;
     deliveryOptions: DeliveryOptionType[];
     selectedDeliveryOption:string | null;
-    setSelectedDeliveryOption:  (option: string | null) => void;
+    setSelectedDeliveryOption: (option: string | null) => void;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
     setPreferenceId: (preferenceId: string) => void
 }
 
 export default function ChooseDeliveryPriceSection({
+    carrinho,
+    userInfo,
+    cartPrice,
     deliveryOptions,
     selectedDeliveryOption,
     setSelectedDeliveryOption,
     setShowPaymentSection,
     setPreferenceId,
 }: ChooseDeliveryPriceSectionProps) {
-    const { carrinho, userInfo } = useUserInfo();
+
+    const precoFaltanteParaFreteGratis = 300 - cartPrice;
+    const precoFaltanteEmPorcentagem = (cartPrice / 300) * 100 + '%';
 
     const handleOptionChange = async(value: string) => {
         const response = await axios.post('/api/create-preference', {
@@ -68,6 +71,7 @@ export default function ChooseDeliveryPriceSection({
                 //         </div>
                 //     </div>
                 // )
+                    <FreeShippingSection precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } />
                 }
     
                 <RadioGroup
