@@ -3,7 +3,7 @@ import { auth } from '../firebase/config';
 import { sendEmailVerification } from 'firebase/auth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Clock } from 'lucide-react';
+import { Clock, Inbox, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface EmailVerificationProps {
@@ -22,9 +22,8 @@ const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => 
         startCooldown();
     }, []);
 
-
     const startCooldown = () => {
-        setCooldown(60); // 60 segundos de cooldown
+        setCooldown(60);
         const timer = setInterval(() => {
             setCooldown((current) => {
                 if (current <= 1) {
@@ -46,7 +45,7 @@ const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => 
       
             if (currentUser) {
                 await sendEmailVerification(currentUser);
-                setSuccessMessage('Email de verificação enviado com sucesso! Por favor, verifique sua caixa de entrada e spam.');
+                setSuccessMessage('success');
                 startCooldown();
             } else {
                 setError('Usuário não encontrado. Por favor, faça login novamente.');
@@ -58,16 +57,38 @@ const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => 
         }
     };
 
+    const renderSuccessMessage = () => (
+        <Alert className="bg-green-50 border-green-200">
+            <AlertTitle className="text-green-800 flex items-center gap-2">
+                <Inbox className="h-5 w-5" />
+                Email de verificação enviado com sucesso!
+            </AlertTitle>
+            <AlertDescription className="mt-2 space-y-2">
+                <p className="text-green-700">
+                    Por favor, verifique sua caixa de entrada para confirmar seu email.
+                </p>
+                <div className="flex items-start gap-2 p-2 bg-green-100 rounded-md">
+                    <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <p className="text-sm text-green-800">
+                        Não encontrou o email? Verifique suas pastas de{ ' ' }
+                        <span className="font-semibold text-amber-600">spam</span> ou{ ' ' }
+                        <span className="font-semibold text-amber-600">lixo eletrônico</span>
+                    </p>
+                </div>
+            </AlertDescription>
+        </Alert>
+    );
+
     return (
         <div className="space-y-6">
             <Alert variant="destructive" className="bg-amber-50 border-amber-200">
-                <AlertTitle className="text-lg font-semibold text-amber-800">
-          Verificação de Email Necessária
+                <AlertTitle className="text-lg text-center font-semibold text-amber-800">
+                    Verificação de Email Necessária
                 </AlertTitle>
                 <AlertDescription className="mt-2 text-amber-700">
                     <p>Para sua segurança, precisamos que você verifique seu email antes de fazer login.</p>
                     <p className="mt-2">Um link de confirmação foi enviado para: <strong>{ email }</strong></p>
-                    <p className="mt-2">Por favor, verifique sua caixa de entrada e pasta de spam.</p>
+                    <p className="mt-2">Por favor, verifique sua caixa de entrada e pasta de <strong>spam</strong> ou <strong>lixo eletrônico</strong>.</p>
                 </AlertDescription>
             </Alert>
 
@@ -79,13 +100,7 @@ const EmailVerification = ({ email, onBackToLogin }: EmailVerificationProps) => 
                 </Alert>
             ) }
 
-            { successMessage && (
-                <Alert className="bg-green-50 border-green-200">
-                    <AlertDescription className="text-green-700">
-                        { successMessage }
-                    </AlertDescription>
-                </Alert>
-            ) }
+            { successMessage && renderSuccessMessage() }
 
             <div className="flex flex-col gap-4 justify-center items-center">
                 <Button
