@@ -39,7 +39,6 @@ export default function Checkout() {
         handleAddressChange,
         handleEditingAddressMode,
         handleSelectedDeliveryOption,
-        // handleSelectedPaymentOption,
         deliveryOptions,
         handleShowFullOrderSummary,
     } = useCheckoutState();
@@ -47,7 +46,7 @@ export default function Checkout() {
     useEffect(() => {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth', // Adiciona uma animação suave
+            behavior: 'smooth',
         });
     }, []);
 

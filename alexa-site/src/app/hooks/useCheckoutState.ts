@@ -4,15 +4,6 @@ import { AddressType, DeliveryOptionType, UseCheckoutStateType } from '../utils/
 import { useUserInfo } from '../hooks/useUserInfo';
 import getShippingOptions from '../utils/getShippingOptions';
 
-
-// const SET_SHOW_FULL_ORDER_SUMMARY = 'SET_SHOW_FULL_ORDER_SUMMARY'
-// const SET_SHOW_LOGIN_SECTION = 'SET_SHOW_LOGIN_SECTION'
-// const SET_EDITING_ADDRESS_MODE = 'SET_EDITING_ADDRESS_MODE'
-// const SET_SELECTED_DELIVERY_OPTION = 'SET_SELECTED_DELIVERY_OPTION'
-// const SET_SELECTED_PAYMENT_OPTION = 'SET_SELECTED_PAYMENT_OPTION'
-// const SET_DELIVERY_OPTION = 'SET_DELIVERY_OPTION'
-// const SET_ADDRESS = 'SET_ADDRESS'
-
 // Define action types
 type ActionType = 
     | { type: 'SET_SHOW_FULL_ORDER_SUMMARY', payload: boolean }

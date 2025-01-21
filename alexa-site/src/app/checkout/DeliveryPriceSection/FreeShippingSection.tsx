@@ -2,7 +2,6 @@
 
 export default function FreeShippingSection({ precoFaltanteEmPorcentagem, precoFaltanteParaFreteGratis }: { precoFaltanteEmPorcentagem: string, precoFaltanteParaFreteGratis: number }) {
     return (
-        // text-[#D4AF37]
         precoFaltanteParaFreteGratis > 0 ?
             (
                 <div className="p-4 border-dashed border-2 border-[#D4AF37]/50 bg-[#D4AF37]/2 rounded-md mb-4">
