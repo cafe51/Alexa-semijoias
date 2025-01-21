@@ -1,5 +1,7 @@
 // app/checkout/DeliveryPriceSection/FreeShippingSection.tsx
 
+import Link from 'next/link';
+
 export default function FreeShippingSection({ precoFaltanteEmPorcentagem, precoFaltanteParaFreteGratis }: { precoFaltanteEmPorcentagem: string, precoFaltanteParaFreteGratis: number }) {
     return (
         precoFaltanteParaFreteGratis > 0 ?
@@ -11,7 +13,11 @@ export default function FreeShippingSection({ precoFaltanteEmPorcentagem, precoF
                     <p className="text-[#D4AF37] text-base mb-2">
           Quase lá, adicione mais <span className="font-bold">{ 'R$ ' + precoFaltanteParaFreteGratis.toFixed(2) }</span> em produtos para ganhar <span className="font-bold text-lg">FRETE GRÁTIS</span>.
                     </p>
-                    <button className="bg-[#D4AF37]/5 text-[#D4AF37] border border-[#D4AF37]/50 px-4 py-2 rounded-md text-sm">Adicionar mais produtos</button>
+                    <Link href={ '/section' }>
+                        <h3 className="bg-[#D4AF37]/5 text-[#D4AF37] border border-[#D4AF37]/50 px-4 py-2 rounded-md text-sm text-center">
+                    Adicionar mais produtos
+                        </h3>
+                    </Link>
                 </div>
             )
             :
