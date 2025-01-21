@@ -10,9 +10,9 @@ interface DeliveryPriceSectionProps {
     cartPrice: number;
     state: UseCheckoutStateType;
     deliveryOptions: DeliveryOptionType[];
-    handleSelectedDeliveryOption:  (option: string | null) => void;
+    handleSelectedDeliveryOption: (option: string | null) => void;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
-    setPreferenceId: (preferenceId: string) => void
+    setPreferenceId: (preferenceId: string) => void;
 }
 
 export default function DeliveryPriceSection(

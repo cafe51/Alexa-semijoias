@@ -29,8 +29,6 @@ export default function Checkout() {
     const [showPaymentFailSection, setShowPaymentFailSection] = useState<boolean | string>(false);
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
     const [isPaymentFinished, setIsPaymentFinished] = useState(false);
-
-
     const { screenSize } = useWindowSize();
 
     const {

@@ -60,12 +60,14 @@ export default function ChooseDeliveryPriceSection({
     const precoFaltanteEmPorcentagem = (cartPrice / valorMinimoParaFreteGratis) * 100 + '%';
 
     const handleOptionChange = async(value: string) => {
-        const response = await axios.post('/api/create-preference', {
-            items: carrinho,
-            userInfo: userInfo,
-        }, {
-            headers: { 'Content-Type': 'application/json' },
-        });
+        // Se for a opção mais barata e o carrinho atingiu o valor mínimo para frete grátis
+        const selectedOption = deliveryOptions.find(option => option.name === value);
+        if (selectedOption && selectedOption.name === cheapestOption.name && precoFaltanteParaFreteGratis <= 0) {
+            // Modifica o preço para 0 antes de enviar para a API
+            selectedOption.price = 0;
+        }
+
+        const response = await axios.post('/api/create-preference', { items: carrinho, userInfo: userInfo }, { headers: { 'Content-Type': 'application/json' } });
         setPreferenceId(response.data.id);
         setSelectedDeliveryOption(value);
         setShowPaymentSection(true);
