@@ -80,7 +80,6 @@ export default function AddressSection({ state: { address, editingAddressMode },
                     <CepInput
                         cep={ cep }
                         handleCepChange={ handleCepChange }
-                        handleCepSubmit={ () => handleCepSubmit(cep.replace('-', '')) }
                         loading={ loading }
                         error={ error }
                     />

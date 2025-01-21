@@ -6,14 +6,13 @@ import InputField from './InputField';
 interface CepInputProps {
     cep: string;
     handleCepChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleCepSubmit: () => void;
     loading: boolean;
     error: string;
 }
 
-export default function CepInput({ cep, handleCepChange, handleCepSubmit, loading, error }: CepInputProps) {
+export default function CepInput({ cep, handleCepChange, loading, error }: CepInputProps) {
     return (
-        <div className="flex flex-col w-full border-2 p-2 gap-2">
+        <div className="flex flex-col w-full py-4 gap-2">
             <InputField
                 id="cep"
                 value={ cep }
@@ -22,13 +21,11 @@ export default function CepInput({ cep, handleCepChange, handleCepSubmit, loadin
                 label="CEP"
                 readOnly={ false }
             />
-            <button
-                onClick={ handleCepSubmit }
-                disabled={ loading || cep.replace('-', '').length !== 8 }
-                className="bg-yellow-300 p-2"
+            <div
+                className="text-center p-2"
             >
-                { loading ? 'Buscando...' : 'Buscar' }
-            </button>
+                <p className='text-red-500'>{ loading ? 'Buscando endereço...' : 'CEP não encontrado' }</p>
+            </div>
             { error && <ErrorMessage message={ error } /> }
         </div>
     );
