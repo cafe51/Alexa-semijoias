@@ -73,7 +73,7 @@ export function useCheckoutState() {
   
     useEffect(() => {
         function fetchDeliveryOptions() {
-            if(!state.address) return;
+            if(!state.address || !state.address.logradouro) return;
             if(state.address.logradouro.length === 0) return;
             const response = getShippingOptions(state.address.localidade, state.address.uf);
             setDeliveryOptions(response.map((option) => ({ deliveryTime: option.days, name: option.name, price: option.price })));
