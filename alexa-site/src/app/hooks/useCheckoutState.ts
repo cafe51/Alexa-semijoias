@@ -127,7 +127,7 @@ export function useCheckoutState() {
         handleSelectedPaymentOption,
         handleShowFullOrderSummary,
         deliveryOptions,
-
+        fetchDeliveryOptions,
         handleShowLoginSection,
     };
 }

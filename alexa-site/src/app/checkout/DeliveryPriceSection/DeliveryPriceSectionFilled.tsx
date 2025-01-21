@@ -8,6 +8,7 @@ interface DeliveryPriceSectionFilledProps {
     price: number;
     term: number;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
+    fetchDeliveryOptions: () => void;
 
 }
 
@@ -15,11 +16,13 @@ interface DeliveryPriceSectionFilledProps {
 export default function DeliveryPriceSectionFilled({
     handleSelectedDeliveryOption,
     setShowPaymentSection,
+    fetchDeliveryOptions,
     price,
     term,
     type,
 } : DeliveryPriceSectionFilledProps) {
     const handleOptionChange = () => {
+        fetchDeliveryOptions();
         handleSelectedDeliveryOption(null);
         setShowPaymentSection(false);
     };

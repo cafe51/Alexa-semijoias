@@ -39,6 +39,7 @@ export default function Checkout() {
         handleSelectedDeliveryOption,
         deliveryOptions,
         handleShowFullOrderSummary,
+        fetchDeliveryOptions,
     } = useCheckoutState();
 
     useEffect(() => {
@@ -142,6 +143,8 @@ export default function Checkout() {
                         state={ state }
                         setShowPaymentSection={ setShowPaymentSection }
                         setPreferenceId={ setPreferenceId }
+                        fetchDeliveryOptions={ fetchDeliveryOptions }
+                        
                     />
                     <PaymentSectionWithMercadoPago
                         state={ state }
@@ -197,6 +200,8 @@ export default function Checkout() {
                                 state={ state }
                                 setShowPaymentSection={ setShowPaymentSection }
                                 setPreferenceId={ setPreferenceId }
+                                fetchDeliveryOptions={ fetchDeliveryOptions }
+
                             />
                             <PaymentSectionWithMercadoPago
                                 state={ state }
@@ -242,6 +247,8 @@ export default function Checkout() {
                             state={ state }
                             setShowPaymentSection={ setShowPaymentSection }
                             setPreferenceId={ setPreferenceId }
+                            fetchDeliveryOptions={ fetchDeliveryOptions }
+
                         />
                         <PaymentSectionWithMercadoPago
                             state={ state }

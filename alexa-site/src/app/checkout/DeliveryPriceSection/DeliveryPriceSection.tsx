@@ -13,6 +13,7 @@ interface DeliveryPriceSectionProps {
     handleSelectedDeliveryOption: (option: string | null) => void;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
     setPreferenceId: (preferenceId: string) => void;
+    fetchDeliveryOptions: () => void;
 }
 
 export default function DeliveryPriceSection(
@@ -25,7 +26,7 @@ export default function DeliveryPriceSection(
         deliveryOptions,
         setShowPaymentSection,
         setPreferenceId,
-        
+        fetchDeliveryOptions,
     }: DeliveryPriceSectionProps) {
 
     if (editingAddressMode) return <DeliveryPriceSectionPending />;
@@ -38,6 +39,7 @@ export default function DeliveryPriceSection(
                 term={ deliveryOption.deliveryTime }
                 type={ deliveryOption.name }
                 setShowPaymentSection={ setShowPaymentSection }
+                fetchDeliveryOptions={ fetchDeliveryOptions }
             />
         );
     } 
