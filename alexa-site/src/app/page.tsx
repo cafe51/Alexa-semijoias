@@ -8,6 +8,7 @@ import FeaturedProducts from './components/homePage/FeaturedProducts';
 // import Newsletter from './components/homePage/Newsletter';
 import { useCollection } from './hooks/useCollection';
 import { FireBaseDocument, OrderByOption, ProductBundleType, SectionType } from './utils/types';
+import InfoBanner from './components/homePage/InfoBanner';
 
 export default function HomePage() {
     const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
@@ -65,6 +66,7 @@ export default function HomePage() {
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full mt-[-170px]">
             <HeroSection />
+            <InfoBanner />
             <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />
             <FeaturedProducts featuredProducts={ featuredProducts }/>
             {
