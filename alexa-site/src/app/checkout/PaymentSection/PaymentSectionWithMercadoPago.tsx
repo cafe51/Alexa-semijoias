@@ -42,7 +42,7 @@ export default function PaymentSectionWithMercadoPago({
                 (!loadingPayment && state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) && <PaymentSectionPending />
             }
             {
-                !loadingPayment && !state.editingAddressMode && userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price && preferenceId && !showPaymentFailSection &&
+                !loadingPayment && !state.editingAddressMode && userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price !== null && state.deliveryOption.price !== undefined && preferenceId && !showPaymentFailSection &&
             <PaymentBrick
                 totalAmount={ cartPrice + state.deliveryOption.price }
                 user={ userInfo }
