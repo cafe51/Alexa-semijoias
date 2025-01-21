@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
 
 interface ChooseDeliveryPriceSectionProps {
     carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
@@ -28,13 +29,35 @@ export default function ChooseDeliveryPriceSection({
     setShowPaymentSection,
     setPreferenceId,
 }: ChooseDeliveryPriceSectionProps) {
-    const precoFaltanteParaFreteGratis = 300 - cartPrice;
-    const precoFaltanteEmPorcentagem = (cartPrice / 300) * 100 + '%';
     
     // Encontra a opção de frete mais barata
     const cheapestOption = deliveryOptions.reduce((prev, current) => 
         prev.price < current.price ? prev : current,
     );
+
+    let valorMinimoParaFreteGratis: number;
+
+    switch (true) {
+    case cheapestOption.price <= 40:
+        valorMinimoParaFreteGratis = 200;
+        break;
+    case cheapestOption.price > 40 && cheapestOption.price <= 70:
+        valorMinimoParaFreteGratis = 300;
+        break;
+    case cheapestOption.price > 70:
+        valorMinimoParaFreteGratis = 350;
+        break;
+    default:
+        throw new Error('Preço inválido');
+    }
+    useEffect(() => {
+        console.log('valorMinimoParaFreteGratis: ', valorMinimoParaFreteGratis);
+        console.log('cheapestOption.price: ', cheapestOption.price);
+    }, [valorMinimoParaFreteGratis, cheapestOption.price]);
+
+
+    const precoFaltanteParaFreteGratis = valorMinimoParaFreteGratis - cartPrice;
+    const precoFaltanteEmPorcentagem = (cartPrice / valorMinimoParaFreteGratis) * 100 + '%';
 
     const handleOptionChange = async(value: string) => {
         const response = await axios.post('/api/create-preference', {
