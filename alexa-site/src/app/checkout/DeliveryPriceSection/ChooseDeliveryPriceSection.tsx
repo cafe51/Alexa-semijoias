@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
 
 interface ChooseDeliveryPriceSectionProps {
     carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
@@ -50,11 +49,6 @@ export default function ChooseDeliveryPriceSection({
     default:
         throw new Error('Preço inválido');
     }
-    useEffect(() => {
-        console.log('valorMinimoParaFreteGratis: ', valorMinimoParaFreteGratis);
-        console.log('cheapestOption.price: ', cheapestOption.price);
-    }, [valorMinimoParaFreteGratis, cheapestOption.price]);
-
 
     const precoFaltanteParaFreteGratis = valorMinimoParaFreteGratis - cartPrice;
     const precoFaltanteEmPorcentagem = (cartPrice / valorMinimoParaFreteGratis) * 100 + '%';
