@@ -67,7 +67,7 @@ export default function Footer() {
     const informations = [
         { name: 'Dicas e Cuidados', link: '/dicas-e-cuidados' },
         { name: 'Política de Privacidade', link: '/politica-de-privacidade' },
-        { name: 'Sobre a ALEXA SEMIJOIAS', link: '/sobre' },
+        // { name: 'Sobre a ALEXA SEMIJOIAS', link: '/sobre' },
         { name: 'Garantia', link: '/garantia' },
     ];
 
