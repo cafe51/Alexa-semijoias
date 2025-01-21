@@ -103,11 +103,11 @@ const AdditionalTipsSection = () => {
 
 const ContactSection = () => {
     const contactMethods = [
-        { icon: Phone, method: 'WhatsApp', contact: '(11) 98765-4321', link: 'https://wa.me/5511987654321' },
-        { icon: Phone, method: 'Telefone', contact: '(11) 3456-7890', link: 'tel:+551134567890' },
-        { icon: Mail, method: 'E-mail', contact: 'contato@suajoalheria.com', link: 'mailto:contato@suajoalheria.com' },
-        { icon: Instagram, method: 'Instagram', contact: '@suajoalheria', link: 'https://www.instagram.com/suajoalheria' },
-        { icon: Facebook, method: 'Facebook', contact: '/suajoalheria', link: 'https://www.facebook.com/suajoalheria' },
+        { icon: Phone, method: 'WhatsApp', contact: '(17) 98165-0632', link: 'https://wa.me/551781650632' },
+        { icon: Phone, method: 'Telefone', contact: '(17) 98165-0632', link: 'tel:+5517981650632' },
+        { icon: Mail, method: 'E-mail', contact: 'alexasemijoias@alexasemijoias.com.br', link: 'mailto:alexasemijoias@alexasemijoias.com.br' },
+        { icon: Instagram, method: 'Instagram', contact: '@alexa.semijoias', link: 'https://www.instagram.com/alexa.semijoias' },
+        { icon: Facebook, method: 'Facebook', contact: '/alexasemijoias', link: 'https://www.facebook.com/alexasemijoias' },
     ];
 
     return (
