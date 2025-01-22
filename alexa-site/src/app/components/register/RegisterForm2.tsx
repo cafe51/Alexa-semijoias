@@ -1,13 +1,15 @@
 // src/app/components/register/RegisterForm2.tsx
 import { useState } from 'react';
 import { useSignUp } from '@/app/hooks/useSignUp';
-// import { useRouter } from 'next/navigation';
+import { useGoogleAuth } from '@/app/hooks/useGoogleAuth';
 import { Button } from '@/components/ui/button';
 import InputField from './InputField';
 import { Eye, EyeOff } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { RegisterFormInputType } from '@/app/utils/types';
+import { checkDuplicateFields } from '@/app/utils/checkDuplicateFields';
+import ButtonGoogleLogin from '../ButtonGoogleLogin';
 
 interface FormData extends RegisterFormInputType {
     confirmPassword: string;
@@ -17,6 +19,7 @@ interface FormErrors {
     nome?: string;
     email?: string;
     phone?: string;
+    cpf?: string;
     password?: string;
     confirmPassword?: string;
 }
@@ -31,15 +34,14 @@ const validEmailDomains = [
 
 export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (email: string | undefined) => void}) {
     const { signup, error: signupError, isLoading } = useSignUp();
-    // const router = useRouter();
+    const { signInWithGoogle, error: googleError, isLoading: isGoogleLoading } = useGoogleAuth();
     const [localError, setLocalError] = useState<string | null>(null);
-    // const [isSubmitting, setIsSubmitting] = useState(false);
-    // const [shouldRedirect, setShouldRedirect] = useState(false);
 
     const [formData, setFormData] = useState<FormData>({
         nome: '',
         email: '',
         phone: '',
+        cpf: '',
         password: '',
         confirmPassword: '',
     });
@@ -63,7 +65,7 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
         );
     };
 
-    const validateForm = () => {
+    const validateForm = async() => {
         const newErrors: FormErrors = {};
         
         if (!formData.nome.trim()) {
@@ -79,6 +81,12 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
         if (formData.phone && !/^\(\d{2}\) \d{5}-\d{4}$/.test(formData.phone)) {
             newErrors.phone = 'Telefone inválido';
         }
+
+        if (!formData.cpf.trim()) {
+            newErrors.cpf = 'CPF é obrigatório';
+        } else if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
+            newErrors.cpf = 'CPF inválido';
+        }
         
         if (!formData.password) {
             newErrors.password = 'Senha é obrigatória';
@@ -88,6 +96,37 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
         
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'As senhas não coincidem';
+        }
+
+        // Verifica duplicidade apenas se não houver outros erros
+        if (Object.keys(newErrors).length === 0) {
+            try {
+                const fieldsToCheck: { [key: string]: string } = {
+                    email: formData.email,
+                    cpf: formData.cpf,
+                };
+
+                if (formData.phone) {
+                    fieldsToCheck.phone = formData.phone;
+                }
+
+                const duplicateCheck = await checkDuplicateFields('usuarios', fieldsToCheck);
+                
+                if (duplicateCheck.isDuplicate && duplicateCheck.field) {
+                    const fieldMessages: { [key: string]: string } = {
+                        email: 'Este e-mail já está cadastrado',
+                        cpf: 'Este CPF já está cadastrado',
+                        phone: 'Este telefone já está cadastrado',
+                    };
+                    
+                    newErrors[duplicateCheck.field as keyof FormErrors] = 
+                        fieldMessages[duplicateCheck.field];
+                }
+            } catch (error) {
+                console.error('Erro ao verificar duplicidade:', error);
+                setLocalError('Erro ao verificar dados. Por favor, tente novamente.');
+                return false;
+            }
         }
     
         setErrors(newErrors);
@@ -100,6 +139,8 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
     
         if (name === 'phone') {
             formattedValue = formatPhoneNumber(value);
+        } else if (name === 'cpf') {
+            formattedValue = formatCPF(value);
         }
     
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
@@ -109,9 +150,8 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
 
-        // Reseta os estados de erro e redirecionamento quando o usuário começa a digitar
+        // Reseta os estados de erro quando o usuário começa a digitar
         setLocalError(null);
-        // setShouldRedirect(false);
     };
     
     const formatPhoneNumber = (value: string) => {
@@ -121,20 +161,27 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
         return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
     };
 
+    const formatCPF = (value: string) => {
+        const numbers = value.replace(/\D/g, '');
+        if (numbers.length <= 3) return numbers;
+        if (numbers.length <= 6) return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
+        if (numbers.length <= 9) return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`;
+        return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9, 11)}`;
+    };
+
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
-        // if (!validateForm() || isSubmitting) {
-        //     return;
-        // }
-
-        if (!validateForm()|| isLoading) {
+        if (isLoading) {
             return;
         }
 
-        // setIsSubmitting(true);
+        const isValid = await validateForm();
+        if (!isValid) {
+            return;
+        }
+
         setLocalError(null);
-        // setShouldRedirect(false);
         
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -148,10 +195,6 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
 
             // Aguarda um momento para garantir que o estado de erro foi atualizado
             await new Promise(resolve => setTimeout(resolve, 500));
-
-            // if (!signupError && !localError) {
-            //     setShouldRedirect(true);
-            // }
         } catch (error) {
             console.error('Erro no cadastro:', error);
             if (error instanceof Error) {
@@ -159,17 +202,8 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
             } else {
                 setLocalError('Ocorreu um erro desconhecido.');
             }
-            // setShouldRedirect(false);
-        // } finally {
-        //     setIsSubmitting(false);
-        // }
         }
     };
-
-    // Efeito para redirecionar apenas quando shouldRedirect for true
-    // if (shouldRedirect && !isSubmitting && !signupError && !localError && !message) {
-    //     router.push('/');
-    // }
 
     return (
         <form onSubmit={ handleSubmit } className="w-full max-w-lg mx-auto space-y-6 sm:space-y-8 p-4 sm:p-6 rounded-xl bg-white shadow-sm">
@@ -197,6 +231,18 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
                 error={ errors.email }
             />
 
+            { /* CPF Field */ }
+            <InputField
+                label="CPF"
+                name="cpf"
+                id="cpf"
+                type="text"
+                placeholder="000.000.000-00"
+                value={ formData.cpf }
+                onChange={ handleChange }
+                error={ errors.cpf }
+            />
+
             { /* Phone Field */ }
             <InputField
                 label="Telefone (opcional)"
@@ -215,7 +261,7 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
                     htmlFor="password" 
                     className="block text-sm sm:text-base font-medium text-[#333333] transition-all duration-200"
                 >
-            Senha
+                    Senha
                 </Label>
                 <div className="relative">
                     <Input
@@ -226,23 +272,23 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
                         value={ formData.password }
                         onChange={ handleChange }
                         className={ `
-                    w-full 
-                    px-4 
-                    py-2.5 
-                    sm:py-3 
-                    text-base 
-                    border 
-                    rounded-lg 
-                    text-[#333333] 
-                    pr-12
-                    placeholder:text-gray-400 
-                    focus:ring-2 
-                    focus:ring-[#D4AF37] 
-                    focus:border-transparent 
-                    transition-all 
-                    duration-200
-                    ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-200'}
-                ` }
+                            w-full 
+                            px-4 
+                            py-2.5 
+                            sm:py-3 
+                            text-base 
+                            border 
+                            rounded-lg 
+                            text-[#333333] 
+                            pr-12
+                            placeholder:text-gray-400 
+                            focus:ring-2 
+                            focus:ring-[#D4AF37] 
+                            focus:border-transparent 
+                            transition-all 
+                            duration-200
+                            ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-200'}
+                        ` }
                     />
                     <button
                         type="button"
@@ -276,24 +322,24 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
                 <Button 
                     type="submit" 
                     className={ `
-                w-full 
-                bg-[#D4AF37] 
-                hover:bg-[#C48B9F] 
-                text-white 
-                font-semibold 
-                text-base 
-                sm:text-lg 
-                py-3 
-                sm:py-4 
-                px-6 
-                rounded-lg 
-                transition-all 
-                duration-300
-                disabled:opacity-50 
-                disabled:cursor-not-allowed
-                shadow-sm 
-                hover:shadow-md
-            ` }
+                        w-full 
+                        bg-[#D4AF37] 
+                        hover:bg-[#C48B9F] 
+                        text-white 
+                        font-semibold 
+                        text-base 
+                        sm:text-lg 
+                        py-3 
+                        sm:py-4 
+                        px-6 
+                        rounded-lg 
+                        transition-all 
+                        duration-300
+                        disabled:opacity-50 
+                        disabled:cursor-not-allowed
+                        shadow-sm 
+                        hover:shadow-md
+                    ` }
                     disabled={ isLoading }
                 >
                     { isLoading ? (
@@ -314,7 +360,21 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
                     </p>
                 </div>
             ) }
-            { /* { message && <p className='text-center text-green-600 mt-4'>{ message }</p> } */ }
+
+            <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-300"></span>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">ou</span>
+                </div>
+            </div>
+
+            <ButtonGoogleLogin isGoogleLoading={ isGoogleLoading } signInWithGoogle={ signInWithGoogle } />
+
+            { googleError && (
+                <p className="text-red-500 text-sm text-center mt-2">{ googleError }</p>
+            ) }
         </form>
     );
 }

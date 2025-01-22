@@ -3,38 +3,15 @@ import { signInWithEmailAndPassword, getIdTokenResult } from 'firebase/auth';
 import { useState } from 'react';
 import { auth, projectFirestoreDataBase } from '../firebase/config';
 import { useAuthContext } from './useAuthContext';
-import { useLocalStorage } from './useLocalStorage';
-import { CartInfoType } from '../utils/types';
-import { useCollection } from './useCollection';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { getDoc, doc } from 'firebase/firestore';
 import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
+import { useSyncCart } from './useSyncCart';
 
 export const useLogin = () => {
     const { dispatch } = useAuthContext();
     const [error, setError] = useState<string | null>(null);
-    const { getLocalCart, setLocalCart } = useLocalStorage();
-    const { addDocument: createNewCart, deleteDocument: deleteCartItemFromDb, getAllDocuments } = useCollection<CartInfoType>('carrinhos'); 
-
-    const syncLocalCartToFirebase = async(userId: string) => {
-        try {
-            const carrinhoItems = await getAllDocuments([{ field: 'userId', operator: '==', value: userId }]);
-            const localCart: CartInfoType[] = getLocalCart();
-            
-            if(localCart && localCart.length > 0) {    
-                await Promise.all(carrinhoItems.map(item => deleteCartItemFromDb(item.id)));
-                await Promise.all(localCart.map((item) => {
-                    item.userId = userId;
-                    return createNewCart(item);
-                }));
-                setLocalCart([]); 
-            }
-        
-        } catch (error) {
-            console.error('Erro ao sincronizar carrinho:', error);
-            setError('Ocorreu um erro ao sincronizar o carrinho. Por favor, tente novamente.'); 
-        }
-    };
+    const { syncLocalCartToFirebase } = useSyncCart();
 
     const checkAndSetAdminClaim = async(user: any) => {
         try {
@@ -81,7 +58,7 @@ export const useLogin = () => {
         try {
             const res = await signInWithEmailAndPassword(auth, email, password);
 
-            // Bloqueia o login se o e-mail não estiver verificado
+            // Verifica se o e-mail está verificado
             if (!res.user.emailVerified) {
                 if (onUnverifiedEmail) {
                     onUnverifiedEmail(email);
@@ -89,14 +66,25 @@ export const useLogin = () => {
                 return;
             }
 
-            //console.log para debugar se o email não verficado causou interrupção no fluxo
-            console.log('XXXXXXXXXXXXXXXXXXXXX chegou até aqui XXXXXXXXXXXXXXXXXxx', res.user.emailVerified);
+            // Verifica se o usuário tem os dados complementares
+            const userDoc = await getDoc(doc(projectFirestoreDataBase, 'usuarios', res.user.uid));
+            const userData = userDoc.data();
 
-            // Despacha o login apenas se o e-mail estiver verificado
+            if (!userData || !userData.cpf) {
+                setError('Cadastro incompleto. Por favor, complete seu cadastro fornecendo seu CPF.');
+                return;
+            }
+
+            // Despacha o login apenas se o e-mail estiver verificado e os dados complementares estiverem preenchidos
             dispatch({ type: 'LOGIN', payload: res.user });
 
             // Sincroniza o carrinho e define a permissão de admin
-            await syncLocalCartToFirebase(res.user.uid); 
+            try {
+                await syncLocalCartToFirebase(res.user.uid);
+            } catch (syncError) {
+                setError('Ocorreu um erro ao sincronizar o carrinho. Por favor, tente novamente.');
+                return;
+            }
             await checkAndSetAdminClaim(res.user);
 
         } catch (err) {

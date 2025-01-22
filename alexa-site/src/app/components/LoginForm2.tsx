@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
+import { useGoogleAuth } from '../hooks/useGoogleAuth';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import ButtonGoogleLogin from './ButtonGoogleLogin';
 
 interface LoginFormProps {
     onUnverifiedEmail: (email: string) => void;
@@ -15,6 +17,7 @@ interface LoginFormProps {
 
 export default function LoginForm({ onUnverifiedEmail, onClick }: LoginFormProps) {
     const { error, login } = useLogin();
+    const { signInWithGoogle, error: googleError, isLoading: isGoogleLoading } = useGoogleAuth();
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -136,6 +139,21 @@ export default function LoginForm({ onUnverifiedEmail, onClick }: LoginFormProps
                 </Button>
                 { error && <p className="text-red-500 text-sm sm:text-base md:text-lg">{ error }</p> }
             </div>
+
+            <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-300"></span>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">ou</span>
+                </div>
+            </div>
+
+            <ButtonGoogleLogin isGoogleLoading={ isGoogleLoading } signInWithGoogle={ signInWithGoogle } />
+
+            { googleError && (
+                <p className="text-red-500 text-sm text-center mt-2">{ 'Ocorreu um erro ao tentar fazer login com a sua conta Google, tente novamente.' }</p>
+            ) }
         </form>
     );
 }

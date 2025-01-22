@@ -50,7 +50,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
             if (user) {
                 try {
                     if (!user.emailVerified) {
-                        return; // Interrompe o fluxo para impedir o login
+                        dispatch({ type: 'AUTH_IS_READY', payload: undefined });
+                        dispatch({ type: 'SET_ADMIN', payload: false });
+                        return;
                     }
 
                     const [userDoc, idTokenResult] = await Promise.all([
@@ -59,12 +61,18 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
                     ]);
                     
                     const userData = userDoc.data();
+
+                    // Verifica se o usuário tem o CPF cadastrado
+                    if (!userData || !userData.cpf) {
+                        dispatch({ type: 'AUTH_IS_READY', payload: undefined });
+                        dispatch({ type: 'SET_ADMIN', payload: false });
+                        return;
+                    }
+
                     const isAdminInFirestore = userData?.admin === true;
                     const hasAdminClaim = idTokenResult.claims.admin === true;
-                    
                     const isAdmin = isAdminInFirestore && hasAdminClaim;
 
-                    
                     dispatch({ type: 'AUTH_IS_READY', payload: { ...user } });
                     dispatch({ type: 'SET_ADMIN', payload: isAdmin });
                     

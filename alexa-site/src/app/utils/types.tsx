@@ -305,6 +305,7 @@ export type UserType = {
 export type RegisterFormInputType = {
     password: string,
     nome: string,
+    cpf: string,
     email: string,
     phone: string
 }
