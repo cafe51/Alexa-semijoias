@@ -22,6 +22,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <head>
+                <meta name="facebook-domain-verification" content="k9qc45dlpt6m4sxg6a3qmin2rmabmh" />
+            </head>
             <body className={ `${inter.className} min-h-screen bg-[#FAF9F6]` }>
                 <AuthContextProvider>
                     <UserInfoProvider>
