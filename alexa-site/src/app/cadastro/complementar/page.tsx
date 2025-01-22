@@ -1,14 +1,15 @@
+// src/app/cadastro/complementar/page.tsx
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
 import GoogleAdditionalInfo from '@/app/components/register/GoogleAdditionalInfo';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LoadingIndicator from '@/app/components/LoadingIndicator';
 
-export default function ComplementarCadastro() {
+function ComplementarCadastroInner() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { user } = useAuthContext();
@@ -37,5 +38,13 @@ export default function ComplementarCadastro() {
                 </CardContent>
             </Card>
         </div>
+    );
+}
+
+export default function ComplementarCadastro() {
+    return (
+        <Suspense fallback={ <LoadingIndicator /> }>
+            <ComplementarCadastroInner />
+        </Suspense>
     );
 }
