@@ -13,6 +13,7 @@ import ImageCarousel from '@/app/components/ImageCarousel';
 import { Card, CardContent } from '@/components/ui/card';
 import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
 import LoadingIndicator from '../LoadingIndicator';
+import ProductJsonLd from './ProductJsonLd';
 
 export default function Product({ id }: { id: string }) {
     const { carrinho } = useUserInfo();
@@ -104,6 +105,7 @@ export default function Product({ id }: { id: string }) {
 
     return (
         <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-0 md:px-8 mb-8 md:mt-16">
+            { product && <ProductJsonLd product={ product } selectedVariation={ productVariationsSelected[0] } /> }
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row gap-8 flex-shrink-0">
