@@ -1,3 +1,5 @@
+// src/app/utils/metaPixel.ts
+
 declare global {
     interface Window {
         fbq: (...args: any[]) => void;
