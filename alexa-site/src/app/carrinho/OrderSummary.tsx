@@ -1,3 +1,4 @@
+// src/app/carrinho/OrderSummary.tsx
 import { formatPrice } from '../utils/formatPrice';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,7 +26,7 @@ export default function OrderSummary({
 }) {
     const totalItems = useMemo(() => {
         if (!carrinho || carrinho.length === 0) return 0;
-        return carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+        return carrinho.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0);
     }, [carrinho]);
 
     return (
