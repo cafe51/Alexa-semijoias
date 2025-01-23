@@ -33,7 +33,6 @@ export async function generateMetadata({ params }: { params: { productId: string
                         alt: productData.name,
                     },
                 ],
-                type: 'website',
                 siteName: 'Alexa Semijoias',
             },
             other: {
