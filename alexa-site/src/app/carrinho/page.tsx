@@ -86,6 +86,7 @@ export default function Carrinho() {
                 <div className="flex flex-col lg:flex-row gap-8">
                     <CartItemList cartItems={ carrinho } />
                     <OrderSummary 
+                        carrinho={ carrinho }
                         subtotal={ subtotal }
                         shipping={ shipping }
                         total={ total }
@@ -111,4 +112,3 @@ function CartItemList({ cartItems }: { cartItems: (ProductCartType & FireBaseDoc
         </section>
     );
 }
-

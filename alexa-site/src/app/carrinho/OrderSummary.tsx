@@ -4,6 +4,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import ShippingCalculator from './ShippingCalculator';
 import { ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { trackPixelEvent } from '../utils/metaPixel';
+import { FireBaseDocument, ProductCartType } from '../utils/types';
+import { useMemo } from 'react';
 
 export default function OrderSummary({ 
     subtotal, 
@@ -11,13 +14,20 @@ export default function OrderSummary({
     total, 
     onSelectShipping, 
     onCheckout,
+    carrinho,
 }: { 
     subtotal: number;
     shipping: number | null;
     total: number;
     onSelectShipping: (optionId: string) => void;
     onCheckout: () => void;
+    carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[]
 }) {
+    const totalItems = useMemo(() => {
+        if (!carrinho || carrinho.length === 0) return 0;
+        return carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+    }, [carrinho]);
+
     return (
         <div className="w-full md:max-w-2xl md:mx-auto flex-grow">
             <Card className="w-full shadow-md shadow-[#C48B9F]">
@@ -43,7 +53,20 @@ export default function OrderSummary({
                     </div>
                     <Button 
                         className="w-full bg-[#D4AF37] hover:bg-[#C48B9F] text-white text-base md:text-lg lg:text-xl py-2 md:py-6 mt-4 md:mt-6"
-                        onClick={ onCheckout }
+                        onClick={ () => {
+                            trackPixelEvent('InitiateCheckout', {
+                                currency: 'BRL',
+                                value: total,
+                                num_items: totalItems,
+                                content_type: 'product',
+                                content_ids: carrinho?.map(item => item.skuId),
+                                contents: carrinho?.map(item => ({
+                                    id: item.skuId,
+                                    quantity: item.quantidade,
+                                })),
+                            });
+                            onCheckout();
+                        } }
                     >
                         <ShoppingBag className="mr-2 h-5 w-5 md:h-6 md:w-6" />
                         Finalizar Compra
