@@ -36,13 +36,24 @@ export async function generateMetadata({ params }: { params: { productId: string
                 type: 'website',
                 siteName: 'Alexa Semijoias',
             },
+            alternates: {
+                canonical: `/product/${params.productId}`,
+            },
             other: {
-                'og:product:brand': 'Alexa Semijoias',
-                'og:product:availability': variation.estoque > 0 ? 'in stock' : 'out of stock',
-                'og:product:condition': 'new',
-                'og:product:price:amount': variation.value.price.toString(),
-                'og:product:price:currency': 'BRL',
-                'og:product:retailer_item_id': variation.sku,
+                // Propriedades específicas do produto para o Meta Pixel
+                'product:brand': 'Alexa Semijoias',
+                'product:availability': variation.estoque > 0 ? 'in stock' : 'out of stock',
+                'product:condition': 'new',
+                'product:price:amount': variation.value.price.toString(),
+                'product:price:currency': 'BRL',
+                'product:retailer_item_id': variation.sku,
+                // OpenGraph específico para produtos
+                'og:price:amount': variation.value.price.toString(),
+                'og:price:currency': 'BRL',
+                'og:availability': variation.estoque > 0 ? 'in stock' : 'out of stock',
+                'og:brand': 'Alexa Semijoias',
+                'og:retailer_item_id': variation.sku,
+                'og:condition': 'new',
             },
         };
     } catch (error) {
