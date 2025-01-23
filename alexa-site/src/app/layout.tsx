@@ -19,6 +19,7 @@ export default function RootLayout({
         <html lang="en">
             <head>
                 <meta name="facebook-domain-verification" content="k9qc45dlpt6m4sxg6a3qmin2rmabmh" />
+                <meta property="og:site_name" content="Alexa Semijoias" />
                 { /* Meta Pixel Code */ }
                 <script
                     dangerouslySetInnerHTML={ {
