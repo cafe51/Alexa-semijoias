@@ -78,7 +78,7 @@ const MobileMenu = ({ isOpen, toggleMenu }: MobileMenuProps) => {
             <SlideInModal 
                 isOpen={ isOpen } 
                 closeModelClick={ toggleMenu }
-                title="Menu Administrativo"
+                title="Menu"
                 slideDirection="left"
             >
                 <div className="flex flex-col h-full bg-[#FAF9F6] p-4">
