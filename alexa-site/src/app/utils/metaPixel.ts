@@ -3,6 +3,7 @@
 declare global {
     interface Window {
         fbq: (...args: any[]) => void;
+        fbqLoaded?: boolean;
     }
 }
 
@@ -48,7 +49,7 @@ export const trackPixelEvent = <T extends BaseEventParams>(
     params?: T,
 ): void => {
     try {
-        if (typeof window !== 'undefined' && window.fbq) {
+        if (typeof window !== 'undefined' && window.fbq && window.fbqLoaded) {
             window.fbq('track', eventName, params);
         }
     } catch (error) {
@@ -61,7 +62,7 @@ export const trackCustomPixelEvent = <T extends BaseEventParams>(
     params?: T,
 ): void => {
     try {
-        if (typeof window !== 'undefined' && window.fbq) {
+        if (typeof window !== 'undefined' && window.fbq && window.fbqLoaded) {
             window.fbq('trackCustom', eventName, params);
         }
     } catch (error) {

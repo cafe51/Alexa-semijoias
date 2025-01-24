@@ -22,6 +22,7 @@ export default function RootLayout({
             <head>
                 <meta name="facebook-domain-verification" content="k9qc45dlpt6m4sxg6a3qmin2rmabmh" />
                 <meta property="og:site_name" content="Alexa Semijoias" />
+                <meta name="next-size-adjust" />
             </head>
             <body className={ `${inter.className} min-h-screen bg-[#FAF9F6]` }>
                 <Script
@@ -29,8 +30,9 @@ export default function RootLayout({
                     strategy="afterInteractive"
                     dangerouslySetInnerHTML={ {
                         __html: `
-            if (!window.fbq) {
-                console.log('[Pixel Debug] Inicializando o Facebook Pixel...');
+            window.fbqLoaded = window.fbqLoaded || false;
+            if (!window.fbqLoaded) {
+                window.fbqLoaded = true;
                 !function(f,b,e,v,n,t,s)
                 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
                 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -41,9 +43,6 @@ export default function RootLayout({
                 'https://connect.facebook.net/en_US/fbevents.js');
                 fbq('init', '574789162040735');
                 fbq('track', 'PageView');
-                console.log('[Pixel Debug] Facebook Pixel carregado com sucesso.');
-            } else {
-                console.warn('[Pixel Debug] Tentativa de carregar o Facebook Pixel novamente. Ignorando...');
             }
         `,
                     } }
