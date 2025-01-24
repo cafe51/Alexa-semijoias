@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useRouter } from 'next/navigation';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -23,7 +24,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     // }, [user, isAdmin, isLoading, router]);
 
     if (isLoading) {
-        return <p>Carregando...</p>;
+        return <LoadingIndicator />;
     }
 
     if (!user || !isAdmin) {
