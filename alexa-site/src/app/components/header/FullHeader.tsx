@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User } from 'lucide-react';
+import { User, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FireBaseDocument, SectionType } from '@/app/utils/types';
 import MobileMenu from '../navBar/MobileMenu';
@@ -10,8 +10,10 @@ import { useRouter } from 'next/navigation';
 import Logo from './Logo';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import SearchBar from './SearchBar';
+import { useAuthContext } from '@/app/hooks/useAuthContext';
 
 const FullHeader: React.FC = () => {
+    const { user, isAdmin } = useAuthContext();
     const { userInfo } = useUserInfo();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState<SectionType | null>(null);
@@ -29,6 +31,17 @@ const FullHeader: React.FC = () => {
             onClick={ () => userInfo ? router.push('/minha-conta') : router.push('/login') }
         >
             <User className={ `${isMobile ? 'h-6 w-6' : 'h-14 w-14'}` } />
+        </Button>
+    );
+
+    const SettingsButton = () => (
+        <Button
+            variant="ghost"
+            size={ isMobile ? 'icon' : 'lg' }
+            className="text-[#C48B9F] h-fit w-fit p-1"
+            onClick={ () => router.push('/admin') }
+        >
+            <Settings className={ `${isMobile ? 'h-6 w-6' : 'h-14 w-14'}` } />
         </Button>
     );
 
@@ -108,6 +121,7 @@ const FullHeader: React.FC = () => {
                                     <Logo isMobile={ isMobile } />
                                 </div>
                                 <div className="flex items-center space-x-4 pr-4">
+                                    { (user && isAdmin) && <SettingsButton /> }
                                     <UserIcon />
                                     <CartIcon isMobile={ isMobile }/>
                                 </div>
@@ -119,7 +133,10 @@ const FullHeader: React.FC = () => {
                                 </div>
                                 <SearchBar />
                                 <div className="flex items-center space-x-10">
+                                    { (user && isAdmin) && <SettingsButton /> }
+
                                     <div className='flex items-center space-x-2'>
+
                                         <UserIcon />
                                         {
                                             userInfo
