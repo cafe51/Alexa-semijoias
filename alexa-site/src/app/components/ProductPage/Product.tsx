@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import { useCollection } from '@/app/hooks/useCollection';
+import { trackPixelEvent } from '@/app/utils/metaPixel';
 import PriceSection from '@/app/components/PriceSection';
 import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
@@ -43,6 +44,15 @@ export default function Product({ id }: { id: string }) {
             const productData = await getDocumentById(id);
             if (productData.exist) {
                 setProduct(productData);
+                // Dispara o evento ViewContent do Meta Pixel
+                trackPixelEvent('ViewContent', {
+                    content_type: 'product',
+                    content_ids: [productData.id],
+                    content_name: productData.name,
+                    content_category: productData.categories[0],
+                    value: productData.productVariations[0].value.price,
+                    currency: 'BRL',
+                });
                 setIsLoading(false);
                 setIsloadingButton(false);
             } else {
