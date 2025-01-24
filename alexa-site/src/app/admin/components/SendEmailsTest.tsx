@@ -110,7 +110,7 @@ export default function SendEmailsTest() {
     };
 
     return (
-        <div className="mt-6 max-w-lg mx-auto">
+        <div className="mt-6 max-w-lg">
             <button
                 onClick={ () => setShowModalConfirmation(true) }
                 disabled={ isSending }

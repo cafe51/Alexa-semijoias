@@ -8,6 +8,8 @@ import { formatPrice } from '../utils/formatPrice';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowUpRight } from 'lucide-react';
+import ChangeDataBaseButton from './components/ChangeDataBaseButton';
+import SendEmailsTest from './components/SendEmailsTest';
 
 interface StatCardProps {
     title: string;
@@ -133,6 +135,16 @@ const AdminDashboard = () => {
                     <PeriodStats salesData={ sales.last30days } title="30 dias" router={ router } />
                 </TabsContent>
             </Tabs>
+
+            {
+                process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true'
+            &&
+            <div className='flex flex-col gap-4 border border-gray-300 p-4 rounded-lg'>
+                <h1>Área do desenvolvedor</h1>
+                <ChangeDataBaseButton />
+                <SendEmailsTest />
+            </div>
+            }
         </div>
     );
 };
