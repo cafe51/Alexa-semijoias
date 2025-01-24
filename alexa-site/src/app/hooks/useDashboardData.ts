@@ -75,7 +75,7 @@ export const useDashboardData = () => {
                     allTime: { total: 0, count: 0 },
                 };
 
-                allOrders.forEach(order => {
+                allOrders.filter(({ status }) => status !== 'cancelado' && status !== 'aguardando pagamento').forEach(order => {
                     const orderDate = (order.createdAt as Timestamp).toDate();
                     const orderTotal = order.valor.soma || 0;
 
