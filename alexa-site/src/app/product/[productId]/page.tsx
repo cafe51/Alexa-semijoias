@@ -1,3 +1,5 @@
+// src/app/product/[productId]/page.tsx
+
 import { Metadata } from 'next';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import { projectFirestoreDataBase } from '@/app/firebase/config';

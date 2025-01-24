@@ -1,3 +1,5 @@
+// src/app/components/ProductPage/Product.tsx
+
 'use client';
 import { useEffect, useState, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';

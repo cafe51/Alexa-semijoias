@@ -1,3 +1,5 @@
+// src/app/components/ProductPage/ProductJsonLd.tsx
+
 'use client';
 
 import { ProductBundleType, ProductVariation } from '@/app/utils/types';
