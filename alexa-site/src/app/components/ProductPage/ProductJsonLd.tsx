@@ -24,7 +24,7 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
         'productID': variation.sku,
         'name': product.name,
         'description': product.description,
-        'url': typeof window !== 'undefined' ? window.location.href : '',
+        'url': `www.alexasemijoias.com.br/product/${product.id}`,
         'image': mainImage,
         'brand': 'Alexa Semijoias', // Nome da marca fixo
         'offers': [

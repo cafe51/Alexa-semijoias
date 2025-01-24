@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: { productId: string
         return {
             title: productData.name,
             description: productData.description,
-            metadataBase: new URL('https://alexasemijoias.com.br'),
+            metadataBase: new URL('https://www.alexasemijoias.com.br'),
             openGraph: {
                 title: productData.name,
                 description: productData.description,
@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: { params: { productId: string
                         alt: productData.name,
                     },
                 ],
+                // a tipagem não reconhece o type 'product' por isso tive que usar 'website'
                 type: 'website',
                 siteName: 'Alexa Semijoias',
             },
@@ -58,7 +59,7 @@ export async function generateMetadata({ params }: { params: { productId: string
         return {
             title: 'Produto - Alexa Semijoias',
             description: 'Descubra nossa coleção exclusiva de semijoias.',
-            metadataBase: new URL('https://alexasemijoias.com.br'),
+            metadataBase: new URL('https://www.alexasemijoias.com.br'),
         };
     }
 }
