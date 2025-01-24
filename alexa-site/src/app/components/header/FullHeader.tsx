@@ -123,7 +123,7 @@ const FullHeader: React.FC = () => {
                                         <UserIcon />
                                         {
                                             userInfo
-                                                ? <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">{ userInfo?.nome }</span>
+                                                ? <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">{ userInfo?.nome.split(' ')[0] }</span>
                                                 : <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">Entrar</span>
                                         }
                                     </div>
