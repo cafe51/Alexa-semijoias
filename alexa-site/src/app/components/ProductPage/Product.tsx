@@ -49,7 +49,7 @@ export default function Product({ id }: { id: string }) {
                     content_type: 'product',
                     content_ids: [productData.id],
                     content_name: productData.name,
-                    content_category: productData.categories[0],
+                    content_category: productData.sections[0],
                     value: productData.productVariations[0].value.price,
                     currency: 'BRL',
                 });
