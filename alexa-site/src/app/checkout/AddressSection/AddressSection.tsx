@@ -28,6 +28,30 @@ export default function AddressSection({ state: { address, editingAddressMode },
     const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newCep = formatCep(e.target.value);
         setCep(newCep);
+        
+        if (newCep === '') {
+            // Resetar o formulário quando o CEP for apagado
+            handleAddressChange({
+                logradouro: '',
+                bairro: '',
+                localidade: '',
+                uf: '',
+                numero: '',
+                complemento: '',
+                referencia: '',
+                cep: '',
+                ddd: '',
+                estado: '',
+                gia: '',
+                ibge: '',
+                siafi: '',
+                regiao: '',
+                unidade: '',
+            });
+            setError('');
+            return;
+        }
+
         if (newCep.replace('-', '').length === 8) {
             handleCepSubmit(newCep.replace('-', ''));
         }
@@ -41,6 +65,24 @@ export default function AddressSection({ state: { address, editingAddressMode },
             handleAddressChange({ ...fetchedAddress, referencia: '', numero: '' });
             setCep(formatCep(cepToFetch));
         } catch {
+            // Resetar o formulário quando o CEP for inválido
+            handleAddressChange({
+                logradouro: '',
+                bairro: '',
+                localidade: '',
+                uf: '',
+                numero: '',
+                complemento: '',
+                referencia: '',
+                cep: '',
+                ddd: '',
+                estado: '',
+                gia: '',
+                ibge: '',
+                siafi: '',
+                regiao: '',
+                unidade: '',
+            });
             setError('CEP inválido ou não encontrado.');
         } finally {
             setLoading(false);
@@ -81,6 +123,7 @@ export default function AddressSection({ state: { address, editingAddressMode },
                         cep={ cep }
                         handleCepChange={ handleCepChange }
                         loading={ loading }
+                        isFormValid={ isFormValid() }
                         error={ error }
                     />
                 ) : (

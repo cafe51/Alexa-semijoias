@@ -1,6 +1,5 @@
 // app/checkout/AddressSection/CepInput.tsx
 
-import ErrorMessage from './ErrorMessage';
 import InputField from './InputField';
 
 interface CepInputProps {
@@ -8,9 +7,10 @@ interface CepInputProps {
     handleCepChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     loading: boolean;
     error: string;
+    isFormValid: boolean;
 }
 
-export default function CepInput({ cep, handleCepChange, loading, error }: CepInputProps) {
+export default function CepInput({ cep, handleCepChange, loading, error, isFormValid }: CepInputProps) {
     return (
         <div className="flex flex-col w-full py-4 gap-2">
             <InputField
@@ -21,12 +21,16 @@ export default function CepInput({ cep, handleCepChange, loading, error }: CepIn
                 label="CEP"
                 readOnly={ false }
             />
-            <div
-                className="text-center p-2"
-            >
-                <p className='text-red-500'>{ loading ? 'Buscando endereço...' : 'CEP não encontrado' }</p>
-            </div>
-            { error && <ErrorMessage message={ error } /> }
+            { loading && (
+                <div className="text-center">
+                    <p className="text-gray-500 text-sm">Buscando endereço...</p>
+                </div>
+            ) }
+            { (error || !isFormValid) && (
+                <div className="text-center">
+                    <p className="text-red-500 text-sm">{ error }</p>
+                </div>
+            ) }
         </div>
     );
 }
