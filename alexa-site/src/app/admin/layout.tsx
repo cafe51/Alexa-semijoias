@@ -33,7 +33,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <AdminHeader />
             <DesktopMenu />
             <MobileMenu isOpen={ menuOpen } toggleMenu={ toggleMenu } />
-            <main className="pt-16 md:ml-64 p-6">
+            <main className="pt-20 md:ml-64 p-6">
                 { isLoading ? <LoadingIndicator /> : children }
             </main>
         </div>
