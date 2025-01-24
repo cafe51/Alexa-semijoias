@@ -6,6 +6,7 @@ import { auth } from '../firebase/config';
 import { useCollection } from './useCollection';
 import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
 import { UserType } from '../utils/types';
+import { Timestamp } from 'firebase/firestore';
 
 export interface SignUpResult {
     success: boolean;
@@ -33,7 +34,7 @@ export const useSignUp = () => {
             const { password, ...signInDataWithoutPassword } = signInData;
 
             await createNewUser(
-                { ...signInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '' }, 
+                { ...signInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '', createdAt: Timestamp.now() }, 
                 res.user.uid,
             );
 

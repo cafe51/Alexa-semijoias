@@ -2,7 +2,7 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useState } from 'react';
 import { auth, projectFirestoreDataBase } from '../firebase/config';
 import { useAuthContext } from './useAuthContext';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
 import { useCollection } from './useCollection';
 import { UserType } from '../utils/types';
 import { useSyncCart } from './useSyncCart';
@@ -39,6 +39,7 @@ export const useGoogleAuth = () => {
                     phone: '',
                     admin: false,
                     cpf: '',
+                    createdAt: Timestamp.now(),
                 }, user.uid);
                 
                 return {

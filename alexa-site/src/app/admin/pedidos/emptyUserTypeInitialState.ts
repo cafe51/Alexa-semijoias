@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export const emptyUserTypeInitialState = {
     exist: false,
     id: '',
@@ -25,4 +27,6 @@ export const emptyUserTypeInitialState = {
         estado: '',
         regiao: '',
     },
+    createdAt: Timestamp.now(),
+
 };
