@@ -1,4 +1,5 @@
 // src/app/layout.tsx
+
 import { Montserrat } from 'next/font/google';
 import './globals.css';
 import Footer from './components/Footer';
@@ -28,17 +29,23 @@ export default function RootLayout({
                     strategy="afterInteractive"
                     dangerouslySetInnerHTML={ {
                         __html: `
-                            !function(f,b,e,v,n,t,s)
-                            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                            n.queue=[];t=b.createElement(e);t.async=!0;
-                            t.src=v;s=b.getElementsByTagName(e)[0];
-                            s.parentNode.insertBefore(t,s)}(window, document,'script',
-                            'https://connect.facebook.net/en_US/fbevents.js');
-                            fbq('init', '574789162040735');
-                            fbq('track', 'PageView');
-                        `,
+            if (!window.fbq) {
+                console.log('[Pixel Debug] Inicializando o Facebook Pixel...');
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '574789162040735');
+                fbq('track', 'PageView');
+                console.log('[Pixel Debug] Facebook Pixel carregado com sucesso.');
+            } else {
+                console.warn('[Pixel Debug] Tentativa de carregar o Facebook Pixel novamente. Ignorando...');
+            }
+        `,
                     } }
                 />
                 <noscript>
