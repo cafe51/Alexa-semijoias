@@ -262,6 +262,7 @@ export type ViaCepResponse = {
 
     uf: string;
     unidade: string;
+    erro?: boolean;
 };
 
 export type AddressType = { numero: string, referencia: string } & ViaCepResponse;
