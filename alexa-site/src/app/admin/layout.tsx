@@ -4,7 +4,7 @@ import { ReactNode, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useRouter } from 'next/navigation';
 import LoadingIndicator from '../components/LoadingIndicator';
-import Header from './components/Header';
+import AdminHeader from './components/AdminHeader';
 import DesktopMenu from './components/DesktopMenu';
 import MobileMenu from './components/MobileMenu';
 
@@ -30,7 +30,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
     return (
         <div className="min-h-screen bg-[#FAF9F6]">
-            <Header />
+            <AdminHeader />
             <DesktopMenu />
             <MobileMenu isOpen={ menuOpen } toggleMenu={ toggleMenu } />
             <main className="pt-16 md:ml-64 p-6">

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 
-const Header = () => (
+const AdminHeader = () => (
     <header className="bg-[#C48B9F] text-white p-4 flex justify-between items-center fixed w-full z-10">
         <div className="flex items-center md:ml-64">
             <h1 className="text-xl font-semibold">ALEXA SEMIJOIAS Admin</h1>
@@ -14,4 +14,4 @@ const Header = () => (
     </header>
 );
 
-export default Header;
+export default AdminHeader;

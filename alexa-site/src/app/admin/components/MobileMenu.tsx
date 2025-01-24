@@ -18,12 +18,13 @@ const MobileMenu = ({ isOpen, toggleMenu }: MobileMenuProps) => {
     const { logout } = useLogout();
 
     const menuItems = [
-        { icon: Store, label: 'Ir para Loja', href: '/' },
+        { icon: BarChart2, label: 'Painel de Controle', href: '/admin' },
         { icon: ShoppingBag, label: 'Produtos', href: '/admin/produtos' },
         { icon: Users, label: 'Clientes', href: '/admin/clientes' },
         { icon: DollarSign, label: 'Vendas', href: '/admin/pedidos' },
         { icon: BarChart2, label: 'Relatórios', href: '/admin/relatorios' },
         { icon: Settings, label: 'Configurações', href: '/admin/configuracoes' },
+        { icon: Store, label: 'Ir para Loja', href: '/' },
     ];
 
     const handleLogout = async() => {

@@ -174,7 +174,7 @@ export type FilterOptionForUseSnapshot = {
 export type FilterOption = { 
     field: string; 
     operator?: WhereFilterOp; 
-    value?: string | number | string[] | number[] | boolean; 
+    value?: string | number | string[] | number[] | boolean | Timestamp; 
     order?: 'asc' | 'desc'; // Adiciona a opção de ordenação
 };
 
@@ -299,7 +299,7 @@ export type UserType = {
     cpf: string,
     phone: string,
     admin: boolean,
-    
+    createdAt: Timestamp,
     address?: AddressType | null
 }
 
