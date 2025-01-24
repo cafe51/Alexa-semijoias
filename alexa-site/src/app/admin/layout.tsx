@@ -1,9 +1,12 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useRouter } from 'next/navigation';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Header from './components/Header';
+import DesktopMenu from './components/DesktopMenu';
+import MobileMenu from './components/MobileMenu';
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -12,20 +15,13 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     const { user, isAdmin, isLoading } = useAuthContext();
     const router = useRouter();
+    const [menuOpen, setMenuOpen] = useState(false);
 
-    //   useEffect(() => {
-    //     if (!isLoading) {
-    //         if (!user) {
-    //             router.push('/login');
-    //         } else if (!isAdmin) {
-    //             router.push('/');
-    //         }
-    //     }
-    // }, [user, isAdmin, isLoading, router]);
+    const toggleMenu = () => setMenuOpen(!menuOpen);
 
-    if (isLoading) {
-        return <LoadingIndicator />;
-    }
+    // if (isLoading) {
+    //     return <LoadingIndicator />;
+    // }
 
     if (!user || !isAdmin) {
         router.push('/login');
@@ -33,9 +29,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     }
 
     return (
-        <div className="flex bg-gray-100 w-full">
-            <main className="flex-1 overflow-y-auto w-full">
-                { children }
+        <div className="min-h-screen bg-[#FAF9F6]">
+            <Header />
+            <DesktopMenu />
+            <MobileMenu isOpen={ menuOpen } toggleMenu={ toggleMenu } />
+            <main className="pt-16 md:ml-64 p-6">
+                { isLoading ? <LoadingIndicator /> : children }
             </main>
         </div>
     );
