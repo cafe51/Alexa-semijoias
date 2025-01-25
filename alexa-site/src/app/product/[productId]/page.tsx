@@ -5,6 +5,7 @@ import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { doc, getDoc } from 'firebase/firestore';
 import Product from '@/app/components/ProductPage/Product';
+import toTitleCase from '@/app/utils/toTitleCase';
 
 export async function generateMetadata({ params }: { params: { productId: string } }): Promise<Metadata> {
     try {
@@ -20,8 +21,8 @@ export async function generateMetadata({ params }: { params: { productId: string
         const variation = productData.productVariations[0];
 
         return {
-            title: productData.name,
-            description: productData.description,
+            title: toTitleCase(productData.name),
+            description: 'Compre agora em até 6 X sem juros',
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
             openGraph: {
                 title: productData.name,
