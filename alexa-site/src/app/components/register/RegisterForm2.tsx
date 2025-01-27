@@ -11,6 +11,13 @@ import { RegisterFormInputType } from '@/app/utils/types';
 import { checkDuplicateFields } from '@/app/utils/checkDuplicateFields';
 import ButtonGoogleLogin from '../ButtonGoogleLogin';
 
+interface RegisterForm2Props {
+    setSignedEmail: (email: string | undefined) => void;
+    setUid: (uid: string) => void;
+    setIncompleteSignIn: () => void;
+    setIsCartLoading?: () => void;
+}
+
 interface FormData extends RegisterFormInputType {
     confirmPassword: string;
 }
@@ -32,7 +39,7 @@ const validEmailDomains = [
     'us', 'uk', 'ca', 'au', 'de', 'fr', 'jp',
 ];
 
-export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (email: string | undefined) => void}) {
+export default function RegisterForm2({ setSignedEmail, setIncompleteSignIn, setUid, setIsCartLoading }: RegisterForm2Props) {
     const { signup, error: signupError, isLoading } = useSignUp();
     const { signInWithGoogle, error: googleError, isLoading: isGoogleLoading } = useGoogleAuth();
     const [localError, setLocalError] = useState<string | null>(null);
@@ -189,8 +196,9 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
             
             const result = await signup(dataObj);
 
-            if (result.success && result.verificationEmailSent) {
+            if (result.success) {
                 setSignedEmail(result.email ? result.email : undefined);
+                result.uid && setUid(result.uid);
             }
 
             // Aguarda um momento para garantir que o estado de erro foi atualizado
@@ -320,7 +328,6 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
             { /* Submit Button */ }
             <div className="pt-2 sm:pt-4">
                 <Button 
-                    type="submit" 
                     className={ `
                         w-full 
                         bg-[#D4AF37] 
@@ -339,7 +346,9 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
                         disabled:cursor-not-allowed
                         shadow-sm 
                         hover:shadow-md
-                    ` }
+                        ` }
+                    type="submit" 
+                    onClick={ setIsCartLoading }
                     disabled={ isLoading }
                 >
                     { isLoading ? (
@@ -370,7 +379,14 @@ export default function RegisterForm2({ setSignedEmail }: { setSignedEmail: (ema
                 </div>
             </div>
 
-            <ButtonGoogleLogin isGoogleLoading={ isGoogleLoading } signInWithGoogle={ signInWithGoogle } />
+            <ButtonGoogleLogin
+                isGoogleLoading={ isGoogleLoading }
+                signInWithGoogle={ signInWithGoogle }
+                setIncompleteSignIn={ setIncompleteSignIn }
+                setUid={ setUid }
+                setIsCartLoading={ setIsCartLoading }
+
+            />
 
             { googleError && (
                 <p className="text-red-500 text-sm text-center mt-2">{ googleError }</p>

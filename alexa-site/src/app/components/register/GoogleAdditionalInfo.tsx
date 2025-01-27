@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 import { Button } from '@/components/ui/button';
 import InputField from './InputField';
-import { useRouter } from 'next/navigation';
 import { UserType } from '@/app/utils/types';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
 import { auth } from '@/app/firebase/config';
@@ -25,7 +24,6 @@ interface FormErrors {
 }
 
 export default function GoogleAdditionalInfo({ userId, onComplete }: GoogleAdditionalInfoProps) {
-    const router = useRouter();
     const { dispatch } = useAuthContext();
     const { syncLocalCartToFirebase } = useSyncCart();
     const { updateDocumentField } = useCollection<UserType>('usuarios');
@@ -141,9 +139,9 @@ export default function GoogleAdditionalInfo({ userId, onComplete }: GoogleAddit
             // Obtém o usuário atual do Firebase Auth
             const currentUser = auth.currentUser;
             if (currentUser) {
+                dispatch({ type: 'LOGIN', payload: currentUser });
                 try {
                     await syncLocalCartToFirebase(currentUser.uid);
-                    dispatch({ type: 'LOGIN', payload: currentUser });
                 } catch (syncError) {
                     setError('Ocorreu um erro ao sincronizar o carrinho. Por favor, tente novamente.');
                     return;
@@ -154,7 +152,6 @@ export default function GoogleAdditionalInfo({ userId, onComplete }: GoogleAddit
                 onComplete();
             }
             
-            router.push('/');
         } catch (error) {
             console.error('Erro ao atualizar informações:', error);
             if (error instanceof Error) {

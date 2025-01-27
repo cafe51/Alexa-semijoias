@@ -20,7 +20,7 @@ export default function AccountSection({ state, handleShowLoginSection, setIsCar
     
     if(state.showLoginSection && !userInfo) return <LoginSection setShowLogin={ handleShowLoginSection } setIsCartLoading={ setIsCartLoading }/>;
     
-    if (!state.showLoginSection && !userInfo) return <RegisterSection setShowLogin={ handleShowLoginSection }/>;
+    if (!state.showLoginSection && !userInfo) return <RegisterSection setShowLogin={ handleShowLoginSection }  setIsCartLoading={ setIsCartLoading }/>;
 
     return null;
 

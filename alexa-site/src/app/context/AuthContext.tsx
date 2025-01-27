@@ -49,12 +49,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const unsubscribe = auth.onAuthStateChanged(async(user) => {
             if (user) {
                 try {
-                    if (!user.emailVerified) {
-                        dispatch({ type: 'AUTH_IS_READY', payload: undefined });
-                        dispatch({ type: 'SET_ADMIN', payload: false });
-                        return;
-                    }
-
                     const [userDoc, idTokenResult] = await Promise.all([
                         getDoc(doc(projectFirestoreDataBase, 'usuarios', user.uid)),
                         getIdTokenResult(user, true),
@@ -76,9 +70,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
                     dispatch({ type: 'AUTH_IS_READY', payload: { ...user } });
                     dispatch({ type: 'SET_ADMIN', payload: isAdmin });
                     
-                    console.log('AuthContext - isAdminInFirestore:', isAdminInFirestore);
-                    console.log('AuthContext - hasAdminClaim:', hasAdminClaim);
-                    console.log('AuthContext - isAdmin:', isAdmin);
                 } catch (error) {
                     console.error('Erro ao verificar status de admin:', error);
                     dispatch({ type: 'SET_ADMIN', payload: false });

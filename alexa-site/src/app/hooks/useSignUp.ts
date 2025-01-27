@@ -1,23 +1,25 @@
 // app/hooks/useSignUp.ts
 
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { useCollection } from './useCollection';
 import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
 import { UserType } from '../utils/types';
 import { Timestamp } from 'firebase/firestore';
+import { useSyncCart } from './useSyncCart';
 
 export interface SignUpResult {
     success: boolean;
-    verificationEmailSent?: boolean;
     email?: string;
+    uid?: string;
 }
 
 export const useSignUp = () => {
     const [error, setError] = useState<null | string>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { addDocument: createNewUser } = useCollection<UserType>('usuarios');
+    const { syncLocalCartToFirebase } = useSyncCart();
 
     const signup = async(signInData: { 
         email: string, 
@@ -39,14 +41,22 @@ export const useSignUp = () => {
                 res.user.uid,
             );
 
-            
-            await sendEmailVerification(res.user);
-            
-            return {
-                success: true,
-                verificationEmailSent: true,
-                email: signInData.email,
-            };
+            try {
+                await syncLocalCartToFirebase(res.user.uid);
+                return {
+                    success: true,
+                    email: signInData.email,
+                    uid: res.user.uid,
+                };
+            } catch (syncError) {
+                console.error('Erro ao sincronizar carrinho:', syncError);
+                setError('Erro ao sincronizar o carrinho. Por favor, tente novamente.');
+                return {
+                    success: false,
+                    email: signInData.email,
+                    uid: res.user.uid,
+                };
+            }
 
         } catch (err) {
             if (err instanceof Error) {

@@ -7,16 +7,21 @@ interface ButtonGoogleLoginProps {
         needsAdditionalInfo?: boolean;
         uid?: string;
     }>;
+    setIncompleteSignIn: () => void;
+    setUid: (uid: string) => void;
+    setIsCartLoading?: () => void;
 }
 
-export default function ButtonGoogleLogin({ isGoogleLoading, signInWithGoogle }: ButtonGoogleLoginProps) {
+export default function ButtonGoogleLogin({ isGoogleLoading, signInWithGoogle, setIncompleteSignIn, setUid, setIsCartLoading }: ButtonGoogleLoginProps) {
     return (
         <Button
             type="button"
             onClick={ async() => {
+                setIsCartLoading && setIsCartLoading();
                 const result = await signInWithGoogle();
-                if (result.success && result.needsAdditionalInfo) {
-                    window.location.href = `/cadastro/complementar?uid=${result.uid}`;
+                if (result.success && result.needsAdditionalInfo && result.uid) {
+                    setUid(result.uid);
+                    setIncompleteSignIn();
                 }
             } }
             disabled={ isGoogleLoading }

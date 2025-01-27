@@ -44,11 +44,6 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         userQuery, 
     );
 
-    // const { documents: pedidos } = useSnapshot<OrderType>(
-    //     'pedidos', 
-    //     userQuery, 
-    // );
-
     const produtosDoCarrinhoQuery = useMemo<FilterOptionForUseSnapshot[]>(() => 
         [{ field: '__name__', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }],
     [productIds], // Só recriar a query quando 'productIds' mudar
@@ -58,24 +53,6 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         'products', 
         produtosDoCarrinhoQuery, 
     );
-
-    // useEffect(() => {
-    //     console.log('produtosDoCarrinho', produtosDoCarrinho);
-    //     console.log('productIds', productIds);
-    // },[produtosDoCarrinho, productIds]);
-
-    // useEffect(() => {
-    //     console.log('cartInfos', cartInfos);
-    // },[cartInfos]);
-    
-
-    // useEffect(() => {
-    //     console.log('productVariationsState', productVariationsState);
-    // },[productVariationsState]);
-
-    // useEffect(() => {
-    //     console.log('skuList', skuList);
-    // },[skuList]);
 
     useEffect(() => {
         if(produtosDoCarrinho) {
@@ -90,7 +67,6 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     }, [produtosDoCarrinho, skuList]);
 
     const { mappedProducts } = useCart(user ? cartInfos : cartLocalStorageState, productVariationsState, setCartLocalStorageState);
-    // useCart(CartInfoType[], ProductType[], Dispatch<SetStateAction<CartInfoType[]>>)
 
     //montagem do carrinho
     useEffect(() => {

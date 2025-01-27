@@ -6,10 +6,13 @@ import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import LoadingIndicator from '../components/LoadingIndicator';
-import EmailVerification from '../components/EmailVerification';
+import GoogleAdditionalInfo from '../components/register/GoogleAdditionalInfo';
 
 export default function Register() {
+    const [incompleteSignIn, setIncompleteSignIn] = useState(false);
     const [signedEmail, setSignedEmail] = useState<string | undefined>(undefined);
+    const [uid, setUid] = useState<string | undefined>(undefined);
+
     const router = useRouter();
     const  { userInfo } = useUserInfo();
 
@@ -30,13 +33,19 @@ export default function Register() {
                     <CardTitle className="text-2xl sm:text-3xl font-bold text-[#333333] p-0 m-0">Crie sua conta</CardTitle>
                 </CardHeader>
                 <CardContent className="max-w-md mx-auto rounded-lg">
-                    { signedEmail ? (
-                        <EmailVerification
-                            email={ signedEmail }
-                        />
-                    ) : (
-                        <RegisterForm setSignedEmail={ (email) => setSignedEmail(email) }/>
-                    ) }
+                    {
+                        incompleteSignIn && uid
+                            ? 
+                            <GoogleAdditionalInfo userId={ uid } />
+                            :
+                            (
+                                <RegisterForm
+                                    setSignedEmail={ (email) => setSignedEmail(email) }
+                                    setIncompleteSignIn={ () => setIncompleteSignIn(true) }
+                                    setUid={ (uid: string) => setUid(uid) }
+                                />
+                            )
+                    }
                     
                 </CardContent>
                 { !signedEmail && (

@@ -1,16 +1,20 @@
 // app/checkout/AccountSection/RegisterSection.tsx
+
 'use client';
-import EmailVerification from '@/app/components/EmailVerification';
+import GoogleAdditionalInfo from '@/app/components/register/GoogleAdditionalInfo';
 import RegisterForm from '@/app/components/register/RegisterForm2';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useState } from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 interface RegisterSectionProps {
     setShowLogin: (isLogin: boolean) => void;
+    setIsCartLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function RegisterSection({ setShowLogin }: RegisterSectionProps) {
+export default function RegisterSection({ setShowLogin, setIsCartLoading }: RegisterSectionProps) {
+    const [incompleteSignIn, setIncompleteSignIn] = useState(false);
     const [signedEmail, setSignedEmail] = useState<string | undefined>(undefined);
+    const [uid, setUid] = useState<string | undefined>(undefined);
 
     return (
         <section className=" bg-[#FAF9F6] flex items-center justify-center px-0 py-0" >
@@ -25,16 +29,29 @@ export default function RegisterSection({ setShowLogin }: RegisterSectionProps) 
                     </p>
                 </CardHeader>
                 <CardContent>
-                    { signedEmail ? (
-                        <EmailVerification
-                            email={ signedEmail }
-                            onBackToLogin={ () => setShowLogin(true) }
-                        />
-                    ) : (
-                        <RegisterForm setSignedEmail={ (email) => setSignedEmail(email) }/>
-                    ) }
+                    { incompleteSignIn && uid
+                        ? 
+                        <GoogleAdditionalInfo userId={ uid } />
+                        :(
+                            <RegisterForm
+                                setSignedEmail={ (email) => setSignedEmail(email) }
+                                setIncompleteSignIn={ () => setIncompleteSignIn(true) }
+                                setUid={ (uid: string) => setUid(uid) }
+                                setIsCartLoading={ () => setIsCartLoading(true) }
+                            />
+                        ) }
                     
                 </CardContent>
+                { !signedEmail && (
+                    <CardFooter className="text-center">
+                        <p className="text-sm text-[#333333]">
+                Já tem uma conta?{ ' ' }
+                            <a href="/login" className="font-medium text-[#C48B9F] hover:text-[#D4AF37]">
+                  Faça login
+                            </a>
+                        </p>
+                    </CardFooter>
+                ) }
             </Card>
         </section>
 

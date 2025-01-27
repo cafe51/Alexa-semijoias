@@ -11,11 +11,16 @@ import Link from 'next/link';
 import ButtonGoogleLogin from './ButtonGoogleLogin';
 
 interface LoginFormProps {
-    onUnverifiedEmail: (email: string) => void;
-    onClick: () => void;
+    setUid: (uid: string) => void;
+    setIncompleteSignIn: () => void;
+    setIsCartLoading?: () => void;
 }
 
-export default function LoginForm({ onUnverifiedEmail, onClick }: LoginFormProps) {
+export default function LoginForm({
+    setIsCartLoading,
+    setIncompleteSignIn,
+    setUid,
+}: LoginFormProps) {
     const { error, login } = useLogin();
     const { signInWithGoogle, error: googleError, isLoading: isGoogleLoading } = useGoogleAuth();
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
@@ -46,11 +51,14 @@ export default function LoginForm({ onUnverifiedEmail, onClick }: LoginFormProps
 
         try {
             // Passa o callback onUnverifiedEmail para o hook de login
-            await login(
+            const result = await login(
                 registerValues.email, 
                 registerValues.password,
-                onUnverifiedEmail,
             );
+            if(result?.SignInIncomplete) {
+                setIncompleteSignIn();
+            }
+            result?.uid && setUid(result?.uid);
         } catch (error) {
             if (error instanceof Error) {
                 console.log(error.message);
@@ -131,7 +139,7 @@ export default function LoginForm({ onUnverifiedEmail, onClick }: LoginFormProps
                 ) }
                 <Button
                     disabled={ isButtonDisabled() }
-                    onClick={ onClick }
+                    onClick={ setIsCartLoading }
                     type="submit"
                     className="w-full bg-[#D4AF37] hover:bg-[#C48B9F] text-white font-semibold py-2.5 sm:py-3 md:py-3.5 px-4 rounded-md text-sm sm:text-base md:text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -149,7 +157,13 @@ export default function LoginForm({ onUnverifiedEmail, onClick }: LoginFormProps
                 </div>
             </div>
 
-            <ButtonGoogleLogin isGoogleLoading={ isGoogleLoading } signInWithGoogle={ signInWithGoogle } />
+            <ButtonGoogleLogin
+                isGoogleLoading={ isGoogleLoading }
+                signInWithGoogle={ signInWithGoogle }
+                setIncompleteSignIn={ setIncompleteSignIn }
+                setUid={ setUid }
+                setIsCartLoading={ setIsCartLoading }
+            />
 
             { googleError && (
                 <p className="text-red-500 text-sm text-center mt-2">{ 'Ocorreu um erro ao tentar fazer login com a sua conta Google, tente novamente.' }</p>

@@ -8,6 +8,12 @@ import { getDoc, doc } from 'firebase/firestore';
 import { getFirebaseErrorMessage } from '../utils/getFirebaseErrorMessage';
 import { useSyncCart } from './useSyncCart';
 
+interface SignInResult {
+    success: boolean;
+    uid: string;
+    SignInIncomplete: boolean;
+}
+
 export const useLogin = () => {
     const { dispatch } = useAuthContext();
     const [error, setError] = useState<string | null>(null);
@@ -52,40 +58,29 @@ export const useLogin = () => {
         }
     };
 
-    const login = async(email: string, password: string, onUnverifiedEmail?: (email: string) => void) => {
+    const login = async(email: string, password: string): Promise<SignInResult | undefined> => {
         setError(null);
 
         try {
             const res = await signInWithEmailAndPassword(auth, email, password);
-
-            // Verifica se o e-mail está verificado
-            if (!res.user.emailVerified) {
-                if (onUnverifiedEmail) {
-                    onUnverifiedEmail(email);
-                }
-                return;
-            }
-
+            
             // Verifica se o usuário tem os dados complementares
             const userDoc = await getDoc(doc(projectFirestoreDataBase, 'usuarios', res.user.uid));
             const userData = userDoc.data();
 
-            if (!userData || !userData.cpf) {
-                setError('Cadastro incompleto. Por favor, complete seu cadastro fornecendo seu CPF.');
-                return;
+            // Se o usuário tem CPF cadastrado, procede com o login completo
+            if (userData && userData.cpf) {
+                dispatch({ type: 'LOGIN', payload: res.user });
+                try {
+                    await syncLocalCartToFirebase(res.user.uid);
+                } catch (syncError) {
+                    setError('Ocorreu um erro ao sincronizar o carrinho. Por favor, tente novamente.');
+                }
+                await checkAndSetAdminClaim(res.user);
             }
 
-            // Despacha o login apenas se o e-mail estiver verificado e os dados complementares estiverem preenchidos
-            dispatch({ type: 'LOGIN', payload: res.user });
+            return { success: true, uid: res.user.uid, SignInIncomplete: !(userData && userData.cpf) };
 
-            // Sincroniza o carrinho e define a permissão de admin
-            try {
-                await syncLocalCartToFirebase(res.user.uid);
-            } catch (syncError) {
-                setError('Ocorreu um erro ao sincronizar o carrinho. Por favor, tente novamente.');
-                return;
-            }
-            await checkAndSetAdminClaim(res.user);
 
         } catch (err) {
             if (err instanceof Error) {

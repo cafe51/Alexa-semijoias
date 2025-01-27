@@ -60,9 +60,9 @@ export const useGoogleAuth = () => {
             }
 
             // Usuário já existe e tem dados complementares
+            dispatch({ type: 'LOGIN', payload: user });
             try {
                 await syncLocalCartToFirebase(user.uid);
-                dispatch({ type: 'LOGIN', payload: user });
                 return { success: true };
             } catch (syncError) {
                 setError('Ocorreu um erro ao sincronizar o carrinho. Por favor, tente novamente.');
