@@ -41,6 +41,13 @@ export default function Product({ id }: { id: string }) {
     } = useDynamicObjectCardsLogic(product, carrinho);
 
     useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    }, []);
+
+    useEffect(() => {
         const updateProductsState = async() => {
             setIsLoading(true);
             const productData = await getDocumentById(id);
