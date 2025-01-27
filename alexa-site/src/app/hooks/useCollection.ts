@@ -1,7 +1,7 @@
 // app/hooks/useCollection.ts
 
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, Timestamp, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy, limit, QueryConstraint } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, Timestamp, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy, limit, QueryConstraint, getCountFromServer } from 'firebase/firestore';
 import { FilterOption, FireBaseDocument, OrderByOption } from '../utils/types';
 import { useCallback } from 'react';
 
@@ -34,12 +34,11 @@ export const useCollection = <T>(collectionName: string) => {
         } catch (error) {
             console.error('Erro ao atualizar documento:', error);
         }
-
     }, [collectionName]);
 
     const getDocumentById = useCallback(async(id: string): Promise<T & FireBaseDocument> => {
-        const docRef = doc(projectFirestoreDataBase, collectionName, id); // Referência ao documento com ID '12345'
-        const docSnap = await getDoc(docRef); // Obtém o documento
+        const docRef = doc(projectFirestoreDataBase, collectionName, id);
+        const docSnap = await getDoc(docRef);
 
         return {
             id: docSnap.id,
@@ -81,13 +80,11 @@ export const useCollection = <T>(collectionName: string) => {
         }
 
         const collectionSnapshot = await getDocs(ref);
-        const collectionSnapshotDocs = collectionSnapshot.docs.map((doc) => ({
+        return collectionSnapshot.docs.map((doc) => ({
             id: doc.id,
             exist: doc.exists(),
             ...doc.data() as T,
         }));
-
-        return collectionSnapshotDocs;
     }, [collectionName]);
     
     const getDocumentsWithConstraints = useCallback(async(
@@ -104,24 +101,6 @@ export const useCollection = <T>(collectionName: string) => {
         }));
     }, [collectionName]);
 
-    const getRecentDocuments = useCallback(async(
-        dateField: string,
-        fromDate: Date,
-    ): Promise<(T & FireBaseDocument)[]> => {
-        const constraints = [
-            where(dateField, '>=', Timestamp.fromDate(fromDate)),
-        ];
-        return getDocumentsWithConstraints(constraints);
-    }, [getDocumentsWithConstraints]);
-
-    const getActiveProducts = useCallback(async(): Promise<(T & FireBaseDocument)[]> => {
-        const constraints = [
-            where('showProduct', '==', true),
-            where('estoqueTotal', '>', 0),
-        ];
-        return getDocumentsWithConstraints(constraints);
-    }, [getDocumentsWithConstraints]);
-
     const getCompletedOrders = useCallback(async(): Promise<(T & FireBaseDocument)[]> => {
         const constraints = [
             where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
@@ -129,15 +108,51 @@ export const useCollection = <T>(collectionName: string) => {
         return getDocumentsWithConstraints(constraints);
     }, [getDocumentsWithConstraints]);
 
+    const getCount = useCallback(async(
+        constraints?: QueryConstraint[],
+    ): Promise<number> => {
+        const ref = collection(projectFirestoreDataBase, collectionName);
+        const q = constraints ? query(ref, ...constraints) : ref;
+        const snapshot = await getCountFromServer(q);
+        return snapshot.data().count;
+    }, [collectionName]);
+
+    const getActiveProductsCount = useCallback(async(): Promise<number> => {
+        const constraints = [
+            where('showProduct', '==', true),
+            where('estoqueTotal', '>', 0),
+        ];
+        return getCount(constraints);
+    }, [getCount]);
+
+    const getRecentDocumentsCount = useCallback(async(
+        dateField: string,
+        fromDate: Date,
+    ): Promise<number> => {
+        const constraints = [
+            where(dateField, '>=', Timestamp.fromDate(fromDate)),
+        ];
+        return getCount(constraints);
+    }, [getCount]);
+
+    const getCompletedOrdersCount = useCallback(async(): Promise<number> => {
+        const constraints = [
+            where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
+        ];
+        return getCount(constraints);
+    }, [getCount]);
+
     return { 
         addDocument, 
         deleteDocument, 
         getDocumentById, 
         updateDocumentField, 
         getAllDocuments, 
-        getRecentDocuments,
-        getActiveProducts,
         getCompletedOrders,
-        getDocumentsWithConstraints, 
+        getDocumentsWithConstraints,
+        getCount,
+        getActiveProductsCount,
+        getRecentDocumentsCount,
+        getCompletedOrdersCount,
     };
 };

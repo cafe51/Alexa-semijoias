@@ -62,11 +62,35 @@ export const useDashboardData = () => {
                 const last7days = Timestamp.fromDate(new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000));
                 const last30days = Timestamp.fromDate(new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000));
 
-                // Busca pedidos completados
-                const completedOrders = await ordersCollection.getCompletedOrders();
-                
-                // Busca pedidos por período
-                const [last24hOrders, last7daysOrders, last30daysOrders] = await Promise.all([
+                // Busca contagens de pedidos por período
+                const [
+                    last24hCount,
+                    last7daysCount,
+                    last30daysCount,
+                    allTimeCount,
+                ] = await Promise.all([
+                    ordersCollection.getCount([
+                        where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
+                        where('createdAt', '>=', last24h),
+                    ]),
+                    ordersCollection.getCount([
+                        where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
+                        where('createdAt', '>=', last7days),
+                    ]),
+                    ordersCollection.getCount([
+                        where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
+                        where('createdAt', '>=', last30days),
+                    ]),
+                    ordersCollection.getCompletedOrdersCount(),
+                ]);
+
+                // Busca valores totais de vendas por período
+                const [
+                    last24hOrders,
+                    last7daysOrders,
+                    last30daysOrders,
+                    allTimeOrders,
+                ] = await Promise.all([
                     ordersCollection.getDocumentsWithConstraints([
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last24h),
@@ -79,44 +103,42 @@ export const useDashboardData = () => {
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last30days),
                     ]),
+                    ordersCollection.getCompletedOrders(),
                 ]);
 
                 // Calcula totais de vendas
-                const calculateSalesData = (orders: (OrderType & FireBaseDocument)[]): SalesData => {
-                    return orders.reduce((acc, order) => ({
-                        total: acc.total + (order.valor.soma || 0),
-                        count: acc.count + 1,
-                    }), { total: 0, count: 0 });
+                const calculateTotal = (orders: (OrderType & FireBaseDocument)[]): number => {
+                    return orders.reduce((acc, order) => acc + (order.valor.soma || 0), 0);
                 };
 
                 const sales = {
-                    last24h: calculateSalesData(last24hOrders),
-                    last7days: calculateSalesData(last7daysOrders),
-                    last30days: calculateSalesData(last30daysOrders),
-                    allTime: calculateSalesData(completedOrders),
+                    last24h: { total: calculateTotal(last24hOrders), count: last24hCount },
+                    last7days: { total: calculateTotal(last7daysOrders), count: last7daysCount },
+                    last30days: { total: calculateTotal(last30daysOrders), count: last30daysCount },
+                    allTime: { total: calculateTotal(allTimeOrders), count: allTimeCount },
                 };
 
-                // Busca produtos ativos e total de produtos
-                const [activeProducts, allProducts] = await Promise.all([
-                    productsCollection.getActiveProducts(),
-                    productsCollection.getAllDocuments(),
+                // Busca contagens de produtos
+                const [activeProductsCount, totalProductsCount] = await Promise.all([
+                    productsCollection.getActiveProductsCount(),
+                    productsCollection.getCount(),
                 ]);
 
-                // Busca clientes recentes e total de clientes
-                const [recentCustomers, allCustomers] = await Promise.all([
-                    usersCollection.getRecentDocuments('createdAt', last30days.toDate()),
-                    usersCollection.getAllDocuments(),
+                // Busca contagens de clientes
+                const [recentCustomersCount, totalCustomersCount] = await Promise.all([
+                    usersCollection.getRecentDocumentsCount('createdAt', last30days.toDate()),
+                    usersCollection.getCount(),
                 ]);
 
                 setData({
                     sales,
                     products: {
-                        total: allProducts.length,
-                        active: activeProducts.length,
+                        total: totalProductsCount,
+                        active: activeProductsCount,
                     },
                     customers: {
-                        last30days: recentCustomers.length,
-                        total: allCustomers.length,
+                        last30days: recentCustomersCount,
+                        total: totalCustomersCount,
                     },
                     isLoading: false,
                     error: null,
