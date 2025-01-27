@@ -4,12 +4,20 @@ import { FilterOptionForUseSnapshot, ProductBundleType } from '@/app/utils/types
 import { SortOption } from '@/app/components/ProductList/ProductSorter';
 import removeAccents from '../utils/removeAccents';
 
+const MAX_STOCK_EMULATOR = 9999999999;
+const MAX_PRICE_EMULATOR = 999999999999999;
+const MAX_STOCK_PRODUCTION = 20;
+const MAX_PRICE_PRODUCTION = 2000;
+
+const MAX_STOCK = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' ? MAX_STOCK_EMULATOR : MAX_STOCK_PRODUCTION;
+const MAX_PRICE = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' ? MAX_PRICE_EMULATOR : MAX_PRICE_PRODUCTION;
+
 export const useProductPagination = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showStoreProducts, setShowStoreProducts] = useState(true);
     const [showOutStoreProducts, setShowOutStoreProducts] = useState(true);
-    const [estoqueRange, setEstoqueRange] = useState<[number, number]>([0, 20]);
-    const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
+    const [estoqueRange, setEstoqueRange] = useState<[number, number]>([0, MAX_STOCK]);
+    const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
     const [error, setError] = useState<string | null>(null);
     const [currentSort, setCurrentSort] = useState<SortOption>({ 
         value: 'newest', 

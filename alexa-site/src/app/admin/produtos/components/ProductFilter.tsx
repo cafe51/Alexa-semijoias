@@ -4,6 +4,14 @@ import { Label } from '@/components/ui/label';
 import SlideUpModal from '@/app/components/ModalMakers/SlideUpModal';
 import DualRangeSlider from '@/components/ui/DualRangeSlider';
 
+const MAX_STOCK_EMULATOR = 9999999999;
+const MAX_PRICE_EMULATOR = 999999999999999;
+const MAX_STOCK_PRODUCTION = 20;
+const MAX_PRICE_PRODUCTION = 2000;
+
+const MAX_STOCK = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' ? MAX_STOCK_EMULATOR : MAX_STOCK_PRODUCTION;
+const MAX_PRICE = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' ? MAX_PRICE_EMULATOR : MAX_PRICE_PRODUCTION;
+
 interface ProductFilterProps {
     showStoreProducts: boolean;
     setShowStoreProducts: (value: boolean) => void;
@@ -70,7 +78,7 @@ export default function ProductFilter({
                     value={ estoqueRange }
                     onChange={ setEstoqueRange }
                     min={ 0 }
-                    max={ 20 }
+                    max={ MAX_STOCK }
                     step={ 1 }
                 />
 
@@ -79,7 +87,7 @@ export default function ProductFilter({
                     value={ priceRange }
                     onChange={ setPriceRange }
                     min={ 0 }
-                    max={ 2000 }
+                    max={ MAX_PRICE }
                     step={ 1 }
                 />
             </div>
