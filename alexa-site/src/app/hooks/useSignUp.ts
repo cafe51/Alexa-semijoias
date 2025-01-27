@@ -23,7 +23,8 @@ export const useSignUp = () => {
         email: string, 
         password: string, 
         nome: string, 
-        phone: string 
+        phone: string,
+        cpf: string,
     }): Promise<SignUpResult> => {
         setError(null);
         setIsLoading(true);
@@ -34,7 +35,7 @@ export const useSignUp = () => {
             const { password, ...signInDataWithoutPassword } = signInData;
 
             await createNewUser(
-                { ...signInDataWithoutPassword, userId: res.user.uid, admin: false, cpf: '', createdAt: Timestamp.now() }, 
+                { ...signInDataWithoutPassword, userId: res.user.uid, admin: false, createdAt: Timestamp.now() }, 
                 res.user.uid,
             );
 
