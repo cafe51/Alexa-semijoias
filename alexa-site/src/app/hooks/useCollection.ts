@@ -40,6 +40,8 @@ export const useCollection = <T>(collectionName: string) => {
         const docRef = doc(projectFirestoreDataBase, collectionName, id);
         const docSnap = await getDoc(docRef);
 
+        console.log('getDocumentById');
+
         return {
             id: docSnap.id,
             exist: docSnap.exists(),
@@ -80,6 +82,7 @@ export const useCollection = <T>(collectionName: string) => {
         }
 
         const collectionSnapshot = await getDocs(ref);
+        console.log('getAllDocuments');
         return collectionSnapshot.docs.map((doc) => ({
             id: doc.id,
             exist: doc.exists(),
@@ -93,7 +96,8 @@ export const useCollection = <T>(collectionName: string) => {
         const ref = collection(projectFirestoreDataBase, collectionName);
         const q = query(ref, ...constraints);
         const querySnapshot = await getDocs(q);
-        
+
+        console.log('getDocumentsWithConstraints');
         return querySnapshot.docs.map(doc => ({
             id: doc.id,
             exist: doc.exists(),
@@ -105,6 +109,9 @@ export const useCollection = <T>(collectionName: string) => {
         const constraints = [
             where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
         ];
+
+        console.log('getCompletedOrders');
+
         return getDocumentsWithConstraints(constraints);
     }, [getDocumentsWithConstraints]);
 
@@ -122,6 +129,9 @@ export const useCollection = <T>(collectionName: string) => {
             where('showProduct', '==', true),
             where('estoqueTotal', '>', 0),
         ];
+
+        console.log('getActiveProductsCount');
+
         return getCount(constraints);
     }, [getCount]);
 
@@ -139,6 +149,9 @@ export const useCollection = <T>(collectionName: string) => {
         const constraints = [
             where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
         ];
+
+        console.log('getCompletedOrdersCount');
+
         return getCount(constraints);
     }, [getCount]);
 
