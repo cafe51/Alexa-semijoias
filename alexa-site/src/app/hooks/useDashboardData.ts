@@ -1,7 +1,9 @@
+// src/app/hooks/useDashboardData.ts
+
 import { useState, useEffect } from 'react';
 import { useCollection } from './useCollection';
-import { OrderType, ProductBundleType, UserType } from '../utils/types';
-import { Timestamp } from 'firebase/firestore';
+import { FireBaseDocument, OrderType, ProductBundleType, UserType } from '../utils/types';
+import { Timestamp, where } from 'firebase/firestore';
 
 interface SalesData {
     total: number;
@@ -60,57 +62,56 @@ export const useDashboardData = () => {
                 const last7days = Timestamp.fromDate(new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000));
                 const last30days = Timestamp.fromDate(new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000));
 
-                // Busca todos os dados
-                const [allOrders, products, allCustomers] = await Promise.all([
-                    ordersCollection.getAllDocuments(),
-                    productsCollection.getAllDocuments(),
-                    usersCollection.getAllDocuments(),
+                // Busca pedidos completados
+                const completedOrders = await ordersCollection.getCompletedOrders();
+                
+                // Busca pedidos por período
+                const [last24hOrders, last7daysOrders, last30daysOrders] = await Promise.all([
+                    ordersCollection.getDocumentsWithConstraints([
+                        where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
+                        where('createdAt', '>=', last24h),
+                    ]),
+                    ordersCollection.getDocumentsWithConstraints([
+                        where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
+                        where('createdAt', '>=', last7days),
+                    ]),
+                    ordersCollection.getDocumentsWithConstraints([
+                        where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
+                        where('createdAt', '>=', last30days),
+                    ]),
                 ]);
 
-                // Processa os pedidos por período
-                const sales = {
-                    last24h: { total: 0, count: 0 },
-                    last7days: { total: 0, count: 0 },
-                    last30days: { total: 0, count: 0 },
-                    allTime: { total: 0, count: 0 },
+                // Calcula totais de vendas
+                const calculateSalesData = (orders: (OrderType & FireBaseDocument)[]): SalesData => {
+                    return orders.reduce((acc, order) => ({
+                        total: acc.total + (order.valor.soma || 0),
+                        count: acc.count + 1,
+                    }), { total: 0, count: 0 });
                 };
 
-                allOrders.filter(({ status }) => status !== 'cancelado' && status !== 'aguardando pagamento').forEach(order => {
-                    const orderDate = (order.createdAt as Timestamp).toDate();
-                    const orderTotal = order.valor.soma || 0;
+                const sales = {
+                    last24h: calculateSalesData(last24hOrders),
+                    last7days: calculateSalesData(last7daysOrders),
+                    last30days: calculateSalesData(last30daysOrders),
+                    allTime: calculateSalesData(completedOrders),
+                };
 
-                    // Atualiza totais para todos os períodos
-                    sales.allTime.total += orderTotal;
-                    sales.allTime.count++;
+                // Busca produtos ativos e total de produtos
+                const [activeProducts, allProducts] = await Promise.all([
+                    productsCollection.getActiveProducts(),
+                    productsCollection.getAllDocuments(),
+                ]);
 
-                    if (orderDate >= last30days.toDate()) {
-                        sales.last30days.total += orderTotal;
-                        sales.last30days.count++;
-
-                        if (orderDate >= last7days.toDate()) {
-                            sales.last7days.total += orderTotal;
-                            sales.last7days.count++;
-
-                            if (orderDate >= last24h.toDate()) {
-                                sales.last24h.total += orderTotal;
-                                sales.last24h.count++;
-                            }
-                        }
-                    }
-                });
-
-                // Processa produtos
-                const activeProducts = products.filter(product => product.showProduct && product.estoqueTotal > 0);
-
-                // Processa clientes
-                const recentCustomers = allCustomers.filter(
-                    customer => (customer.createdAt as Timestamp).toDate() >= last30days.toDate(),
-                );
+                // Busca clientes recentes e total de clientes
+                const [recentCustomers, allCustomers] = await Promise.all([
+                    usersCollection.getRecentDocuments('createdAt', last30days.toDate()),
+                    usersCollection.getAllDocuments(),
+                ]);
 
                 setData({
                     sales,
                     products: {
-                        total: products.length,
+                        total: allProducts.length,
                         active: activeProducts.length,
                     },
                     customers: {
