@@ -27,9 +27,14 @@ export const useCollection = <T>(collectionName: string) => {
     const deleteDocument = useCallback(async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id)), [collectionName]);
 
     const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object) => {
-        const docRef = doc(projectFirestoreDataBase, collectionName, id);
-        console.log('chamou update', id, field, value, docRef);
-        await updateDoc(docRef, { [field]: value });
+        try {
+            const docRef = doc(projectFirestoreDataBase, collectionName, id);
+            console.log('chamou update', id, field, value, docRef);
+            await updateDoc(docRef, { [field]: value });
+        } catch (error) {
+            console.error('Erro ao atualizar documento:', error);
+        }
+
     }, [collectionName]);
 
     const getDocumentById = useCallback(async(id: string): Promise<T & FireBaseDocument> => {
