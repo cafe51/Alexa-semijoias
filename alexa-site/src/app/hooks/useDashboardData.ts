@@ -1,6 +1,6 @@
 // src/app/hooks/useDashboardData.ts
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useCollection } from './useCollection';
 import { FireBaseDocument, OrderType, ProductBundleType, UserType } from '../utils/types';
 import { Timestamp, where } from 'firebase/firestore';
@@ -53,7 +53,14 @@ export const useDashboardData = () => {
     const productsCollection = useCollection<ProductBundleType>('products');
     const usersCollection = useCollection<UserType>('usuarios');
 
+    const collections = useMemo(() => ({
+        orders: ordersCollection,
+        products: productsCollection,
+        users: usersCollection,
+    }), [ordersCollection, productsCollection, usersCollection]);
+
     useEffect(() => {
+        console.log('Dashboard useEffect executado');
         const fetchDashboardData = async() => {
             try {
                 // Calcula os timestamps
@@ -69,19 +76,19 @@ export const useDashboardData = () => {
                     last30daysCount,
                     allTimeCount,
                 ] = await Promise.all([
-                    ordersCollection.getCount([
+                    collections.orders.getCount([
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last24h),
                     ]),
-                    ordersCollection.getCount([
+                    collections.orders.getCount([
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last7days),
                     ]),
-                    ordersCollection.getCount([
+                    collections.orders.getCount([
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last30days),
                     ]),
-                    ordersCollection.getCompletedOrdersCount(),
+                    collections.orders.getCompletedOrdersCount(),
                 ]);
 
                 // Busca valores totais de vendas por período
@@ -91,19 +98,19 @@ export const useDashboardData = () => {
                     last30daysOrders,
                     allTimeOrders,
                 ] = await Promise.all([
-                    ordersCollection.getDocumentsWithConstraints([
+                    collections.orders.getDocumentsWithConstraints([
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last24h),
                     ]),
-                    ordersCollection.getDocumentsWithConstraints([
+                    collections.orders.getDocumentsWithConstraints([
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last7days),
                     ]),
-                    ordersCollection.getDocumentsWithConstraints([
+                    collections.orders.getDocumentsWithConstraints([
                         where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
                         where('createdAt', '>=', last30days),
                     ]),
-                    ordersCollection.getCompletedOrders(),
+                    collections.orders.getCompletedOrders(),
                 ]);
 
                 // Calcula totais de vendas
@@ -120,14 +127,14 @@ export const useDashboardData = () => {
 
                 // Busca contagens de produtos
                 const [activeProductsCount, totalProductsCount] = await Promise.all([
-                    productsCollection.getActiveProductsCount(),
-                    productsCollection.getCount(),
+                    collections.products.getActiveProductsCount(),
+                    collections.products.getCount(),
                 ]);
 
                 // Busca contagens de clientes
                 const [recentCustomersCount, totalCustomersCount] = await Promise.all([
-                    usersCollection.getRecentDocumentsCount('createdAt', last30days.toDate()),
-                    usersCollection.getCount(),
+                    collections.users.getRecentDocumentsCount('createdAt', last30days.toDate()),
+                    collections.users.getCount(),
                 ]);
 
                 setData({
@@ -154,7 +161,7 @@ export const useDashboardData = () => {
         };
 
         fetchDashboardData();
-    }, [ordersCollection, productsCollection, usersCollection]);
+    }, [collections]);
 
     return data;
 };

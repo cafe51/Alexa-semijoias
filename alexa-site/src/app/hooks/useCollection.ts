@@ -3,10 +3,11 @@
 import { projectFirestoreDataBase } from '../firebase/config';
 import { CollectionReference, DocumentData, Query, Timestamp, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy, limit, QueryConstraint, getCountFromServer } from 'firebase/firestore';
 import { FilterOption, FireBaseDocument, OrderByOption } from '../utils/types';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export const useCollection = <T>(collectionName: string) => {
     const addDocument = useCallback(async(dataObj: T & { id?: string }, id?: string) => {
+        console.log('useCollection: addDocument chamado');
         if (id) {
             // Define o ID específico
             console.log('projectFirestoreDataBase', projectFirestoreDataBase);
@@ -24,7 +25,10 @@ export const useCollection = <T>(collectionName: string) => {
         }
     }, [collectionName]);
   
-    const deleteDocument = useCallback(async(id: string) => await deleteDoc(doc(projectFirestoreDataBase, collectionName, id)), [collectionName]);
+    const deleteDocument = useCallback(async(id: string) => {
+        console.log('useCollection: deleteDocument chamado');
+        await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
+    }, [collectionName]);
 
     const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object) => {
         try {
@@ -37,6 +41,7 @@ export const useCollection = <T>(collectionName: string) => {
     }, [collectionName]);
 
     const getDocumentById = useCallback(async(id: string): Promise<T & FireBaseDocument> => {
+        console.log('useCollection: getDocumentById chamado');
         const docRef = doc(projectFirestoreDataBase, collectionName, id);
         const docSnap = await getDoc(docRef);
 
@@ -54,6 +59,7 @@ export const useCollection = <T>(collectionName: string) => {
         itemsPerPage?: number,
         orderByOption?: OrderByOption,
     ): Promise<(T & FireBaseDocument)[]> => {
+        console.log('useCollection: getAllDocuments chamado');
         let ref: Query | CollectionReference<DocumentData, DocumentData> = collection(projectFirestoreDataBase, collectionName);
 
         if (filterOptions) {
@@ -93,6 +99,7 @@ export const useCollection = <T>(collectionName: string) => {
     const getDocumentsWithConstraints = useCallback(async(
         constraints: QueryConstraint[],
     ): Promise<(T & FireBaseDocument)[]> => {
+        console.log('useCollection: getDocumentsWithConstraints chamado');
         const ref = collection(projectFirestoreDataBase, collectionName);
         const q = query(ref, ...constraints);
         const querySnapshot = await getDocs(q);
@@ -106,6 +113,7 @@ export const useCollection = <T>(collectionName: string) => {
     }, [collectionName]);
 
     const getCompletedOrders = useCallback(async(): Promise<(T & FireBaseDocument)[]> => {
+        console.log('useCollection: getCompletedOrders chamado');
         const constraints = [
             where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
         ];
@@ -118,6 +126,7 @@ export const useCollection = <T>(collectionName: string) => {
     const getCount = useCallback(async(
         constraints?: QueryConstraint[],
     ): Promise<number> => {
+        console.log('useCollection: getCount chamado');
         const ref = collection(projectFirestoreDataBase, collectionName);
         const q = constraints ? query(ref, ...constraints) : ref;
         const snapshot = await getCountFromServer(q);
@@ -125,6 +134,7 @@ export const useCollection = <T>(collectionName: string) => {
     }, [collectionName]);
 
     const getActiveProductsCount = useCallback(async(): Promise<number> => {
+        console.log('useCollection: getActiveProductsCount chamado');
         const constraints = [
             where('showProduct', '==', true),
             where('estoqueTotal', '>', 0),
@@ -139,6 +149,7 @@ export const useCollection = <T>(collectionName: string) => {
         dateField: string,
         fromDate: Date,
     ): Promise<number> => {
+        console.log('useCollection: getRecentDocumentsCount chamado');
         const constraints = [
             where(dateField, '>=', Timestamp.fromDate(fromDate)),
         ];
@@ -146,6 +157,7 @@ export const useCollection = <T>(collectionName: string) => {
     }, [getCount]);
 
     const getCompletedOrdersCount = useCallback(async(): Promise<number> => {
+        console.log('useCollection: getCompletedOrdersCount chamado');
         const constraints = [
             where('status', 'not-in', ['cancelado', 'aguardando pagamento']),
         ];
@@ -155,7 +167,7 @@ export const useCollection = <T>(collectionName: string) => {
         return getCount(constraints);
     }, [getCount]);
 
-    return { 
+    return useMemo(() => ({ 
         addDocument, 
         deleteDocument, 
         getDocumentById, 
@@ -167,5 +179,17 @@ export const useCollection = <T>(collectionName: string) => {
         getActiveProductsCount,
         getRecentDocumentsCount,
         getCompletedOrdersCount,
-    };
+    }), [
+        addDocument, 
+        deleteDocument, 
+        getDocumentById, 
+        updateDocumentField, 
+        getAllDocuments, 
+        getCompletedOrders,
+        getDocumentsWithConstraints,
+        getCount,
+        getActiveProductsCount,
+        getRecentDocumentsCount,
+        getCompletedOrdersCount,
+    ]);
 };
