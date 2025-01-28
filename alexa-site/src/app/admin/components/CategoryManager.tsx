@@ -138,21 +138,25 @@ const CategoryManager = () => {
                                                     <div className="flex justify-between items-center">
                                                         <p className="font-bold text-[#333333]">{ toTitleCase(product.name) }</p>
                                                     </div>
-            
-                                                    <div
-                                                        className="relative rounded-lg h-20 w-20 overflow-hidden bg-gray-100"
-                                                    >
-                                                        <Image
-                                                            className="object-cover w-full h-full"
-                                                            src={ product.images?.[0]?.localUrl || blankImage }
-                                                            alt="Foto do produto"
-                                                            fill
-                                                            // loading="lazy"
-                                                            priority
-                                                            sizes='300px'
-                                                        />
+                                                    <div className="w-full flex justify-between items-center">
+                                                        <div className="relative rounded-lg h-20 w-20 overflow-hidden bg-gray-100">
+                                                            <Image
+                                                                className="object-cover w-full h-full"
+                                                                src={ product.images?.[0]?.localUrl || blankImage }
+                                                                alt="Foto do produto"
+                                                                fill
+                                                                priority
+                                                                sizes='300px'
+                                                            />
+                                                        </div>
+                                                        <div className="flex flex-wrap justify-end items-start gap-1 max-w-[50%]">
+                                                            { product.categories.map((category) => (
+                                                                <div key={ category } className="p-1 bg-green-600 rounded whitespace-nowrap">
+                                                                    <p className="text-white text-xs">{ category }</p>
+                                                                </div>
+                                                            )) }
+                                                        </div>
                                                     </div>
-
                                                     <div className="flex justify-between items-center">
                                                         <p className="text-[#333333]">Estoque: <span className="font-bold">{ product.estoqueTotal }</span></p>
                                                         <p className="text-[#D4AF37] font-bold">{ formatPrice(product.value.price) }</p>

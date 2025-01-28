@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useLogout } from '@/app/hooks/useLogout';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import CategoryManager from './CategoryManager';
 
 export default function DesktopMenu()  {
     const router = useRouter();
@@ -54,6 +55,13 @@ export default function DesktopMenu()  {
             href: '/',
             enabled: true,
         },
+        // {
+        //     icon: Settings,
+        //     label: 'Gerenciar Categorias',
+        //     href: '',
+        //     enabled: true,
+        //     onClick: () => setShowCategoryManager(true),
+        // },
     ];
 
     const handleLogout = async() => {
@@ -95,6 +103,8 @@ export default function DesktopMenu()  {
                             ) }
                         </li>
                     )) }
+                    <CategoryManager />
+
                 </ul>
             </nav>
             <Button 
