@@ -17,6 +17,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
 import LoadingIndicator from '../LoadingIndicator';
 import ProductJsonLd from './ProductJsonLd';
+import RecommendedProducts from './RecommendedProducts';
 
 export default function Product({ id }: { id: string }) {
     const { carrinho } = useUserInfo();
@@ -185,6 +186,7 @@ export default function Product({ id }: { id: string }) {
                     </section>
                 </div>
             </div>
+            <RecommendedProducts mainProductId={ id } />
         </main>
     );
 }

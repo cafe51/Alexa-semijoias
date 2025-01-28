@@ -1,0 +1,68 @@
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+
+import ProductCard from '../ProductList/ProductCard';
+import { useRecommendedProducts } from '@/app/hooks/useRecommendedProducts';
+
+interface RecommendProductsProps {
+    mainProductId: string;
+}
+
+export default function RecommendedProducts({ mainProductId }: RecommendProductsProps){
+    const { recommendedProducts, loading, error } = useRecommendedProducts(mainProductId);
+
+
+    if (loading) return <div className="text-center py-10 h-screen">Carregando...</div>;
+    if (error) return <div className="text-center py-10 text-red-500">{ error }</div>;
+
+    return (
+        <Card className="mt-12 border-[#F8C3D3] shadow-md shadow-[#F8C3D3]">
+            <CardHeader className="pb-2">
+                <CardTitle className="text-xl md:text-2xl lg:text-3xl text-center text-[#333333]">
+                    Você Também Vai Amar
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+                { /* Grid para telas pequenas e médias */ }
+                <div className="lg:hidden grid grid-cols-2 md:grid-cols-3 gap-4">
+                    { recommendedProducts.map((product, index) => (
+                        <div key={ index }>
+                            <ProductCard product={ product } homePage={ true } />
+                        </div>
+                    )) }
+                </div>
+
+                { /* Carousel para telas grandes */ }
+                <div className="hidden lg:block">
+                    <Carousel
+                        opts={ {
+                            align: 'start',
+                            loop: true,
+                            containScroll: false,
+                        } }
+                        className="w-full"
+                    >
+                        <CarouselContent className="-ml-4">
+                            { recommendedProducts.map((product, index) => (
+                                <CarouselItem 
+                                    key={ index } 
+                                    className="pl-4 basis-[22%]"
+                                >
+                                    <ProductCard product={ product } homePage={ true } />
+                                </CarouselItem>
+                            )) }
+                        </CarouselContent>
+                        <CarouselPrevious className="left-2 bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
+                        <CarouselNext className="right-2 bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
+                    </Carousel>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
