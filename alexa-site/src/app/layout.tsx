@@ -86,7 +86,8 @@ export default function RootLayout({
                 <meta name="format-detection" content="telephone=no" />
                 <meta name="theme-color" content="#FAF9F6" />
                 <link rel="manifest" href="/manifest.json" />
-                <link rel="apple-touch-icon" href="/icon-192x192.png" />
+                <link rel="apple-touch-icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.ico" />
             </head>
             <body className={ `${inter.className} min-h-screen bg-[#FAF9F6]` }>
                 <Script
