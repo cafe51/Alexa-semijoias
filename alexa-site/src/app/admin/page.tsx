@@ -9,6 +9,7 @@ import { formatPrice } from '../utils/formatPrice';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ChangeDataBaseButton from './components/ChangeDataBaseButton';
 import SendEmailsTest from './components/SendEmailsTest';
+import CategoryManager from './components/CategoryManager';
 import StatCard from './components/StatCard';
 import PeriodStats from './components/PeriodStats';
 
@@ -83,6 +84,7 @@ const AdminDashboard = () => {
                 <h1>Área do desenvolvedor</h1>
                 <ChangeDataBaseButton />
                 <SendEmailsTest />
+                <CategoryManager />
             </div>
             }
         </div>
