@@ -1,8 +1,32 @@
 //src/app/page.tsx
+import React from 'react';
+import { Metadata } from 'next';
+import HeroSection from './components/homePage/HeroSection';
+
+export const metadata: Metadata = {
+    title: 'Alexa Semijoias | Semijoias Exclusivas com Elegância e Qualidade',
+    description: 'Descubra nossa coleção exclusiva de semijoias. Brincos, colares, anéis e pulseiras com qualidade premium. Compre em até 6x sem juros com entrega para todo Brasil.',
+    keywords: 'semijoias, joias, acessórios, brincos, colares, anéis, pulseiras, folheados, ouro, prata, joias em aço',
+    openGraph: {
+        title: 'Alexa Semijoias | Semijoias Exclusivas',
+        description: 'Descubra nossa coleção exclusiva de semijoias. Peças únicas com qualidade e elegância.',
+        url: 'https://www.alexasemijoias.com.br',
+        siteName: 'Alexa Semijoias',
+        type: 'website',
+        images: [
+            {
+                url: '/bigHeroLogo.png',
+                width: 800,
+                height: 600,
+                alt: 'Alexa Semijoias Logo',
+            },
+        ],
+    },
+};
+
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import HeroSection from './components/homePage/HeroSection';
+import { useEffect, useState } from 'react';
 import SectionsCarousel from './components/homePage/SectionsCarousel';
 import FeaturedProducts from './components/homePage/FeaturedProducts';
 // import Newsletter from './components/homePage/Newsletter';
