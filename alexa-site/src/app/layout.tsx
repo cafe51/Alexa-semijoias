@@ -18,11 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="pt-BR">
             <head>
                 <meta name="facebook-domain-verification" content="k9qc45dlpt6m4sxg6a3qmin2rmabmh" />
                 <meta property="og:site_name" content="Alexa Semijoias" />
                 <meta name="next-size-adjust" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta name="robots" content="index, follow" />
+                <meta name="description" content="Alexa Semijoias - Descubra nossa coleção exclusiva de semijoias. Peças únicas com qualidade e elegância para todos os momentos." />
+                <meta name="keywords" content="semijoias, joias, acessórios, brincos, colares, anéis, pulseiras, folheados, ouro, prata, joias em aço" />
+                <link rel="canonical" href="https://www.alexasemijoias.com.br" />
             </head>
             <body className={ `${inter.className} min-h-screen bg-[#FAF9F6]` }>
                 <Script
