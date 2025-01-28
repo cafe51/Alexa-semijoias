@@ -1,0 +1,4 @@
+Contact: mailto:contato@alexasemijoias.com.br
+Expires: 2025-12-31T23:59:59.000Z
+Preferred-Languages: pt, en
+Policy: https://www.alexasemijoias.com.br/politica-de-privacidade

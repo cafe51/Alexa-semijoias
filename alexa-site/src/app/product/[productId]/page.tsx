@@ -21,24 +21,37 @@ export async function generateMetadata({ params }: { params: { productId: string
         const variation = productData.productVariations[0];
 
         return {
-            title: toTitleCase(productData.name),
-            description: 'Compre agora em até 6 X sem juros',
+            title: `${toTitleCase(productData.name)} | Alexa Semijoias`,
+            description: productData.description || `${toTitleCase(productData.name)} - Compre em até 6x sem juros com frete grátis. Semijoias exclusivas com qualidade e elegância.`,
+            keywords: [...new Set([...(productData.categories || []), ...productData.categories, 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes', productData.name])].join(', '),
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
+            robots: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+            alternates: {
+                canonical: `/product/${params.productId}`,
+            },
             openGraph: {
-                title: productData.name,
+                title: toTitleCase(productData.name),
                 description: productData.description,
                 url: `/product/${params.productId}`,
-                images: [
-                    {
-                        url: mainImage,
-                        width: 800,
-                        height: 600,
-                        alt: productData.name,
-                    },
-                ],
-                // a tipagem não reconhece o type 'product' por isso tive que usar 'website'
-                type: 'website',
+                images: productData.images.map(img => ({
+                    url: img.localUrl,
+                    width: 800,
+                    height: 600,
+                    alt: `${productData.name} - ${img.index + 1}`,
+                })),
+                type: 'website', // Mantendo 'website' pois é o tipo aceito pelo Next.js
                 siteName: 'Alexa Semijoias',
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: toTitleCase(productData.name),
+                description: productData.description,
+                images: [mainImage],
             },
             other: {
                 'og:type': 'product',
@@ -54,6 +67,8 @@ export async function generateMetadata({ params }: { params: { productId: string
                 'product:price:amount': variation.value.price.toString(),
                 'product:price:currency': 'BRL',
                 'product:retailer_item_id': variation.sku,
+                'product:category': productData.categories.join(','),
+                'product:weight': `${variation.peso}g`,
             },
         };
     } catch (error) {

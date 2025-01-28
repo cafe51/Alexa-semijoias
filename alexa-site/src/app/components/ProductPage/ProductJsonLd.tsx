@@ -21,28 +21,52 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Product',
+        '@id': `https://www.alexasemijoias.com.br/product/${product.id}#product`,
         'productID': variation.sku,
         'name': product.name,
         'description': product.description,
-        'url': `www.alexasemijoias.com.br/product/${product.id}`,
+        'url': `https://www.alexasemijoias.com.br/product/${product.id}`,
         'image': mainImage,
-        'brand': 'Alexa Semijoias', // Nome da marca fixo
-        'offers': [
-            {
-                '@type': 'Offer',
-                'price': variation.value.price.toString(),
-                'priceCurrency': 'BRL',
-                'itemCondition': 'https://schema.org/NewCondition',
-                'availability': variation.estoque > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        'brand': {
+            '@type': 'Brand',
+            'name': 'Alexa Semijoias',
+            'url': 'https://www.alexasemijoias.com.br',
+        },
+        'category': product.categories.join(', '),
+        'material': 'Semijoia',
+        'itemCondition': 'https://schema.org/NewCondition',
+        'manufacturer': {
+            '@type': 'Organization',
+            'name': 'Alexa Semijoias',
+        },
+
+        'offers': {
+            '@type': 'Offer',
+            'url': `https://www.alexasemijoias.com.br/product/${product.id}`,
+            'price': variation.value.price.toString(),
+            'priceCurrency': 'BRL',
+            'itemCondition': 'https://schema.org/NewCondition',
+            'availability': variation.estoque > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            'seller': {
+                '@type': 'Organization',
+                'name': 'Alexa Semijoias',
+                'url': 'https://www.alexasemijoias.com.br',
             },
-        ],
+        },
         'additionalProperty': [
             {
                 '@type': 'PropertyValue',
                 'propertyID': 'item_group_id',
-                'value': product.id, // ID do produto como group ID
+                'value': product.id,
             },
+            {
+                '@type': 'PropertyValue',
+                'propertyID': 'categories',
+                'value': product.categories.join(', '),
+            },
+
         ],
+
     };
 
     return (
