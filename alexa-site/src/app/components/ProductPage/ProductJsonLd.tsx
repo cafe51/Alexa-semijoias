@@ -21,7 +21,7 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Product',
-        '@id': `https://www.alexasemijoias.com.br/product/${product.id}#product`,
+        '@id': product.id,
         'productID': variation.sku,
         'name': product.name,
         'description': product.description,
