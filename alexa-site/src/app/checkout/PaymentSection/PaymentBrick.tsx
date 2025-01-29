@@ -6,6 +6,7 @@ import { usePaymentProcessing } from '../../../app/hooks/usePaymentProcessing';
 import { useEffect } from 'react';
 import { nameGenerator } from '../../../app/utils/nameGenerator';
 import { convertArrayToString } from '../../../app/utils/convertArrayToString';
+import { trackPixelEvent } from '@/app/utils/metaPixel';
 
 interface PaymentBrickProps {
     totalAmount: number;
@@ -139,6 +140,17 @@ export default function PaymentBrick({
             onSubmit={ async(params) => {
                 setIsProcessingPayment(true);
                 setLoadingPayment(true);
+                trackPixelEvent('Purchase', {
+                    currency: 'BRL',
+                    value: totalAmount,
+                    content_type: 'product',
+                    contents: carrinho?.map(item => ({
+                        id: item.skuId,
+                        quantity: item.quantidade,
+                    })),
+                    content_ids: carrinho?.map(item => item.skuId),
+                    num_items: carrinho?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0),
+                });
                 return onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection, setLoadingPayment);
             } }
             onReady={ onReady }
