@@ -9,6 +9,7 @@ import blankImage from '../../../../../public/blankImage.png';
 import PriceSection from '../../PriceSection';
 import QuantitySelectionCartBox from '../../QuantitySelectionCartBox';
 import ProductSummary from './ProductSummary';
+import { trackPixelEvent } from '@/app/utils/metaPixel';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;
@@ -162,6 +163,18 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                         handleClick={
                             () => {
                                 productVariationsSelected.length === 1 && handleAddToCart(carrinho, productVariationsSelected[0], setIsloadingButton, quantity);
+                                productVariationsSelected.length === 1 && trackPixelEvent('AddToCart', {
+                                    content_type: 'product',
+                                    content_ids: [object.id],
+                                    content_name: object.name,
+                                    content_category: object.sections[0],
+                                    value: (object.value.promotionalPrice ? object.value.promotionalPrice : object.value.price) * quantity,
+                                    currency: 'BRL',
+                                    contents: [{
+                                        id: object.id,
+                                        quantity: quantity,
+                                    }],
+                                });
                                 closeModelClick();
                                 closeModalFinishBuyClick();
                             }

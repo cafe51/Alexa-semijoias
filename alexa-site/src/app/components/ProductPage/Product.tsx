@@ -93,6 +93,19 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
     const handleFinishBuyClick = useCallback(() => {
         if (productVariationsSelected.length === 1) {
             const selectedVariation = productVariationsSelected[0];
+            trackPixelEvent('AddToCart', {
+                content_type: 'product',
+                content_ids: [product.id],
+                content_name: product.name,
+                content_category: product.sections[0],
+                value: (product.value.promotionalPrice ? product.value.promotionalPrice : product.value.price) * quantity,
+                currency: 'BRL',
+                contents: [{
+                    id: product.id,
+                    quantity: quantity,
+                }],
+            });
+                    
             handleAddToCart(carrinho, selectedVariation, setIsloadingButton, quantity);
             
             // Atualiza o localCartQuantity imediatamente

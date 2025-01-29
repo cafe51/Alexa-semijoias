@@ -18,7 +18,12 @@ export default function PriceSection({
     quantity,
     handleClick,
 }: PriceSectionProps) {
+    const handleAddToCartClick = () => {
+        // Dispara o evento AddToCart do Meta Pixel
 
+        
+        handleClick();
+    };
 
     return (
         <section className='w-full p-2 border-solid border-2 border-x-0 borderColor'>
@@ -29,7 +34,7 @@ export default function PriceSection({
             />  
             <LargeButton
                 color=' bg-[#D4AF37] hover:bg-[#C48B9F] text-white '
-                onClick={ handleClick }
+                onClick={ handleAddToCartClick }
                 loadingButton={ isLoadingButton }
                 disabled={ isDisabled() }
             >
@@ -39,4 +44,3 @@ export default function PriceSection({
         </section>
     );
 }
-

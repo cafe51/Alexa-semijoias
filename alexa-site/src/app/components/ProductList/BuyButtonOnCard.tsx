@@ -8,6 +8,7 @@ import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
 import { ImSpinner9 } from 'react-icons/im';
+import { trackPixelEvent } from '@/app/utils/metaPixel';
 
 export function BuyButtonOnCard({ product }: { product: ProductBundleType & FireBaseDocument; }) {
     const  [isLoadingButton, setIsloadingButton ] = useState(false);
@@ -41,6 +42,19 @@ export function BuyButtonOnCard({ product }: { product: ProductBundleType & Fire
             setShowModalOptionsVariation(!showModalOptionsVariation);
         } else {
             handleAddToCart(carrinho, product.productVariations[0], setIsloadingButton);
+            trackPixelEvent('AddToCart', {
+                content_type: 'product',
+                content_ids: [product.id],
+                content_name: product.name,
+                content_category: product.sections[0],
+                value: (product.value.promotionalPrice ? product.value.promotionalPrice : product.value.price) * 1,
+                currency: 'BRL',
+                contents: [{
+                    id: product.id,
+                    quantity: 1,
+                }],
+            });
+                    
             setShowModalFinishBuy(prev => !prev);
         }
     };
