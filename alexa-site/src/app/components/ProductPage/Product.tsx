@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import { useCollection } from '@/app/hooks/useCollection';
 import { trackPixelEvent } from '@/app/utils/metaPixel';
+import { sendGAEvent, sendGTMEvent } from '@/app/utils/analytics';
 import PriceSection from '@/app/components/PriceSection';
 import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
@@ -48,15 +49,45 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
     }, []);
 
     useEffect(() => {
-        // Dispara o evento ViewContent do Meta Pixel
+        // Dispara eventos de visualização do produto
+        const productPrice = initialProduct.productVariations[0].value.price;
+        
+        // Meta Pixel
         trackPixelEvent('ViewContent', {
             content_type: 'product',
             content_ids: [initialProduct.id],
             content_name: initialProduct.name,
             content_category: initialProduct.sections[0],
-            value: initialProduct.productVariations[0].value.price,
+            value: productPrice,
             currency: 'BRL',
         });
+
+        // Google Analytics
+        sendGAEvent('view_item', {
+            currency: 'BRL',
+            value: productPrice,
+            items: [{
+                item_id: initialProduct.id,
+                item_name: initialProduct.name,
+                item_category: initialProduct.sections[0],
+                price: productPrice,
+            }],
+        });
+
+        // Google Tag Manager
+        sendGTMEvent('view_item', {
+            ecommerce: {
+                currency: 'BRL',
+                value: productPrice,
+                items: [{
+                    item_id: initialProduct.id,
+                    item_name: initialProduct.name,
+                    item_category: initialProduct.sections[0],
+                    price: productPrice,
+                }],
+            },
+        });
+
         setIsloadingButton(false);
 
         const updateProductsState = async() => {
@@ -93,17 +124,49 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
     const handleFinishBuyClick = useCallback(() => {
         if (productVariationsSelected.length === 1) {
             const selectedVariation = productVariationsSelected[0];
+            const price = product.value.promotionalPrice || product.value.price;
+            const totalValue = price * quantity;
+
+            // Meta Pixel
             trackPixelEvent('AddToCart', {
                 content_type: 'product',
                 content_ids: [product.id],
                 content_name: product.name,
                 content_category: product.sections[0],
-                value: (product.value.promotionalPrice ? product.value.promotionalPrice : product.value.price) * quantity,
+                value: totalValue,
                 currency: 'BRL',
                 contents: [{
                     id: product.id,
                     quantity: quantity,
                 }],
+            });
+
+            // Google Analytics
+            sendGAEvent('add_to_cart', {
+                currency: 'BRL',
+                value: totalValue,
+                items: [{
+                    item_id: selectedVariation.sku,
+                    item_name: product.name,
+                    item_category: product.sections[0],
+                    price: price,
+                    quantity: quantity,
+                }],
+            });
+
+            // Google Tag Manager
+            sendGTMEvent('add_to_cart', {
+                ecommerce: {
+                    currency: 'BRL',
+                    value: totalValue,
+                    items: [{
+                        item_id: selectedVariation.sku,
+                        item_name: product.name,
+                        item_category: product.sections[0],
+                        price: price,
+                        quantity: quantity,
+                    }],
+                },
             });
                     
             handleAddToCart(carrinho, selectedVariation, setIsloadingButton, quantity);

@@ -9,6 +9,8 @@ import { UserInfoProvider } from './context/UserInfoContext';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { WebVitals } from './components/WebVitals';
 import { Metadata } from 'next';
 
 const inter = Montserrat({ subsets: ['latin'] });
@@ -128,8 +130,11 @@ export default function RootLayout({
                         <Footer />
                     </UserInfoProvider>
                 </AuthContextProvider>
+                <GoogleTagManager gtmId="GTM-XYZ" />
+                <GoogleAnalytics gaId="G-KLLD2T3EQ1" />
                 <Analytics />
                 <SpeedInsights />
+                <WebVitals />
             </body>
         </html>
     );
