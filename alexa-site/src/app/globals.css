@@ -241,10 +241,10 @@ a {
 }
 
 /* Melhorias para CLS */
-.aspect-square {
+/* .aspect-square {
   position: relative;
   padding-bottom: 100%;
-}
+} */
 
 .aspect-square > * {
   position: absolute;
