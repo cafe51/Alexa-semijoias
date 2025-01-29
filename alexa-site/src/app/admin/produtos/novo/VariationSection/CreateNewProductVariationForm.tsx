@@ -71,6 +71,9 @@ export default function CreateNewProductVariationForm({
 
     const isThereCustomPropertyCombinationAlreadyCreated = () => { 
         const stateCustomProperties = state.productVariations.map((statePv) => statePv.customProperties); // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
+        for (const property in productVariationState.customProperties) {
+            productVariationState.customProperties[property] = productVariationState.customProperties[property].trim();
+        }
         const existSameCustomProperty = stateCustomProperties.some((stateCustomProperty) => deepEqual(productVariationState.customProperties, stateCustomProperty));
         return existSameCustomProperty;
     };
@@ -115,7 +118,11 @@ export default function CreateNewProductVariationForm({
             if(await isThereACodeInTheFireStore('sku')) {
                 setSkuErrorMessage('Já existe um produto salvo no banco de dados com esse sku');
                 return;
-            }    
+            }
+
+            for (const property in productVariationState.customProperties) {
+                productVariationState.customProperties[property] = productVariationState.customProperties[property].trim();
+            }
 
             handlers.handleAddProductVariation({ ...productVariationState, defaultProperties: productDefaultProperties });
 
