@@ -26,7 +26,7 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
             ...prevState,
             customProperties: {
                 ...prevState.customProperties,
-                [newVariation.toLowerCase()]: '',
+                [newVariation.toLowerCase().trim()]: '',
             },
 
         }));

@@ -38,19 +38,19 @@ export default function CreateNewProductVariationForm({
     const [isFormValid, setIsFormValid] = useState(false);
     const { getAllDocuments: getAllProductVariationsFromFirebase } = useCollection<ProductVariationsType>('productVariations');
 
-    const handleProductDefaultPropertyChange = (value: any, field: string) => {
+    const handleProductDefaultPropertyChange = (value: string, field: string) => {
         setProductDefaultProperties(prevState => ({
             ...prevState,
             [field]: value,
         }));
     };
 
-    const handleProductCustomPropertyChange = (value: any, field: string) => {
+    const handleProductCustomPropertyChange = (value: string, field: string) => {
         setProductVariationState((prevState) => ({
             ...prevState,
             customProperties: {
                 ...prevState.customProperties,
-                [field]: value,
+                [field]: value.trim(),
             },
         }));
     };
