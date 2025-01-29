@@ -26,9 +26,9 @@ export default function AddressSectionFilled({ address, handleEditingAddressMode
             <CardContent className="pt-4 md:text-lg">
                 <div className='flex gap-2'>
                     <div>
-                        <span>{ address.bairro }</span>
+                        <span>{ address.bairro }</span>                     <span> - </span>
                     </div>
-                    <span> - </span>
+
                     <span>{ address.numero }</span>
                     <span>{ address.complemento }</span>
                 </div>
