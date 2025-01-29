@@ -17,7 +17,7 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
     const [newVariation, setNewVariation] = useState('');
 
     function handleAddVariationClick() {
-        if(state.variations.length > 0 && state.variations.includes(newVariation)) {
+        if(state.variations.length > 0 && state.variations.includes(newVariation.trim())) {
             setErrorMessage('Essa variação já existe');
             return;
         }
