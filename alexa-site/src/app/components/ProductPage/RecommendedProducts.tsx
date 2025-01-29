@@ -18,11 +18,28 @@ export default function RecommendedProducts({ mainProductId }: RecommendProducts
     const { recommendedProducts, loading, error } = useRecommendedProducts(mainProductId);
 
 
-    if (loading) return <div className="text-center py-10 h-screen">Carregando...</div>;
+    const SkeletonLoader = () => (
+        <Card className="mt-12 border-[#F8C3D3] shadow-md shadow-[#F8C3D3] min-h-[400px]">
+            <CardHeader className="pb-2">
+                <CardTitle className="text-xl md:text-2xl lg:text-3xl text-center text-[#333333]">
+                    Você Também Vai Amar
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    { [1, 2, 3, 4].map((index) => (
+                        <div key={ index } className="aspect-square bg-skeleton rounded-lg"></div>
+                    )) }
+                </div>
+            </CardContent>
+        </Card>
+    );
+
+    if (loading) return <SkeletonLoader />;
     if (error) return <div className="text-center py-10 text-red-500">{ error }</div>;
 
     return (
-        <Card className="mt-12 border-[#F8C3D3] shadow-md shadow-[#F8C3D3]">
+        <Card className="mt-12 border-[#F8C3D3] shadow-md shadow-[#F8C3D3] min-h-[400px]">
             <CardHeader className="pb-2">
                 <CardTitle className="text-xl md:text-2xl lg:text-3xl text-center text-[#333333]">
                     Você Também Vai Amar
@@ -30,7 +47,7 @@ export default function RecommendedProducts({ mainProductId }: RecommendProducts
             </CardHeader>
             <CardContent className="p-4">
                 { /* Grid para telas pequenas e médias */ }
-                <div className="lg:hidden grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="lg:hidden grid grid-cols-2 md:grid-cols-3 gap-4 min-h-[300px]">
                     { recommendedProducts.map((product, index) => (
                         <div key={ index }>
                             <ProductCard product={ product } homePage={ true } />
@@ -39,7 +56,7 @@ export default function RecommendedProducts({ mainProductId }: RecommendProducts
                 </div>
 
                 { /* Carousel para telas grandes */ }
-                <div className="hidden lg:block">
+                <div className="hidden lg:block min-h-[300px]">
                     <Carousel
                         opts={ {
                             align: 'start',

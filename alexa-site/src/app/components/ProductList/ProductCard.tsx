@@ -20,15 +20,24 @@ export default function ProductCard({ product, homePage=false }: { product: Prod
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
             <CardContent className="p-0 flex flex-col h-full">
                 <Link href={ `/product/${product.id}` } className='relative aspect-square'>
-                    <Image
-                        data-testid="product-link"
-                        className='rounded-lg rounded-b-none object-cover scale-100'
-                        src={ product.images && product.images[0] ? product?.images[0].localUrl : blankImage.src }
-                        alt="Foto da peça"
-                        sizes="2200px"
-                        priority
-                        fill
-                    />
+                    <div className="w-full h-full bg-skeleton">
+                        <Image
+                            data-testid="product-link"
+                            className='rounded-lg rounded-b-none object-cover scale-100 loading'
+                            src={ product.images && product.images[0] ? product?.images[0].localUrl : blankImage.src }
+                            alt={ `Foto de ${product.name}` }
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            priority={ homePage }
+                            loading={ homePage ? 'eager' : 'lazy' }
+                            quality={ 85 }
+                            fill
+                            onLoad={ (event) => {
+                                const img = event.target as HTMLImageElement;
+                                img.classList.remove('loading');
+                                img.classList.add('loaded');
+                            } }
+                        />
+                    </div>
                     <div className="absolute top-2 left-2 right-2 flex justify-between">
                         { product.lancamento && (
                             <Badge className="bg-[#C48B9F] text-white text-xs sm:text-sm md:text-base lg:text-lg">

@@ -58,11 +58,32 @@ export default function HomeContent() {
         return featuredProducts;
     }
 
-    if (loading) return <div className="text-center py-10 h-screen">Carregando...</div>;
+    const LoadingSkeleton = () => (
+        <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
+            <div className="w-full h-[70vh] bg-skeleton animate-pulse" />
+            <div className="bg-gray-100 py-4 px-6 w-full">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                    { [1, 2, 3].map((index) => (
+                        <div key={ index } className="h-16 bg-skeleton animate-pulse rounded" />
+                    )) }
+                </div>
+            </div>
+            <div className="max-w-6xl mx-auto p-4">
+                <div className="h-8 w-48 bg-skeleton animate-pulse rounded mb-4" />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    { [1, 2, 3, 4].map((index) => (
+                        <div key={ index } className="aspect-square bg-skeleton animate-pulse rounded" />
+                    )) }
+                </div>
+            </div>
+        </div>
+    );
+
+    if (loading) return <LoadingSkeleton />;
     if (error) return <div className="text-center py-10 text-red-500">{ error }</div>;
 
     return (
-        <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full mt-[-170px]">
+        <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
             <HeroSection />
             <InfoBanner />
             <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />

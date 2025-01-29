@@ -1,6 +1,6 @@
 // SectionCard.tsx
 'use client';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { FilterOption, ProductBundleType } from '@/app/utils/types';
@@ -40,42 +40,45 @@ export default function SectionCard({ section }: SectionCardProps) {
 
     const imageUrl = getImageUrlFromFirebaseProductDocument(randomProduct);
     
+    if (!randomProduct) {
+        return (
+            <Card className="relative overflow-hidden flex flex-col">
+                <div className="aspect-square bg-skeleton animate-pulse rounded-lg" />
+                <div className="h-16 bg-skeleton animate-pulse mt-2 rounded" />
+            </Card>
+        );
+    }
+
     return (
         <Card className="relative overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col">
-            <Link href={ `/section/${section}` } className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/25 via-10% to-transparent to-40% z-10" />
-            <CardContent className="p-0 flex flex-col h-full z-0">
-                <div className='relative aspect-square'>
-                    <Image
-                        className="rounded-lg rounded-b-none object-cover scale-100 z-0"
-                        src={ imageUrl }
-                        alt={ section }
-                        sizes="3000px"
-                        priority
-                        fill
-                    />
-                </div>
-            </CardContent>
-
-            <div className="relative text-center h-16">
-                { /* Container para a imagem de fundo */ }
-                <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute inset-0 -top-[300px]">
+            <Link href={ `/section/${section}` } className="block">
+                <div className="relative">
+                    <div className='relative aspect-square bg-skeleton'>
                         <Image
+                            className="rounded-lg object-cover loading"
                             src={ imageUrl }
-                            alt={ section }
+                            alt={ `Seção de ${section}` }
+                            sizes="(max-width: 640px) 80vw, (max-width: 1024px) 40vw, 400px"
+                            quality={ 85 }
+                            priority={ false }
+                            loading="lazy"
                             fill
-                            className="object-cover object-bottom"
-                            sizes="3000px"
-                            priority
+                            onLoad={ (event) => {
+                                const img = event.target as HTMLImageElement;
+                                img.classList.remove('loading');
+                                img.classList.add('loaded');
+                            } }
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/25 via-10% to-transparent to-40%" />
+                    </div>
+                    
+                    <div className="absolute bottom-0 left-0 right-0 text-center pb-4">
+                        <h3 className="font-semibold text-xl sm:text-2xl text-white px-4 sm:px-6">
+                            { section.toUpperCase() }
+                        </h3>
                     </div>
                 </div>
-                
-                { /* Texto */ }
-                <h3 className="relative z-30 font-semibold text-xl sm:text-2xl text-white inline-block px-4 sm:px-6 py-2 sm:py-3">
-                    { section.toUpperCase() }
-                </h3>
-            </div>
+            </Link>
         </Card>
     );
 }

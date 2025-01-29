@@ -8,29 +8,51 @@ import {
 import SectionCard from './SectionCard';
 
 export default function SectionsCarousel({ sections }: { sections: string[] }) {
+    const hasSections = Array.isArray(sections) && sections.length > 0;
+
     return (
         <section className="py-8 sm:py-12 md:py-16 px-4">
-            <h2 className="text-2xl sm:text-3xl  text-center mb-6 sm:mb-8 md:mb-12">ESCOLHA POR SEÇÃO</h2>
-            <Carousel
-                opts={ {
-                    align: 'start',
-                    loop: true,
-                } }
-                className="w-full max-w-5xl mx-auto"
-            >
-                <CarouselContent className="-ml-2 md:-ml-4">
-                    { sections.map((section, index) => (
-                        <CarouselItem key={ index } className="pl-2 md:pl-4 basis-4/5 sm:basis-2/3 md:basis-2/3 lg:basis-2/5 xl:basis-1/3">
-                            <SectionCard section={ section } />
-                        </CarouselItem>
-                    )) }
-                </CarouselContent>
+            <div className="max-w-6xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl text-center mb-6 sm:mb-8 md:mb-12">ESCOLHA POR SEÇÃO</h2>
                 
-                <div className={ `hidden ${ sections.length > 3 ? 'xl:flex' : 'xl:hidden'} justify-end mt-4` }>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                <div className="min-h-[300px]">
+                    { hasSections ? (
+                        <Carousel
+                            opts={ {
+                                align: 'start',
+                                loop: true,
+                            } }
+                            className="w-full"
+                        >
+                            <CarouselContent className="-ml-2 md:-ml-4">
+                                { sections.map((section, index) => (
+                                    <CarouselItem 
+                                        key={ index } 
+                                        className="pl-2 md:pl-4 basis-4/5 sm:basis-2/3 md:basis-2/3 lg:basis-2/5 xl:basis-1/3 transition-opacity duration-300"
+                                    >
+                                        <SectionCard section={ section } />
+                                    </CarouselItem>
+                                )) }
+                            </CarouselContent>
+                            
+                            { sections.length > 3 && (
+                                <div className="hidden xl:flex justify-end mt-4 gap-2">
+                                    <CarouselPrevious className="bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
+                                    <CarouselNext className="bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
+                                </div>
+                            ) }
+                        </Carousel>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            { [1, 2, 3].map((index) => (
+                                <div key={ index } className="aspect-[4/3]">
+                                    <div className="w-full h-full bg-skeleton animate-pulse rounded-lg" />
+                                </div>
+                            )) }
+                        </div>
+                    ) }
                 </div>
-            </Carousel>
+            </div>
         </section>
     );
 }

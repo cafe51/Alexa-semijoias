@@ -19,14 +19,13 @@ import LoadingIndicator from '../LoadingIndicator';
 import ProductJsonLd from './ProductJsonLd';
 import RecommendedProducts from './RecommendedProducts';
 
-export default function Product({ id }: { id: string }) {
+export default function Product({ id, initialProduct }: { id: string; initialProduct: ProductBundleType & FireBaseDocument }) {
     const { carrinho } = useUserInfo();
     const [shipping, setShipping] = useState<string | null>(null);
     const { getDocumentById } = useCollection<ProductBundleType>('products');
-    const [product, setProduct] = useState<ProductBundleType & FireBaseDocument | null>(null);
+    const [product, setProduct] = useState<ProductBundleType & FireBaseDocument>(initialProduct);
     const [isLoadingButton, setIsloadingButton] = useState(true);
     const { handleAddToCart } = useAddNewItemCart();
-    const [isLoading, setIsLoading] = useState(true);
     const [showModalFinishBuy, setShowModalFinishBuy] = useState(false);
     const [localCartQuantity, setLocalCartQuantity] = useState<{ [key: string]: number }>({});
 
@@ -49,30 +48,27 @@ export default function Product({ id }: { id: string }) {
     }, []);
 
     useEffect(() => {
+        // Dispara o evento ViewContent do Meta Pixel
+        trackPixelEvent('ViewContent', {
+            content_type: 'product',
+            content_ids: [initialProduct.id],
+            content_name: initialProduct.name,
+            content_category: initialProduct.sections[0],
+            value: initialProduct.productVariations[0].value.price,
+            currency: 'BRL',
+        });
+        setIsloadingButton(false);
+
         const updateProductsState = async() => {
-            setIsLoading(true);
             const productData = await getDocumentById(id);
             if (productData.exist) {
                 setProduct(productData);
-                // Dispara o evento ViewContent do Meta Pixel
-                trackPixelEvent('ViewContent', {
-                    content_type: 'product',
-                    content_ids: [productData.id],
-                    content_name: productData.name,
-                    content_category: productData.sections[0],
-                    value: productData.productVariations[0].value.price,
-                    currency: 'BRL',
-                });
-                setIsLoading(false);
-                setIsloadingButton(false);
-            } else {
-                console.log('Produto Não encontrado', productData);
-                setIsLoading(false);
             }
         };
 
+        // Atualiza os dados em segundo plano
         updateProductsState();
-    }, [getDocumentById, id]);
+    }, [getDocumentById, id, initialProduct]);
 
     useEffect(() => {
         // Inicializa o localCartQuantity com as quantidades do carrinho
@@ -121,14 +117,14 @@ export default function Product({ id }: { id: string }) {
         setShowModalFinishBuy(prev => !prev);
     }, [handleAddToCart, carrinho, productVariationsSelected, quantity, setIsloadingButton, localCartQuantity, setQuantity, setCurrentPhase, setSelectedOptions]);
 
-    if(isLoading || !product) return <LoadingIndicator />;
+    if(!product) return <LoadingIndicator />;
 
     return (
-        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-0 md:px-8 mb-8 md:mt-16">
+        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-0 md:px-8 mb-8 md:mt-16 animate-fadeIn">
             { product && <ProductJsonLd product={ product } selectedVariation={ productVariationsSelected[0] } /> }
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col md:flex-row gap-8 flex-shrink-0">
+                <div className="flex flex-col md:flex-row gap-8 flex-shrink-0 min-h-[600px]">
                     <section className="md:w-1/2 mx-0 px-0 flex items-center justify-center">
                         <ImageCarousel productData={ product }/>
                     </section>

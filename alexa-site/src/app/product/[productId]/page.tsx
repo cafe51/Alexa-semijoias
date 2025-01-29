@@ -11,8 +11,18 @@ export async function generateMetadata({ params }: { params: { productId: string
     try {
         const docRef = doc(projectFirestoreDataBase, 'products', params.productId);
         const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+
         const productData = {
-            ...docSnap.data(),
+            ...data,
+            creationDate: data?.creationDate ? {
+                seconds: data.creationDate.seconds,
+                nanoseconds: data.creationDate.nanoseconds,
+            } : null,
+            updatingDate: data?.updatingDate ? {
+                seconds: data.updatingDate.seconds,
+                nanoseconds: data.updatingDate.nanoseconds,
+            } : null,
             id: docSnap.id,
             exist: docSnap.exists(),
         } as ProductBundleType & FireBaseDocument;
@@ -80,8 +90,33 @@ export async function generateMetadata({ params }: { params: { productId: string
     }
 }
 
-export default function ProductScreenPage({ params: { productId } }: { params: { productId: string } }) {
+async function getProduct(productId: string) {
+    const docRef = doc(projectFirestoreDataBase, 'products', productId);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    // Convertendo os campos de data para objetos simples
+    const processedData = {
+        ...data,
+        creationDate: data?.creationDate ? {
+            seconds: data.creationDate.seconds,
+            nanoseconds: data.creationDate.nanoseconds,
+        } : null,
+        updatingDate: data?.updatingDate ? {
+            seconds: data.updatingDate.seconds,
+            nanoseconds: data.updatingDate.nanoseconds,
+        } : null,
+        id: docSnap.id,
+        exist: docSnap.exists(),
+    } as ProductBundleType & FireBaseDocument;
+
+    return processedData;
+}
+
+export default async function ProductScreenPage({ params: { productId } }: { params: { productId: string } }) {
+    const initialProduct = await getProduct(productId);
+    
     return (
-        <Product id={ productId } />
+        <Product id={ productId } initialProduct={ initialProduct } />
     );
 }
