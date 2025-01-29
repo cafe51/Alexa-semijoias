@@ -11,12 +11,6 @@ import QuantitySelectionCartBox from '../QuantitySelectionCartBox';
 interface PropertiesSelectionSectionProps {
     carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
     isLoadingButton: boolean;
-    handleAddToCart: (
-        carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null,
-        productData: ProductVariation | null,
-        setIsloadingButton: React.Dispatch<React.SetStateAction<boolean>>,
-        quantity?: number
-    ) => void;
     currentPhase: number;
     setCurrentPhase: React.Dispatch<React.SetStateAction<number>>;
     selectedOptions: { [key: string]: string };

@@ -149,7 +149,6 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                                         <PropertiesSelectionSection
                                             isLoadingButton={ isLoadingButton }
                                             carrinho={ carrinho }
-                                            handleAddToCart={ handleAddToCart }
                                             selectedOptions={ selectedOptions }
                                             currentPhase={ currentPhase }
                                             setCurrentPhase={ setCurrentPhase }
