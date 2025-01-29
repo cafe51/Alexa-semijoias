@@ -108,7 +108,7 @@ export default function PaymentBrick({
                     email: user.email,
                     identification: {
                         type: 'CPF',
-                        number: user.cpf,
+                        number: user.cpf.replace(/\D/g, ''),
                     },
                     address: {
                         additionalInformation: user.address?.referencia,
