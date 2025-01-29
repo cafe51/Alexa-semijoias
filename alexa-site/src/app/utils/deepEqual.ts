@@ -1,4 +1,8 @@
-export default function deepEqual(obj1: { [key: string]: string } | string, obj2: { [key: string]: string } | string) {
+type DeepObject = {
+    [key: string]: DeepObject | string | number | boolean | null | undefined;
+};
+
+export default function deepEqual(obj1: DeepObject | string | number | boolean | null | undefined, obj2: DeepObject | string | number | boolean | null | undefined): boolean {
     // Se os dois objetos são exatamente iguais
     if (obj1 === obj2) return true;
   
