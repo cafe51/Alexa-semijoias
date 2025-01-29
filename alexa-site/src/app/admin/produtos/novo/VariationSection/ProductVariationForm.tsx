@@ -43,11 +43,13 @@ export default function ProductVariationForm({
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { customProperties, defaultProperties } = productVariationState;
 
-        if (JSON.stringify(state.variations) !== JSON.stringify(Object.keys(customProperties))) {
+        if (JSON.stringify(state.variations.sort()) !== JSON.stringify(Object.keys(customProperties).sort())) {
             return false;
         }
 
         if (!customProperties || Object.keys(customProperties).length === 0) {
+            // console.log('AAAAAAASASASASASASASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', customProperties);
+
             return false;
         }
 
@@ -56,6 +58,7 @@ export default function ProductVariationForm({
                 return false;
             }
         }
+
 
         return true;
     };
@@ -69,7 +72,6 @@ export default function ProductVariationForm({
                     handleProductDefaultPropertyChange={ handleProductDefaultPropertyChange }
                     handleProductCustomPropertyChange={ handleProductCustomPropertyChange }
                     setErrorMessage={ setErrorMessage }
-
                 />
       
                 <InputStandardProperties
