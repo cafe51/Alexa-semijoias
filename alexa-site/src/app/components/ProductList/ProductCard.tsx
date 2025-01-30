@@ -23,19 +23,14 @@ export default function ProductCard({ product, homePage=false }: { product: Prod
                     <div className="w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"
-                            className='rounded-lg rounded-b-none object-cover scale-100 loading'
+                            className='rounded-lg rounded-b-none object-cover scale-100'
                             src={ product.images && product.images[0] ? product?.images[0].localUrl : blankImage.src }
                             alt={ `Foto de ${product.name}` }
-                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            sizes="3000px"
                             priority={ homePage }
                             loading={ homePage ? 'eager' : 'lazy' }
-                            quality={ 85 }
+                            quality={ 90 }
                             fill
-                            onLoad={ (event) => {
-                                const img = event.target as HTMLImageElement;
-                                img.classList.remove('loading');
-                                img.classList.add('loaded');
-                            } }
                         />
                     </div>
                     <div className="absolute top-2 left-2 right-2 flex justify-between">

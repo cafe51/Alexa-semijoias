@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import React, { useState, useEffect, memo } from 'react';
 import { Truck, CreditCard, Shield } from 'lucide-react';
 
 const BANNER_INFO = [
@@ -25,7 +27,7 @@ interface InfoItemProps {
     description: string;
 }
 
-const InfoItem = ({ icon, title, description }: InfoItemProps) => (
+const InfoItem = memo(({ icon, title, description }: InfoItemProps) => (
     <div className="flex items-center gap-3 justify-center">
         <div className="text-gray-700">
             { icon }
@@ -35,9 +37,11 @@ const InfoItem = ({ icon, title, description }: InfoItemProps) => (
             <p className="text-xs sm:text-sm text-gray-600">{ description }</p>
         </div>
     </div>
-);
+));
 
-const MobileCarousel = () => {
+InfoItem.displayName = 'InfoItem';
+
+const MobileCarousel = memo(function MobileCarousel() {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -67,9 +71,11 @@ const MobileCarousel = () => {
             </div>
         </>
     );
-};
+});
 
-const InfoBanner = () => {
+MobileCarousel.displayName = 'MobileCarousel';
+
+function InfoBanner() {
     const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
     useEffect(() => {
@@ -107,6 +113,10 @@ const InfoBanner = () => {
             ) }
         </div>
     );
-};
+}
 
-export default InfoBanner;
+const MemoizedInfoBanner = memo(InfoBanner);
+
+MemoizedInfoBanner.displayName = 'InfoBanner';
+
+export default MemoizedInfoBanner;

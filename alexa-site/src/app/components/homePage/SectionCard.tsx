@@ -58,8 +58,8 @@ export default function SectionCard({ section }: SectionCardProps) {
                             className="rounded-lg object-cover loading"
                             src={ imageUrl }
                             alt={ `Seção de ${section}` }
-                            sizes="(max-width: 640px) 80vw, (max-width: 1024px) 40vw, 400px"
-                            quality={ 85 }
+                            sizes="3000px"
+                            quality={ 80 }
                             priority={ false }
                             loading="lazy"
                             fill
