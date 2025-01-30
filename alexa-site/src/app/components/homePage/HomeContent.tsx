@@ -1,3 +1,4 @@
+// HomeContent.tsx
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { SectionType } from '@/app/utils/types';
@@ -6,7 +7,6 @@ import InfoBanner from './InfoBanner';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
-// Importação dinâmica dos componentes que precisam de client-side
 const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
     ssr: true,
 });
@@ -15,7 +15,6 @@ const FeaturedProducts = dynamic(() => import('./FeaturedProducts'), {
     ssr: true,
 });
 
-// Componente para carregamento
 function LoadingFallback() {
     return (
         <div className="max-w-6xl mx-auto p-4">
@@ -31,33 +30,44 @@ function LoadingFallback() {
     );
 }
 
-// Componentes Server para dados
-async function SectionsData() {
+// Componentes para buscar dados
+const SectionsDataFetcher = async() => {
     const response = await fetch(`${API_BASE_URL}/api/sections`, { 
-        next: { revalidate: 60 }, // Revalidar a cada minuto
+        next: { revalidate: 60 },
     });
     const sections = await response.json();
-    return <SectionsCarousel sections={ sections.map((section: SectionType) => section.sectionName) } />;
+    return sections;
+};
+
+const ProductsDataFetcher = async() => {
+    const response = await fetch(`${API_BASE_URL}/api/featured-products`, {
+        next: { revalidate: 60 },
+    });
+    return response.json();
+};
+
+// Componentes de renderização
+function Sections({ sections }: { sections: SectionType[] }) {
+    return <SectionsCarousel sections={ sections.map(section => section.sectionName) } />;
 }
 
-async function ProductsData() {
-    const response = await fetch(`${API_BASE_URL}/api/featured-products`, {
-        next: { revalidate: 60 }, // Revalidar a cada minuto
-    });
-    const products = await response.json();
+function Products({ products }: { products: any[] }) {
     return <FeaturedProducts featuredProducts={ products } />;
 }
 
-export default function HomeContent() {
+export default async function HomeContent() {
+    const sections = await SectionsDataFetcher();
+    const products = await ProductsDataFetcher();
+
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
             <HeroSection />
             <InfoBanner />
             <Suspense fallback={ <LoadingFallback /> }>
-                <SectionsData />
+                <Sections sections={ sections } />
             </Suspense>
             <Suspense fallback={ <LoadingFallback /> }>
-                <ProductsData />
+                <Products products={ products } />
             </Suspense>
         </div>
     );

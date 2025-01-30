@@ -28,6 +28,6 @@ export const metadata: Metadata = {
     },
 };
 
-export default function HomePage() {
-    return <HomeContent />;
+export default async function HomePage() {
+    return await HomeContent();
 }
