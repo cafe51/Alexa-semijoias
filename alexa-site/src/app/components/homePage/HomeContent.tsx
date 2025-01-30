@@ -1,11 +1,10 @@
-// HomeContent.tsx
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { SectionType } from '@/app/utils/types';
+import { FireBaseDocument, ProductBundleType, SectionType } from '@/app/utils/types';
 import HeroSection from './HeroSection';
 import InfoBanner from './InfoBanner';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { projectFirestoreDataBase } from '@/app/firebase/config';
 
 const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
     ssr: true,
@@ -30,34 +29,67 @@ function LoadingFallback() {
     );
 }
 
-// Componentes para buscar dados
-const SectionsDataFetcher = async() => {
-    const response = await fetch(`${API_BASE_URL}/api/sections`, { 
-        next: { revalidate: 60 },
-    });
-    const sections = await response.json();
-    return sections;
-};
+// Funções para buscar dados diretamente do Firestore
+async function getSections() {
+    try {
+        const sectionsRef = collection(projectFirestoreDataBase, 'siteSections');
+        const sectionsSnapshot = await getDocs(sectionsRef);
+        return sectionsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        })) as (SectionType & FireBaseDocument)[];
+    } catch (error) {
+        console.error('Erro ao buscar seções:', error);
+        return [];
+    }
+}
 
-const ProductsDataFetcher = async() => {
-    const response = await fetch(`${API_BASE_URL}/api/featured-products`, {
-        next: { revalidate: 60 },
-    });
-    return response.json();
-};
+async function getFeaturedProducts() {
+    try {
+        // Primeiro, buscar todas as seções
+        const sectionsRef = collection(projectFirestoreDataBase, 'siteSections');
+        const sectionsSnapshot = await getDocs(sectionsRef);
+        const sections = sectionsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        })) as (SectionType & FireBaseDocument)[];
+
+        // Buscar produtos em destaque para cada seção em paralelo
+        const productsPromises = sections.map(async(section) => {
+            const productsRef = collection(projectFirestoreDataBase, 'products');
+            const q = query(
+                productsRef,
+                where('estoqueTotal', '>=', 1),
+                where('showProduct', '==', true),
+                where('sections', 'array-contains', section.sectionName),
+                orderBy('creationDate', 'desc'),
+                limit(1),
+            );
+
+            const productsSnapshot = await getDocs(q);
+            return productsSnapshot.docs[0]?.data() as (ProductBundleType & FireBaseDocument);
+        });
+
+        const products = await Promise.all(productsPromises);
+        return products.filter(Boolean);
+    } catch (error) {
+        console.error('Erro ao buscar produtos em destaque:', error);
+        return [];
+    }
+}
 
 // Componentes de renderização
 function Sections({ sections }: { sections: SectionType[] }) {
     return <SectionsCarousel sections={ sections.map(section => section.sectionName) } />;
 }
 
-function Products({ products }: { products: any[] }) {
+function Products({ products }: { products: (ProductBundleType & FireBaseDocument)[] }) {
     return <FeaturedProducts featuredProducts={ products } />;
 }
 
 export default async function HomeContent() {
-    const sections = await SectionsDataFetcher();
-    const products = await ProductsDataFetcher();
+    const sections = await getSections();
+    const products = await getFeaturedProducts();
 
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
