@@ -67,11 +67,16 @@ async function getFeaturedProducts() {
             );
 
             const productsSnapshot = await getDocs(q);
-            return productsSnapshot.docs[0]?.data() as (ProductBundleType & FireBaseDocument);
+            const doc = productsSnapshot.docs[0];
+            if (!doc) return null;
+            return {
+                id: doc.id,
+                ...doc.data(),
+            } as (ProductBundleType & FireBaseDocument);
         });
 
         const products = await Promise.all(productsPromises);
-        return products.filter(Boolean);
+        return products.filter((product): product is ProductBundleType & FireBaseDocument => product !== null);
     } catch (error) {
         console.error('Erro ao buscar produtos em destaque:', error);
         return [];
