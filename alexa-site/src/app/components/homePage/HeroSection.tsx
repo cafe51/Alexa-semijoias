@@ -2,22 +2,27 @@
 
 import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
-import heroBannerSmall from '@/../public/heroBannerSmall.png';
+// import heroBannerSmall from '@/../public/heroBannerSmall.png';
 import heroBannerLarge from '@/../public/heroBannerLarge.png';
-import heroBannerMedium from '@/../public/heroBannerMedium.png';
+// import heroBannerMedium from '@/../public/heroBannerMedium.png';
 import bigHeroLogo from '@/../public/bigHeroLogo2.png';
+// import { useEffect } from 'react';
 
 export default function HeroSection() {
     // Hook para verificar tamanho da tela
-    const isLargeScreen = useMediaQuery({ minWidth: 1300 });
-    const isMediumScreen = useMediaQuery({ minWidth: 640, maxWidth: 1300 });
+    // const isLargeScreen = useMediaQuery({ minWidth: 1300 });
+    // const isMediumScreen = useMediaQuery({ minWidth: 640, maxWidth: 1300 });
+    const isSmallScreen = useMediaQuery({ minWidth: 10, maxWidth: 640 });
+
 
     // Define a imagem com base nos breakpoints de tela
-    const backgroundImage = isLargeScreen
-        ? heroBannerLarge
-        : isMediumScreen
-            ? heroBannerMedium
-            : heroBannerSmall;
+
+    // const backgroundImage = isLargeScreen
+    //     ? heroBannerLarge
+    //     : isMediumScreen
+    //         ? heroBannerMedium
+    //         : heroBannerSmall;
+
 
     return (
         <section className="relative w-full">
@@ -25,12 +30,14 @@ export default function HeroSection() {
             <div className="relative w-full h-[30vh] md:h-[50vh] bg-skeleton">
                 <Image
                     className="object-cover"
-                    src={ backgroundImage }
+                    src={ heroBannerLarge }
                     alt="Banner Principal Alexa Semijoias"
                     priority
-                    sizes="3000px"
-                    quality={ 90 }
+                    sizes='3000px'
+                    quality={ 100 }
                     fill
+                    placeholder="blur"
+                    blurDataURL={ heroBannerLarge.blurDataURL }
                 />
                 
                 { /* Container do logo centralizado */ }
@@ -41,9 +48,11 @@ export default function HeroSection() {
                             src={ bigHeroLogo }
                             alt="Logo Alexa Semijoias"
                             priority
-                            sizes="3000px"
-                            quality={ 90 }
+                            sizes="(max-width: 640px) 90vw, (max-width: 1300px) 60vw, 50vw"
+                            quality={ isSmallScreen ? 30 : 100 }
                             fill
+                            placeholder="blur"
+                            blurDataURL={ bigHeroLogo.blurDataURL }
                         />
                     </div>
                 </div>
