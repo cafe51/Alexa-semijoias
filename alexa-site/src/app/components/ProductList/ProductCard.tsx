@@ -19,7 +19,7 @@ export default function ProductCard({ product, homePage=false }: { product: Prod
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
             <CardContent className="p-0 flex flex-col h-full">
-                <Link href={ `/product/${product.id}` } className='relative aspect-square'>
+                <Link href={ `/product/${product.slug}` } className='relative aspect-square'>
                     <div className="w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"

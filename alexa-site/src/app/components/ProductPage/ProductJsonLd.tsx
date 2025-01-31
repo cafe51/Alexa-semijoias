@@ -25,7 +25,7 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
         'productID': variation.sku,
         'name': product.name,
         'description': product.description,
-        'url': `https://www.alexasemijoias.com.br/product/${product.id}`,
+        'url': `https://www.alexasemijoias.com.br/product/${product.slug}`,
         'image': mainImage,
         'brand': {
             '@type': 'Brand',
@@ -42,7 +42,7 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
 
         'offers': {
             '@type': 'Offer',
-            'url': `https://www.alexasemijoias.com.br/product/${product.id}`,
+            'url': `https://www.alexasemijoias.com.br/product/${product.slug}`,
             'price': variation.value.price.toString(),
             'priceCurrency': 'BRL',
             'itemCondition': 'https://schema.org/NewCondition',

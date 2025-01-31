@@ -1,8 +1,8 @@
 // Este é um módulo ES6
 import { collection, getDocs, updateDoc, doc, Firestore } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
-import { ProductVariation } from '@/app/utils/types';
-
+// import { ProductVariation } from '@/app/utils/types';
+import createProductSlug from '@/app/utils/createProductSlug';
 
 // Função principal que irá atualizar os documentos
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
@@ -16,19 +16,21 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
         
         const productsPromises = productsSnapshot.docs.map(async(docSnap) => {
             const docRef = doc(db, 'products', docSnap.id);
-            const productVariations = docSnap.data().productVariations as ProductVariation[];
+            // const productVariations = docSnap.data().productVariations as ProductVariation[];
             const name = docSnap.data().name;
+            const slug = createProductSlug(name);
 
-            const updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed = productVariations.map((pv) => {
-                for (const property in pv.customProperties) {
-                    pv.customProperties[property] = pv.customProperties[property].trim();
-                }
-                return pv;
-            });
+            // const updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed = productVariations.map((pv) => {
+            //     for (const property in pv.customProperties) {
+            //         pv.customProperties[property] = pv.customProperties[property].trim();
+            //     }
+            //     return pv;
+            // });
 
             return updateDoc(docRef, {
-                name: name.toLowerCase().trim(),
-                productVariations: updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed,
+                // name: name.toLowerCase().trim(),
+                slug, // adiciona o campo slug
+                // productVariations: updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed,
             });
         });
 
@@ -41,6 +43,7 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
         throw error;
     }
 };
+
 // Se o arquivo for executado diretamente, chama a função
 if (require.main === module) {
     updateProducts().catch((err) => console.error('Erro fatal:', err));

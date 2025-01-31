@@ -53,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         productsSnapshot.forEach((doc) => {
             const data = doc.data();
             result.push({
-                url: `${BASE_URL}/product/${doc.id}`,
+                url: `${BASE_URL}/product/${data.slug}`,
                 lastModified: formatDate(data.updatingDate?.toDate() || new Date()),
                 changeFrequency: 'daily',
                 priority: data.lancamento ? 0.9 : 0.8,

@@ -87,6 +87,7 @@ export type ProductVariation = {
 
 export type ProductBundleType = {
     name: string;
+    slug: string;
     categories: string[],
     showProduct: boolean,
     freeShipping: boolean,
