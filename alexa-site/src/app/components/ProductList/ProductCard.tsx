@@ -15,11 +15,12 @@ const calculateDiscount = (original: number, promotional: number) => {
 export default function ProductCard({ product, homePage=false }: { product: ProductBundleType & FireBaseDocument; homePage?: boolean}) { 
     const displayPrice = product.value.promotionalPrice || product.value.price;
     const installmentValue = displayPrice / 6;
+    const slugName = product.slug;
 
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
             <CardContent className="p-0 flex flex-col h-full">
-                <Link href={ `/product/${product.slug}` } className='relative aspect-square'>
+                <Link href={ `/product/${slugName}` } className='relative aspect-square'>
                     <div className="w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"
