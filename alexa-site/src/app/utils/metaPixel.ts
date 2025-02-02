@@ -2,11 +2,11 @@
 
 declare global {
     interface Window {
-        fbq: (...args: any[]) => void;
-        fbqLoaded?: boolean;
+      fbq: (...args: any[]) => void;
+      fbqLoaded?: boolean;
+      lastTrackedViewContent?: string;
     }
-}
-
+  }
 type StandardEvents = 
     | 'AddPaymentInfo'
     | 'AddToCart'
@@ -50,13 +50,21 @@ export const trackPixelEvent = <T extends BaseEventParams>(
 ): void => {
     try {
         if (typeof window !== 'undefined' && window.fbq && window.fbqLoaded) {
+        // Se for um evento ViewContent, verifique se já foi disparado para o mesmo produto
+            if (eventName === 'ViewContent' && params?.content_ids?.[0]) {
+                const currentId = String(params.content_ids[0]);
+                if (window.lastTrackedViewContent === currentId) {
+                    return; // Já disparado para este produto
+                }
+                window.lastTrackedViewContent = currentId;
+            }
             window.fbq('track', eventName, params);
         }
     } catch (error) {
         console.error('Erro ao rastrear evento do Meta Pixel:', error);
     }
 };
-
+  
 export const trackCustomPixelEvent = <T extends BaseEventParams>(
     eventName: string,
     params?: T,

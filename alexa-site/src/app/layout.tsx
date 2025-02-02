@@ -8,10 +8,10 @@ import { AuthContextProvider } from './context/AuthContext';
 import { UserInfoProvider } from './context/UserInfoContext';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import Script from 'next/script';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { WebVitals } from './components/WebVitals';
 import { Metadata } from 'next';
+import FacebookPixel from './components/FacebookPixel';
 
 const inter = Montserrat({ subsets: ['latin'] });
 
@@ -92,37 +92,6 @@ export default function RootLayout({
                 <link rel="icon" href="/favicon.ico" />
             </head>
             <body className={ `${inter.className} min-h-screen bg-[#FAF9F6]` }>
-                <Script
-                    id="fb-pixel"
-                    strategy="afterInteractive"
-                    dangerouslySetInnerHTML={ {
-                        __html: `
-            window.fbqLoaded = window.fbqLoaded || false;
-            if (!window.fbqLoaded) {
-                window.fbqLoaded = true;
-                !function(f,b,e,v,n,t,s)
-                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t,s)}(window, document,'script',
-                'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '574789162040735');
-                fbq('track', 'PageView');
-            }
-        `,
-                    } }
-                />
-                <noscript>
-                    <img 
-                        height="1" 
-                        width="1" 
-                        style={ { display: 'none' } }
-                        src="https://www.facebook.com/tr?id=574789162040735&ev=PageView&noscript=1"
-                        alt=""
-                    />
-                </noscript>
                 <AuthContextProvider>
                     <UserInfoProvider>
                         <Header />
@@ -135,6 +104,7 @@ export default function RootLayout({
                 <Analytics />
                 <SpeedInsights />
                 <WebVitals />
+                <FacebookPixel />
             </body>
         </html>
     );
