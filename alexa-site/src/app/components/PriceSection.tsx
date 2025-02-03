@@ -31,7 +31,18 @@ export default function PriceSection({
                 price={ product.value.price }
                 promotionalPrice={ product.value.promotionalPrice }
                 quantity={ quantity }
-            />  
+            />
+
+            {
+                product.estoqueTotal <= 0 &&
+                <div className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg">
+                    <p className="text-xl text-center font-bold text-red-500 my-2">Produto indisponível no momento</p>
+                    <p className="text-center text-gray-600 mt-2">
+    Este item está esgotado, mas estamos trabalhando para repor o estoque.
+                    </p>
+                </div>
+            }
+
             <LargeButton
                 color=' bg-[#D4AF37] hover:bg-[#C48B9F] text-white '
                 onClick={ handleAddToCartClick }
