@@ -46,7 +46,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Alexa Semijoias | Semijoias Exclusivas',
         description: 'Descubra nossa coleção exclusiva de semijoias. Peças únicas com qualidade e elegância para todos os momentos.',
-        images: ['/bigHeroLogo.png'],
+        images: ['/MetadataBanner.png'],
         creator: '@alexasemijoias',
         site: '@alexasemijoias',
     },
