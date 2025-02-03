@@ -2,7 +2,7 @@
 import { collection, getDocs, updateDoc, doc, Firestore } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
 // import { ProductVariation } from '@/app/utils/types';
-import createProductSlug from '@/app/utils/createProductSlug';
+import createSlugName from '@/app/utils/createSlugName';
 
 // Função principal que irá atualizar os documentos
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
@@ -18,7 +18,7 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
             const docRef = doc(db, 'products', docSnap.id);
             // const productVariations = docSnap.data().productVariations as ProductVariation[];
             const name = docSnap.data().name;
-            const slug = createProductSlug(name);
+            const slug = createSlugName(name);
 
             // const updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed = productVariations.map((pv) => {
             //     for (const property in pv.customProperties) {

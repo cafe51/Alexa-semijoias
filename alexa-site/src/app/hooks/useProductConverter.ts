@@ -8,7 +8,7 @@ import blankImage from '../../../public/blankImage.png';
 import { Timestamp } from 'firebase/firestore';
 import toTitleCase from '../utils/toTitleCase';
 import keyWordsCreator from '../utils/keyWordsCreator';
-import createProductSlug from '../utils/createProductSlug';
+import createSlugName from '../utils/createSlugName';
 
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
@@ -62,7 +62,7 @@ export function useProductConverter() {
 
         return {
             name: name.trim().toLowerCase(),
-            slug: createProductSlug(name.trim().toLowerCase()),
+            slug: createSlugName(name.trim().toLowerCase()),
             keyWords: [
                 ...keyWordsCreator(name.trim().toLowerCase()),
                 ...categoriesKeyWords,
@@ -123,7 +123,7 @@ export function useProductConverter() {
         const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
 
         return {
-            slug: createProductSlug(name.trim().toLowerCase()),
+            slug: createSlugName(name.trim().toLowerCase()),
             name: name.trim().toLowerCase(),
             keyWords: [
                 ...keyWordsCreator(name.trim().toLowerCase()),

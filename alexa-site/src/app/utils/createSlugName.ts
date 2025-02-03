@@ -1,4 +1,4 @@
-export default function createProductSlug(productName: string): string {
+export default function createSlugName(productName: string): string {
     return productName
         .toLowerCase()
         .normalize('NFD')
