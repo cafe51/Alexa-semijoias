@@ -17,7 +17,7 @@ export default function DashboardProductDetails({ product }: {product:  ProductB
             <ResponsiveCarousel productData={ product } />
 
             <div className=''>
-                <p>{ product.description }</p>
+                <p className='text-gray-600 text-sm md:text-base mb-6 whitespace-pre-line'>{ product.description }</p>
             </div>
 
             <div className='flex flex-col gap-2'>
