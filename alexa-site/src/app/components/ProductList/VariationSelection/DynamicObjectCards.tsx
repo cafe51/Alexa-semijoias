@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
 import OptionButton from './OptionButton';
-import ErrorMessage from './ErrorMessage';
 import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Image from 'next/image';
@@ -10,6 +9,8 @@ import PriceSection from '../../PriceSection';
 import QuantitySelectionCartBox from '../../QuantitySelectionCartBox';
 import ProductSummary from './ProductSummary';
 import { trackPixelEvent } from '@/app/utils/metaPixel';
+import toTitleCase from '@/app/utils/toTitleCase';
+import OutOfStockMessage from '../OutOfStockMessage';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;
@@ -61,11 +62,15 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
     const handleOptionSelect = (option: string) => {
         console.log('clicou', option);
         if (!availableOptions.includes(option)) {
-            setErrorMessage(
-                currentPhase === 0
-                    ? `No momento estamos sem estoque para essa opção de ${keys[currentPhase].toLowerCase()}`
-                    : `No momento estamos sem estoque dessa opção de ${keys[currentPhase].toLowerCase()} para a opção de ${keys[currentPhase - 1]} ${selectedOptions[keys[currentPhase - 1]]} escolhida`,
-            );
+            const errorMessage = currentPhase === 0
+                ? <p>No momento estamos sem estoque de { keys[currentPhase] } { option }</p>
+                : 
+                <p className="text-xs text-center text-red-500 my-2" >
+                    { toTitleCase(keys[currentPhase]) } <span className='font-bold text-sm'>{ option }</span> para { keys[currentPhase - 1] } <span className='font-bold text-sm'>{ selectedOptions[keys[currentPhase - 1]].toLowerCase() }</span> está indisponível no momento
+                </p>
+                ;
+
+            setErrorMessage(errorMessage);
             return;
         }
 
@@ -88,6 +93,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
             setSelectedOptions(updatedOptions);
             setCurrentPhase(previousPhase);
         }
+        setErrorMessage(null);
     };
 
     const isDisabled = () => {
@@ -113,7 +119,7 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
 
     return (
         <div className="p-4">
-            <ErrorMessage message={ errorMessage } />
+            { errorMessage && <OutOfStockMessage message={ errorMessage } /> }
             { currentPhase < keys.length ? (
                 <div className='flex flex-col gap-4 items-center justify-center'>
                     <h2>{ keys[currentPhase] }</h2>

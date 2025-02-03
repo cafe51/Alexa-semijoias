@@ -18,7 +18,6 @@ export default function OptionButton({ option, isAvailable, handleOptionSelect }
                     value={ option }
                     id={ option }
                     className="peer sr-only"
-                    disabled={ !isAvailable }
                     onClick={ () => handleOptionSelect(option) } 
                 />
                 <Label

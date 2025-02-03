@@ -6,7 +6,7 @@ function useDynamicObjectCardsLogic(object: (ProductBundleType & FireBaseDocumen
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
     const [availableOptions, setAvailableOptions] = useState<string[]>([]);
     const [allOptions, setAllOptions] = useState<string[]>([]);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<React.JSX.Element | null>(null);
     const [productVariationsSelected, setProductVariationsSelected] = useState<ProductVariation[]>([]);
     const [quantity, setQuantity] = useState(1);
 

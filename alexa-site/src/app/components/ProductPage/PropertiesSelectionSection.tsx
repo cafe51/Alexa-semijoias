@@ -1,13 +1,14 @@
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { sendGAEvent, sendGTMEvent } from '@/app/utils/analytics';
 import { ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
-import ErrorMessage from '@/app/checkout/AddressSection/ErrorMessage';
 import OptionButton from '../ProductList/VariationSelection/OptionButton';
 import ProductSummary from '../ProductList/VariationSelection/ProductSummary';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import blankImage from '../../../../public/blankImage.png';
 import Image from 'next/image';
 import QuantitySelectionCartBox from '../QuantitySelectionCartBox';
+import toTitleCase from '@/app/utils/toTitleCase';
+import OutOfStockMessage from '../ProductList/OutOfStockMessage';
 
 interface PropertiesSelectionSectionProps {
     carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
@@ -16,8 +17,8 @@ interface PropertiesSelectionSectionProps {
     setCurrentPhase: React.Dispatch<React.SetStateAction<number>>;
     selectedOptions: { [key: string]: string };
     setSelectedOptions: Dispatch<SetStateAction<{ [key: string]: string }>>;
-    errorMessage: string | null;
-    setErrorMessage: Dispatch<SetStateAction<string | null>>;
+    errorMessage: React.JSX.Element | null;
+    setErrorMessage: Dispatch<SetStateAction<React.JSX.Element | null>>;
     quantity: number;
     setQuantity: Dispatch<SetStateAction<number>>;
     availableOptions: string[];
@@ -41,16 +42,25 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
     const handleOptionSelect = useCallback((option: string) => {
         if (!availableOptions.includes(option)) {
             const errorMessage = currentPhase === 0
-                ? `No momento estamos sem estoque para essa opção de ${keys[currentPhase]}`
-                : `No momento estamos sem estoque dessa opção de ${keys[currentPhase]} para a opção de ${keys[currentPhase - 1]} ${selectedOptions[keys[currentPhase - 1]]} escolhida`;
+                ? <p>No momento estamos sem estoque de { keys[currentPhase] } { option }</p>
+                : 
+                <p className="text-xs text-center text-red-500 my-2" >
+                    { toTitleCase(keys[currentPhase]) } <span className='font-bold text-sm'>{ option }</span> para { keys[currentPhase - 1] } <span className='font-bold text-sm'>{ selectedOptions[keys[currentPhase - 1]].toLowerCase() }</span> está indisponível no momento
+                </p>
+                ;
             
+            const errorMessageGA = currentPhase === 0
+                ? `No momento estamos sem estoque para essa opção de ${keys[currentPhase]}`
+                : `${toTitleCase(keys[currentPhase])} ${option} para ${keys[currentPhase - 1]} ${selectedOptions[keys[currentPhase - 1]].toLowerCase()} escestá indisponível no momentoolhida`;
+            
+
             setErrorMessage(errorMessage);
 
             // Rastrear erro de seleção
             sendGAEvent('select_item_error', {
                 item_category: keys[currentPhase],
                 item_variant: option,
-                error_message: errorMessage,
+                error_message: errorMessageGA,
             });
 
             return;
@@ -180,7 +190,6 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
 
     return (
         <div className="">
-            { errorMessage && <ErrorMessage message={ errorMessage } /> }
             { isSelectionPhase ? (
                 <div className='flex flex-col gap-4'>
                     <div className='flex gap-2'>
@@ -205,6 +214,9 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
                             />
                         )) }
                     </div>
+
+                    { errorMessage && <OutOfStockMessage message={ errorMessage } /> }
+
                 </div>
             ) : (
                 <div className='flex flex-col gap-4 items-center justify-center'>
