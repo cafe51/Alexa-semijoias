@@ -17,20 +17,20 @@ export default function CreateVariationsForm({ state, handlers, setProductVariat
     const [newVariation, setNewVariation] = useState('');
 
     function handleAddVariationClick() {
-        if(state.variations.length > 0 && state.variations.includes(newVariation.trim())) {
+        if(state.variations.length > 0 && state.variations.includes(newVariation.trim().toLowerCase())) {
             setErrorMessage('Essa variação já existe');
             return;
         }
-        (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation.toLowerCase().trim()]);
+        (newVariation && newVariation.length > 0) && handlers.handleVariationsChange([...state.variations, newVariation.toLowerCase().trim().toLowerCase()]);
         setProductVariationState((prevState) => ({
             ...prevState,
             customProperties: {
                 ...prevState.customProperties,
-                [newVariation.toLowerCase().trim()]: '',
+                [newVariation.toLowerCase().trim().toLowerCase()]: '',
             },
 
         }));
-        handlers.handleAddNewVariationInAllProductVariations(newVariation.toLowerCase().trim());
+        handlers.handleAddNewVariationInAllProductVariations(newVariation.toLowerCase().trim().toLowerCase());
         setNewVariation('');
     }
 

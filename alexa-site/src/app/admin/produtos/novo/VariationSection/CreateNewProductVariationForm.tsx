@@ -50,7 +50,7 @@ export default function CreateNewProductVariationForm({
             ...prevState,
             customProperties: {
                 ...prevState.customProperties,
-                [field]: value.trim(),
+                [field]: value.trim().toLowerCase(),
             },
         }));
     };
@@ -72,7 +72,7 @@ export default function CreateNewProductVariationForm({
     const isThereCustomPropertyCombinationAlreadyCreated = () => { 
         const stateCustomProperties = state.productVariations.map((statePv) => statePv.customProperties); // [ { tamanho: 'medio', cor: 'amarelo' }, { tamanho: 'pequeno', cor: 'amarelo' }, ...]
         for (const property in productVariationState.customProperties) {
-            productVariationState.customProperties[property] = productVariationState.customProperties[property].trim();
+            productVariationState.customProperties[property] = productVariationState.customProperties[property].trim().toLowerCase();
         }
         const existSameCustomProperty = stateCustomProperties.some((stateCustomProperty) => deepEqual(productVariationState.customProperties, stateCustomProperty));
         return existSameCustomProperty;
@@ -121,7 +121,7 @@ export default function CreateNewProductVariationForm({
             }
 
             for (const property in productVariationState.customProperties) {
-                productVariationState.customProperties[property] = productVariationState.customProperties[property].trim();
+                productVariationState.customProperties[property] = productVariationState.customProperties[property].trim().toLowerCase();
             }
 
             handlers.handleAddProductVariation({ ...productVariationState, defaultProperties: productDefaultProperties });

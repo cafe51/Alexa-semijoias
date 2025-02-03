@@ -79,7 +79,7 @@ export default function CategoriesListFromFb({ options, selectedOptions, handleC
                             className={ 'bg-green-200 text-green-600 rounded p-2 hover:bg-pink-200 w-full full ms-2 text-sm font-medium' }
                             onClick={ () => {
                                 setNewSearch('');
-                                handlers.handleAddCategories(newSearch.trim());
+                                handlers.handleAddCategories(newSearch.trim().toLowerCase());
                             } }
                         >
                             Criar { newSearch }
