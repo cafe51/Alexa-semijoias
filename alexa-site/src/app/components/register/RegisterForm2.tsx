@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { RegisterFormInputType } from '@/app/utils/types';
 import { checkDuplicateFields } from '@/app/utils/checkDuplicateFields';
 import ButtonGoogleLogin from '../ButtonGoogleLogin';
+import validarCPF from '@/app/utils/validarCPF';
 
 interface RegisterForm2Props {
     setSignedEmail: (email: string | undefined) => void;
@@ -91,7 +92,7 @@ export default function RegisterForm2({ setSignedEmail, setIncompleteSignIn, set
 
         if (!formData.cpf.trim()) {
             newErrors.cpf = 'CPF é obrigatório';
-        } else if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
+        } else if (!(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf.trim())) || !validarCPF(formData.cpf.trim())) {
             newErrors.cpf = 'CPF inválido';
         }
         

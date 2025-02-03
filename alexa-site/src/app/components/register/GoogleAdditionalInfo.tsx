@@ -7,6 +7,7 @@ import { useAuthContext } from '@/app/hooks/useAuthContext';
 import { auth } from '@/app/firebase/config';
 import { checkDuplicateFields } from '@/app/utils/checkDuplicateFields';
 import { useSyncCart } from '@/app/hooks/useSyncCart';
+import validarCPF from '@/app/utils/validarCPF';
 
 interface GoogleAdditionalInfoProps {
     userId: string;
@@ -47,6 +48,10 @@ export default function GoogleAdditionalInfo({ userId, onComplete }: GoogleAddit
         if (!formData.cpf.trim()) {
             newErrors.cpf = 'CPF é obrigatório';
         } else if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
+            newErrors.cpf = 'CPF inválido';
+        }
+
+        if (!validarCPF(formData.cpf.trim())) {
             newErrors.cpf = 'CPF inválido';
         }
 
