@@ -22,6 +22,7 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
         '@context': 'https://schema.org',
         '@type': 'Product',
         '@id': product.id,
+        'content_id': product.id,
         'productID': variation.sku,
         'name': product.name,
         'description': product.description,

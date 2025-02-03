@@ -57,6 +57,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
                 'og:price:amount': variation.value.price.toString(),
                 'og:price:currency': 'BRL',
                 'og:retailer_item_id': variation.sku,
+                'og:content_id': variation.sku,
+                'content_id': variation.sku,
                 'product:brand': 'Alexa Semijoias',
                 'product:availability': variation.estoque > 0 ? 'in stock' : 'out of stock',
                 'product:condition': 'new',
