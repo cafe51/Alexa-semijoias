@@ -12,7 +12,6 @@ export default function FacebookPixelCampain1() {
         script.id = 'fb-pixel-script';
         script.async = true;
         script.innerHTML = `
-      if (!window.fbqLoaded) {
         window.fbqLoaded = true;
         !function(f,b,e,v,n,t,s){
           if(f.fbq)return;
@@ -30,7 +29,6 @@ export default function FacebookPixelCampain1() {
         }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '609318868723849');
         fbq('track', 'PageView');
-      }
     `;
         document.body.appendChild(script);
     }, []);
