@@ -10,5 +10,5 @@ export function createSlugName(productName: string): string {
 }
 
 export function revertSlugName(slug: string): string {
-    return slug.replace(/-/g, ' ');
+    return slug.replace(/-/g, ' ').trim().toLowerCase();
 }
