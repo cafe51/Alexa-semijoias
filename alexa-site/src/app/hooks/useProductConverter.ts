@@ -8,7 +8,7 @@ import blankImage from '../../../public/blankImage.png';
 import { Timestamp } from 'firebase/firestore';
 import toTitleCase from '../utils/toTitleCase';
 import keyWordsCreator from '../utils/keyWordsCreator';
-import createSlugName from '../utils/createSlugName';
+import { createSlugName } from '../utils/createSlugName';
 
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);

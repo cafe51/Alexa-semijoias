@@ -1,4 +1,4 @@
-export default function createSlugName(productName: string): string {
+export function createSlugName(productName: string): string {
     return productName
         .toLowerCase()
         .normalize('NFD')
@@ -7,4 +7,8 @@ export default function createSlugName(productName: string): string {
         .replace(/\s+/g, '-') // Substitui espaços por hífens
         .replace(/-+/g, '-') // Remove hífens duplicados
         .trim(); // Remove espaços no início e fim
+}
+
+export function revertSlugName(slug: string): string {
+    return slug.replace(/-/g, ' ');
 }
