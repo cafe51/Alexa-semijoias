@@ -1,7 +1,6 @@
 import { MetadataRoute } from 'next';
 import { projectFirestoreDataBase } from './firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { createSlugName } from './utils/createSlugName';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -72,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             
             // URL da seção principal
             result.push({
-                url: `${BASE_URL}/section/${createSlugName(data.sectionName)}`,
+                url: `${BASE_URL}/section/${encodeURIComponent(data.sectionName)}`,
                 lastModified: formatDate(new Date()),
                 changeFrequency: 'daily',
                 priority: 0.8,
@@ -82,7 +81,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             if (data.subsections && Array.isArray(data.subsections)) {
                 data.subsections.forEach(subsection => {
                     result.push({
-                        url: `${BASE_URL}/section/${createSlugName(data.sectionName)}/${createSlugName(subsection)}`,
+                        url: `${BASE_URL}/section/${encodeURIComponent(data.sectionName)}/${encodeURIComponent(subsection)}`,
                         lastModified: formatDate(new Date()),
                         changeFrequency: 'daily',
                         priority: 0.7,
