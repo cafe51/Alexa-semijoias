@@ -2,7 +2,7 @@
 import { collection, getDocs, updateDoc, doc, Firestore } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
 // import { ProductVariation } from '@/app/utils/types';
-import createSlugName from '@/app/utils/createSlugName';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 // Função principal que irá atualizar os documentos
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
