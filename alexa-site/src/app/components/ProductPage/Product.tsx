@@ -216,7 +216,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                                 { product.lancamento && <Badge variant="destructive" className="bg-[#C48B9F] text-white">Lançamento</Badge> }
                             </div>
 
-                            <p className="text-gray-600 text-sm md:text-base mb-6">{ product.description }</p>
+                            <p className="text-gray-600 text-sm md:text-base mb-6 whitespace-pre-line">{ product.description }</p>
                         </div>
                         {
                             !product.productVariations.some((pv) => pv.customProperties === undefined) && (
