@@ -12,7 +12,6 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { WebVitals } from './components/WebVitals';
 import { Metadata } from 'next';
 import FacebookPixel from './components/FacebookPixel';
-import FacebookPixelCampain1 from './components/FacebookPixelCampain1';
 
 const inter = Montserrat({ subsets: ['latin'] });
 
@@ -106,7 +105,6 @@ export default function RootLayout({
                 <SpeedInsights />
                 <WebVitals />
                 <FacebookPixel />
-                <FacebookPixelCampain1 />
             </body>
         </html>
     );
