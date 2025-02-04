@@ -11,6 +11,7 @@ import ProductSummary from './ProductSummary';
 import { trackPixelEvent } from '@/app/utils/metaPixel';
 import toTitleCase from '@/app/utils/toTitleCase';
 import OutOfStockMessage from '../OutOfStockMessage';
+import { MetaConversionsService } from '@/app/utils/meta-conversions/service';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;
@@ -181,6 +182,16 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                                         quantity: quantity,
                                     }],
                                 });
+                                
+                                // Meta Conversions API
+                                MetaConversionsService.getInstance().sendAddToCart({
+                                    product: object,
+                                    quantity,
+                                    url: window.location.href,
+                                }).catch(error => {
+                                    console.error('Failed to send AddToCart event to Meta Conversions API:', error);
+                                });
+
                                 closeModelClick();
                                 closeModalFinishBuyClick();
                             }

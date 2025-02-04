@@ -4,6 +4,7 @@ import { useCheckoutState } from '../hooks/useCheckoutState';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { MetaConversionsService } from '@/app/utils/meta-conversions/service';
 import AccountSection from './AccountSection/AccountSection';
 import AddressSection from './AddressSection/AddressSection';
 import DeliveryPriceSection from './DeliveryPriceSection/DeliveryPriceSection';
@@ -47,7 +48,17 @@ export default function Checkout() {
             top: 0,
             behavior: 'smooth',
         });
-    }, []);
+
+        // Envia evento de início de checkout para a API de Conversões da Meta
+        if (carrinho && carrinho.length > 0) {
+            MetaConversionsService.getInstance().sendInitiateCheckout({
+                cart: carrinho,
+                url: window.location.href,
+            }).catch(error => {
+                console.error('Failed to send InitiateCheckout event to Meta Conversions API:', error);
+            });
+        }
+    }, [carrinho]);
 
     useEffect(() => {
         if(isPaymentFinished) {

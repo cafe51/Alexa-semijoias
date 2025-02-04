@@ -7,6 +7,7 @@ import { FireBaseDocument, OrderType, PixPaymentResponseType, ProductCartType, S
 import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
+import { MetaConversionsService } from '../utils/meta-conversions/service';
 import { createPayment, sendEmailConfirmation } from '../utils/apiCall';
 import { handlePaymentFailure } from '../utils/paymentStatusHandler';
 import { createAdditionalInfo, createNewOrderObject, createPayer, createPayerAddInfo } from '../utils/orderHelpers';
@@ -57,6 +58,15 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
 
 
             console.log('Pedido finalizado com sucesso');
+
+            // Envia evento de compra para a API de Conversões da Meta
+            await MetaConversionsService.getInstance().sendPurchase({
+                order: newOrder,
+                url: window.location.href,
+            }).catch(error => {
+                console.error('Failed to send Purchase event to Meta Conversions API:', error);
+            });
+
         } catch (error) {
             console.error('Erro ao criar o pedido:', error);
             throw error;

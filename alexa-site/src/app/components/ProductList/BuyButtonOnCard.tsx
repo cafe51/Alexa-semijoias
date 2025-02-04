@@ -9,6 +9,7 @@ import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import FinishBuyConfirmationModal from '../FinishBuyConfirmationModal';
 import { ImSpinner9 } from 'react-icons/im';
 import { trackPixelEvent } from '@/app/utils/metaPixel';
+import { MetaConversionsService } from '@/app/utils/meta-conversions/service';
 
 export function BuyButtonOnCard({ product }: { product: ProductBundleType & FireBaseDocument; }) {
     const  [isLoadingButton, setIsloadingButton ] = useState(false);
@@ -53,6 +54,15 @@ export function BuyButtonOnCard({ product }: { product: ProductBundleType & Fire
                     id: product.id,
                     quantity: 1,
                 }],
+            });
+
+            // Meta Conversions API
+            MetaConversionsService.getInstance().sendAddToCart({
+                product,
+                quantity: 1,
+                url: window.location.href,
+            }).catch(error => {
+                console.error('Failed to send AddToCart event to Meta Conversions API:', error);
             });
                     
             setShowModalFinishBuy(prev => !prev);

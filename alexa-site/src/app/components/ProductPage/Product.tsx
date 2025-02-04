@@ -6,6 +6,7 @@ import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import { useCollection } from '@/app/hooks/useCollection';
 import { trackPixelEvent } from '@/app/utils/metaPixel';
 import { sendGAEvent, sendGTMEvent } from '@/app/utils/analytics';
+import { MetaConversionsService } from '@/app/utils/meta-conversions/service';
 import PriceSection from '@/app/components/PriceSection';
 import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
@@ -60,6 +61,14 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
             content_category: initialProduct.sections[0],
             value: productPrice,
             currency: 'BRL',
+        });
+
+        // Meta Conversions API
+        MetaConversionsService.getInstance().sendViewContent({
+            product: initialProduct,
+            url: window.location.href,
+        }).catch(error => {
+            console.error('Failed to send ViewContent event to Meta Conversions API:', error);
         });
 
         // Google Analytics
@@ -139,6 +148,15 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                     id: product.id,
                     quantity: quantity,
                 }],
+            });
+
+            // Meta Conversions API
+            MetaConversionsService.getInstance().sendAddToCart({
+                product,
+                quantity,
+                url: window.location.href,
+            }).catch(error => {
+                console.error('Failed to send AddToCart event to Meta Conversions API:', error);
             });
 
             // Google Analytics

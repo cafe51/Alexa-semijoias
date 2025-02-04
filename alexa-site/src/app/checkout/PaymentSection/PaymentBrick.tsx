@@ -121,25 +121,12 @@ export default function PaymentBrick({
                         streetNumber: user.address?.numero,
                     },
                 },
-                // payer: {
-                //     email: user.email,
-                //     firstName: user.nome.split(' ')[0],
-                //     lastName: user.nome.split(' ')[1],
-                //     address: {
-                //         city: user.address?.localidade,
-                //         additionalInformation: user.address?.referencia,
-                //         complement: user.address?.complemento,
-                //         federalUnit: user.address?.uf,
-                //         neighborhood: user.address?.bairro,
-                //         streetName: user.address?.logradouro,
-                //         zipCode: user.address?.cep,
-                //     },
-                // },
             } }
             customization={ customization }
             onSubmit={ async(params) => {
                 setIsProcessingPayment(true);
                 setLoadingPayment(true);
+                // Meta Pixel
                 trackPixelEvent('Purchase', {
                     currency: 'BRL',
                     value: totalAmount,
