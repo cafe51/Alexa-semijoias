@@ -10,7 +10,7 @@ interface PriceSectionProps {
     isDisabled: () => boolean;
     quantity: number;
     handleClick: () => void;
-    setShowTooltip: (showTooltip: boolean) => void;
+    setShowTooltip?: (showTooltip: boolean) => void;
 }
 
 export default function PriceSection({
@@ -24,11 +24,11 @@ export default function PriceSection({
 
     const handleAddToCartClick = () => {
         if (isDisabled()) {
-            setShowTooltip(true);
+            setShowTooltip && setShowTooltip(true);
             return;
         }
         handleClick();
-        setShowTooltip(false);
+        setShowTooltip && setShowTooltip(false);
     };
 
     return (

@@ -30,10 +30,12 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
             const currentData = docSnap.data();
             const currentDescription = currentData.description || '';
 
-            const additionalText = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.\n\nCom 1 ano de garantia, você pode usar suas peças com confiança, sabendo que elas foram feitas para te acompanhar em todos os momentos especiais.\n';
+            // Remove o texto adicional da descrição
+            const textToRemove = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.\n\nCom 1 ano de garantia, você pode usar suas peças com confiança, sabendo que elas foram feitas para te acompanhar em todos os momentos especiais.\n';
+            const updatedDescription = currentDescription.replace(textToRemove, '');
 
             return updateDoc(docRef, {
-                description: currentDescription + additionalText,
+                description: updatedDescription,
             });
         });
 
@@ -46,4 +48,3 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
         throw error;
     }
 };
-
