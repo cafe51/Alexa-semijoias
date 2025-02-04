@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 interface CustomerInfoProps {
   name: string;
   email: string;
-  phone: string;
+  phone: string | undefined;
 }
 
 const CustomerInfo: React.FC<CustomerInfoProps> = ({ name, email, phone }) => {

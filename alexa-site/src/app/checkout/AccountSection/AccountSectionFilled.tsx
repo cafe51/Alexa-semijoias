@@ -8,7 +8,7 @@ interface AccountSectionFilledProps {
     nome: string;
     email: string;
     cpf: string;
-    telefone: string;
+    telefone: string | undefined;
     adminDashboard?: boolean;
   }
 

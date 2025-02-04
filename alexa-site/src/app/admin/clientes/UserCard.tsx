@@ -59,9 +59,11 @@ export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCa
                     <button onClick={ onEmailClick } className="border p-2 rounded-full">
                         <CiMail size={ 24 }/>
                     </button>
-                    <button onClick={ onWhatsAppClick } className="border p-2 rounded-full">
-                        <FaWhatsapp size={ 24 }/>
-                    </button>
+                    {
+                        user.phone && <button onClick={ onWhatsAppClick } className="border p-2 rounded-full">
+                            <FaWhatsapp size={ 24 }/>
+                        </button>
+                    }
 
                 </div>
             </div>
