@@ -25,7 +25,7 @@ import SelectionTooltip from '../SelectionTooltip';
 
 const TEXTO_DA_QUALIDADE_DA_SEMIJOIA = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.';
 
-const TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO = '\n\n\nNossas joias em aço são super resistentes, elas não escurecem e não oxidam.\nO aço inox de alta qualidade garante uma durabilidade superior, evitando manchas, oxidação e desbotamento, mesmo com o uso diário. São peças feitas para brilhar tanto quanto você, sem perder seu charme ao longo do tempo.';
+const TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO = '\n\n\nO aço inox de alta qualidade garante uma durabilidade superior, evitando manchas, oxidação e desbotamento, mesmo com o uso diário. São peças feitas para brilhar tanto quanto você, sem perder seu charme ao longo do tempo. Para toda a vida. ';
 
 const TEXTO_DA_GARANTIA = '\n\nCom 1 ano de garantia, você pode usar suas peças com confiança, sabendo que elas foram feitas para te acompanhar em todos os momentos especiais.\n';
 
@@ -248,7 +248,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                             <p className="text-gray-600 text-sm md:text-base mb-6 whitespace-pre-line">{
                                 product.description +
                                 (product.sections.includes('joias em aço inox') ?  TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO : TEXTO_DA_QUALIDADE_DA_SEMIJOIA)
-                            + TEXTO_DA_GARANTIA
+                            + (!product.sections.includes('joias em aço inox') ? TEXTO_DA_GARANTIA : '')
                             }</p>
                         </div>
                         {
