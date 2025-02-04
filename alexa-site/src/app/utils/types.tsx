@@ -298,7 +298,7 @@ export type UserType = {
     email: string,
     userId: string,
     cpf: string,
-    phone: string,
+    phone?: string,
     admin: boolean,
     createdAt: Timestamp,
     address?: AddressType | null

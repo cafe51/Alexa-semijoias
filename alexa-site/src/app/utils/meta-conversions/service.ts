@@ -24,8 +24,27 @@ export class MetaConversionsService {
         return MetaConversionsService.instance;
     }
 
+    private async getClientIp(): Promise<string | undefined> {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip;
+        } catch (error) {
+            console.error('Failed to get client IP:', error);
+            return undefined;
+        }
+    }
+
     private async sendEvent(event: MetaEvent): Promise<void> {
         try {
+            // Adiciona o IP do cliente aos dados do usuário se não houver dados de usuário com hash
+            if (!event.user_data.em && !event.user_data.ph && !event.user_data.fn) {
+                const clientIp = await this.getClientIp();
+                if (clientIp) {
+                    event.user_data.client_ip_address = clientIp;
+                }
+            }
+
             const payload = {
                 data: [event],
                 ...(META_TEST_MODE && { test_event_code: META_CONSTANTS.TEST_EVENT_CODE }),
@@ -74,8 +93,8 @@ export class MetaConversionsService {
         return event;
     }
 
-    public async sendViewContent({ product, url }: ViewContentParams): Promise<void> {
-        const event = this.createBaseEvent(EVENT_NAMES.VIEW_CONTENT, url);
+    public async sendViewContent({ product, url, userData }: ViewContentParams): Promise<void> {
+        const event = this.createBaseEvent(EVENT_NAMES.VIEW_CONTENT, url, userData);
 
         console.log('visualizando produto e enviando para o meta');
         console.log('produto visualizado:', product);

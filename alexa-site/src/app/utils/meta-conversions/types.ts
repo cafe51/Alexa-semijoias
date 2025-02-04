@@ -1,4 +1,4 @@
-import { ProductCartType, OrderType, ProductBundleType, FireBaseDocument } from '@/app/utils/types';
+import { ProductCartType, OrderType, ProductBundleType, FireBaseDocument, UserType } from '@/app/utils/types';
 
 export interface MetaUserData {
   em?: string[];
@@ -31,9 +31,22 @@ export interface MetaEvent {
   custom_data?: MetaCustomData;
 }
 
+// Assim é a tipagem para usuários:
+// type UserType = {
+//     nome: string,
+//     email: string,
+//     userId: string,
+//     cpf: string,
+//     phone?: string,
+//     admin: boolean,
+//     createdAt: Timestamp,
+//     address?: AddressType | null
+// }
+
 export interface ViewContentParams {
   product: ProductBundleType & FireBaseDocument;
   url: string;
+  userData?: FireBaseDocument & UserType
 }
 
 export interface AddToCartParams {

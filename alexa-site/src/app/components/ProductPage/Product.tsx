@@ -22,7 +22,7 @@ import ProductJsonLd from './ProductJsonLd';
 import RecommendedProducts from './RecommendedProducts';
 
 export default function Product({ id, initialProduct }: { id: string; initialProduct: ProductBundleType & FireBaseDocument }) {
-    const { carrinho } = useUserInfo();
+    const { carrinho, userInfo } = useUserInfo();
     const [shipping, setShipping] = useState<string | null>(null);
     const { getDocumentById } = useCollection<ProductBundleType>('products');
     const [product, setProduct] = useState<ProductBundleType & FireBaseDocument>(initialProduct);
@@ -67,6 +67,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
         MetaConversionsService.getInstance().sendViewContent({
             product: initialProduct,
             url: window.location.href,
+            ...(userInfo && { userData: userInfo }),
         }).catch(error => {
             console.error('Failed to send ViewContent event to Meta Conversions API:', error);
         });
