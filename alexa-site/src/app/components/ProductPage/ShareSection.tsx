@@ -8,7 +8,7 @@ interface ShareSectionProps {
 
 export default function ShareSection({ url }: ShareSectionProps) {
     const handleWhatsAppShare = () => {
-        const whatsappUrl = `https://api.whatsapp.com/send?text=Olha que linda essa peça! ${encodeURIComponent(url)}`;
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(url)}`;
         window.open(whatsappUrl, '_blank');
     };
 
