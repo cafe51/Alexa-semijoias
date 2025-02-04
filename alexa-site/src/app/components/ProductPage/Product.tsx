@@ -15,11 +15,12 @@ import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
 import FinishBuyConfirmationModal from '@/app/components/FinishBuyConfirmationModal';
 import { Badge } from '@/components/ui/badge';
 import ImageCarousel from '@/app/components/ImageCarousel';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
 import LoadingIndicator from '../LoadingIndicator';
 import ProductJsonLd from './ProductJsonLd';
 import RecommendedProducts from './RecommendedProducts';
+import SelectionTooltip from '../SelectionTooltip';
 
 export default function Product({ id, initialProduct }: { id: string; initialProduct: ProductBundleType & FireBaseDocument }) {
     const { carrinho, userInfo } = useUserInfo();
@@ -30,6 +31,8 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
     const { handleAddToCart } = useAddNewItemCart();
     const [showModalFinishBuy, setShowModalFinishBuy] = useState(false);
     const [localCartQuantity, setLocalCartQuantity] = useState<{ [key: string]: number }>({});
+    const [showTooltip, setShowTooltip] = useState(false);
+
 
     const {
         currentPhase, setCurrentPhase,
@@ -239,26 +242,28 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                         </div>
                         {
                             !product.productVariations.some((pv) => pv.customProperties === undefined) && (
-                                <Card className='border-[#F8C3D3]'>
-                                    <CardContent className="p-4">
-                                        <PropertiesSelectionSection
-                                            isLoadingButton={ isLoadingButton }
-                                            carrinho={ carrinho }
-                                            selectedOptions={ selectedOptions }
-                                            currentPhase={ currentPhase }
-                                            setCurrentPhase={ setCurrentPhase }
-                                            setSelectedOptions={ setSelectedOptions }
-                                            errorMessage={ errorMessage }
-                                            setErrorMessage={ setErrorMessage }
-                                            quantity={ quantity }
-                                            setQuantity={ setQuantity }
-                                            availableOptions={ availableOptions }
-                                            allOptions={ allOptions }
-                                            productVariationsSelected={ productVariationsSelected }
-                                            keys={ keys }
-                                        />
-                                    </CardContent>
-                                </Card>
+                                <CardContent className="p-0">
+                                    <SelectionTooltip 
+                                        isVisible={ showTooltip }
+                                        onClose={ () => setShowTooltip(false) }
+                                    />
+                                    <PropertiesSelectionSection
+                                        isLoadingButton={ isLoadingButton }
+                                        carrinho={ carrinho }
+                                        selectedOptions={ selectedOptions }
+                                        currentPhase={ currentPhase }
+                                        setCurrentPhase={ setCurrentPhase }
+                                        setSelectedOptions={ setSelectedOptions }
+                                        errorMessage={ errorMessage }
+                                        setErrorMessage={ setErrorMessage }
+                                        quantity={ quantity }
+                                        setQuantity={ setQuantity }
+                                        availableOptions={ availableOptions }
+                                        allOptions={ allOptions }
+                                        productVariationsSelected={ productVariationsSelected }
+                                        keys={ keys }
+                                    />
+                                </CardContent>
                             )
                         }
                         
@@ -268,6 +273,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                             isDisabled={ isDisabled }
                             quantity={ quantity }
                             handleClick={ handleFinishBuyClick }
+                            setShowTooltip={ setShowTooltip }
                         />
 
                         <div className='py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg *:text-lg *:uppercase borderColor text-center w-full flex justify-center mt-2'>

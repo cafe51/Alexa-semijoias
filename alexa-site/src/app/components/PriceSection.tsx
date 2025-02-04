@@ -3,12 +3,14 @@ import Price from './Price';
 import { ShoppingCart } from 'lucide-react';
 import LargeButton from './LargeButton';
 
+
 interface PriceSectionProps {
     product: (ProductBundleType & FireBaseDocument);
     isLoadingButton: boolean;
     isDisabled: () => boolean;
     quantity: number;
     handleClick: () => void;
+    setShowTooltip: (showTooltip: boolean) => void;
 }
 
 export default function PriceSection({
@@ -17,16 +19,20 @@ export default function PriceSection({
     isDisabled,
     quantity,
     handleClick,
+    setShowTooltip,
 }: PriceSectionProps) {
-    const handleAddToCartClick = () => {
-        // Dispara o evento AddToCart do Meta Pixel
 
-        
+    const handleAddToCartClick = () => {
+        if (isDisabled()) {
+            setShowTooltip(true);
+            return;
+        }
         handleClick();
+        setShowTooltip(false);
     };
 
     return (
-        <section className='w-full p-2 border-solid border-2 border-x-0 borderColor'>
+        <section className='w-full p-2 border-solid border-2 border-x-0 borderColor relative'>
             <Price
                 price={ product.value.price }
                 promotionalPrice={ product.value.promotionalPrice }
@@ -47,7 +53,6 @@ export default function PriceSection({
                 color=' bg-[#D4AF37] hover:bg-[#C48B9F] text-white '
                 onClick={ handleAddToCartClick }
                 loadingButton={ isLoadingButton }
-                disabled={ isDisabled() }
             >
                 <ShoppingCart className="mr-2 h-4 w-4 md:h-6 md:w-6" />
             COMPRE JÁ

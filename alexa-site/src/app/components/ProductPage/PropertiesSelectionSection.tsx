@@ -201,7 +201,7 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
                                 <MdOutlineArrowBackIos size={ 24 }/>
                             </button>
                         ) }
-                        <h2>{ keys[currentPhase] + ':' }</h2>
+                        <p className='text-2xl'>{ toTitleCase(keys[currentPhase]) + ':' }</p>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
