@@ -127,7 +127,7 @@ export default function ProductEditionForm({
             <LargeButton color='blue' loadingButton={ loadingButton } onClick={ handleCreateNewProductClick }>
                 { product ? 'Salvar': 'Criar' }
             </LargeButton>
-            <LargeButton color='green hidden' loadingButton={ false } onClick={ () => {
+            <LargeButton color='green ' loadingButton={ false } onClick={ () => {
                 console.log('state', state);
                 console.log('oldState', oldStateRef.current);
             } }>
