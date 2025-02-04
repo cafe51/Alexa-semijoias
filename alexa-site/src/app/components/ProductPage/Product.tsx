@@ -20,6 +20,7 @@ import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
 import LoadingIndicator from '../LoadingIndicator';
 import ProductJsonLd from './ProductJsonLd';
 import RecommendedProducts from './RecommendedProducts';
+import ShareSection from './ShareSection';
 import SelectionTooltip from '../SelectionTooltip';
 
 const TEXTO_DA_QUALIDADE_DA_SEMIJOIA = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.';
@@ -289,8 +290,11 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                         <div className='py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg *:text-lg *:uppercase borderColor text-center w-full flex justify-center mt-2'>
                             <ShippingCalculator onSelectShipping={ selectShipping } selectedShipping={ Number(shipping) }/>
                         </div>
+                        <ShareSection url={ window.location.href } />
+
                     </section>
                 </div>
+
             </div>
             <RecommendedProducts mainProductId={ id } />
         </main>
