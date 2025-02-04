@@ -45,9 +45,11 @@ export class MetaConversionsService {
                 }
             }
 
-            const payload = {
+            const payload = META_TEST_MODE ? {
                 data: [event],
-                ...(META_TEST_MODE && { test_event_code: META_CONSTANTS.TEST_EVENT_CODE }),
+                test_event_code: META_CONSTANTS.TEST_EVENT_CODE,
+            } : {
+                data: [event],
             };
 
             const response = await fetch(`${this.apiUrl}?access_token=${META_CONSTANTS.ACCESS_TOKEN}`, {

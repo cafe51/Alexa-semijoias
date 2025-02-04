@@ -1,5 +1,5 @@
 // Quando true, todos os eventos serão enviados em modo de teste
-export const META_TEST_MODE = true;
+export const META_TEST_MODE = false;
 
 export const META_CONSTANTS = {
     PIXEL_ID: '609318868723849',
