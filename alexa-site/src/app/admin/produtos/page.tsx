@@ -10,6 +10,7 @@ import { useProductConverter } from '@/app/hooks/useProductConverter';
 import ProductListItem from './productPage/ProductListItem';
 import ProductsHeader from './components/ProductsHeader';
 import { useCollection } from '@/app/hooks/useCollection';
+import useFirebaseUpload from '@/app/hooks/useFirebaseUpload';
 import Notification from '@/app/components/Notification';
 import { useProductPagination } from '@/app/hooks/useProductPagination';
 import { Pagination } from '@/app/components/Pagination';
@@ -59,7 +60,8 @@ export default function ProductsDashboard() {
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
-    const { deleteDocument: deleteProductBundle } = useCollection<ProductBundleType>('products');
+    const { deleteDocument: deleteProductBundle, getDocumentById: getProductById } = useCollection<ProductBundleType>('products');
+    const { deleteImage } = useFirebaseUpload();
     const { deleteDocument: deleteProductVariation, getAllDocuments: getAllProductVariations } = useCollection<ProductVariationsType>('productVariations');
     const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
 
@@ -91,8 +93,21 @@ export default function ProductsDashboard() {
 
     const handleDelete = useCallback(async(id: string) => {
         try {
+            // Buscar o produto para ter acesso às URLs das imagens
+            const product = await getProductById(id);
+            if (!product.exist) {
+                throw new Error('Produto não encontrado');
+            }
+
+            // Deletar todas as imagens do produto do Firebase Storage
+            const deleteImagePromises = product.images.map(image => deleteImage(image.localUrl));
+            await Promise.all(deleteImagePromises);
+
+            // Deletar as variações do produto
             const productVariationsFromCollection = await getAllProductVariations([{ field: 'productId', operator: '==', value: id }]);
             await Promise.all(productVariationsFromCollection.map((pv) => deleteProductVariation(pv.id)));
+
+            // Deletar o documento do produto
             await deleteProductBundle(id);
             refresh();
             setNotification({ message: 'Produto excluído com sucesso', type: 'success' });
@@ -100,7 +115,7 @@ export default function ProductsDashboard() {
             console.error('Erro ao excluir produto:', error);
             setNotification({ message: 'Falha ao excluir produto. Por favor, tente novamente.', type: 'error' });
         }
-    }, [deleteProductBundle, refresh, deleteProductVariation, getAllProductVariations]);
+    }, [deleteProductBundle, refresh, deleteProductVariation, getAllProductVariations, getProductById, deleteImage]);
 
     const handleProductEdited = useCallback(() => {
         setShowEditionModal(false);

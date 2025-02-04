@@ -11,10 +11,9 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
         if (files) {
             const newImages = await Promise.all(
                 Array.from(files).map(async(file, index) => {
-                    const croppedFile = await cropToSquare(file);
                     return {
-                        file: croppedFile,
-                        localUrl: URL.createObjectURL(croppedFile),
+                        file,
+                        localUrl: URL.createObjectURL(file),
                         index: state.images.length + index,
                     };
                 }),
@@ -22,45 +21,6 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
             handleSetImages([...state.images, ...newImages]);
             e.target.value = ''; // Limpa o input para permitir o upload da mesma imagem novamente se necessário.
         }
-    };
-
-    const cropToSquare = (file: File): Promise<File> => {
-        return new Promise((resolve) => {
-            const img = document.createElement('img');
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            img.src = URL.createObjectURL(file);
-            img.onload = () => {
-                const size = Math.min(img.width, img.height);
-                canvas.width = size;
-                canvas.height = size;
-
-                if (ctx) {
-                    ctx.drawImage(
-                        img,
-                        (img.width - size) / 2,
-                        (img.height - size) / 2,
-                        size,
-                        size,
-                        0,
-                        0,
-                        size,
-                        size,
-                    );
-
-                    canvas.toBlob((blob) => {
-                        if (blob) {
-                            const croppedFile = new File([blob], file.name, {
-                                type: file.type,
-                                lastModified: Date.now(),
-                            });
-                            resolve(croppedFile);
-                        }
-                    }, file.type);
-                }
-            };
-        });
     };
 
     const removeImage = (index: number) => {
@@ -72,11 +32,7 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
                 return imageFromState;
             }
         });
-        // for(const imageFromState of imagesFromState) {
-        //     if(imageFromState.index > index) {
-        //         imageFromState.index -= 1;
-        //     }
-        // }
+
         handleSetImages(imagesWithNewIndex);
     };
 

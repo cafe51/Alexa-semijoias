@@ -13,7 +13,7 @@ import { createSlugName } from '../utils/createSlugName';
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
 
-    const { uploadImages } = useFirebaseUpload();
+    const { uploadImages, deleteImage } = useFirebaseUpload();
     const {
         addDocument: createNewSiteSectionDocument,
         updateDocumentField: updateSiteSectionDocumentField,
@@ -227,17 +227,25 @@ export function useProductConverter() {
         };
     };
 
-    const uploadAndGetAllImagesUrl = async(images: ImageProductDataType[]) => {
-        const imagesFromStateClone1 = [...images];
-        const imagesFromStateClone2 = [...images];
+    const uploadAndGetAllImagesUrl = async(images: ImageProductDataType[], oldImages?: ImageProductDataType[]) => {
+        // Se existirem imagens antigas que não estão mais presentes nas novas imagens, deletá-las
+        if (oldImages) {
+            const newImageUrls = new Set(images.filter(img => !img.file).map(img => img.localUrl));
+            const imagesToDelete = oldImages.filter(oldImg => !newImageUrls.has(oldImg.localUrl));
+            
+            // Deletar imagens antigas que não estão mais sendo usadas
+            await Promise.all(imagesToDelete.map(img => deleteImage(img.localUrl)));
+        }
 
-        const imagesWithFiles = imagesFromStateClone1.filter((image) => image.file !== undefined) as {file: File, localUrl: string, index: number }[]; // filtra as imagens locais
-        const imagesFromFirebase = await uploadImages(imagesWithFiles); // upa as imagens locais e pega o link delas
+        // Upload das novas imagens
+        const imagesWithFiles = images.filter((image) => image.file !== undefined) as {file: File, localUrl: string, index: number }[];
+        const imagesFromFirebase = await uploadImages(imagesWithFiles);
+
+        // Retornar array com imagens antigas mantidas + novas imagens
         return [
-            ...imagesFromStateClone2
-                .filter((img) => img.file === undefined), //imagens antigas
-            ...imagesFromFirebase, //novas imagens
-        ]; // junta todos os links, antigos e novos
+            ...images.filter((img) => img.file === undefined),
+            ...imagesFromFirebase,
+        ];
     };
 
     const createOrUpdateCategories = async(categories: string[]) => {
@@ -375,4 +383,4 @@ export function useProductConverter() {
         },
 
     };
-} 
+}

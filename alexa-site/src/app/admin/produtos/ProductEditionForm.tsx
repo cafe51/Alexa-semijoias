@@ -58,7 +58,10 @@ export default function ProductEditionForm({
                 return;
             }
 
-            const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(state.images);
+            const allImagesUrls = await useProductDataHandlers.uploadAndGetAllImagesUrl(
+                state.images,
+                productFromFirebase?.images, // Passar as imagens antigas do produto
+            );
 
             const orderedImagesByIndex = allImagesUrls.sort((a, b) => a.index - b.index);
 

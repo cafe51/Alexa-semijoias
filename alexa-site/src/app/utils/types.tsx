@@ -366,7 +366,7 @@ export type SiteSectionManagementType = {
 export type UseProductDataHandlers = {
     hasNoProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
     hasProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
-    uploadAndGetAllImagesUrl: (images: ImageProductDataType[]) => Promise<ImageProductDataType[]>;
+    uploadAndGetAllImagesUrl: (images: ImageProductDataType[], oldImages?: ImageProductDataType[]) => Promise<ImageProductDataType[]>;
     createOrUpdateCategories: (categories: string[]) => Promise<void>;
     createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
         exist?: boolean;
