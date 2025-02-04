@@ -2,7 +2,7 @@
 import { collection, getDocs, updateDoc, doc, Firestore } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
 // import { ProductVariation } from '@/app/utils/types';
-import { createSlugName } from '@/app/utils/createSlugName';
+// import { createSlugName } from '@/app/utils/createSlugName';
 
 // Função principal que irá atualizar os documentos
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
@@ -17,8 +17,8 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
         const productsPromises = productsSnapshot.docs.map(async(docSnap) => {
             const docRef = doc(db, 'products', docSnap.id);
             // const productVariations = docSnap.data().productVariations as ProductVariation[];
-            const name = docSnap.data().name;
-            const slug = createSlugName(name);
+            // const name = docSnap.data().name;
+            // const slug = createSlugName(name);
 
             // const updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed = productVariations.map((pv) => {
             //     for (const property in pv.customProperties) {
@@ -27,10 +27,13 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
             //     return pv;
             // });
 
+            const currentData = docSnap.data();
+            const currentDescription = currentData.description || '';
+
+            const additionalText = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.\n\nCom 1 ano de garantia, você pode usar suas peças com confiança, sabendo que elas foram feitas para te acompanhar em todos os momentos especiais.\n';
+
             return updateDoc(docRef, {
-                // name: name.toLowerCase().trim(),
-                slug, // adiciona o campo slug
-                // productVariations: updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed,
+                description: currentDescription + additionalText,
             });
         });
 
@@ -44,7 +47,3 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
     }
 };
 
-// Se o arquivo for executado diretamente, chama a função
-if (require.main === module) {
-    updateProducts().catch((err) => console.error('Erro fatal:', err));
-}
