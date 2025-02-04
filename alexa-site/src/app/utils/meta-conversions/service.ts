@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { META_CONSTANTS, EVENT_NAMES, META_TEST_MODE } from './constants';
 import { HashUtils } from './hash-utils';
+import { manageFbc, manageFbp } from './cookie-utils';
 import type { 
     MetaEvent, 
     ViewContentParams,
@@ -89,6 +90,8 @@ export class MetaConversionsService {
                     firstName: userData.nome?.split(' ')[0],
                     lastName: userData.nome?.split(' ').slice(1).join(' '),
                 }) : {},
+                fbc: manageFbc() || undefined,
+                fbp: manageFbp(),
             },
         };
 

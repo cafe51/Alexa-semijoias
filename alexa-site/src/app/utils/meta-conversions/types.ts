@@ -7,6 +7,8 @@ export interface MetaUserData {
   ln?: string[];
   client_ip_address?: string;
   client_user_agent: string;
+  fbc?: string;
+  fbp?: string;
 }
 
 export interface MetaCustomData {
