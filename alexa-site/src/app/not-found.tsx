@@ -1,22 +1,11 @@
-'use client';
 import Link from 'next/link';
-import { Search, ArrowLeft, Home } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import SearchBar from './components/header/SearchBar';
 
 export default function NotFound() {
-    const [searchTerm, setSearchTerm] = useState('');
-    const router = useRouter();
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault(); // Previne o comportamento padrão do formulário
-        if (searchTerm.trim()) {
-            router.push(`/search/${searchTerm}`);
-        }
-    };
 
     return (
         <div
@@ -39,25 +28,7 @@ export default function NotFound() {
 
                 { /* Formulário de busca */ }
                 <div className="mb-8">
-                    <form
-                        className="flex flex-col sm:flex-row gap-4 justify-center"
-                        onSubmit={ handleSearch } // Lida com o envio do formulário
-                    >
-                        <Input
-                            className="w-full sm:w-64 md:w-80 lg:w-96 bg-white border-[#C48B9F] focus:border-[#D4AF37] text-[#333333] px-4 py-2 text-base"
-                            type="search"
-                            placeholder="Buscar semijoias..."
-                            value={ searchTerm }
-                            onChange={ (e) => setSearchTerm(e.target.value) }
-                        />
-                        <Button
-                            type="submit" // Define o tipo correto como "submit"
-                            className="bg-[#D4AF37] hover:bg-[#C48B9F] text-white px-4 py-2 sm:px-6"
-                        >
-                            <Search className="w-5 h-5 mr-2" />
-                            Buscar
-                        </Button>
-                    </form>
+                    <SearchBar />
                 </div>
 
                 { /* Botões de navegação */ }
