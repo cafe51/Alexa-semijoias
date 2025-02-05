@@ -85,7 +85,7 @@ export default function NotFound() {
                 <div className="mt-12">
                     <p className="text-sm sm:text-base text-[#333333]">
                         Não encontrou o que procurava?
-                        <Link href="/contato" className="text-[#C48B9F] hover:text-[#D4AF37] ml-1">
+                        <Link href="https://wa.me/551781650632" className="text-[#C48B9F] hover:text-[#D4AF37] ml-1">
                             Entre em contato conosco
                         </Link>
                     </p>
