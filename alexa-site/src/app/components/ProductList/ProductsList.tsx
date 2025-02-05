@@ -7,6 +7,7 @@ import LoadingIndicator from '../LoadingIndicator';
 import ButtonPaginator from '../ButtonPaginator';
 import ProductSorter, { SortOption } from './ProductSorter';
 import removeAccents from '@/app/utils/removeAccents';
+import SectionPageTitle from '@/app/section/SectionPageTitle';
 
 interface ProductsListProps {
     sectionName?: string;
@@ -74,19 +75,28 @@ export default function ProductsList({ sectionName, subsection, searchTerm }: Pr
         console.log('Filtros aplicados:', pedidosFiltrados);
     }, [pedidosFiltrados]);
 
-    if (isLoading && !documents) return <LoadingIndicator />;
+    if ((isLoading && !documents)) return <LoadingIndicator />;
 
     if (documents && documents.length <= 0) {
         if (searchTerm) {
             return <h1 className="text-center mt-8">Nenhum produto encontrado para &ldquo;{ searchTerm }&rdquo;</h1>;
         }
-        return <h1 className="text-center mt-8">Ainda não há produtos nessa categoria</h1>;
+        return <h1 className="text-center mt-8">Ainda não há produtos nessa seção</h1>;
     }
 
     return (
         <main>
+            
             { documents && documents.length > 0 && (
                 <>
+                    {
+                        (subsection
+                            ? 
+                            sectionName && subsection && <SectionPageTitle section={ sectionName } subsection={ subsection.split(':')[1] } />
+                            :
+                            sectionName && <SectionPageTitle section={ sectionName } />)
+
+                    }
                     <ProductSorter 
                         currentSort={ currentSort.value }
                         onSortChange={ (option) => setCurrentSort(option) }
