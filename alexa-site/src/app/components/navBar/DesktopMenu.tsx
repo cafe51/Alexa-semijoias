@@ -8,6 +8,7 @@ import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SectionType } from '@/app/utils/types';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 interface DesktopMenuProps {
     menuSections: SectionType[];
@@ -40,7 +41,7 @@ export default function DesktopMenu({ menuSections, router }: DesktopMenuProps) 
                             variant="ghost" 
                             className="text-[#333333] hover:bg-[#F8C3D3]/20 text-lg group focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0" 
                             size="lg"
-                            onClick={ () => router.push('/section/' + section.sectionName) }
+                            onClick={ () => router.push('/section/' + createSlugName(section.sectionName)) }
                             onMouseEnter={ () => hasSubsections(section) && setOpenIndex(index) }
                             onMouseLeave={ () => setOpenIndex(null) }
                         >
@@ -63,7 +64,7 @@ export default function DesktopMenu({ menuSections, router }: DesktopMenuProps) 
                                         key={ subIndex } 
                                         variant="ghost" 
                                         className="justify-start hover:bg-[#F8C3D3]/20 w-full text-center p-6 border-none focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                        onClick={ () => router.push('/section/' + section.sectionName + '/' + subsection) }
+                                        onClick={ () => router.push('/section/' + createSlugName(section.sectionName) + '/' + createSlugName(subsection)) }
                                     >
                                         { subsection.toUpperCase() }
                                     </Button>

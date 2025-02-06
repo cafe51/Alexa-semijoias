@@ -7,6 +7,7 @@ import { useCollection } from '../hooks/useCollection';
 import { SectionType } from '../utils/types';
 import { useEffect, useState } from 'react';
 import toTitleCase from '../utils/toTitleCase';
+import { createSlugName } from '../utils/createSlugName';
 
 type FooterSectionType = { name: string, link: string };
 
@@ -90,7 +91,7 @@ export default function Footer() {
                             <div className="w-1/2 px-4 lg:pr-8">
                                 <FooterSection
                                     title="Sessões"
-                                    items={ sections.map(({ sectionName }) => ({ name: toTitleCase(sectionName), link: `/section/${sectionName.toLowerCase()}` })) }
+                                    items={ sections.map(({ sectionName }) => ({ name: toTitleCase(sectionName), link: `/section/${createSlugName(sectionName)}` })) }
                                 />
                             </div>
                         }

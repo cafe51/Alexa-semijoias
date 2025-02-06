@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { createSlugName } from '../utils/createSlugName';
 
 export default function SectionPageTitle({ section, subsection }: { section: string, subsection?: string | undefined }) {
     return (
@@ -20,7 +21,7 @@ export default function SectionPageTitle({ section, subsection }: { section: str
                 { /* Condicional para exibir section como link ou não */ }
                 { subsection ? (
                     // Se houver uma subsection, section será um link
-                    <Link href={ `/section/${section.toLowerCase()}` } passHref>
+                    <Link href={ `/section/${createSlugName(section)}` } passHref>
                         <span className="text-xs sm:text-sm md:text-lg lg:text-xl text-gray-500 cursor-pointer hover:text-[#C48B9F]">
                             { section }
                         </span>

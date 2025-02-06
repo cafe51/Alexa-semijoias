@@ -7,6 +7,7 @@ import { FireBaseDocument, SectionType, UserType } from '@/app/utils/types';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 interface MobileMenuProps {
     isMenuOpen: boolean;
@@ -50,7 +51,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, activeSection, m
                                                         handleSectionClick(section);
                                                     }
                                                     else {
-                                                        router.push('/section/' + section.sectionName);
+                                                        router.push('/section/' + createSlugName(section.sectionName));
                                                         setIsMenuOpen(false);
                                                     }
                                                 } }
@@ -88,7 +89,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, activeSection, m
                                                 onClick={ () => {
                                                     handleBackToMain();
                                                     setIsMenuOpen(false);
-                                                    router.push('/section/' + activeSection.sectionName);
+                                                    router.push('/section/' + createSlugName(activeSection.sectionName));
                                                 } }
                                             >
                                                 Mostrar todos
@@ -102,7 +103,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, activeSection, m
                                                     onClick={ () => {
                                                         handleBackToMain();
                                                         setIsMenuOpen(false);
-                                                        router.push('/section/' + activeSection.sectionName + '/' + subsection);
+                                                        router.push('/section/' + createSlugName(activeSection.sectionName) + '/' + createSlugName(subsection));
                                                     } }
                                                 >
                                                     { subsection.toUpperCase() }

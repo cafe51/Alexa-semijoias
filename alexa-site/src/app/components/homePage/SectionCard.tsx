@@ -7,6 +7,7 @@ import { FilterOption, ProductBundleType } from '@/app/utils/types';
 import { useCollection } from '@/app/hooks/useCollection';
 import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
 import Link from 'next/link';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 interface SectionCardProps {
     section: string;
@@ -51,7 +52,7 @@ export default function SectionCard({ section }: SectionCardProps) {
 
     return (
         <Card className="relative overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col">
-            <Link href={ `/section/${section}` } className="block">
+            <Link href={ `/section/${createSlugName(section)}` } className="block">
                 <div className="relative">
                     <div className='relative aspect-square bg-skeleton'>
                         <Image

@@ -144,6 +144,15 @@ export type StateNewProductType = {
 
 }
 
+export type SectionSlugType = {
+    sectionName: string,
+    sectionSlugName: string,
+    subsections?: {
+        subsectionName: string,
+        subsectionSlugName: string,
+    }[],
+}
+
 export type SectionType = {
     sectionName: string,
     subsections?: string[] | null | undefined,

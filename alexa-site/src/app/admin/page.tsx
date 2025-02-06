@@ -77,7 +77,7 @@ const AdminDashboard = () => {
             </Tabs>
 
             {
-                process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true'
+                process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'false'
             &&
             <div className='flex flex-col gap-4 border border-gray-300 p-4 rounded-lg'>
                 <h1>Área do desenvolvedor</h1>

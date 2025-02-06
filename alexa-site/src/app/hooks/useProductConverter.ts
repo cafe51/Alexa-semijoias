@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CategoryType, FireBaseDocument, ImageProductDataType, ProductBundleType, ProductVariation, ProductVariationsType, SectionType, StateNewProductType } from '../utils/types';
+import { CategoryType, FireBaseDocument, ImageProductDataType, ProductBundleType, ProductVariation, ProductVariationsType, SectionSlugType, SectionType, StateNewProductType } from '../utils/types';
 import { useCollection } from './useCollection';
 import useFirebaseUpload from './useFirebaseUpload';
 import { getRandomBarCode } from '../utils/getRandomBarCode';
@@ -8,7 +8,7 @@ import blankImage from '../../../public/blankImage.png';
 import { Timestamp } from 'firebase/firestore';
 import toTitleCase from '../utils/toTitleCase';
 import keyWordsCreator from '../utils/keyWordsCreator';
-import { createSlugName } from '../utils/createSlugName';
+import { createSlugName, createSubsectionsWithSlug } from '../utils/createSlugName';
 
 export function useProductConverter() {
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
@@ -20,6 +20,12 @@ export function useProductConverter() {
         getDocumentById: getSiteSectionDocumentById,
         getAllDocuments: getSiteSectionsFromFirebase,
     } = useCollection<SectionType>('siteSections');
+
+    const {
+        addDocument: createNewSiteSectionWithSlugNameDocument,
+        updateDocumentField: updateSiteSectionWithSlugNameDocumentField,
+        getAllDocuments: getSiteSectionsWithSlugNameFromFirebase,
+    } = useCollection<SectionSlugType>('siteSectionsWithSlugName');
 
     const {
         getAllDocuments: getAllCategoriesFromFirebase,
@@ -267,18 +273,40 @@ export function useProductConverter() {
                     if(siteSection.subsections) { // caso o siteSection possua subsections
                         const siteSectionDocument = await getSiteSectionDocumentById(siteSection.id); // procura o siteSection equivalente no firebase
                         if(siteSectionDocument.exist) { // caso seja achado o siteSection equivalente no firebase
+                            const siteSectionWithSlugNameDocument = await getSiteSectionsWithSlugNameFromFirebase(
+                                [{ field: 'sectionName', operator: '==', value: siteSection.sectionName }],
+                                1);
                             if(siteSectionDocument.subsections) { // caso o siteSection do firebase possua subsections
                                 const subSectionsSet = new Set(siteSectionDocument.subsections);
                                 siteSection.subsections.forEach((ss) => subSectionsSet.add(ss)); // add todas as subsections exceto as repetidas
                                 const subSectionsUpdated = Array.from(subSectionsSet);
                                 updateSiteSectionDocumentField(siteSection.id, 'subsections', subSectionsUpdated);
+
+                                const newSubsectionsWithSlugName = subSectionsUpdated ? createSubsectionsWithSlug(subSectionsUpdated) : [];
+                                updateSiteSectionWithSlugNameDocumentField(
+                                    siteSectionWithSlugNameDocument[0].id,
+                                    'subsections',
+                                    newSubsectionsWithSlugName ? newSubsectionsWithSlugName : [],
+                                );
                             } else { // caso o siteSection do firebase não possua subsections
                                 updateSiteSectionDocumentField(siteSection.id, 'subsections', siteSection.subsections);
+
+                                const newSubsectionsWithSlugName = siteSection.subsections ? createSubsectionsWithSlug(siteSection.subsections) : [];
+                                updateSiteSectionWithSlugNameDocumentField(
+                                    siteSectionWithSlugNameDocument[0].id,
+                                    'subsections',
+                                    newSubsectionsWithSlugName ? newSubsectionsWithSlugName : [],
+                                );
                             }
                         }
                     }
                 } else { // caso a siteSection não contenha exist (não exista no firebase)
                     createNewSiteSectionDocument(siteSection);
+                    createNewSiteSectionWithSlugNameDocument({
+                        sectionName: siteSection.sectionName,
+                        sectionSlugName: createSlugName(siteSection.sectionName),
+                        subsections: siteSection.subsections ? createSubsectionsWithSlug(siteSection.subsections) : [],
+                    });
                 }
             }
         }

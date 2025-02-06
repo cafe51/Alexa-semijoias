@@ -1,8 +1,9 @@
 // Este é um módulo ES6
-import { collection, getDocs, updateDoc, doc, Firestore } from 'firebase/firestore';
+import { collection, getDocs, doc, Firestore, setDoc } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
 // import { ProductVariation } from '@/app/utils/types';
-// import { createSlugName } from '@/app/utils/createSlugName';
+import { createSlugName, createSubsectionsWithSlug } from '@/app/utils/createSlugName';
+import {  SectionType } from '../functions/src/types';
 
 // Função principal que irá atualizar os documentos
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
@@ -11,36 +12,61 @@ export const updateProducts = async(db: Firestore = projectFirestoreDataBase) =>
         // subsections?: string[], // do tipo 'sectionName:subsectionName'[]
         // categories: string[],
         // Referência para a coleção 'products'
-        const productsCollection = collection(db, 'products');
-        const productsSnapshot = await getDocs(productsCollection);
+        const sectionCollection = collection(db, 'siteSections');
+        const sectionsSnapshot = await getDocs(sectionCollection);
+
+        // const sectionWithSlugNameCollection = collection(db, 'siteSectionsWithSlugName');
+        // const sectionsWithSlugNameSnapshot = await getDocs(sectionWithSlugNameCollection);
         
-        const productsPromises = productsSnapshot.docs.map(async(docSnap) => {
-            const docRef = doc(db, 'products', docSnap.id);
-            // const productVariations = docSnap.data().productVariations as ProductVariation[];
-            // const name = docSnap.data().name;
-            // const slug = createSlugName(name);
+        const sectionsPromises = sectionsSnapshot.docs.map(async(docSnap) => {
+            // const docRef = doc(db, 'siteSections', docSnap.id);
+            const docRefOfSectionWithSlugName = doc(db, 'siteSectionsWithSlugName', docSnap.id);
 
-            // const updatedProductVariationsWithValuesOfAllCustomPropertiesTrimmed = productVariations.map((pv) => {
-            //     for (const property in pv.customProperties) {
-            //         pv.customProperties[property] = pv.customProperties[property].trim();
-            //     }
-            //     return pv;
-            // });
+            const section = docSnap.data() as SectionType;
 
-            const currentData = docSnap.data();
-            const currentDescription = currentData.description || '';
+            const sectionName = section.sectionName;
+            const subsections = section.subsections;
 
-            // Remove o texto adicional da descrição
-            const textToRemove = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.\n\nCom 1 ano de garantia, você pode usar suas peças com confiança, sabendo que elas foram feitas para te acompanhar em todos os momentos especiais.\n';
-            const updatedDescription = currentDescription.replace(textToRemove, '');
+            const newSubsections = subsections ? createSubsectionsWithSlug(subsections) : []; 
+            const sectionSlugName = createSlugName(sectionName);
 
-            return updateDoc(docRef, {
-                description: updatedDescription,
+            return setDoc(docRefOfSectionWithSlugName, {
+                sectionName,
+                sectionSlugName,
+                subsections: newSubsections,
             });
+
+            // if(subsections && subsections.length > 0) {
+            //     return updateDoc(docRef, {
+            //         slugSectionName: slugSectionName,
+            //         subsections: newSubsections,
+            //     });
+            // }
+            // return updateDoc(docRef, {
+            //     slugSectionName: slugSectionName,
+            // });
         });
 
+        // const productCollection = collection(db, 'products');
+        // const productsSnapShot = await getDocs(productCollection);
+
+        // const productsPromises = productsSnapShot.docs.map(async(docSnap) => {
+        //     const docRef = doc(db, 'products', docSnap.id);
+        //     const product = docSnap.data() as ProductBundleType;
+        //     const subsections = product.subsections;
+        //     const newSubsections = subsections?.map(subsection => {
+        //         const subsectionName = subsection.split(':')[1];
+        //         return `${subsection}:${createSlugName(subsectionName)}`;
+        //     });
+        //     return updateDoc(docRef, {
+        //         subsections: newSubsections,
+        //     });
+        // });
+
         // Executa todas as promessas
-        await Promise.all(productsPromises);
+        await Promise.all(sectionsPromises);
+        // await Promise.all(productsPromises);
+
         console.log('Todos os produtos foram atualizados com sucesso.');
 
     } catch (error) {
