@@ -3,7 +3,7 @@ import { collection, getDocs, doc, Firestore, setDoc } from 'firebase/firestore'
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
 // import { ProductVariation } from '@/app/utils/types';
 import { createSlugName, createSubsectionsWithSlug } from '@/app/utils/createSlugName';
-import {  SectionType } from '../functions/src/types';
+import { SectionType } from '@/app/utils/types';
 
 // Função principal que irá atualizar os documentos
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
