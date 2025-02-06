@@ -1,3 +1,4 @@
+'use client';
 //app/minha-conta/DeleteMySelfForm.tsx
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useDeleteUser } from '../hooks/useDeleteUser';

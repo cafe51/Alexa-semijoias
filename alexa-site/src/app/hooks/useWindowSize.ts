@@ -1,4 +1,5 @@
 // useWindowSize.ts
+'use client';
 import { useState, useEffect } from 'react';
 
 interface WindowSize {

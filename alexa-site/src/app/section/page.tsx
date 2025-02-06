@@ -1,22 +1,25 @@
-//app/section/[sectionName]/page.tsx
-'use client';
-import { useEffect, useState } from 'react';
-import ProductsList from './../components/ProductList/ProductsList';
+// src/app/section/page.tsx
+export const dynamic = 'force-dynamic';
+
+import { getProductsForSection } from '@/app/firebase/admin-config';
+import ProductsList from '../components/ProductList/ProductsList';
 import SectionPageTitle from './SectionPageTitle';
+import PageContainer from '@/app/components/PageContainer';
 
-export default function Section() {
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setLoading(false);
-    }, []);
-
+export default async function Section() {
+    // Busca inicial dos produtos no servidor
+    const { products, hasMore, lastVisible } = await getProductsForSection(
+        undefined,
+        10,
+        { field: 'creationDate', direction: 'desc' },
+    );
+    
     return (
-        <div className="min-h-screen bg-[#FAF9F6] text-[#333333] py-6 sm:py-8 px-3 sm:px-4 md:px-8" style={ { fontFamily: 'Montserrat, sans-serif' } }>
-            <div className="max-w-7xl mx-auto">
-                { !loading && <SectionPageTitle section={ 'produtos' } /> }
-                <ProductsList/>
-            </div>
-        </div>
+        <PageContainer>
+            <SectionPageTitle section="produtos" />
+            <ProductsList 
+                initialData={ { products, hasMore, lastVisible } }
+            />
+        </PageContainer>
     );
 }

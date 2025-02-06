@@ -1,3 +1,4 @@
+'use client';
 // src/app/utils/metaPixel.ts
 
 declare global {

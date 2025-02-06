@@ -1,3 +1,4 @@
+'use client';
 type EventValue = string | number | boolean | null | EventParams | Array<string | number | boolean | null | EventParams>;
 
 type EventParams = {

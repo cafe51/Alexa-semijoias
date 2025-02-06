@@ -1,5 +1,5 @@
 // src/app/hooks/usePaymentProcessing.ts
-
+'use client';
 import { IPaymentFormData } from '@mercadopago/sdk-react/bricks/payment/type';
 import { IBrickError } from '@mercadopago/sdk-react/bricks/util/types/common';
 import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';

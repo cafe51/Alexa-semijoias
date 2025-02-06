@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect } from 'react';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
 import OptionButton from './OptionButton';

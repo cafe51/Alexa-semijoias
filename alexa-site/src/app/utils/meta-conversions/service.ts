@@ -1,3 +1,4 @@
+'use client';
 import { v4 as uuidv4 } from 'uuid';
 import { META_CONSTANTS, EVENT_NAMES, META_TEST_MODE } from './constants';
 import { HashUtils } from './hash-utils';
