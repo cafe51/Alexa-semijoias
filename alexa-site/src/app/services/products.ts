@@ -27,8 +27,8 @@ function buildProductsQuery({
     searchTerm,
 }: ProductsQueryParams) {
     let query = adminDb.collection('products')
-        .where('showProduct', '==', true)
-        .where('estoqueTotal', '>', 0);
+        .where('showProduct', '==', true);
+        // .where('estoqueTotal', '>', 0);
 
     if (searchTerm) {
         const processedTerm = removeAccents(searchTerm.toLowerCase());

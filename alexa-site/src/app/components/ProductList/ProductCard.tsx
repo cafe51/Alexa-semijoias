@@ -1,3 +1,4 @@
+// src/app/components/ProductList/ProductCard.tsx
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
