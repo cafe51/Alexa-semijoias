@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import heroBannerLarge from '@/../public/heroBannerLarge.webp';
+// import heroBannerLarge from '@/../public/heroBannerLarge.webp';
 import bigHeroLogo from '@/../public/bigHeroLogo2.png';
 
 export default function HeroSection() {
@@ -11,7 +11,7 @@ export default function HeroSection() {
         <section className="relative w-full">
             { /* Container principal com altura fixa para desktop */ }
             <div className="relative w-full h-[30vh] md:h-[50vh] bg-skeleton">
-                <Image
+                { /* <Image
                     className="object-cover"
                     src={ heroBannerLarge }
                     title='Banner Principal Alexa Semijoias'
@@ -22,7 +22,7 @@ export default function HeroSection() {
                     fill
                     placeholder="blur"
                     blurDataURL={ heroBannerLarge.blurDataURL }
-                />
+                /> */ }
                 
                 { /* Container do logo centralizado */ }
                 <div className="absolute inset-0 flex items-center justify-center">
