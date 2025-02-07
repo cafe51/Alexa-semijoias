@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import heroBannerLarge from '@/../public/heroBannerLarge.png';
+import heroBannerLarge from '@/../public/heroBannerLarge.webp';
 import bigHeroLogo from '@/../public/bigHeroLogo2.png';
 
 export default function HeroSection() {
