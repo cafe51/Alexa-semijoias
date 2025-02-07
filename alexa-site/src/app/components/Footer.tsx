@@ -1,5 +1,5 @@
 'use client';
-import { Facebook, Instagram, Twitter, Mail, Phone, LucideProps } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, LucideProps } from 'lucide-react';
 import Logo from './header/Logo';
 // import { Input } from '@/components/ui/input';
 // import { Button } from '@/components/ui/button';
@@ -146,7 +146,6 @@ export default function Footer() {
                     <div className="flex space-x-6 mb-4 sm:mb-0">
                         <SocialIcon Icon={ Facebook } link="https://facebook.com/alexasemijoias" />
                         <SocialIcon Icon={ Instagram } link="https://instagram.com/alexa.semijoias" />
-                        <SocialIcon Icon={ Twitter } link="https://twitter.com/alexasemijoias" />
                     </div>
                     <div className="text-[#333333] text-base lg:text-lg">
                         <p className="mb-2 flex items-center justify-center sm:justify-start">
