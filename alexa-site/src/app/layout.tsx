@@ -156,7 +156,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         <Header initialMenuSections={ menuSections } />
                         <LoadingBar /> { /* Componente global de carregamento */ }
                         { children }
-                        <Footer />
+                        <Footer sections={ menuSections } />
                     </UserInfoProvider>
                 </AuthContextProvider>
 

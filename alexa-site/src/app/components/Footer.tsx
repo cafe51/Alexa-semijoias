@@ -3,13 +3,13 @@ import { Facebook, Instagram, Mail, Phone, LucideProps } from 'lucide-react';
 import Logo from './header/Logo';
 // import { Input } from '@/components/ui/input';
 // import { Button } from '@/components/ui/button';
-import { useCollection } from '../hooks/useCollection';
-import { SectionType } from '../utils/types';
 import { useEffect, useState } from 'react';
 import toTitleCase from '../utils/toTitleCase';
 import { createSlugName } from '../utils/createSlugName';
+import { FireBaseDocument, SectionType } from '../utils/types';
 
 type FooterSectionType = { name: string, link: string };
+
 
 const FooterSection = ({ title, items }: { title: string, items: FooterSectionType[] }) => (
     <div className="mb-8 lg:mb-0">
@@ -32,25 +32,12 @@ const SocialIcon = ({ Icon, link }: { Icon: React.ForwardRefExoticComponent<Omit
     </a>
 );
 
-export default function Footer() {
-    const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
-    const [sections, setSections] = useState<SectionType[]>([]);
+interface FooterProps {
+    sections: (SectionType & FireBaseDocument)[];
+  }
+
+export default function Footer({ sections }: FooterProps) {
     const [isMobile, setIsMobile] = useState(true);
-
-    useEffect(() => {
-        async function fetchSectionsAndProducts() {
-            try {
-                // Obter as seções do Firebase
-                const sectionsData = await getAllSections();
-                setSections(sectionsData);
-                
-            } catch (err) {
-                console.error('Erro ao buscar dados:', err);
-            }
-        }
-
-        fetchSectionsAndProducts();
-    }, []);
 
     useEffect(() => {
         const handleResize = () => {
