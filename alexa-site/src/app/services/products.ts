@@ -79,3 +79,52 @@ export async function fetchProducts({
         throw new Error('Falha ao carregar produtos');
     }
 }
+
+export async function fetchRandomProductForSection(
+    section: string,
+): Promise<(ProductBundleType & FireBaseDocument) | null> {
+    try {
+        // Gera um valor aleatório de 00 a 98 (como string com 2 dígitos)
+        const randomSelectorValue = Math.floor(Math.random() * 99)
+            .toString()
+            .padStart(2, '0');
+  
+        // Primeira tentativa: produtos com randomIndex >= randomSelectorValue
+        let queryRef = adminDb
+            .collection('products')
+            .where('sections', 'array-contains', section)
+            .where('randomIndex', '>=', randomSelectorValue)
+            .orderBy('randomIndex')
+            .limit(4);
+        let snapshot = await queryRef.get();
+  
+        // Se não houver resultados, tenta com randomIndex < randomSelectorValue
+        if (snapshot.empty) {
+            queryRef = adminDb
+                .collection('products')
+                .where('sections', 'array-contains', section)
+                .where('randomIndex', '<', randomSelectorValue)
+                .orderBy('randomIndex')
+                .limit(4);
+            snapshot = await queryRef.get();
+        }
+  
+        if (snapshot.empty) {
+            return null;
+        }
+  
+        const docs = snapshot.docs;
+        const randomIdx = Math.floor(Math.random() * docs.length);
+        const doc = docs[randomIdx];
+  
+        return {
+            id: doc.id,
+            exist: doc.exists,
+            ...serializeData(doc.data()),
+        } as ProductBundleType & FireBaseDocument;
+    } catch (error) {
+        console.error('Erro ao buscar produto aleatório para a seção:', error);
+        return null;
+    }
+}
+  

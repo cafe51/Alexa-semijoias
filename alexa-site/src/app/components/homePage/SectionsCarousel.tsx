@@ -7,15 +7,25 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel';
 import SectionCard from './SectionCard';
-
-export default function SectionsCarousel({ sections }: { sections: string[] }) {
+import { ProductBundleType, FireBaseDocument } from '@/app/utils/types';
+  
+  interface SectionWithProduct {
+    section: string;
+    product: (ProductBundleType & FireBaseDocument) | null;
+  }
+  
+  interface SectionsCarouselProps {
+    sections: SectionWithProduct[];
+  }
+  
+export default function SectionsCarousel({ sections }: SectionsCarouselProps) {
     const hasSections = Array.isArray(sections) && sections.length > 0;
-
+  
     return (
         <section className="py-8 sm:py-12 md:py-16 px-4">
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-2xl sm:text-3xl text-center mb-6 sm:mb-8 md:mb-12">ESCOLHA POR SEÇÃO</h1>
-                
+  
                 <div className="min-h-[300px]">
                     { hasSections ? (
                         <Carousel
@@ -26,16 +36,16 @@ export default function SectionsCarousel({ sections }: { sections: string[] }) {
                             className="w-full"
                         >
                             <CarouselContent className="-ml-2 md:-ml-4">
-                                { sections.map((section, index) => (
-                                    <CarouselItem 
-                                        key={ index } 
+                                { sections.map((item, index) => (
+                                    <CarouselItem
+                                        key={ index }
                                         className="pl-2 md:pl-4 basis-4/5 sm:basis-2/3 md:basis-2/3 lg:basis-2/5 xl:basis-1/3 transition-opacity duration-300"
                                     >
-                                        <SectionCard section={ section } />
+                                        <SectionCard section={ item.section } product={ item.product } />
                                     </CarouselItem>
                                 )) }
                             </CarouselContent>
-                            
+  
                             { sections.length > 3 && (
                                 <div className="hidden xl:flex justify-end mt-4 gap-2">
                                     <CarouselPrevious className="bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
@@ -57,3 +67,4 @@ export default function SectionsCarousel({ sections }: { sections: string[] }) {
         </section>
     );
 }
+  
