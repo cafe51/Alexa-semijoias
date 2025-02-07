@@ -58,6 +58,7 @@ export default function SectionCard({ section }: SectionCardProps) {
                         <Image
                             className="rounded-lg object-cover loading"
                             src={ imageUrl }
+                            title={ `Seção de ${section}` }
                             alt={ `Seção de ${section}` }
                             sizes="300px"
                             quality={ 80 }
