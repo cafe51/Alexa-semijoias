@@ -1,3 +1,4 @@
+// src/app/components/header/FullHeader.tsx
 'use client';
 import React, { useState, useEffect } from 'react';
 import { User, Settings } from 'lucide-react';
@@ -6,24 +7,25 @@ import { FireBaseDocument, SectionType } from '@/app/utils/types';
 import MobileMenu from '../navBar/MobileMenu';
 import DesktopMenu from '../navBar/DesktopMenu';
 import CartIcon from './CartIcon';
-import { useCollection } from '@/app/hooks/useCollection';
 import { useRouter } from 'next/navigation';
 import Logo from './Logo';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import SearchBar from './SearchBar';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
-import throttle from 'lodash/throttle'; // Importa o throttle do lodash
+import throttle from 'lodash/throttle';
 
-const FullHeader: React.FC = () => {
+interface FullHeaderProps {
+  initialMenuSections: (SectionType & FireBaseDocument)[];
+}
+
+const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     const { user, isAdmin } = useAuthContext();
     const { userInfo } = useUserInfo();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState<SectionType | null>(null);
     const [isMobile, setIsMobile] = useState(true);
-    const { getAllDocuments } = useCollection<SectionType>('siteSections');
-    const [menuSections, setMenuSections] = useState<(SectionType & FireBaseDocument)[]>(
-        [],
-    );
+    // Usa os dados já carregados pelo servidor
+    const [menuSections] = useState<(SectionType & FireBaseDocument)[]>(initialMenuSections);
     const [scrollPosition, setScrollPosition] = useState(0);
     const router = useRouter();
 
@@ -51,19 +53,12 @@ const FullHeader: React.FC = () => {
         </Button>
     );
 
-    useEffect(() => {
-        async function getSectionsFromFireBase() {
-            const res = await getAllDocuments();
-            setMenuSections(res);
-        }
-        getSectionsFromFireBase();
-    }, [getAllDocuments]);
+    // Removemos o useEffect que buscava as seções (já estão nas props)
 
-    // Usa throttle para limitar a frequência das atualizações do scroll
     useEffect(() => {
         const handleScroll = throttle(() => {
             setScrollPosition(window.pageYOffset);
-        }, 100); // atualiza, no máximo, a cada 100ms
+        }, 100);
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -126,24 +121,29 @@ const FullHeader: React.FC = () => {
                                         router={ router }
                                     />
                                 ) }
-                                <div className="cursor-pointer" onClick={ () => router.push('/') }>
+                                <div
+                                    className="cursor-pointer"
+                                    onClick={ () => router.push('/') }
+                                >
                                     <Logo isMobile={ isMobile } />
                                 </div>
                                 <div className="flex items-center space-x-4 pr-4">
-                                    { (user && isAdmin) && <SettingsButton /> }
+                                    { user && isAdmin && <SettingsButton /> }
                                     <UserIcon />
                                     <CartIcon isMobile={ isMobile } />
                                 </div>
                             </>
                         ) : (
                             <>
-                                <div className="cursor-pointer" onClick={ () => router.push('/') }>
+                                <div
+                                    className="cursor-pointer"
+                                    onClick={ () => router.push('/') }
+                                >
                                     <Logo />
                                 </div>
                                 <SearchBar />
                                 <div className="flex items-center space-x-10">
-                                    { (user && isAdmin) && <SettingsButton /> }
-
+                                    { user && isAdmin && <SettingsButton /> }
                                     <div className="flex items-center space-x-2">
                                         <UserIcon />
                                         { userInfo ? (
@@ -169,7 +169,11 @@ const FullHeader: React.FC = () => {
                 </div>
             </header>
             { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
-            <div style={ { height: isMobile ? `${headerHeight + 64}px` : '160px' } } />
+            <div
+                style={ {
+                    height: isMobile ? `${headerHeight + 64}px` : '160px',
+                } }
+            />
             { /* Container da SearchBar mobile */ }
             { isMobile && (
                 <div

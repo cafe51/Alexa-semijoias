@@ -12,6 +12,7 @@ import { Metadata } from 'next';
 import FacebookPixel from './components/FacebookPixel';
 import LoadingBar from './components/LoadingBar';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { getSiteSections } from './services/siteSections';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -98,7 +99,9 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    const menuSections = await getSiteSections();
+
     return (
         <html lang="pt-BR" className={ montserrat.className }>
             <head>
@@ -150,7 +153,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className="min-h-screen bg-[#FAF9F6] text-[#333333]">
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Header />
+                        <Header initialMenuSections={ menuSections } />
                         <LoadingBar /> { /* Componente global de carregamento */ }
                         { children }
                         <Footer />

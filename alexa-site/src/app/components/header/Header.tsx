@@ -1,18 +1,20 @@
-//app/components/Header.tsx
+// app/components/Header.tsx
 'use client';
 import { usePathname } from 'next/navigation';
 import SimpleHeader from './SimpleHeader';
+import { FireBaseDocument, SectionType } from '@/app/utils/types';
 import FullHeader from './FullHeader';
 
+interface HeaderProps {
+  initialMenuSections?: (SectionType & FireBaseDocument)[];
+}
 
-export default function Header() {
+export default function Header({ initialMenuSections = [] }: HeaderProps) {
+    const pathname = usePathname();
+    const pathSegment = pathname.split('/')[1];
 
-    const pathname = usePathname(); // Obter o caminho atual
-    const pathSegment = pathname.split('/')[1]; // Extrair a parte 'login'
+    if (['login', 'cadastro', 'checkout'].includes(pathSegment)) return <SimpleHeader />;
+    if (pathSegment === 'admin') return <></>;
 
-    if(pathSegment === 'login' || pathSegment === 'cadastro' || pathSegment === 'checkout') return <SimpleHeader />;
-    if(pathSegment === 'admin') return <></>;
-    
-    return <FullHeader />;
-
+    return <FullHeader initialMenuSections={ initialMenuSections } />;
 }
