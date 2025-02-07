@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BuyButtonOnCard } from './BuyButtonOnCard';
 import toTitleCase from '@/app/utils/toTitleCase';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 const calculateDiscount = (original: number, promotional: number) => {
     return Math.round(((original - promotional) / original) * 100);
@@ -16,19 +17,19 @@ const calculateDiscount = (original: number, promotional: number) => {
 export default function ProductCard({ product, homePage=false }: { product: ProductBundleType & FireBaseDocument; homePage?: boolean}) { 
     const displayPrice = product.value.promotionalPrice || product.value.price;
     const installmentValue = displayPrice / 6;
-    const slugName = product.slug;
+    // const slugName = product.name;
 
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
             <CardContent className="p-0 flex flex-col h-full">
-                <Link href={ `/product/${slugName}` } className='relative aspect-square'>
+                <Link href={ `/product/${createSlugName(product.name)}` } className='relative aspect-square'>
                     <div className="relative w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"
                             className='rounded-lg rounded-b-none object-cover scale-100'
                             src={ product.images && product.images[0] ? product?.images[0].localUrl : blankImage.src }
                             alt={ `Foto de ${product.name}` }
-                            sizes="3000px"
+                            sizes="300px"
                             priority={ homePage }
                             loading={ homePage ? 'eager' : 'lazy' }
                             quality={ 90 }
