@@ -12,6 +12,7 @@ import Logo from './Logo';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import SearchBar from './SearchBar';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
+import throttle from 'lodash/throttle'; // Importa o throttle do lodash
 
 const FullHeader: React.FC = () => {
     const { user, isAdmin } = useAuthContext();
@@ -20,16 +21,20 @@ const FullHeader: React.FC = () => {
     const [activeSection, setActiveSection] = useState<SectionType | null>(null);
     const [isMobile, setIsMobile] = useState(true);
     const { getAllDocuments } = useCollection<SectionType>('siteSections');
-    const [menuSections, setMenuSections] = useState<(SectionType & FireBaseDocument)[] | never[]>([]);
+    const [menuSections, setMenuSections] = useState<(SectionType & FireBaseDocument)[]>(
+        [],
+    );
     const [scrollPosition, setScrollPosition] = useState(0);
     const router = useRouter();
-      
+
     const UserIcon = () => (
-        <Button 
+        <Button
             variant="ghost"
             size={ isMobile ? 'icon' : 'lg' }
             className="text-[#C48B9F] h-fit w-fit p-1"
-            onClick={ () => userInfo ? router.push('/minha-conta') : router.push('/login') }
+            onClick={ () =>
+                userInfo ? router.push('/minha-conta') : router.push('/login')
+            }
         >
             <User className={ `${isMobile ? 'h-6 w-6' : 'h-14 w-14'}` } />
         </Button>
@@ -52,14 +57,13 @@ const FullHeader: React.FC = () => {
             setMenuSections(res);
         }
         getSectionsFromFireBase();
-    }, []);
+    }, [getAllDocuments]);
 
-    const handleScroll = () => {
-        const position = window.pageYOffset;
-        setScrollPosition(position);
-    };
-
+    // Usa throttle para limitar a frequência das atualizações do scroll
     useEffect(() => {
+        const handleScroll = throttle(() => {
+            setScrollPosition(window.pageYOffset);
+        }, 100); // atualiza, no máximo, a cada 100ms
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -96,10 +100,14 @@ const FullHeader: React.FC = () => {
     return (
         <>
             <header
-                className={ `fixed top-0 left-0 right-0 px-4 z-50 bg-white  ${ isMobile ? headerMobileStyle : headerDesktopStyle }` }
+                className={ `fixed top-0 left-0 right-0 px-4 z-50 bg-white ${
+                    isMobile ? headerMobileStyle : headerDesktopStyle
+                }` }
                 style={ {
                     height: isMobile ? `${headerHeight}px` : 'auto',
-                    backgroundColor: isMobile ? `rgba(255,255,255, ${headerOpacity})` : 'white',
+                    backgroundColor: isMobile
+                        ? `rgba(255,255,255, ${headerOpacity})`
+                        : 'white',
                 } }
             >
                 <div className="container mx-auto">
@@ -124,7 +132,7 @@ const FullHeader: React.FC = () => {
                                 <div className="flex items-center space-x-4 pr-4">
                                     { (user && isAdmin) && <SettingsButton /> }
                                     <UserIcon />
-                                    <CartIcon isMobile={ isMobile }/>
+                                    <CartIcon isMobile={ isMobile } />
                                 </div>
                             </>
                         ) : (
@@ -136,41 +144,39 @@ const FullHeader: React.FC = () => {
                                 <div className="flex items-center space-x-10">
                                     { (user && isAdmin) && <SettingsButton /> }
 
-                                    <div className='flex items-center space-x-2'>
-
+                                    <div className="flex items-center space-x-2">
                                         <UserIcon />
-                                        {
-                                            userInfo
-                                                ? <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">{ userInfo?.nome.split(' ')[0] }</span>
-                                                : <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">Entrar</span>
-                                        }
+                                        { userInfo ? (
+                                            <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">
+                                                { userInfo?.nome.split(' ')[0] }
+                                            </span>
+                                        ) : (
+                                            <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">
+                        Entrar
+                                            </span>
+                                        ) }
                                     </div>
-                                    <CartIcon isMobile={ isMobile }/>
+                                    <CartIcon isMobile={ isMobile } />
                                 </div>
                             </>
                         ) }
                     </div>
                     { !isMobile && (
                         <div className="py-2 border-t border-[#C48B9F]">
-                            <DesktopMenu menuSections={ menuSections } router={ router }/>
+                            <DesktopMenu menuSections={ menuSections } router={ router } />
                         </div>
                     ) }
                 </div>
             </header>
             { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
-            <div 
-                style={ { 
-                    height: isMobile ? `${headerHeight + 64}px` : '160px',
-                } } 
-            />
+            <div style={ { height: isMobile ? `${headerHeight + 64}px` : '160px' } } />
             { /* Container da SearchBar mobile */ }
             { isMobile && (
-                <div 
+                <div
                     className="fixed left-0 right-0 z-40 px-4 shadow-lg"
                     style={ {
                         top: `${headerHeight}px`,
                         backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
-                        // transition: 'top 0.3s ease-in-out',
                     } }
                 >
                     <SearchBar />

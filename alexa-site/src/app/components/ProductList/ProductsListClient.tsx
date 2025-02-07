@@ -69,10 +69,12 @@ export default function ProductsListClient({
                             subsection={ subsection } 
                         />
                     ) }
-                    <ProductSorter 
-                        currentSort={ currentSort.value }
-                        onSortChange={ (option) => setCurrentSort(option) }
-                    />
+                    <div className='w-full flex justify-end'>
+                        <ProductSorter 
+                            currentSort={ currentSort.value }
+                            onSortChange={ (option) => setCurrentSort(option) }
+                        />
+                    </div>
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                         { productsToShow.map((productData) => (
                             <ProductCard key={ productData.id } product={ productData } />

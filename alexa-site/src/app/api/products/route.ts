@@ -1,7 +1,4 @@
 // src/app/api/products/route.ts
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
-
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchProducts } from '@/app/services/products';
 import { ITEMS_PER_PAGE } from '@/app/utils/constants';
@@ -26,7 +23,12 @@ export async function GET(request: NextRequest) {
             searchTerm,
         });
 
-        return NextResponse.json(productsResponse);
+        return new NextResponse(JSON.stringify(productsResponse), {
+            headers: {
+                // Define cache compartilhado: 60 segundos e permite servir stale-while-revalidate
+                'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+            },
+        });
     } catch (error) {
         console.error('Erro ao buscar produtos:', error);
         return NextResponse.json(

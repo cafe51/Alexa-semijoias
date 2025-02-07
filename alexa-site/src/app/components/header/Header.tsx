@@ -1,13 +1,8 @@
 //app/components/Header.tsx
-
 'use client';
-
-// import FullHeader from './FullHeader';
 import { usePathname } from 'next/navigation';
 import SimpleHeader from './SimpleHeader';
-// import AdminHeader from './AdminHeader';
 import FullHeader from './FullHeader';
-// import AdminHeader from '@/app/admin/components/AdminHeader';
 
 
 export default function Header() {

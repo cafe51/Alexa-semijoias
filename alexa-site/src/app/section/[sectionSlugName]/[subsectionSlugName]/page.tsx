@@ -1,5 +1,5 @@
 // src/app/section/[sectionSlugName]/[subsectionSlugName]/page.tsx
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // A cada 60 segundos a página é revalidada
 
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';

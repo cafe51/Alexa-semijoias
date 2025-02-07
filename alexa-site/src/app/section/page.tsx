@@ -1,5 +1,5 @@
 // src/app/section/page.tsx
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // A cada 60 segundos a página é revalidada
 
 import { getProductsForSection } from '@/app/firebase/admin-config';
 import ProductsList from '../components/ProductList/ProductsList';
@@ -13,7 +13,7 @@ export default async function Section() {
         10,
         { field: 'creationDate', direction: 'desc' },
     );
-    
+  
     return (
         <PageContainer>
             <SectionPageTitle section="produtos" />
