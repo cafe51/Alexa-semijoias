@@ -2,12 +2,10 @@
 'use client';
 
 import Image from 'next/image';
-import { useMediaQuery } from 'react-responsive';
 import heroBannerLarge from '@/../public/heroBannerLarge.png';
 import bigHeroLogo from '@/../public/bigHeroLogo2.png';
 
 export default function HeroSection() {
-    const isSmallScreen = useMediaQuery({ minWidth: 10, maxWidth: 640 });
 
     return (
         <section className="relative w-full">
@@ -34,7 +32,7 @@ export default function HeroSection() {
                             alt="Logo Alexa Semijoias"
                             priority
                             sizes="(max-width: 640px) 90vw, (max-width: 1300px) 60vw, 50vw"
-                            quality={ isSmallScreen ? 30 : 100 }
+                            quality={ 100 }
                             fill
                             placeholder="blur"
                             blurDataURL={ bigHeroLogo.blurDataURL }

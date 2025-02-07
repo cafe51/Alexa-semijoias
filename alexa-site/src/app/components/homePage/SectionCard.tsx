@@ -74,9 +74,9 @@ export default function SectionCard({ section }: SectionCardProps) {
                     </div>
                     
                     <div className="absolute bottom-0 left-0 right-0 text-center pb-4">
-                        <h3 className="font-semibold text-xl sm:text-2xl text-white px-4 sm:px-6">
+                        <h2 className="font-semibold text-xl sm:text-2xl text-white px-4 sm:px-6">
                             { section.toUpperCase() }
-                        </h3>
+                        </h2>
                     </div>
                 </div>
             </Link>

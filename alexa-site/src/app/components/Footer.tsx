@@ -77,7 +77,7 @@ export default function Footer() {
         // { name: 'FAQ', link: '/faq' },
         // { name: 'Trocas e Devoluções', link: '/trocas-e-devolucoes' },
         // { name: 'Rastreamento de Pedidos', link: '/rastreamento' },
-    ];
+    ]; // ainda vão ser implementadas essas opções
 
     return (
         <footer className="bg-white border-t border-[#F8C3D3] shadow-[0_-4px_8px_rgba(0,0,0,0.2)]">
@@ -112,29 +112,6 @@ export default function Footer() {
                             <div className="w-full sm:w-1/2 px-4 mb-8 sm:mb-0">
                                 <FooterSection title="Atendimento ao Cliente" items={ customerService } />
                             </div>
-                        }
-                        { /* Newsletter */ }
-                        {
-                            // <div className="w-full sm:w-1/2 px-4">
-                            //     <div className="mb-8 lg:mb-0">
-
-                            //         <h3 className="text-[#D4AF37] text-lg lg:text-xl font-semibold mb-4">Newsletter</h3>
-                            //         <p className="text-[#333333] mb-4 text-base lg:text-lg">Receba nossas novidades e ofertas exclusivas.</p>
-                            //         <form onSubmit={ (e) => e.preventDefault() } className="flex flex-col space-y-3">
-                            //             <Input 
-                            //                 type="email" 
-                            //                 placeholder="Seu e-mail" 
-                            //                 className="border-[#F8C3D3] focus:border-[#D4AF37] focus:ring-[#D4AF37] text-base p-4 h-12"
-                            //             />
-                            //             <Button 
-                            //                 type="submit" 
-                            //                 className="bg-[#F8C3D3] hover:bg-[#C48B9F] text-white text-base h-12 px-6"
-                            //             >
-                            //             Inscrever-se
-                            //             </Button>
-                            //         </form>
-                            //     </div>
-                            // </div>
                         }
                     </div>
                 </div>
