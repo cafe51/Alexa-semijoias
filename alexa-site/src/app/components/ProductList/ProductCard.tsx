@@ -17,17 +17,18 @@ const calculateDiscount = (original: number, promotional: number) => {
 export default function ProductCard({ product, homePage=false }: { product: ProductBundleType & FireBaseDocument; homePage?: boolean}) { 
     const displayPrice = product.value.promotionalPrice || product.value.price;
     const installmentValue = displayPrice / 6;
+    const outOfStock = product.estoqueTotal <= 0;
     // const slugName = product.name;
 
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
             <CardContent className="p-0 flex flex-col h-full">
-                <Link href={ `/product/${createSlugName(product.name)}` } className='relative aspect-square'>
+                <Link href={ `/product/${createSlugName(product.name)}` } className="relative aspect-square">
                     <div className="relative w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"
-                            className='rounded-lg rounded-b-none object-cover scale-100'
-                            src={ product.images && product.images[0] ? product?.images[0].localUrl : blankImage.src }
+                            className={ `rounded-lg rounded-b-none object-cover scale-100 ${outOfStock ? 'opacity-50' : ''}` }
+                            src={ product.images && product.images[0] ? product.images[0].localUrl : blankImage.src }
                             alt={ `Foto de ${product.name}` }
                             sizes="300px"
                             priority={ homePage }
@@ -36,18 +37,27 @@ export default function ProductCard({ product, homePage=false }: { product: Prod
                             fill
                         />
                     </div>
+
                     <div className="absolute top-2 left-2 right-2 flex justify-between">
                         { product.lancamento && (
                             <Badge className="bg-[#C48B9F] text-white text-xs sm:text-sm md:text-base lg:text-lg">
-                        Lançamento
+        Lançamento
                             </Badge>
                         ) }
                         { product.value.promotionalPrice > 0 && (
                             <Badge className="bg-[#F8C3D3] text-[#333333] text-xs sm:text-sm md:text-base lg:text-lg ml-auto">
-                        -{ calculateDiscount(product.value.price, product.value.promotionalPrice) }%
+        -{ calculateDiscount(product.value.price, product.value.promotionalPrice) }%
                             </Badge>
                         ) }
                     </div>
+
+                    { outOfStock && (
+                        <div className="absolute top-0 right-0 w-52 h-52 overflow-hidden z-50">
+                            <div className="bg-[#C48B9F] bg-opacity-100 text-white font-bold py-1 text-center transform rotate-45 translate-y-8 translate-x-6 w-60">
+        SEM ESTOQUE
+                            </div>
+                        </div>
+                    ) }
                 </Link>
 
                 <div className="p-4 flex flex-col flex-grow">
