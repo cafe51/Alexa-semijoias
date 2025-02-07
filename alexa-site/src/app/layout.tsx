@@ -10,7 +10,6 @@ import { UserInfoProvider } from './context/UserInfoContext';
 // import { WebVitals } from './components/WebVitals';
 import { Metadata } from 'next';
 // import FacebookPixel from './components/FacebookPixel';
-import LoadingBar from './components/LoadingBar';
 // import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { getSiteSections } from './services/siteSections';
 
@@ -154,7 +153,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <AuthContextProvider>
                     <UserInfoProvider>
                         <Header initialMenuSections={ menuSections } />
-                        <LoadingBar /> { /* Componente global de carregamento */ }
                         { children }
                         <Footer sections={ menuSections } />
                     </UserInfoProvider>
