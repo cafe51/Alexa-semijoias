@@ -52,9 +52,8 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                             src={ product.images && product.images[0] ? product.images[0].localUrl : blankImage.src }
                             alt={ `Foto de ${product.name}` }
                             title={ `Foto de ${product.name}` }
-                            width={ 300 }
-                            height={ 300 }
-                            sizes="300px"
+                            sizes="150px"
+                            fill
                             placeholder="blur" // melhora a percepção de carregamento
                             blurDataURL={ blankImage.src }
                             priority={ homePage }

@@ -33,9 +33,9 @@ export default function SectionCard({ section, product }: SectionCardProps) {
                             src={ imageUrl }
                             title={ `Seção de ${section}` }
                             alt={ `Seção de ${section}` }
-                            sizes="300px"
+                            sizes="150px"
                             quality={ 80 }
-                            loading="lazy"
+                            loading="eager"
                             fill
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/25 via-10% to-transparent to-40%" />
