@@ -1,4 +1,5 @@
 // src/app/components/homePage/SectionCard.tsx
+import { memo, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,8 +12,15 @@ interface SectionCardProps {
   product: (ProductBundleType & FireBaseDocument) | null;
 }
 
-export default function SectionCard({ section, product }: SectionCardProps) {
-    const imageUrl = product ? getImageUrlFromFirebaseProductDocument(product) : '';
+function SectionCard({ section, product }: SectionCardProps) {
+    // Memoriza o slug da seção para evitar recálculos desnecessários.
+    const sectionSlug = useMemo(() => createSlugName(section), [section]);
+  
+    // Se o produto existir, obtém a URL da imagem de forma memorizada.
+    const imageUrl = useMemo(
+        () => (product ? getImageUrlFromFirebaseProductDocument(product) : ''),
+        [product],
+    );
 
     if (!product) {
         return (
@@ -25,7 +33,7 @@ export default function SectionCard({ section, product }: SectionCardProps) {
 
     return (
         <Card className="relative overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col">
-            <Link href={ `/section/${createSlugName(section)}` } className="block">
+            <Link href={ `/section/${sectionSlug}` } className="block">
                 <div className="relative">
                     <div className="relative aspect-square bg-skeleton">
                         <Image
@@ -33,10 +41,14 @@ export default function SectionCard({ section, product }: SectionCardProps) {
                             src={ imageUrl }
                             title={ `Seção de ${section}` }
                             alt={ `Seção de ${section}` }
-                            sizes="150px"
-                            quality={ 80 }
-                            loading="eager"
+                            // Define tamanhos responsivos para que o navegador escolha a imagem ideal
+                            sizes="(max-width: 640px) 150px, 200px"
+                            quality={ 75 } // Ajuste a qualidade conforme necessário
+                            loading="lazy" // Use "eager" se for conteúdo crítico (acima da dobra)
                             fill
+                            // Caso você tenha um blurDataURL, pode adicioná-lo aqui:
+                            // placeholder="blur"
+                            // blurDataURL={algumBlurDataURL}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#C48B9F] from-0% via-[#C48B9F]/80 via-10% via-[#C48B9F]/25 via-10% to-transparent to-40%" />
                     </div>
@@ -51,3 +63,5 @@ export default function SectionCard({ section, product }: SectionCardProps) {
         </Card>
     );
 }
+
+export default memo(SectionCard);

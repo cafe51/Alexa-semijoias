@@ -1,4 +1,6 @@
 // src/app/components/ProductList/ProductCard.tsx
+'use client';
+
 import React, { memo, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -21,16 +23,16 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, homePage = false }: ProductCardProps) {
-    // Valor de exibição: caso haja preço promocional, usa-o, senão, o preço normal.
+    // Define o preço a ser exibido (promocional ou o normal)
     const displayPrice = product.value.promotionalPrice || product.value.price;
 
-    // Memoiza o valor da parcela para evitar recalculo em cada render.
+    // Memoriza o valor da parcela
     const installmentValue = useMemo(() => displayPrice / 6, [displayPrice]);
 
-    // Define se o produto está sem estoque.
+    // Verifica se o produto está sem estoque
     const outOfStock = product.estoqueTotal <= 0;
 
-    // Calcula o desconto, se houver preço promocional.
+    // Calcula o desconto, se houver preço promocional
     const discount = useMemo(() => {
         if (product.value.promotionalPrice > 0 && product.value.price > 0) {
             return calculateDiscount(product.value.price, product.value.promotionalPrice);
@@ -38,8 +40,11 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
         return null;
     }, [product.value.price, product.value.promotionalPrice]);
 
-    // Memoiza o slug do produto.
+    // Memoriza o slug do produto
     const productSlug = useMemo(() => createSlugName(product.name), [product.name]);
+
+    // Define um atributo "sizes" responsivo para a imagem do produto
+    const imageSizes = '(max-width: 640px) 150px, 200px';
 
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
@@ -49,16 +54,20 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                         <Image
                             data-testid="product-link"
                             className={ `rounded-lg rounded-b-none object-cover scale-100 ${outOfStock ? 'opacity-50' : ''}` }
-                            src={ product.images && product.images[0] ? product.images[0].localUrl : blankImage.src }
+                            src={
+                                product.images && product.images[0]
+                                    ? product.images[0].localUrl
+                                    : blankImage.src
+                            }
                             alt={ `Foto de ${product.name}` }
                             title={ `Foto de ${product.name}` }
-                            sizes="150px"
+                            sizes={ imageSizes }
                             fill
                             placeholder="blur" // melhora a percepção de carregamento
                             blurDataURL={ blankImage.src }
-                            priority={ homePage }
+                            priority={ homePage } // imagens prioritárias na homepage
                             loading={ homePage ? 'eager' : 'lazy' }
-                            quality={ 85 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
+                            quality={ 75 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
                         />
                     </div>
 
