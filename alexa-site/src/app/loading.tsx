@@ -1,4 +1,4 @@
-// src/app/section/[sectionSlugName]/loading.tsx
+// src/app/loading.tsx
 import LoadingIndicator from '@/app/components/LoadingIndicator';
 
 export default function SectionSlugLoading() {

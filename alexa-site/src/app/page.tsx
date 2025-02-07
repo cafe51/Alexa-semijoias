@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import { Metadata } from 'next';
 import HomeContent from './components/homePage/HomeContent';
 

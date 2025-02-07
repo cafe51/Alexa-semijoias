@@ -1,28 +1,13 @@
+// src/app/components/homePage/HeroSection.tsx
 'use client';
 
 import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
-// import heroBannerSmall from '@/../public/heroBannerSmall.png';
 import heroBannerLarge from '@/../public/heroBannerLarge.png';
-// import heroBannerMedium from '@/../public/heroBannerMedium.png';
 import bigHeroLogo from '@/../public/bigHeroLogo2.png';
-// import { useEffect } from 'react';
 
 export default function HeroSection() {
-    // Hook para verificar tamanho da tela
-    // const isLargeScreen = useMediaQuery({ minWidth: 1300 });
-    // const isMediumScreen = useMediaQuery({ minWidth: 640, maxWidth: 1300 });
     const isSmallScreen = useMediaQuery({ minWidth: 10, maxWidth: 640 });
-
-
-    // Define a imagem com base nos breakpoints de tela
-
-    // const backgroundImage = isLargeScreen
-    //     ? heroBannerLarge
-    //     : isMediumScreen
-    //         ? heroBannerMedium
-    //         : heroBannerSmall;
-
 
     return (
         <section className="relative w-full">

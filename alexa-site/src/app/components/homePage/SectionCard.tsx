@@ -1,4 +1,4 @@
-// SectionCard.tsx
+// src/app/components/homePage/SectionCard.tsx
 'use client';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
@@ -59,7 +59,7 @@ export default function SectionCard({ section }: SectionCardProps) {
                             className="rounded-lg object-cover loading"
                             src={ imageUrl }
                             alt={ `Seção de ${section}` }
-                            sizes="3000px"
+                            sizes="300px"
                             quality={ 80 }
                             priority={ false }
                             loading="lazy"

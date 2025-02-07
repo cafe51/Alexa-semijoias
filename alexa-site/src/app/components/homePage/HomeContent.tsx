@@ -1,3 +1,4 @@
+// src/app/components/homePage/HomeContent.tsx
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { FireBaseDocument, ProductBundleType, SectionType } from '@/app/utils/types';
@@ -9,7 +10,6 @@ import { projectFirestoreDataBase } from '@/app/firebase/config';
 const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
     ssr: true,
 });
-
 const FeaturedProducts = dynamic(() => import('./FeaturedProducts'), {
     ssr: true,
 });
@@ -19,22 +19,19 @@ function LoadingFallback() {
         <div className="max-w-6xl mx-auto p-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 { Array.from({ length: 3 }).map((_, index) => (
-                    <div 
-                        key={ `skeleton-${index}` } 
-                        className="aspect-square bg-skeleton animate-pulse rounded" 
-                    />
+                    <div key={ `skeleton-${index}` } className="aspect-square bg-skeleton animate-pulse rounded" />
                 )) }
             </div>
         </div>
     );
 }
 
-// Funções para buscar dados diretamente do Firestore
+// Função para buscar as seções (única chamada)
 async function getSections() {
     try {
         const sectionsRef = collection(projectFirestoreDataBase, 'siteSections');
         const sectionsSnapshot = await getDocs(sectionsRef);
-        return sectionsSnapshot.docs.map(doc => ({
+        return sectionsSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
         })) as (SectionType & FireBaseDocument)[];
@@ -44,18 +41,10 @@ async function getSections() {
     }
 }
 
-async function getFeaturedProducts() {
+// Agora a função recebe as seções já carregadas (evitando duplicação)
+async function getFeaturedProducts(sectionsData: (SectionType & FireBaseDocument)[]) {
     try {
-        // Primeiro, buscar todas as seções
-        const sectionsRef = collection(projectFirestoreDataBase, 'siteSections');
-        const sectionsSnapshot = await getDocs(sectionsRef);
-        const sections = sectionsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-        })) as (SectionType & FireBaseDocument)[];
-
-        // Buscar produtos em destaque para cada seção em paralelo
-        const productsPromises = sections.map(async(section) => {
+        const productsPromises = sectionsData.map(async(section) => {
             const productsRef = collection(projectFirestoreDataBase, 'products');
             const q = query(
                 productsRef,
@@ -65,7 +54,6 @@ async function getFeaturedProducts() {
                 orderBy('creationDate', 'desc'),
                 limit(1),
             );
-
             const productsSnapshot = await getDocs(q);
             const doc = productsSnapshot.docs[0];
             if (!doc) return null;
@@ -74,7 +62,6 @@ async function getFeaturedProducts() {
                 ...doc.data(),
             } as (ProductBundleType & FireBaseDocument);
         });
-
         const products = await Promise.all(productsPromises);
         return products.filter((product): product is ProductBundleType & FireBaseDocument => product !== null);
     } catch (error) {
@@ -83,28 +70,24 @@ async function getFeaturedProducts() {
     }
 }
 
-// Componentes de renderização
-function Sections({ sections }: { sections: SectionType[] }) {
-    return <SectionsCarousel sections={ sections.map(section => section.sectionName) } />;
-}
-
-function Products({ products }: { products: (ProductBundleType & FireBaseDocument)[] }) {
-    return <FeaturedProducts featuredProducts={ products } />;
-}
+// Cache (revalidate) – os dados serão revalidado a cada 60 segundos
+export const revalidate = 60;
 
 export default async function HomeContent() {
+    // Busca as seções primeiro
     const sections = await getSections();
-    const products = await getFeaturedProducts();
+    // Usa os dados das seções para buscar os produtos em destaque
+    const featuredProducts = await getFeaturedProducts(sections);
 
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
             <HeroSection />
             <InfoBanner />
             <Suspense fallback={ <LoadingFallback /> }>
-                <Sections sections={ sections } />
+                <SectionsCarousel sections={ sections.map((section) => section.sectionName) } />
             </Suspense>
             <Suspense fallback={ <LoadingFallback /> }>
-                <Products products={ products } />
+                <FeaturedProducts featuredProducts={ featuredProducts } />
             </Suspense>
         </div>
     );

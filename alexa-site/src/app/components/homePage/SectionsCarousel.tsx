@@ -1,3 +1,4 @@
+// src/app/components/homePage/SectionsCarousel.tsx
 import {
     Carousel,
     CarouselContent,
