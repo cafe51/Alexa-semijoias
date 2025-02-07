@@ -51,13 +51,15 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                             className={ `rounded-lg rounded-b-none object-cover scale-100 ${outOfStock ? 'opacity-50' : ''}` }
                             src={ product.images && product.images[0] ? product.images[0].localUrl : blankImage.src }
                             alt={ `Foto de ${product.name}` }
+                            title={ `Foto de ${product.name}` }
+                            width={ 300 }
+                            height={ 300 }
                             sizes="300px"
                             placeholder="blur" // melhora a percepção de carregamento
-                            blurDataURL={ blankImage.src } // utilize um blurDataURL adequado (pode ser o próprio blankImage ou outro)
+                            blurDataURL={ blankImage.src }
                             priority={ homePage }
                             loading={ homePage ? 'eager' : 'lazy' }
                             quality={ 85 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
-                            fill
                         />
                     </div>
 

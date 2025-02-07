@@ -14,6 +14,7 @@ export default function HeroSection() {
                 <Image
                     className="object-cover"
                     src={ heroBannerLarge }
+                    title='Banner Principal Alexa Semijoias'
                     alt="Banner Principal Alexa Semijoias"
                     priority
                     sizes='3000px'
@@ -28,6 +29,7 @@ export default function HeroSection() {
                     <div className="relative w-[90%] md:w-[60%] lg:w-[50%] aspect-[3/1]">
                         <Image
                             className="object-contain"
+                            title='Logo Alexa Semijoias'
                             src={ bigHeroLogo }
                             alt="Logo Alexa Semijoias"
                             priority
