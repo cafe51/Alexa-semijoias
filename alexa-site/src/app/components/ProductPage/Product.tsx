@@ -22,6 +22,7 @@ import ProductJsonLd from './ProductJsonLd';
 import RecommendedProducts from './RecommendedProducts';
 import ShareSection from './ShareSection';
 import SelectionTooltip from '../SelectionTooltip';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 const TEXTO_DA_QUALIDADE_DA_SEMIJOIA = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.';
 
@@ -245,7 +246,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                                 { product.lancamento && <Badge variant="destructive" className="bg-[#C48B9F] text-white">Lançamento</Badge> }
                             </div>
 
-                            <p className="text-gray-600 text-sm md:text-base mb-6 whitespace-pre-line">{
+                            <p className="text-gray-600 md:text-base mb-6 whitespace-pre-line ">{
                                 product.description +
                                 (product.sections.includes('joias em aço inox') ?  TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO : TEXTO_DA_QUALIDADE_DA_SEMIJOIA)
                             + (!product.sections.includes('joias em aço inox') ? TEXTO_DA_GARANTIA : '')
@@ -290,7 +291,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                         <div className='py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg *:text-lg *:uppercase borderColor text-center w-full flex justify-center mt-2'>
                             <ShippingCalculator onSelectShipping={ selectShipping } selectedShipping={ Number(shipping) }/>
                         </div>
-                        <ShareSection url={ window.location.href } />
+                        <ShareSection url={ `www.alexasemijoias.com.br/product/${createSlugName(product.name)}` } />
 
                     </section>
                 </div>
