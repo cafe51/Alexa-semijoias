@@ -1,7 +1,7 @@
 // src/app/hooks/useProducts.ts
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ProductBundleType, FireBaseDocument } from '@/app/utils/types';
 
 type ProductsResponse = {
@@ -12,7 +12,7 @@ type ProductsResponse = {
 
 type UseProductsProps = {
   sectionName?: string;
-  subsection?: string; // novo parâmetro
+  subsection?: string;
   initialData?: ProductsResponse;
   orderBy?: string;
   direction?: 'asc' | 'desc';
@@ -36,11 +36,19 @@ export function useProducts({
         initialData?.lastVisible || null,
     );
 
+    // useRef para identificar a primeira renderização
+    const isFirstRender = useRef(true);
+
     useEffect(() => {
-    // Se os parâmetros estiverem nos valores default e não houver filtros, mantemos o initialData
-        if (!searchTerm && !subsection && initialData && orderBy === 'creationDate' && direction === 'desc') {
-            return;
+        // Na primeira render, se os parâmetros estiverem nos valores default e não houver filtros,
+        // usamos o initialData e não buscamos os dados novamente.
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            if (!searchTerm && !subsection && initialData && orderBy === 'creationDate' && direction === 'desc') {
+                return;
+            }
         }
+
         const fetchProductsData = async() => {
             setIsLoading(true);
             try {
@@ -66,7 +74,7 @@ export function useProducts({
         };
 
         fetchProductsData();
-    }, [sectionName, subsection, orderBy, direction, searchTerm, initialData]);
+    }, [sectionName, subsection, orderBy, direction, searchTerm]); // note que removemos initialData daqui
 
     const loadMore = async() => {
         if (!hasMore || isLoading) return;
