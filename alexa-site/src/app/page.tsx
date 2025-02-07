@@ -3,12 +3,28 @@ import { Metadata } from 'next';
 import HomeContent from './components/homePage/HomeContent';
 
 export const metadata: Metadata = {
-    title: 'Alexa Semijoias | Semijoias Exclusivas com Elegância e Qualidade',
-    description: 'Descubra nossa coleção exclusiva de semijoias. Brincos, colares, anéis e pulseiras com qualidade premium. Compre em até 6x sem juros com entrega para todo Brasil.',
-    keywords: 'semijoias, joias, acessórios, brincos, colares, anéis, pulseiras, folheados, ouro, prata, joias em aço',
+    title: 'Alexa Semijoias | Semijoias de Verdade',
+    description:
+    'Descubra Alexa Semijoias. Compre em até 6x sem juros com entrega para todo Brasil.',
+    keywords: [
+        'semijoias',
+        'joias',
+        'acessórios',
+        'brincos',
+        'colares',
+        'anéis',
+        'pulseiras',
+        'folheados',
+        'ouro',
+        'prata',
+        'joias em aço',
+    ],
+    alternates: {
+        canonical: 'https://www.alexasemijoias.com.br',
+    },
     openGraph: {
-        title: 'Alexa Semijoias | Semijoias Exclusivas',
-        description: 'Descubra nossa coleção exclusiva de semijoias. Peças únicas com qualidade e elegância.',
+        title: 'Alexa Semijoias | Semijoias de Verdade',
+        description: 'Descubra Alexa Semijoias. Semijoias de Verdade.',
         url: 'https://www.alexasemijoias.com.br',
         siteName: 'Alexa Semijoias',
         type: 'website',
