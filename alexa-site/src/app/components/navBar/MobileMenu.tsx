@@ -1,5 +1,7 @@
 // src/app/components/navBar/MobileMenu.tsx
-import React from 'react';
+'use client';
+
+import React, { useTransition } from 'react';
 import { Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import NavFooterLogged from './NavFooterLogged';
@@ -21,7 +23,7 @@ interface MobileMenuProps {
   userInfo: (UserType & FireBaseDocument) | null;
 }
 
-function MobileMenu({
+export default function MobileMenu({
     isMenuOpen,
     setIsMenuOpen,
     activeSection,
@@ -31,6 +33,8 @@ function MobileMenu({
     router,
     userInfo,
 }: MobileMenuProps) {
+    const [, startTransition] = useTransition();
+
     return (
         <Sheet open={ isMenuOpen } onOpenChange={ setIsMenuOpen }>
             <SheetTrigger asChild>
@@ -66,16 +70,15 @@ function MobileMenu({
                                                     if (section.subsections && section.subsections.length > 0) {
                                                         handleSectionClick(section);
                                                     } else {
-                                                        router.push(
-                                                            '/section/' + createSlugName(section.sectionName),
-                                                        );
+                                                        startTransition(() => {
+                                                            router.push('/section/' + createSlugName(section.sectionName));
+                                                        });
                                                         setIsMenuOpen(false);
                                                     }
                                                 } }
                                             >
                                                 { section.sectionName.toUpperCase() }
-                                                { section.subsections &&
-                          section.subsections.length > 0 && (
+                                                { section.subsections && section.subsections.length > 0 && (
                                                     <ChevronRight className="h-5 w-5 ml-auto" />
                                                 ) }
                                             </Button>
@@ -95,7 +98,7 @@ function MobileMenu({
                         >
                             { activeSection && (
                                 <>
-                                    <div className="border-t-2 border-b-2 border-[#C48B9F] py-2">
+                                    <div className="border-t-2 border-b-2 border-[#C48B9F] py-2 ">
                                         <Button
                                             variant="ghost"
                                             onClick={ handleBackToMain }
@@ -105,7 +108,7 @@ function MobileMenu({
                       Voltar
                                         </Button>
                                     </div>
-                                    <div className="h-full overflow-auto p-6">
+                                    <div className="h-full overflow-auto p-6 ">
                                         <h2 className="text-2xl font-bold mb-6 text-[#C48B9F]">
                                             { activeSection.sectionName.toUpperCase() }
                                         </h2>
@@ -117,10 +120,9 @@ function MobileMenu({
                                                     onClick={ () => {
                                                         handleBackToMain();
                                                         setIsMenuOpen(false);
-                                                        router.push(
-                                                            '/section/' +
-                                createSlugName(activeSection.sectionName),
-                                                        );
+                                                        startTransition(() => {
+                                                            router.push('/section/' + createSlugName(activeSection.sectionName));
+                                                        });
                                                     } }
                                                 >
                           Mostrar todos
@@ -135,12 +137,14 @@ function MobileMenu({
                                     onClick={ () => {
                                         handleBackToMain();
                                         setIsMenuOpen(false);
-                                        router.push(
-                                            '/section/' +
-                                    createSlugName(activeSection.sectionName) +
-                                    '/' +
-                                    createSlugName(subsection),
-                                        );
+                                        startTransition(() => {
+                                            router.push(
+                                                '/section/' +
+                                      createSlugName(activeSection.sectionName) +
+                                      '/' +
+                                      createSlugName(subsection),
+                                            );
+                                        });
                                     } }
                                 >
                                     { subsection.toUpperCase() }
@@ -154,11 +158,7 @@ function MobileMenu({
                         </div>
                     </div>
                     { userInfo ? (
-                        <NavFooterLogged
-                            userInfo={ userInfo }
-                            router={ router }
-                            closeMenu={ () => setIsMenuOpen(false) }
-                        />
+                        <NavFooterLogged userInfo={ userInfo } router={ router } closeMenu={ () => setIsMenuOpen(false) } />
                     ) : (
                         <NavFooterUnlogged router={ router } closeMenu={ () => setIsMenuOpen(false) } />
                     ) }
@@ -167,5 +167,3 @@ function MobileMenu({
         </Sheet>
     );
 }
-
-export default React.memo(MobileMenu);

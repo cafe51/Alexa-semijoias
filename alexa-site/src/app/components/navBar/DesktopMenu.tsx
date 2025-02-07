@@ -1,5 +1,7 @@
 // src/app/components/navBar/DesktopMenu.tsx
-import React from 'react';
+'use client';
+
+import React, { useState, useTransition } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,13 +9,15 @@ import { SectionType } from '@/app/utils/types';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { createSlugName } from '@/app/utils/createSlugName';
 
-interface DesktopMenuProps {
+export type DesktopMenuProps = {
   menuSections: SectionType[];
   router: AppRouterInstance;
-}
+};
 
-function DesktopMenu({ menuSections, router }: DesktopMenuProps) {
-    const [openIndex, setOpenIndex] = React.useState<number | null>(null);
+export default function DesktopMenu({ menuSections, router }: DesktopMenuProps) {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [, startTransition] = useTransition();
+
 
     const hasSubsections = (section: SectionType) => {
         return Array.isArray(section.subsections) && section.subsections.length > 0;
@@ -36,11 +40,13 @@ function DesktopMenu({ menuSections, router }: DesktopMenuProps) {
                     <PopoverTrigger asChild>
                         <Button
                             variant="ghost"
-                            className="text-[#333333] hover:bg-[#F8C3D3]/20 text-lg group focus:outline-none"
+                            className="text-[#333333] hover:bg-[#F8C3D3]/20 text-lg group focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                             size="lg"
-                            onClick={ () =>
-                                router.push('/section/' + createSlugName(section.sectionName))
-                            }
+                            onClick={ () => {
+                                startTransition(() => {
+                                    router.push('/section/' + createSlugName(section.sectionName));
+                                });
+                            } }
                             onMouseEnter={ () => hasSubsections(section) && setOpenIndex(index) }
                             onMouseLeave={ () => setOpenIndex(null) }
                         >
@@ -58,25 +64,22 @@ function DesktopMenu({ menuSections, router }: DesktopMenuProps) {
                             onMouseLeave={ () => setOpenIndex(null) }
                         >
                             <div className="flex flex-col">
-                                { section.subsections?.map(
-                                    (subsection: string, subIndex: number) => (
-                                        <Button
-                                            key={ subIndex }
-                                            variant="ghost"
-                                            className="justify-start hover:bg-[#F8C3D3]/20 w-full text-center p-6 border-none"
-                                            onClick={ () =>
+                                { section.subsections?.map((subsection: string, subIndex: number) => (
+                                    <Button
+                                        key={ subIndex }
+                                        variant="ghost"
+                                        className="justify-start hover:bg-[#F8C3D3]/20 w-full text-center p-6 border-none focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        onClick={ () => {
+                                            startTransition(() => {
                                                 router.push(
-                                                    '/section/' +
-                            createSlugName(section.sectionName) +
-                            '/' +
-                            createSlugName(subsection),
-                                                )
-                                            }
-                                        >
-                                            { subsection.toUpperCase() }
-                                        </Button>
-                                    ),
-                                ) }
+                                                    '/section/' + createSlugName(section.sectionName) + '/' + createSlugName(subsection),
+                                                );
+                                            });
+                                        } }
+                                    >
+                                        { subsection.toUpperCase() }
+                                    </Button>
+                                )) }
                             </div>
                         </PopoverContent>
                     ) }
@@ -85,5 +88,3 @@ function DesktopMenu({ menuSections, router }: DesktopMenuProps) {
         </nav>
     );
 }
-
-export default React.memo(DesktopMenu);

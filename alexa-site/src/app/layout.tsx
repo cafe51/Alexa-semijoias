@@ -12,6 +12,7 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { WebVitals } from './components/WebVitals';
 import { Metadata } from 'next';
 import FacebookPixel from './components/FacebookPixel';
+import LoadingBar from './components/LoadingBar';
 
 const inter = Montserrat({ subsets: ['latin'] });
 
@@ -79,8 +80,8 @@ export const metadata: Metadata = {
 export default function RootLayout({
     children,
 }: Readonly<{
-  children: React.ReactNode;
-}>) {
+    children: React.ReactNode;
+  }>) {
     return (
         <html lang="pt-BR">
             <head>
@@ -95,6 +96,7 @@ export default function RootLayout({
                 <AuthContextProvider>
                     <UserInfoProvider>
                         <Header />
+                        <LoadingBar /> { /* Componente global de carregamento */ }
                         { children }
                         <Footer />
                     </UserInfoProvider>
