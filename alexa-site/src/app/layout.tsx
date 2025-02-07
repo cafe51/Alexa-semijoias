@@ -5,12 +5,12 @@ import Footer from './components/Footer';
 import Header from './components/header/Header';
 import { AuthContextProvider } from './context/AuthContext';
 import { UserInfoProvider } from './context/UserInfoContext';
-// import { Analytics } from '@vercel/analytics/react';
-// import { SpeedInsights } from '@vercel/speed-insights/next';
-// import { WebVitals } from './components/WebVitals';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { WebVitals } from './components/WebVitals';
 import { Metadata } from 'next';
-// import FacebookPixel from './components/FacebookPixel';
-// import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import FacebookPixel from './components/FacebookPixel';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { getSiteSections } from './services/siteSections';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
@@ -158,12 +158,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     </UserInfoProvider>
                 </AuthContextProvider>
 
-                { /* <GoogleTagManager gtmId="GTM-XYZ" /> */ }
-                { /* <GoogleAnalytics gaId="G-KLLD2T3EQ1" /> */ }
-                { /* <Analytics /> */ }
-                { /* <SpeedInsights /> */ }
-                { /* <WebVitals /> */ }
-                { /* <FacebookPixel /> */ }
+                <GoogleTagManager gtmId="GTM-XYZ" />
+                <GoogleAnalytics gaId="G-KLLD2T3EQ1" />
+                <Analytics />
+                <SpeedInsights />
+                <WebVitals />
+                <FacebookPixel />
             </body>
         </html>
     );
