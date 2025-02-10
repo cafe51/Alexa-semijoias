@@ -1,3 +1,4 @@
+// src/app/hooks/useDynamicObjectCardsLogic
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ProductBundleType, ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 

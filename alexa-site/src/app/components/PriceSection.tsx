@@ -1,3 +1,4 @@
+// src/app/components/PriceSection.tsx
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import Price from './Price';
 import { ShoppingCart } from 'lucide-react';
