@@ -34,22 +34,23 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             variant="ghost"
             size={ isMobile ? 'icon' : 'lg' }
             className="text-[#C48B9F] h-fit w-fit p-1"
-            onClick={ () =>
-                userInfo ? router.push('/minha-conta') : router.push('/login')
-            }
+            // Se o usuário estiver logado, o botão direciona para "minha conta", caso contrário, para "login"
+            aria-label={ userInfo ? 'Acessar minha conta' : 'Entrar' }
+            onClick={ () => (userInfo ? router.push('/minha-conta') : router.push('/login')) }
         >
-            <User className={ `${isMobile ? 'h-6 w-6' : 'h-14 w-14'}` } />
+            <User className={ isMobile ? 'h-6 w-6' : 'h-14 w-14' } />
         </Button>
     );
-
+    
     const SettingsButton = () => (
         <Button
             variant="ghost"
             size={ isMobile ? 'icon' : 'lg' }
             className="text-[#C48B9F] h-fit w-fit p-1"
+            aria-label="Acessar área administrativa"
             onClick={ () => router.push('/admin') }
         >
-            <Settings className={ `${isMobile ? 'h-6 w-6' : 'h-14 w-14'}` } />
+            <Settings className={ isMobile ? 'h-6 w-6' : 'h-14 w-14' } />
         </Button>
     );
 

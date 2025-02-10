@@ -38,7 +38,13 @@ export default function MobileMenu({
     return (
         <Sheet open={ isMenuOpen } onOpenChange={ setIsMenuOpen }>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden text-[#C48B9F]">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="lg:hidden text-[#C48B9F]"
+                    // Altera o label de acordo com o estado do menu
+                    aria-label={ isMenuOpen ? 'Fechar menu' : 'Abrir menu' }
+                >
                     { isMenuOpen ? <X className="h-8 w-8" /> : <Menu className="h-6 w-6" /> }
                 </Button>
             </SheetTrigger>
