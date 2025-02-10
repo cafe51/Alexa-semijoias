@@ -17,7 +17,7 @@ export default function ImageCarousel({ productData: { images, name } }: { produ
                 <CarouselContent className="w-full">
                     { images.map((image, index) => (
                         <CarouselItem key={ index } className="px-0 w-full">
-                            <div className="w-full aspect-square relative bg-skeleton">
+                            <div className="w-full aspect-[4/5] relative bg-skeleton">
                                 <Image
                                     alt={ `${name} - Imagem ${index + 1}` }
                                     src={ image.localUrl }
