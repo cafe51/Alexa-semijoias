@@ -4,10 +4,10 @@ export const revalidate = 60; // Revalidação a cada 60 segundos
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getProductsForSection, getSectionBySlug } from '@/app/firebase/admin-config';
-import ProductsList from '@/app/components/ProductList/ProductsList';
 import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
 import { SectionSlugType } from '@/app/utils/types';
+import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -103,7 +103,7 @@ export default async function SubSection({ params: { sectionSlugName, subsection
 
     return (
         <PageContainer>
-            <ProductsList
+            <ProductsListClient
                 sectionName={ sectionData.sectionName }
                 subsection={ subsectionName }
                 initialData={ { products, hasMore, lastVisible } }

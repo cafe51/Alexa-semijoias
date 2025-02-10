@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { getSectionBySlug, getProductsForSection } from '@/app/firebase/admin-config';
 import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
-import ProductsList from '@/app/components/ProductList/ProductsList';
+import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -86,7 +86,7 @@ export default async function Section({ params }: Props) {
 
     return (
         <PageContainer>
-            <ProductsList
+            <ProductsListClient
                 sectionName={ sectionData.sectionName }
                 initialData={ { products, hasMore, lastVisible } }
             />
