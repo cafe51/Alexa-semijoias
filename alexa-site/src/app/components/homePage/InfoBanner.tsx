@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import { Truck, CreditCard, Shield } from 'lucide-react';
 
 const BANNER_INFO = [
@@ -43,33 +43,62 @@ InfoItem.displayName = 'InfoItem';
 
 const MobileCarousel = memo(function MobileCarousel() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const touchStartX = useRef(0);
+    const touchEndX = useRef(0);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
+    const resetInterval = () => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
+        intervalRef.current = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % BANNER_INFO.length);
         }, 3000);
+    };
 
-        return () => clearInterval(interval);
+    useEffect(() => {
+        resetInterval();
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
     }, []);
 
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        touchEndX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStartX.current - touchEndX.current > 50) {
+            setCurrentIndex((prev) => (prev + 1) % BANNER_INFO.length);
+        } else if (touchEndX.current - touchStartX.current > 50) {
+            setCurrentIndex((prev) => (prev - 1 + BANNER_INFO.length) % BANNER_INFO.length);
+        }
+        resetInterval();
+    };
+
     return (
-        <>
-            <div className="flex justify-center">
-                <InfoItem { ...BANNER_INFO[currentIndex] } />
-            </div>
+        <div
+            className="flex flex-col items-center"
+            onTouchStart={ handleTouchStart }
+            onTouchMove={ handleTouchMove }
+            onTouchEnd={ handleTouchEnd }
+        >
+            <InfoItem { ...BANNER_INFO[currentIndex] } />
             <div className="flex justify-center mt-3 gap-2">
                 { BANNER_INFO.map((_, index) => (
-                    <button
+                    <div
                         key={ index }
                         className={ `h-2 w-2 rounded-full transition-colors duration-300 ${
                             currentIndex === index ? 'bg-gray-600' : 'bg-gray-300'
                         }` }
-                        onClick={ () => setCurrentIndex(index) }
-                        aria-label={ `Ir para slide ${index + 1}` }
                     />
                 )) }
             </div>
-        </>
+        </div>
     );
 });
 
@@ -89,7 +118,6 @@ function InfoBanner() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Renderiza um placeholder enquanto detecta o tamanho da tela
     if (isMobile === null) {
         return (
             <div className="bg-gray-100 py-4 px-6 w-full">
