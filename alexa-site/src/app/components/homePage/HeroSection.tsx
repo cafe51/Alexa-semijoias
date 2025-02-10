@@ -1,14 +1,14 @@
 // src/app/components/homePage/HeroSection.tsx
 // Removemos o 'use client' porque esse componente é estático e não interage com o estado
 import Image from 'next/image';
-import heroBannerLarge from '@/../public/heroBannerLarge.webp';
+import heroBannerLarge from '@/../public/heroBannerSmall.webp';
 import bigHeroLogo from '@/../public/bigHeroLogo2.png';
 
 export default function HeroSection() {
     return (
         <section className="relative w-full">
             { /* Container principal com altura fixa para desktop */ }
-            <div className="relative w-[100vw] h-[30vh] md:h-[50vh] bg-skeleton">
+            <div className="relative w-[100%] h-[30vh] md:h-[50vh] bg-skeleton">
                 <Image
                     className="object-cover"
                     src={ heroBannerLarge }
