@@ -51,14 +51,13 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
     };
 
     const removeImage = (index: number) => {
-        const imagesFromState = [...state.images].filter((image) => image.index !== index);
-        const imagesWithNewIndex = imagesFromState.map((imageFromState) => {
-            if(imageFromState.index > index){
-                return { ...imageFromState, index: imageFromState.index -= 1 };
-            } else {
-                return imageFromState;
-            }
-        });
+        // Filtra as imagens removendo a que possui o índice informado
+        const imagesFromState = state.images.filter((image) => image.index !== index);
+        // Atualiza os índices das imagens que estavam após a imagem removida, sem mutar os objetos originais
+        const imagesWithNewIndex = imagesFromState.map((image) => ({
+            ...image,
+            index: image.index > index ? image.index - 1 : image.index,
+        }));
 
         handleSetImages(imagesWithNewIndex);
     };

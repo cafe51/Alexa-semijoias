@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType, ProductVariationsType, SectionType, StateNewProductType } from '@/app/utils/types';
 import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
 import DashboardProductDetails from './productPage/DashboardProductDetails';
-import DashboardProductEdition from './productPage/DashboardProductEdition';
 import { emptyProductBundleInitialState } from './productPage/emptyProductBundleInitialState';
 import { initialEmptyState } from '@/app/hooks/useNewProductState';
 import { useProductConverter } from '@/app/hooks/useProductConverter';
@@ -72,7 +71,6 @@ export default function ProductsDashboard() {
         };
         fetchSections();
     }, []);
-
 
     useEffect(() => {
         if (selectedProduct.exist) {
@@ -164,31 +162,42 @@ export default function ProductsDashboard() {
                 >
                     {
                         siteSections && siteSections.length > 0 &&
-                     <ProductQuantitiesList siteSections={ siteSections } />
+                        <ProductQuantitiesList siteSections={ siteSections } />
                     }
                 </ModalMaker>
             }
-                
-            <SlideInModal
-                isOpen={ showEditionModal }
-                closeModelClick={ () => setShowEditionModal(false) }
-                title="Editar Produto"
-            >
-                <DashboardProductEdition
-                    product={ productBundleEditable }
-                    useProductDataHandlers={ useProductDataHandlers }
-                    productFromFirebase={ selectedProduct }
-                    setRefreshProducts={ handleProductEdited }
-                />
-            </SlideInModal>
 
-            <SlideInModal
-                isOpen={ showCreateNewProductModal }
-                closeModelClick={ () => setShowCreateNewProductModal(false) }
-                title="Criar Novo Produto"
-            >
-                <ProductEditionForm useProductDataHandlers={ useProductDataHandlers } goToProductPage={ handleProductEdited } />
-            </SlideInModal>
+            { /* Renderiza o modal somente quando ele estiver aberto, garantindo que o formulário seja desmontado ao fechar */ }
+            { showEditionModal && (
+                <SlideInModal
+                    isOpen={ showEditionModal }
+                    closeModelClick={ () => setShowEditionModal(false) }
+                    title="Editar Produto"
+                >
+                    <ProductEditionForm
+                        // Usamos uma key baseada no id do produto para forçar a reinicialização do componente
+                        key={ selectedProduct.id }
+                        product={ productBundleEditable }
+                        useProductDataHandlers={ useProductDataHandlers }
+                        productFromFirebase={ selectedProduct }
+                        setRefreshProducts={ handleProductEdited }
+                    />
+                </SlideInModal>
+            ) }
+
+            { showCreateNewProductModal && (
+                <SlideInModal
+                    isOpen={ showCreateNewProductModal }
+                    closeModelClick={ () => setShowCreateNewProductModal(false) }
+                    title="Criar Novo Produto"
+                >
+                    <ProductEditionForm
+                        key="new"
+                        useProductDataHandlers={ useProductDataHandlers }
+                        goToProductPage={ handleProductEdited }
+                    />
+                </SlideInModal>
+            ) }
 
             <SlideInModal
                 slideDirection='left'
