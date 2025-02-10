@@ -43,9 +43,6 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
     // Memoriza o slug do produto
     const productSlug = useMemo(() => createSlugName(product.name), [product.name]);
 
-    // Define um atributo "sizes" responsivo para a imagem do produto
-    const imageSizes = '(max-width: 640px) 150px, 200px';
-
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
             <CardContent className="p-0 flex flex-col h-full">
@@ -61,7 +58,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                             }
                             alt={ `Foto de ${product.name}` }
                             title={ `Foto de ${product.name}` }
-                            sizes={ imageSizes }
+                            sizes={ '3000px' }
                             fill
                             placeholder="blur" // melhora a percepção de carregamento
                             blurDataURL={ blankImage.src }
