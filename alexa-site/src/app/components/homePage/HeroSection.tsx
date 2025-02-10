@@ -8,7 +8,7 @@ export default function HeroSection() {
     return (
         <section className="relative w-full">
             { /* Container principal com altura fixa para desktop */ }
-            <div className="relative w-[100%] h-[30vh] md:h-[50vh] bg-skeleton">
+            <div className="relative w-[100%] h-[30vh] bg-skeleton">
                 <Image
                     className="object-cover"
                     src={ heroBannerLarge }
@@ -16,7 +16,7 @@ export default function HeroSection() {
                     alt="Banner Principal Alexa Semijoias"
                     priority
                     // Usamos "100vw" para informar que a imagem ocupa toda a largura da viewport
-                    sizes="3000px"
+                    sizes="30px"
                     quality={ 80 } // Se possível, teste reduzir um pouco esse valor (ex: 75) sem comprometer a qualidade visual
                     fill
                     placeholder="blur"
