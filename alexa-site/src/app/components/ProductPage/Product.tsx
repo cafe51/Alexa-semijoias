@@ -17,10 +17,15 @@ import { CardContent } from '@/components/ui/card';
 import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
 import LoadingIndicator from '../LoadingIndicator';
 import ProductJsonLd from './ProductJsonLd';
-import RecommendedProducts from './RecommendedProducts';
 import ShareSection from './ShareSection';
 import { createSlugName } from '@/app/utils/createSlugName';
 import SelectionTooltip from '../SelectionTooltip';
+import dynamic from 'next/dynamic';
+
+const RecommendedProducts = dynamic(
+    () => import('@/app/components/ProductPage/RecommendedProducts'),
+    { ssr: true },
+);
 
 export default function Product({ id, initialProduct }: { id: string; initialProduct: ProductBundleType & FireBaseDocument }) {
     const { carrinho, userInfo } = useUserInfo();
