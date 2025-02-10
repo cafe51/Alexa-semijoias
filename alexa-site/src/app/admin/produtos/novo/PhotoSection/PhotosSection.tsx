@@ -1,3 +1,4 @@
+// src/app/admin/produtos/novo/PhotoSection/PhotosSection.tsx
 import { ImageProductDataType, StateNewProductType } from '@/app/utils/types';
 import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 import { StrictModeDroppable } from './StrictModeDroppable';
