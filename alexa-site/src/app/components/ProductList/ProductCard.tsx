@@ -66,7 +66,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                             placeholder="blur" // melhora a percepção de carregamento
                             blurDataURL={ blankImage.src }
                             priority={ homePage } // imagens prioritárias na homepage
-                            loading={ homePage ? 'eager' : 'lazy' }
+                            // loading={ homePage ? 'eager' : 'lazy' }
                             quality={ 75 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
                         />
                     </div>

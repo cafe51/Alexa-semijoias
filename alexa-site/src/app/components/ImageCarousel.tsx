@@ -28,7 +28,7 @@ export default function ImageCarousel({ productData: { images, name } }: { produ
                                         img.classList.add('loaded');
                                     } }
                                     priority={ index === 0 }
-                                    loading={ index === 0 ? 'eager' : 'lazy' }
+                                    // loading={ index === 0 ? 'eager' : 'lazy' }
                                     quality={ 85 }
                                 />
                             </div>
