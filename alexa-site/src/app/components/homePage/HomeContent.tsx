@@ -7,6 +7,7 @@ import InfoBanner from './InfoBanner';
 import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { fetchRandomProductForSection } from '@/app/services/products';
+import { serializeData } from '@/app/utils/serializeData';
 
 const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
     ssr: true,
@@ -34,7 +35,7 @@ async function getSections() {
         const sectionsSnapshot = await getDocs(sectionsRef);
         return sectionsSnapshot.docs.map((doc) => ({
             id: doc.id,
-            ...doc.data(),
+            ...serializeData(doc.data()),
         })) as (SectionType & FireBaseDocument)[];
     } catch (error) {
         console.error('Erro ao buscar seções:', error);
@@ -60,7 +61,7 @@ async function getFeaturedProducts(sectionsData: (SectionType & FireBaseDocument
             if (!doc) return null;
             return {
                 id: doc.id,
-                ...doc.data(),
+                ...serializeData(doc.data()),
             } as (ProductBundleType & FireBaseDocument);
         });
         const products = await Promise.all(productsPromises);
