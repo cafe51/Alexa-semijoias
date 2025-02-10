@@ -22,11 +22,6 @@ export default function ImageCarousel({ productData: { images, name } }: { produ
                                     fill
                                     sizes="3000px"
                                     className="object-cover loading"
-                                    onLoad={ (event) => {
-                                        const img = event.target as HTMLImageElement;
-                                        img.classList.remove('loading');
-                                        img.classList.add('loaded');
-                                    } }
                                     priority={ index === 0 }
                                     // loading={ index === 0 ? 'eager' : 'lazy' }
                                     quality={ 85 }
