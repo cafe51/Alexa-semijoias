@@ -146,7 +146,7 @@ export function BuyButtonOnCard({
             ) }
 
             <Button
-                className="w-full bg-[#D4AF37] hover:bg-[#C48B9F] text-white py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg lg:text-xl"
+                className="w-full bg-[#D4AF37] hover:bg-[#C48B9F] text-white py-2 sm:py-3 md:py-4 text-lg lg:text-xl"
                 onClick={ handleClickButtonBuyNow }
                 disabled={ isDisabled() }
             >

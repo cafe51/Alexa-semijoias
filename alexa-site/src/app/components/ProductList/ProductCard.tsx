@@ -91,25 +91,25 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                 </Link>
 
                 <div className="p-4 flex flex-col flex-grow">
-                    <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2 text-[#333333] line-clamp-2">
+                    <h3 className="text-lg md:text-xl lg:text-2xl font-semibold mb-2 text-[#333333] line-clamp-2">
                         { toTitleCase(product.name) }
                     </h3>
 
                     <div className="flex flex-col mb-3 flex-grow">
                         <div className="flex flex-wrap items-baseline gap-2">
-                            <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#D4AF37]">
+                            <span className="text-2xl lg:text-3xl font-bold text-[#D4AF37]">
                                 { formatPrice(displayPrice) }
                             </span>
                             { product.value.promotionalPrice > 0 && (
-                                <span className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500 line-through">
+                                <span className="text-lg lg:text-xl text-gray-500 line-through">
                                     { formatPrice(product.value.price) }
                                 </span>
                             ) }
                         </div>
 
-                        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mt-1">
+                        <p className="text-lg lg:text-xl text-gray-600 mt-1">
               ou até 6x de{ ' ' }
-                            <span className="font-semibold text-base sm:text-lg md:text-xl lg:text-2xl text-[#C48B9F]">
+                            <span className="font-semibold text-2xl lg:text-4xl text-[#C48B9F]">
                                 { formatPrice(installmentValue) }
                             </span>{ ' ' }
               sem juros
