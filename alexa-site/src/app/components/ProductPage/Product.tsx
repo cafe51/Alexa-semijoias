@@ -120,6 +120,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                     return;
                 }
                 const updatedProduct = await res.json();
+                console.log('Produto atualizado:', updatedProduct);
                 if (updatedProduct && updatedProduct.exist) {
                     setProduct(updatedProduct);
                 }

@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/carousel';
 
 export default function ImageCarousel({ productData: { images, name } }: { productData: ProductBundleType & FireBaseDocument }) {
+
+    console.log('PRODUCT ON CAROUSEL', images);
     return (
         <div className="w-full px-0 -mx-2 sm:mx-0">
             <Carousel className="w-full">
@@ -21,7 +23,7 @@ export default function ImageCarousel({ productData: { images, name } }: { produ
                                     src={ image.localUrl }
                                     fill
                                     sizes="3000px"
-                                    className="object-cover loading"
+                                    className="object-cover"
                                     priority={ index === 0 }
                                     // loading={ index === 0 ? 'eager' : 'lazy' }
                                     quality={ 85 }
