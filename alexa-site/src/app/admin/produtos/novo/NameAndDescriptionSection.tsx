@@ -144,7 +144,7 @@ export default function NameAndDescriptionSection({ state, handlers }: NameAndDe
                 onClick={ handleGenerateDescription }
                 className={ `mt-2 px-4 py-2 rounded bg-blue-500 text-white ${state.images.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}` }
             >
-                { generating ? 'Gerando...' : 'Gerar descrição com AI' }
+                { generating ? 'Gerando...' : 'Gerar descrição' }
             </button>
         </section>
     );
