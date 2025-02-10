@@ -20,7 +20,7 @@ export default function ImageCarousel({ productData: { images, name } }: { produ
                                     alt={ `${name} - Imagem ${index + 1}` }
                                     src={ image.localUrl }
                                     fill
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+                                    sizes="3000px"
                                     className="object-cover loading"
                                     onLoad={ (event) => {
                                         const img = event.target as HTMLImageElement;
