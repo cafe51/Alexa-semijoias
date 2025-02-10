@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import toTitleCase from '../utils/toTitleCase';
 import { createSlugName } from '../utils/createSlugName';
 import { FireBaseDocument, SectionType } from '../utils/types';
+import Link from 'next/link';
 
 type FooterSectionType = { name: string, link: string };
 
@@ -26,10 +27,17 @@ const FooterSection = ({ title, items }: { title: string, items: FooterSectionTy
     </div>
 );
 
-const SocialIcon = ({ Icon, link }: { Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>, link: string }) => (
-    <a href={ link } target="_blank" rel="noopener noreferrer" className="text-[#333333] hover:text-[#D4AF37] transition-colors duration-300 p-2">
+const SocialIcon = ({ Icon, link, linkName }: { Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>, link: string, linkName: string }) => (
+    <Link
+        href={ link }
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-[#333333] hover:text-[#D4AF37] transition-colors duration-300 p-2"
+        aria-label={ linkName }
+    >
+
         <Icon size={ 24 } className="hover:scale-110 transition-transform duration-300" />
-    </a>
+    </Link>
 );
 
 interface FooterProps {
@@ -108,8 +116,8 @@ export default function Footer({ sections }: FooterProps) {
                         <Logo isMobile={ isMobile } />
                     </div>
                     <div className="flex space-x-6 mb-4 sm:mb-0">
-                        <SocialIcon Icon={ Facebook } link="https://facebook.com/alexasemijoias" />
-                        <SocialIcon Icon={ Instagram } link="https://instagram.com/alexa.semijoias" />
+                        <SocialIcon Icon={ Facebook } link="https://facebook.com/alexasemijoias" linkName="Link para o Facebook da ALEXA SEMIJOIAS" />
+                        <SocialIcon Icon={ Instagram } link="https://instagram.com/alexa.semijoias" linkName="Link para o Instagram da ALEXA SEMIJOIAS" />
                     </div>
                     <div className="text-[#333333] text-base lg:text-lg">
                         <p className="mb-2 flex items-center justify-center sm:justify-start">
