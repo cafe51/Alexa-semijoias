@@ -50,11 +50,18 @@ export default function DesktopMenu()  {
             message: 'Módulo de configurações em desenvolvimento',
         },
         { 
+            icon: Settings, 
+            label: 'Cupons', 
+            href: '/admin/coupons',
+            enabled: true,
+        },
+        { 
             icon: Store, 
             label: 'Ir para Loja', 
             href: '/',
             enabled: true,
         },
+        
         // {
         //     icon: Settings,
         //     label: 'Gerenciar Categorias',
