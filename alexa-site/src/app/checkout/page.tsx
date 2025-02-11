@@ -17,6 +17,7 @@ import { FireBaseDocument, ProductCartType } from '../utils/types';
 import SummaryCard from './OrderSummarySection/SummaryCard';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { useCollection } from '../hooks/useCollection';
+import CouponSection from './CouponSection/CouponSection';
 
 export default function Checkout() {
     const router = useRouter();
@@ -31,6 +32,9 @@ export default function Checkout() {
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
     const [isPaymentFinished, setIsPaymentFinished] = useState(false);
     const { screenSize } = useWindowSize();
+
+    // Estados para o cupom
+    const [ couponDiscount, setCouponDiscount ] = useState<number>(0);
 
     const {
         state,
@@ -130,9 +134,22 @@ export default function Checkout() {
                 <div className="space-y-4">
                     <OrderSummarySection 
                         carrinho={ carrinho } 
-                        cartPrice={ cartPrice } 
+                        cartPrice={ cartPrice }
+                        couponDiscount={ couponDiscount }
                         handleShowFullOrderSummary={ handleShowFullOrderSummary }
                         state={ state }
+                    />
+                    { /* Seção de cupom */ }
+                    <CouponSection 
+                        cartPrice={ cartPrice }
+                        carrinho={ carrinho }
+
+                        onCouponApplied={ (_coupon, discount) => {
+                            setCouponDiscount(discount);
+                        } }
+                        onCouponRemoved={ () => {
+                            setCouponDiscount(0);
+                        } }
                     />
                     <AccountSection 
                         handleShowLoginSection={ handleShowLoginSection } 
@@ -159,7 +176,7 @@ export default function Checkout() {
                     />
                     <PaymentSectionWithMercadoPago
                         state={ state }
-                        cartPrice={ cartPrice }
+                        cartPrice={ cartPrice - couponDiscount } // valor do carrinho com desconto
                         userInfo={ userInfo }
                         preferenceId={ preferenceId }
                         showPaymentSection={ showPaymentSection }
@@ -175,11 +192,16 @@ export default function Checkout() {
                 <div className="space-y-6">
                     { /* Order Summary no topo */ }
                     <div className="w-full">
-                        <OrderSummarySection 
-                            carrinho={ carrinho } 
-                            cartPrice={ cartPrice } 
-                            handleShowFullOrderSummary={ handleShowFullOrderSummary }
-                            state={ state }
+                        <CouponSection 
+                            cartPrice={ cartPrice }
+                            carrinho={ carrinho }
+
+                            onCouponApplied={ (_coupon, discount) => {
+                                setCouponDiscount(discount);
+                            } }
+                            onCouponRemoved={ () => {
+                                setCouponDiscount(0);
+                            } }
                         />
                     </div>
                     
@@ -202,6 +224,17 @@ export default function Checkout() {
                         
                         { /* Coluna 2 */ }
                         <div className="space-y-4">
+                            <CouponSection 
+                                cartPrice={ cartPrice }
+                                carrinho={ carrinho }
+
+                                onCouponApplied={ (_coupon, discount) => {
+                                    setCouponDiscount(discount);
+                                } }
+                                onCouponRemoved={ () => {
+                                    setCouponDiscount(0);
+                                } }
+                            />
                             <DeliveryPriceSection
                                 cartPrice={ cartPrice } 
                                 carrinho={ carrinho }

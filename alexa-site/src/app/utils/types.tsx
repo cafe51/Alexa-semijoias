@@ -2,6 +2,54 @@
 import { Timestamp, WhereFilterOp } from 'firebase/firestore';
 import { SavedSubSectionType } from '../hooks/useSectionManagement';
 
+export type CouponUsageType = {
+    id: string;
+    cupomId: string; // Referência ao ID do cupom
+    usuarioId: string; // ID do usuário que utilizou o cupom
+    pedidoId: string; // ID do pedido onde o cupom foi aplicado
+    dataUso: Timestamp; // Data de utilização do cupom
+};
+
+export type CouponValidationResponse = {
+    valido: boolean;
+    descontoAplicado?: number; // Apenas se o cupom for válido
+    mensagemErro?: string; // Se inválido, exibir o motivo do erro
+    coupon?: CouponType;
+};
+
+export type CouponConditionType = {
+    valorMinimoCompra?: number; // Ex: 100 para cupom válido apenas para compras acima de R$100
+    categoriasPermitidas?: string[]; // IDs das categorias que podem usar o cupom
+    produtosEspecificos?: string[]; // IDs de produtos que podem usar o cupom
+    primeiraCompraApenas?: boolean; // O cupom é válido apenas para novos clientes?
+    somenteUsuarios?: string[]; // Lista de userId que podem usar esse cupom
+    textoExplicativo: string; // Mensagem personalizada sobre as condições do cupom
+};
+
+export type CouponType = {
+    id: string; // ID do cupom
+    codigo: string; // Código do cupom (único e case-insensitive)
+    descricao: string; // Texto explicativo do cupom para exibição ao usuário
+    tipo: 'percentual' | 'fixo' | 'freteGratis'; // Tipo de cupom
+    valor: number; // Valor do desconto (% se for percentual, R$ se for fixo)
+    
+    dataInicio: Timestamp; // Data de início da validade
+    dataExpiracao: Timestamp; // Data de expiração
+    
+    limiteUsoGlobal: number | null; // Número máximo de usos total (null = ilimitado)
+    limiteUsoPorUsuario: number | null; // Número máximo de usos por cliente (null = ilimitado)
+
+    condicoes: CouponConditionType; // Objeto que armazena todas as condições do cupom
+
+    cumulativo: boolean; // Permite uso com outros cupons?
+    
+    status: 'ativo' | 'expirado' | 'desativado'; // Estado atual do cupom
+
+    criadoEm: Timestamp; // Data de criação
+    atualizadoEm: Timestamp; // Última atualização
+};
+
+
 export type DadosDaEmpresaType = {
     nome: string;
     cnpj: string;
@@ -173,7 +221,7 @@ export type DeliveryOptionType = {
     name: string;
     deliveryTime: number;
     price: number;
-  }
+}
 
 export type FilterOptionForUseSnapshot = {
     field: string,
@@ -278,8 +326,6 @@ export type ViaCepResponse = {
 export type AddressType = { numero: string, referencia: string } & ViaCepResponse;
 
 export type StatusType = 'aguardando pagamento' | 'preparando para o envio' | 'pedido enviado' | 'cancelado' | 'entregue';
-
-
 
 export type PixPaymentResponseType = { qrCode: string, qrCodeBase64: string, ticketUrl: string }
 

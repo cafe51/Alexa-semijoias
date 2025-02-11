@@ -8,15 +8,13 @@ import Link from 'next/link';
 interface OrderSummaryProps {
     handleShowFullOrderSummary: (option: boolean) => void;
     carrinho: ProductCartType[] | null;
-    subtotalPrice: number | undefined
-    frete: number | undefined
+    subtotalPrice: number | undefined;
+    frete: number | undefined;
+    couponDiscount?: number;
 }
 
-export default function OrderSummary({ handleShowFullOrderSummary, carrinho, subtotalPrice, frete }: OrderSummaryProps) {
-
-    console.log('CARRINHO', carrinho);
-
-    if (!carrinho || carrinho.length < 0) return <p>Loading...</p>;
+export default function OrderSummary({ handleShowFullOrderSummary, carrinho, subtotalPrice, frete, couponDiscount = 0 }: OrderSummaryProps) {
+    if (!carrinho || carrinho.length === 0) return <p>Loading...</p>;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -34,16 +32,19 @@ export default function OrderSummary({ handleShowFullOrderSummary, carrinho, sub
                     <PriceSummarySection
                         frete={ frete }
                         subtotalPrice={ subtotalPrice }
+                        couponDiscount={ couponDiscount }
                     />
                     <section className="flex flex-col gap-1 w-full border border-gray-100 shadow-lg mt-4">
                         <div className="flex justify-between w-full p-4">
                             <h3 className="text-center self-center">Produtos</h3>
-                            <Link href={ '/carrinho' }><h3 className="text-center text-sm self-center text-blue-400">Editar produtos</h3></Link>
+                            <Link href={ '/carrinho' }>
+                                <h3 className="text-center text-sm self-center text-blue-400">Editar produtos</h3>
+                            </Link>
                         </div>
                         { carrinho ? carrinho.map((produto: ProductCartType) => {
                             if (produto && produto.quantidade && produto.quantidade > 0) {
                                 return <SummaryCard key={ produto.skuId } produto={ produto } />;
-                            } else return false;
+                            } else return null;
                         }) : <span>Loading...</span> }
                     </section>
                 </div>
