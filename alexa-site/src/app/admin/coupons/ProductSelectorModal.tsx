@@ -1,8 +1,9 @@
 // app/admin/coupons/ProductSelectorModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalWrapper from './ModalWrapper';
 import { useProducts } from '@/app/hooks/useProducts';
 import { ProductBundleType, FireBaseDocument } from '@/app/utils/types';
+import ButtonPaginator from '@/app/components/ButtonPaginator';
 
 interface ProductSelectorModalProps {
   initialSelected: (ProductBundleType & FireBaseDocument)[];
@@ -14,18 +15,31 @@ const ProductSelectorModal: React.FC<ProductSelectorModalProps> = ({ initialSele
     const [searchTerm, setSearchTerm] = useState('');
     const [confirmedSearchTerm, setConfirmedSearchTerm] = useState('');
     const [selected, setSelected] = useState<(ProductBundleType & FireBaseDocument)[]>(initialSelected);
-  
-    // O hook só realizará a busca se confirmedSearchTerm não estiver vazio.
-    const { products, isLoading, loadMore } = useProducts({ searchTerm: confirmedSearchTerm });
+    const [productsList, setProductsList] = useState<(ProductBundleType & FireBaseDocument)[]>([]);
 
-    const handleSelectProduct = (product: ProductBundleType & FireBaseDocument) => {
-        if (!selected.find(item => item.id === product.id)) {
+    // Ref para o container de listagem para preservar o scroll
+
+    // O hook useProducts só realizará a busca se confirmedSearchTerm não estiver vazio.
+    const { products, loadMore, hasMore, isLoading } = useProducts({ searchTerm: confirmedSearchTerm });
+
+    useEffect(() => {
+        setProductsList(products);
+    }, [products]);
+
+    // Alterna a seleção do produto: se já estiver selecionado, remove-o; caso contrário, adiciona-o.
+    const handleToggleProduct = (product: ProductBundleType & FireBaseDocument) => {
+        if (selected.find(item => item.id === product.id)) {
+            setSelected(selected.filter(item => item.id !== product.id));
+        } else {
             setSelected([...selected, product]);
         }
     };
 
-    const handleRemoveProduct = (id: string) => {
-        setSelected(selected.filter(product => product.id !== id));
+    // Função para apenas adicionar o produto (usada caso o clique seja feito no botão, sem "toggle")
+    const handleSelectProduct = (product: ProductBundleType & FireBaseDocument) => {
+        if (!selected.find(item => item.id === product.id)) {
+            setSelected([...selected, product]);
+        }
     };
 
     const triggerSearch = () => {
@@ -60,90 +74,58 @@ const ProductSelectorModal: React.FC<ProductSelectorModalProps> = ({ initialSele
             </div>
             { confirmedSearchTerm === '' ? (
                 <p className="text-gray-600">
-          Digite um termo de pesquisa e clique em `&quot;`Pesquisar`&quot;` para ver os produtos.
+          Digite um termo de pesquisa e clique em  `&ldquo;`Pesquisar`&ldquo;` para ver os produtos.
                 </p>
             ) : (
                 <div className="max-h-60 overflow-y-auto mb-4">
-                    { isLoading ? (
-                        <p>Carregando produtos...</p>
-                    ) : (
-                        products.map(product => (
-                            <div
-                                key={ product.id }
-                                className="flex items-center justify-between p-2 border rounded mb-2"
-                            >
-                                <div className="flex items-center space-x-4">
-                                    <img
-                                        src={ product.images?.[0]?.localUrl || '/placeholder.png' }
-                                        alt={ product.name }
-                                        className="w-12 h-12 object-cover rounded"
-                                    />
-                                    <div>
-                                        <p className="font-semibold">{ product.name }</p>
-                                        <p className="text-sm text-gray-600">Estoque: { product.estoqueTotal }</p>
-                                        <p className="text-sm text-gray-600">Preço: R$ { product.finalPrice }</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={ () => handleSelectProduct(product) }
-                                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                    { (
+                        productsList.map(product => {
+                            const isSelected = !!selected.find(item => item.id === product.id);
+                            return (
+                                <div
+                                    key={ product.id }
+                                    className={ `flex items-center justify-between p-2 border rounded mb-2 cursor-pointer ${
+                                        isSelected ? 'bg-green-100' : ''
+                                    }` }
+                                    onClick={ () => handleToggleProduct(product) }
                                 >
-                  Selecionar
-                                </button>
-                            </div>
-                        ))
+                                    <div className="flex items-center space-x-4">
+                                        <img
+                                            src={ product.images?.[0]?.localUrl || '/placeholder.png' }
+                                            alt={ product.name }
+                                            className="w-12 h-12 object-cover rounded"
+                                        />
+                                        <div>
+                                            <p className="font-semibold">{ product.name }</p>
+                                            <p className="text-sm text-gray-600">Estoque: { product.estoqueTotal }</p>
+                                            <p className="text-sm text-gray-600">Preço: R$ { product.finalPrice }</p>
+                                        </div>
+                                    </div>
+                                    { isSelected ? (
+                                        <span className="bg-gray-300 text-gray-700 px-3 py-1 rounded">Selecionado</span>
+                                    ) : (
+                                        <button
+                                            onClick={ e => {
+                                                e.stopPropagation();
+                                                handleSelectProduct(product);
+                                            } }
+                                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                                        >
+                      Selecionar
+                                        </button>
+                                    ) }
+                                </div>
+                            );
+                        })
                     ) }
                 </div>
             ) }
-            { confirmedSearchTerm !== '' && products.length > 0 && (
-                <button
-                    onClick={ loadMore }
-                    className="mb-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                >
-          Carregar mais
-                </button>
+            { confirmedSearchTerm !== '' && products.length > 0 && hasMore && (
+                <ButtonPaginator loadMore={ loadMore } isLoading={ isLoading }>
+                          Carregar mais
+                </ButtonPaginator>
             ) }
-            <div className="mb-4">
-                <h3 className="font-semibold mb-2">Produtos Selecionados:</h3>
-                { selected.length === 0 ? (
-                    <p>Nenhum produto selecionado.</p>
-                ) : (
-                    <div className="space-y-2">
-                        { selected.map(product => (
-                            <div
-                                key={ product.id }
-                                className="flex items-center justify-between p-2 border rounded"
-                            >
-                                <div className="flex items-center space-x-4">
-                                    <img
-                                        src={ product.images?.[0]?.localUrl || '/placeholder.png' }
-                                        alt={ product.name }
-                                        className="w-12 h-12 object-cover rounded"
-                                    />
-                                    <div>
-                                        <p className="font-semibold">{ product.name }</p>
-                                        <p className="text-sm text-gray-600">Estoque: { product.estoqueTotal }</p>
-                                        <p className="text-sm text-gray-600">Preço: R$ { product.finalPrice }</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={ () => handleRemoveProduct(product.id) }
-                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                                >
-                  Remover
-                                </button>
-                            </div>
-                        )) }
-                    </div>
-                ) }
-            </div>
-            <div className="flex justify-end space-x-4">
-                <button
-                    onClick={ onClose }
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
-                >
-          Cancelar
-                </button>
+            <div className="flex justify-end">
                 <button
                     onClick={ () => onConfirm(selected) }
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"

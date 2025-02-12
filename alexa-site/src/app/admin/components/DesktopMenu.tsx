@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ShoppingBag, Users, Settings, BarChart2, LogOut, Store, DollarSign } from 'lucide-react';
+import { ShoppingBag, Users, Settings, BarChart2, LogOut, Store, DollarSign, BadgePercent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useLogout } from '@/app/hooks/useLogout';
@@ -50,7 +50,7 @@ export default function DesktopMenu()  {
             message: 'Módulo de configurações em desenvolvimento',
         },
         { 
-            icon: Settings, 
+            icon: BadgePercent, 
             label: 'Cupons', 
             href: '/admin/coupons',
             enabled: true,

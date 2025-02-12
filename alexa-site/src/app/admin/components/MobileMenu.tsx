@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Menu, ShoppingBag, Users, Settings, BarChart2, LogOut, Store, DollarSign } from 'lucide-react';
+import { Menu, ShoppingBag, Users, Settings, BarChart2, LogOut, Store, DollarSign, BadgePercent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useLogout } from '@/app/hooks/useLogout';
@@ -56,6 +56,12 @@ const MobileMenu = ({ isOpen, toggleMenu }: MobileMenuProps) => {
             href: '/admin/configuracoes',
             enabled: false,
             message: 'Módulo de configurações em desenvolvimento',
+        },
+        { 
+            icon: BadgePercent, 
+            label: 'Cupons', 
+            href: '/admin/coupons',
+            enabled: true,
         },
         { 
             icon: Store, 

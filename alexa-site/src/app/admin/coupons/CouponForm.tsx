@@ -1,7 +1,14 @@
 // app/admin/coupons/CouponForm.tsx
 'use client';
 import React, { useState } from 'react';
-import { CouponType, CouponConditionType } from '@/app/utils/types';
+import {
+    CouponType,
+    CouponConditionType,
+    FireBaseDocument,
+    UserType,
+    ProductBundleType,
+    SectionType,
+} from '@/app/utils/types';
 import { Timestamp } from 'firebase/firestore';
 import CategorySelectorModal from './CategorySelectorModal';
 import UserSelectorModal from './UserSelectorModal';
@@ -12,6 +19,14 @@ interface CouponFormProps {
   onSubmit: (data: CouponType) => void;
   onCancel: () => void;
 }
+
+// Função para sanitizar o código: remove acentos, espaços e caracteres especiais.
+const sanitizeCodigo = (value: string) => {
+    return value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9]/g, '');
+};
 
 const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel }) => {
     // ===== ESTADOS DOS CAMPOS PRINCIPAIS =====
@@ -36,14 +51,14 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
     const [status, setStatus] = useState<CouponType['status']>(initialData?.status || 'ativo');
 
     // ===== ESTADOS PARA USUÁRIOS (SEM CONFLITO COM A LIMITAÇÃO) =====
-    const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<(UserType & FireBaseDocument)[]>([]);
     const [showUserModal, setShowUserModal] = useState(false);
 
   // ===== ESTADOS PARA A LIMITAÇÃO: categorias x produtos =====
   type LimitationType = 'none' | 'categorias' | 'produtos';
   const [limitationType, setLimitationType] = useState<LimitationType>('none');
-  const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
-  const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<(SectionType & FireBaseDocument)[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<(ProductBundleType & FireBaseDocument)[]>([]);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
 
@@ -72,25 +87,25 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
           condicoes.primeiraCompraApenas = true;
       }
       if (selectedUsers.length > 0) {
-          condicoes.somenteUsuarios = selectedUsers.map((user: any) => user.userId);
+          condicoes.somenteUsuarios = selectedUsers.map((user) => user.userId);
       }
       if (limitationType === 'categorias' && selectedCategories.length > 0) {
-          condicoes.categoriasPermitidas = selectedCategories.map((cat: any) => cat.id);
+          condicoes.categoriasPermitidas = selectedCategories.map((cat) => cat.id);
       } else if (limitationType === 'produtos' && selectedProducts.length > 0) {
-          condicoes.produtosEspecificos = selectedProducts.map((prod: any) => prod.id);
+          condicoes.produtosEspecificos = selectedProducts.map((prod) => prod.id);
       }
-      // O objeto final do cupom
+      // O objeto final do cupom utiliza o código sanitizado como ID
       const couponPreview: CouponType = {
-          id: initialData?.id || '',
+          id: codigo,
           codigo,
           descricao,
           tipo,
-          valor: Number(valor),
+          valor: tipo === 'freteGratis' ? 0 : Number(valor),
           dataInicio: Timestamp.fromDate(new Date(dataInicio)),
           dataExpiracao: Timestamp.fromDate(new Date(dataExpiracao)),
           limiteUsoGlobal: limiteUsoGlobal !== '' ? Number(limiteUsoGlobal) : null,
           limiteUsoPorUsuario: limiteUsoPorUsuario !== '' ? Number(limiteUsoPorUsuario) : null,
-          condicoes: condicoes as CouponConditionType, // Garantindo que textoExplicativo esteja definido
+          condicoes: condicoes as CouponConditionType,
           cumulativo,
           status,
           criadoEm: initialData?.criadoEm || Timestamp.now(),
@@ -108,7 +123,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
       if (!codigo.trim()) missingFields.push('Código');
       if (!descricao.trim()) missingFields.push('Descrição');
       if (!tipo) missingFields.push('Tipo');
-      if (!valor || valor <= 0) missingFields.push('Valor');
+      if (tipo !== 'freteGratis' && (!valor || valor <= 0)) missingFields.push('Valor');
       if (!dataInicio) missingFields.push('Data Início');
       if (!dataExpiracao) missingFields.push('Data Expiração');
       if (!textoExplicativo.trim()) missingFields.push('Texto Explicativo');
@@ -122,7 +137,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
       }
 
       if (missingFields.length > 0) {
-          alert(`Por favor, preencha os seguintes campos obrigatórios:\n${missingFields.join(', ')}`);
+          alert(`Por favor, preencha os seguintes campos obrigatórios:\n\n${missingFields.join(', \n\n')}`);
           return;
       }
 
@@ -135,21 +150,21 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
           condicoes.primeiraCompraApenas = true;
       }
       if (selectedUsers.length > 0) {
-          condicoes.somenteUsuarios = selectedUsers.map((user: any) => user.userId);
+          condicoes.somenteUsuarios = selectedUsers.map((user) => user.userId);
       }
       if (limitationType === 'categorias' && selectedCategories.length > 0) {
-          condicoes.categoriasPermitidas = selectedCategories.map((cat: any) => cat.id);
+          condicoes.categoriasPermitidas = selectedCategories.map((cat) => cat.id);
       } else if (limitationType === 'produtos' && selectedProducts.length > 0) {
-          condicoes.produtosEspecificos = selectedProducts.map((prod: any) => prod.id);
+          condicoes.produtosEspecificos = selectedProducts.map((prod) => prod.id);
       }
       // Se a limitação for "none", não inclui nenhum dos dois campos
 
       const coupon: CouponType = {
-          id: initialData?.id || '',
+          id: codigo,
           codigo,
           descricao,
           tipo,
-          valor: Number(valor),
+          valor: tipo === 'freteGratis' ? 0 : Number(valor),
           dataInicio: Timestamp.fromDate(new Date(dataInicio)),
           dataExpiracao: Timestamp.fromDate(new Date(dataExpiracao)),
           limiteUsoGlobal: limiteUsoGlobal !== '' ? Number(limiteUsoGlobal) : null,
@@ -182,10 +197,11 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                           <input
                               type="text"
                               value={ codigo }
-                              onChange={ (e) => setCodigo(e.target.value) }
+                              onChange={ (e) => setCodigo(sanitizeCodigo(e.target.value)) }
                               className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               required
                           />
+                          <small className="text-gray-500">Apenas letras e números (sem espaços ou caracteres especiais).</small>
                       </div>
                       <div>
                           <label className="block font-semibold mb-1">Descrição</label>
@@ -211,13 +227,22 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                       </div>
                       <div>
                           <label className="block font-semibold mb-1">Valor</label>
-                          <input
-                              type="number"
-                              value={ valor }
-                              onChange={ (e) => setValor(Number(e.target.value)) }
-                              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              required
-                          />
+                          { tipo === 'freteGratis' ? (
+                              <input
+                                  type="text"
+                                  value="frete grátis"
+                                  disabled
+                                  className="w-full border rounded p-2 bg-gray-100 text-gray-600"
+                              />
+                          ) : (
+                              <input
+                                  type="number"
+                                  value={ valor }
+                                  onChange={ (e) => setValor(Number(e.target.value)) }
+                                  className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  required
+                              />
+                          ) }
                       </div>
                       <div>
                           <label className="block font-semibold mb-1">Data Início</label>
@@ -240,7 +265,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                           />
                       </div>
                       <div>
-                          <label className="block font-semibold mb-1">Limite Uso Global</label>
+                          <label className="block font-semibold mb-1">Quantidade</label>
                           <input
                               type="number"
                               value={ limiteUsoGlobal }
@@ -250,7 +275,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                           />
                       </div>
                       <div>
-                          <label className="block font-semibold mb-1">Limite Uso por Usuário</label>
+                          <label className="block font-semibold mb-1">Limite por Usuário</label>
                           <input
                               type="number"
                               value={ limiteUsoPorUsuario }
@@ -287,7 +312,9 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                               />
                           </div>
                           <div>
-                              <label className="block font-semibold mb-1">Texto Explicativo <span className="text-red-500">*</span></label>
+                              <label className="block font-semibold mb-1">
+                  Texto Explicativo <span className="text-red-500">*</span>
+                              </label>
                               <textarea
                                   value={ textoExplicativo }
                                   onChange={ (e) => setTextoExplicativo(e.target.value) }
@@ -296,7 +323,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                               ></textarea>
                           </div>
                       </div>
-                      <div className="flex flex-col md:flex-row items-center gap-4">
+                      <div className="flex flex-col items-start md:flex-row md:items-center gap-10">
                           <label className="flex items-center">
                               <input
                                   type="checkbox"
@@ -323,7 +350,6 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                                   className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                   <option value="ativo">Ativo</option>
-                                  <option value="expirado">Expirado</option>
                                   <option value="desativado">Desativado</option>
                               </select>
                           </div>
@@ -340,7 +366,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                           </button>
                           { selectedUsers.length > 0 && (
                               <ul className="mt-2 space-y-1">
-                                  { selectedUsers.map((user: any) => (
+                                  { selectedUsers.map((user) => (
                                       <li key={ user.id } className="flex items-center justify-between bg-gray-100 p-2 rounded">
                                           <span>
                                               { user.nome } ({ user.email })
@@ -348,7 +374,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                                           <button
                                               type="button"
                                               onClick={ () =>
-                                                  setSelectedUsers(selectedUsers.filter((u: any) => u.id !== user.id))
+                                                  setSelectedUsers(selectedUsers.filter((u) => u.id !== user.id))
                                               }
                                               className="text-red-500"
                                           >
@@ -361,8 +387,8 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                       </div>
                       { /* Seção de Limitação: escolha entre categorias ou produtos */ }
                       <div className="border p-4 rounded">
-                          <h3 className="font-bold mb-2">Limitação do Cupom</h3>
-                          <div className="flex items-center gap-4 mb-4">
+                          <h3 className="font-bold mb-8">Limitação do Cupom</h3>
+                          <div className="flex flex-col items-start md:flex-row md:items-center gap-8 mb-4">
                               <label className="flex items-center">
                                   <input
                                       type="radio"
@@ -408,13 +434,13 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                                   </button>
                                   { selectedCategories.length > 0 && (
                                       <ul className="mt-2 space-y-1">
-                                          { selectedCategories.map((cat: any) => (
+                                          { selectedCategories.map((cat) => (
                                               <li key={ cat.id } className="flex items-center justify-between bg-gray-100 p-2 rounded">
                                                   <span>{ cat.sectionName }</span>
                                                   <button
                                                       type="button"
                                                       onClick={ () =>
-                                                          setSelectedCategories(selectedCategories.filter((c: any) => c.id !== cat.id))
+                                                          setSelectedCategories(selectedCategories.filter((c) => c.id !== cat.id))
                                                       }
                                                       className="text-red-500"
                                                   >
@@ -437,11 +463,11 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                                   </button>
                                   { selectedProducts.length > 0 && (
                                       <ul className="mt-2 space-y-1">
-                                          { selectedProducts.map((prod: any) => (
+                                          { selectedProducts.map((prod) => (
                                               <li key={ prod.id } className="flex items-center justify-between bg-gray-100 p-2 rounded">
                                                   <div className="flex items-center gap-2">
                                                       <img
-                                                          src={ prod.images?.[0]?.url || '/placeholder.png' }
+                                                          src={ prod.images?.[0]?.localUrl || '/placeholder.png' }
                                                           alt={ prod.name }
                                                           className="w-10 h-10 object-cover rounded"
                                                       />
@@ -450,7 +476,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
                                                   <button
                                                       type="button"
                                                       onClick={ () =>
-                                                          setSelectedProducts(selectedProducts.filter((p: any) => p.id !== prod.id))
+                                                          setSelectedProducts(selectedProducts.filter((p) => p.id !== prod.id))
                                                       }
                                                       className="text-red-500"
                                                   >
