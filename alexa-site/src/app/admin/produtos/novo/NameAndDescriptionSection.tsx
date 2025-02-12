@@ -1,11 +1,14 @@
 // app/admin/dashboard/[adminId]/produtos/novo/NameAndDescriptionSection.tsx
 import { useState } from 'react';
 import { StateNewProductType, UseNewProductState } from '@/app/utils/types';
+import { compressImage } from '@/app/utils/compressImage';
 
 interface NameAndDescriptionSectionProps {
   state: StateNewProductType;
   handlers: UseNewProductState;
 }
+
+const MAX_FILE_SIZE = 300 * 1024; // 300KB em bytes
 
 export default function NameAndDescriptionSection({ state, handlers }: NameAndDescriptionSectionProps) {
     const [generating, setGenerating] = useState(false);
@@ -33,8 +36,9 @@ export default function NameAndDescriptionSection({ state, handlers }: NameAndDe
         const imagesData = await Promise.all(
             selectedImages.map(async(image) => {
                 if (image.file) {
+                    const compressedImage = await compressImage(image.file, MAX_FILE_SIZE);
                     try {
-                        return await getBase64(image.file);
+                        return await getBase64(compressedImage);
                     } catch (err) {
                         console.error('Erro convertendo imagem para Base64:', err);
                         return '';

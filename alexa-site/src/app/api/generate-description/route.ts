@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         // Detalhamento sobre o tipo de produto e atributos a serem ressaltados.
         messageContent.push({
             type: 'text',
-            text: 'Considere que os produtos podem ser semijoias banhadas a ouro 18k ou peças em aço inox, ambas reconhecidas pela beleza, qualidade e durabilidade. Sua copy deve realçar os atributos do produto, evidenciando detalhes únicos presentes nas imagens (como design, cores e texturas) e conectando emocionalmente com o público.',
+            text: 'Considere que os produtos podem ser semijoias banhadas a ouro 18k ou peças em aço inox, ambas reconhecidas pela beleza, qualidade e durabilidade. Analise as imagens para interpretar a peça definir como será sua descrição. Sua copy deve realçar os atributos do produto, evidenciando detalhes únicos presentes nas imagens (como design, cores, texturas, formato e material) e conectando emocionalmente com o público. Faça uma analise minuciosa da imagem identificando todos os detalhes e particularidades da peça para poder criar uma boa copy, descritiva e persuasiva. Faça a copy baseando-se nos modelos de exemplo que eu vou te passar, faça na mesma estrutura textual. Observe que às vezes uma foto será a peça no corpo da modelo e às vezes haverá a foto da apenas da peça. Baseie-se em todas essas informações para identificar como a peça será descrita. ',
         });
 
         // Instrução para uma análise minuciosa e restrição quanto ao termo indesejado.
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
         messageContent.push({
             type: 'text',
-            text: 'Não use notações de markdown para escrever a descrição. Mas use formatação e emojis.',
+            text: 'Não use notações de markdown para escrever a descrição.',
         });
 
         messageContent.push({
@@ -65,19 +65,19 @@ export async function POST(request: Request) {
         messageContent.push({
             type: 'text',
             text: `Abaixo seguem alguns exemplos de descrições para referência (note que, mesmo que alguns exemplos contenham a palavra "sofisticado", evite usá-la na resposta):
-
+Exemplo 1:
 "✨ Um toque de modernidade e elegância! ✨
 Com um design marcante, esse brinco de argola com três fios torcidos combina textura e brilho em uma peça única e versátil. Disponível em tons prateado e dourado, ele é perfeito para quem busca um acessório refinado para elevar qualquer look. Feito em aço inox, garante durabilidade e conforto para o uso diário.
-
+Exemplo 2:
 🐍 O poder e a sedução da serpente no seu look! 🐍
 Esse anel ousado traz o formato de uma serpente envolvendo o dedo em duas voltas, simbolizando transformação, proteção e sabedoria. Seu design envolvente se ajusta perfeitamente, criando um efeito impactante e marcante. Produzido em aço inox, ele é resistente e perfeito para quem ama acessórios com significado! ✨
-
+Exemplo 3:
 🕊️ Fé e proteção em uma joia especial! 🕊️
 Esse colar carrega um profundo significado espiritual com seu pingente do Fruto do Espírito Santo, representando paz, amor e esperança. Seu design detalhado transmite delicadeza, tornando-se uma peça perfeita para expressar sua fé com estilo. Um acessório elegante e cheio de luz para iluminar seus dias! ✨
-
+Exemplo 4:
 💖 Um acessório repleto de amor e significado! 💖
 Essa pulseira encantadora combina charme e delicadeza com seus berloques de corações lisos, perfeitos para representar momentos especiais e pessoas queridas. Os separadores em aço inox adicionam um toque único e garantem um caimento impecável no pulso. Uma peça cheia de sentimento para quem ama acessórios marcantes! ✨
-
+Exemplo 5:
 💎 Brilho e requinte em cada detalhe! 💎
 Esse conjunto deslumbrante combina microzircônias cravejadas e baguetes brilhantes, criando um efeito luxuoso e marcante. O design redondo equilibra modernidade e elegância, sendo perfeito para ocasiões especiais ou para quem ama um toque de glamour no dia a dia. Feito com materiais de alta qualidade, esse conjunto é um verdadeiro destaque! ✨`,
         });
@@ -137,7 +137,7 @@ Esse conjunto deslumbrante combina microzircônias cravejadas e baguetes brilhan
 
         // Chama o OpenAI com a mensagem construída
         const response = await openai.chat.completions.create({
-            model: 'gpt-4o-2024-11-20', // Use o modelo que está funcionando para você
+            model: 'gpt-4o-mini', // Use o modelo que está funcionando para você
             messages: [
                 {
                     role: 'user',
