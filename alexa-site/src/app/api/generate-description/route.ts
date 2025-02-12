@@ -53,6 +53,11 @@ export async function POST(request: Request) {
 
         messageContent.push({
             type: 'text',
+            text: 'Não use markdown ou HTML para escrever a descrição. Use apenas texto simples.',
+        });
+
+        messageContent.push({
+            type: 'text',
             text: 'Antes de criar a descrição, faça uma análise minuciosa das imagens e, se houver, do título do produto. Evite repetir descrições anteriores e, sempre que possível, não utilize a palavra "sofisticado" (substitua-a por termos mais apropriados ou remova-a).',
         });
 
