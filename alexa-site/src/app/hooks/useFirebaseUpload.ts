@@ -8,45 +8,9 @@ import {
     deleteObject,
 } from 'firebase/storage';
 import { ImageProductDataType } from '../utils/types';
-import imageCompression from 'browser-image-compression';
+import { compressImage } from '../utils/compressImage';
 
 const MAX_FILE_SIZE = 300 * 1024; // 300KB em bytes
-
-/**
- * Comprime a imagem se ela for maior que 300KB.
- * Usa a biblioteca browser-image-compression para manter a melhor qualidade possível.
- */
-const compressImage = async(file: File): Promise<File> => {
-    // Se a imagem já for pequena, não comprime.
-    if (file.size <= MAX_FILE_SIZE) {
-        return file;
-    }
-
-    // Opções para o imageCompression
-    const options = {
-        maxSizeMB: 0.3, // 300KB = 0.3MB
-        maxWidthOrHeight: 1920, // Opcional: defina um tamanho máximo para largura ou altura se desejar
-        useWebWorker: true,
-    // Você pode definir onProgress se quiser acompanhar o progresso da compressão
-    // onProgress: (progress) => console.log(`Compressão: ${progress}%`),
-    };
-
-    try {
-        const compressedFile = await imageCompression(file, options);
-        // Caso a compressão não tenha atingido o tamanho desejado, pode-se logar um aviso
-        if (compressedFile.size > MAX_FILE_SIZE) {
-            console.warn(
-                `Imagem comprimida ainda tem ${Math.round(
-                    compressedFile.size / 1024,
-                )}KB, que é superior a 300KB`,
-            );
-        }
-        return compressedFile;
-    } catch (error) {
-        console.error('Erro ao comprimir imagem:', error);
-        throw error;
-    }
-};
 
 const useFirebaseUpload = () => {
     const [progress, setProgress] = useState<number[]>([]);
@@ -58,7 +22,7 @@ const useFirebaseUpload = () => {
         const compressedImages = await Promise.all(
             images.map(async(image) => ({
                 ...image,
-                file: await compressImage(image.file),
+                file: await compressImage(image.file, MAX_FILE_SIZE),
             })),
         );
         const imagesFromFirebase: ImageProductDataType[] = [];
