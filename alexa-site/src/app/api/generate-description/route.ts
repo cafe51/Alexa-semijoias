@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
         messageContent.push({
             type: 'text',
-            text: 'Não use markdown ou HTML para escrever a descrição. Use apenas texto simples.',
+            text: 'Não use notações de markdown para escrever a descrição. Mas use formatação e emojis.',
         });
 
         messageContent.push({
@@ -137,7 +137,7 @@ Esse conjunto deslumbrante combina microzircônias cravejadas e baguetes brilhan
 
         // Chama o OpenAI com a mensagem construída
         const response = await openai.chat.completions.create({
-            model: 'gpt-4o-mini', // Use o modelo que está funcionando para você
+            model: 'gpt-4o-2024-11-20', // Use o modelo que está funcionando para você
             messages: [
                 {
                     role: 'user',
