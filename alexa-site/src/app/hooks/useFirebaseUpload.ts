@@ -1,73 +1,60 @@
 // src/hooks/useFirebaseUpload.ts
 import { useState } from 'react';
 import { storage } from '../firebase/config';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import {
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+    deleteObject,
+} from 'firebase/storage';
 import { ImageProductDataType } from '../utils/types';
+import imageCompression from 'browser-image-compression';
 
 const MAX_FILE_SIZE = 300 * 1024; // 300KB em bytes
 
+/**
+ * Comprime a imagem se ela for maior que 300KB.
+ * Usa a biblioteca browser-image-compression para manter a melhor qualidade possível.
+ */
 const compressImage = async(file: File): Promise<File> => {
-    // Se o arquivo já for menor que 300KB, retorna ele mesmo
+    // Se a imagem já for pequena, não comprime.
     if (file.size <= MAX_FILE_SIZE) {
         return file;
     }
 
-    // Criar URL temporária para a imagem
-    const imageBitmap = await createImageBitmap(file);
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    // Opções para o imageCompression
+    const options = {
+        maxSizeMB: 0.3, // 300KB = 0.3MB
+        maxWidthOrHeight: 1920, // Opcional: defina um tamanho máximo para largura ou altura se desejar
+        useWebWorker: true,
+    // Você pode definir onProgress se quiser acompanhar o progresso da compressão
+    // onProgress: (progress) => console.log(`Compressão: ${progress}%`),
+    };
 
-    if (!ctx) {
-        throw new Error('Não foi possível obter o contexto do canvas');
-    }
-
-    // Definir dimensões iniciais do canvas
-    canvas.width = imageBitmap.width;
-    canvas.height = imageBitmap.height;
-
-    // Desenhar imagem no canvas
-    ctx.drawImage(imageBitmap, 0, 0);
-
-    // Tentar diferentes qualidades até conseguir um arquivo menor que 300KB
-    let quality = 0.7;
-    let compressedFile: File | null = null;
-
-    while (quality > 0.1) {
-        const blob = await new Promise<Blob>((resolve) => {
-            canvas.toBlob((b) => resolve(b!), 'image/jpeg', quality);
-        });
-
-        if (blob.size <= MAX_FILE_SIZE) {
-            compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
-            break;
+    try {
+        const compressedFile = await imageCompression(file, options);
+        // Caso a compressão não tenha atingido o tamanho desejado, pode-se logar um aviso
+        if (compressedFile.size > MAX_FILE_SIZE) {
+            console.warn(
+                `Imagem comprimida ainda tem ${Math.round(
+                    compressedFile.size / 1024,
+                )}KB, que é superior a 300KB`,
+            );
         }
-
-        quality -= 0.1;
+        return compressedFile;
+    } catch (error) {
+        console.error('Erro ao comprimir imagem:', error);
+        throw error;
     }
-
-    // Se mesmo com qualidade mínima o arquivo ainda for grande, reduzir dimensões
-    if (!compressedFile) {
-        const scale = Math.sqrt(MAX_FILE_SIZE / file.size);
-        canvas.width = Math.floor(imageBitmap.width * scale);
-        canvas.height = Math.floor(imageBitmap.height * scale);
-        ctx.drawImage(imageBitmap, 0, 0, canvas.width, canvas.height);
-
-        const blob = await new Promise<Blob>((resolve) => {
-            canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.7);
-        });
-
-        compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
-    }
-
-    return compressedFile;
 };
-
 
 const useFirebaseUpload = () => {
     const [progress, setProgress] = useState<number[]>([]);
 
-    const uploadImages = async(images: { file: File; localUrl: string; index: number }[]): Promise<ImageProductDataType[]> => {
-        // Comprimir imagens antes do upload
+    const uploadImages = async(
+        images: { file: File; localUrl: string; index: number }[],
+    ): Promise<ImageProductDataType[]> => {
+    // Comprimir imagens (usando a nova função)
         const compressedImages = await Promise.all(
             images.map(async(image) => ({
                 ...image,
@@ -79,8 +66,9 @@ const useFirebaseUpload = () => {
 
         const uploadPromises = compressedImages.map((image, index) => {
             return new Promise<void>((resolve, reject) => {
-                if(!image || !image.file) {
-                    throw new Error(`invalid image file at index ${ image.localUrl }`);
+                if (!image || !image.file) {
+                    reject(new Error(`Arquivo de imagem inválido no índice ${image.index}`));
+                    return;
                 }
                 const storageRef = ref(storage, `images/${image.file.name}`);
                 const uploadTask = uploadBytesResumable(storageRef, image.file);
@@ -88,7 +76,8 @@ const useFirebaseUpload = () => {
                 uploadTask.on(
                     'state_changed',
                     (snapshot) => {
-                        progresses[index] = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        progresses[index] =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                         setProgress([...progresses]);
                     },
                     (error) => {
@@ -97,27 +86,29 @@ const useFirebaseUpload = () => {
                     },
                     async() => {
                         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        imagesFromFirebase.push({ localUrl: downloadURL, index: image.index });
+                        imagesFromFirebase.push({
+                            localUrl: downloadURL,
+                            index: image.index,
+                        });
                         resolve();
                     },
                 );
-
             });
         });
 
-        await Promise.all(uploadPromises); // Aguarda até que todas as promessas sejam resolvidas
+        await Promise.all(uploadPromises);
         return imagesFromFirebase;
     };
 
     const deleteImage = async(imageUrl: string) => {
         try {
-            // Extrair o nome do arquivo da URL do Firebase Storage
+            // Extrai o nome do arquivo da URL do Firebase Storage
             const url = new URL(imageUrl);
-            const pathWithToken = url.pathname.split('/o/')[1]; // Remove /v0/b/[bucket]/o/
+            const pathWithToken = url.pathname.split('/o/')[1];
             if (!pathWithToken) {
                 throw new Error('URL inválida');
             }
-            const path = decodeURIComponent(pathWithToken.split('?')[0]); // Remove o token
+            const path = decodeURIComponent(pathWithToken.split('?')[0]);
             const imageRef = ref(storage, path);
             await deleteObject(imageRef);
         } catch (error) {
@@ -126,7 +117,7 @@ const useFirebaseUpload = () => {
         }
     };
 
-    return { uploadImages, deleteImage, progress  };
+    return { uploadImages, deleteImage, progress };
 };
 
 export default useFirebaseUpload;
