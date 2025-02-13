@@ -34,7 +34,7 @@ export default function Checkout() {
     const { screenSize } = useWindowSize();
 
     // Estados para o cupom
-    const [ couponDiscount, setCouponDiscount ] = useState<number>(0);
+    const [ couponDiscount, setCouponDiscount ] = useState<number | 'freteGratis'>(0);
 
     const {
         state,
@@ -143,13 +143,11 @@ export default function Checkout() {
                     <CouponSection 
                         cartPrice={ cartPrice }
                         carrinho={ carrinho }
-
-                        onCouponApplied={ (_coupon, discount) => {
-                            setCouponDiscount(discount);
-                        } }
-                        onCouponRemoved={ () => {
-                            setCouponDiscount(0);
-                        } }
+                        fetchDeliveryOptions={ fetchDeliveryOptions }
+                        resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }
+                        hiddenPaymentSection={ () => setShowPaymentSection(false) }
+                        setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
+                        couponDiscount={ couponDiscount }
                     />
                     <AccountSection 
                         handleShowLoginSection={ handleShowLoginSection } 
@@ -172,11 +170,12 @@ export default function Checkout() {
                         setShowPaymentSection={ setShowPaymentSection }
                         setPreferenceId={ setPreferenceId }
                         fetchDeliveryOptions={ fetchDeliveryOptions }
+                        couponDiscount={ couponDiscount }
                         
                     />
                     <PaymentSectionWithMercadoPago
                         state={ state }
-                        cartPrice={ cartPrice - couponDiscount } // valor do carrinho com desconto
+                        cartPrice={ cartPrice } // valor do carrinho com desconto
                         userInfo={ userInfo }
                         preferenceId={ preferenceId }
                         showPaymentSection={ showPaymentSection }
@@ -185,26 +184,13 @@ export default function Checkout() {
                         setShowPaymentFailSection={ setShowPaymentFailSection }
                         setIsProcessingPayment={ setIsProcessingPayment }
                         setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
+                        couponDiscount={ couponDiscount }
+
                     />
                 </div>
             ) : screenSize === 'medium' ? (
                 // Layout Medium
                 <div className="space-y-6">
-                    { /* Order Summary no topo */ }
-                    <div className="w-full">
-                        <CouponSection 
-                            cartPrice={ cartPrice }
-                            carrinho={ carrinho }
-
-                            onCouponApplied={ (_coupon, discount) => {
-                                setCouponDiscount(discount);
-                            } }
-                            onCouponRemoved={ () => {
-                                setCouponDiscount(0);
-                            } }
-                        />
-                    </div>
-                    
                     { /* Duas colunas abaixo */ }
                     <div className="grid grid-cols-2 gap-6">
                         { /* Coluna 1 */ }
@@ -213,6 +199,15 @@ export default function Checkout() {
                                 handleShowLoginSection={ handleShowLoginSection } 
                                 state={ state } 
                                 setIsCartLoading={ setIsCartLoading }
+                            />
+                            <CouponSection 
+                                cartPrice={ cartPrice }
+                                carrinho={ carrinho }
+                                fetchDeliveryOptions={ fetchDeliveryOptions }
+                                resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }
+                                hiddenPaymentSection={ () => setShowPaymentSection(false) }
+                                setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
+                                couponDiscount={ couponDiscount }
                             />
                             <AddressSection 
                                 handleAddressChange={ handleAddressChange } 
@@ -224,17 +219,6 @@ export default function Checkout() {
                         
                         { /* Coluna 2 */ }
                         <div className="space-y-4">
-                            <CouponSection 
-                                cartPrice={ cartPrice }
-                                carrinho={ carrinho }
-
-                                onCouponApplied={ (_coupon, discount) => {
-                                    setCouponDiscount(discount);
-                                } }
-                                onCouponRemoved={ () => {
-                                    setCouponDiscount(0);
-                                } }
-                            />
                             <DeliveryPriceSection
                                 cartPrice={ cartPrice } 
                                 carrinho={ carrinho }
@@ -245,6 +229,8 @@ export default function Checkout() {
                                 setShowPaymentSection={ setShowPaymentSection }
                                 setPreferenceId={ setPreferenceId }
                                 fetchDeliveryOptions={ fetchDeliveryOptions }
+                                couponDiscount={ couponDiscount }
+
 
                             />
                             <PaymentSectionWithMercadoPago
@@ -258,6 +244,8 @@ export default function Checkout() {
                                 setShowPaymentFailSection={ setShowPaymentFailSection }
                                 setIsProcessingPayment={ setIsProcessingPayment }
                                 setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
+                                couponDiscount={ couponDiscount }
+
                             />
                         </div>
                     </div>
@@ -271,6 +259,15 @@ export default function Checkout() {
                             handleShowLoginSection={ handleShowLoginSection } 
                             state={ state } 
                             setIsCartLoading={ setIsCartLoading }
+                        />
+                        <CouponSection 
+                            cartPrice={ cartPrice }
+                            carrinho={ carrinho }
+                            fetchDeliveryOptions={ fetchDeliveryOptions }
+                            resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }
+                            hiddenPaymentSection={ () => setShowPaymentSection(false) }
+                            setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
+                            couponDiscount={ couponDiscount }
                         />
                         <AddressSection 
                             handleAddressChange={ handleAddressChange } 
@@ -292,6 +289,8 @@ export default function Checkout() {
                             setShowPaymentSection={ setShowPaymentSection }
                             setPreferenceId={ setPreferenceId }
                             fetchDeliveryOptions={ fetchDeliveryOptions }
+                            couponDiscount={ couponDiscount }
+
 
                         />
                         <PaymentSectionWithMercadoPago
@@ -305,6 +304,8 @@ export default function Checkout() {
                             setShowPaymentFailSection={ setShowPaymentFailSection }
                             setIsProcessingPayment={ setIsProcessingPayment }
                             setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
+                            couponDiscount={ couponDiscount }
+
                         />
                     </div>
     

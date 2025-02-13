@@ -14,6 +14,8 @@ interface DeliveryPriceSectionProps {
     setShowPaymentSection: (showPaymentSection: boolean) => void;
     setPreferenceId: (preferenceId: string) => void;
     fetchDeliveryOptions: () => void;
+    couponDiscount: number | 'freteGratis';
+
 }
 
 export default function DeliveryPriceSection(
@@ -27,19 +29,24 @@ export default function DeliveryPriceSection(
         setShowPaymentSection,
         setPreferenceId,
         fetchDeliveryOptions,
+        couponDiscount,
     }: DeliveryPriceSectionProps) {
+
+    const handleOptionChange = () => {
+        fetchDeliveryOptions();
+        handleSelectedDeliveryOption(null);
+        setShowPaymentSection(false);
+    };
 
     if (editingAddressMode) return <DeliveryPriceSectionPending />;
         
     if (selectedDeliveryOption && deliveryOption) {
         return (
             <DeliveryPriceSectionFilled
-                handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
                 price={ deliveryOption.price }
                 term={ deliveryOption.deliveryTime }
                 type={ deliveryOption.name }
-                setShowPaymentSection={ setShowPaymentSection }
-                fetchDeliveryOptions={ fetchDeliveryOptions }
+                handleOptionChange={ handleOptionChange }
             />
         );
     } 
@@ -53,7 +60,7 @@ export default function DeliveryPriceSection(
             selectedDeliveryOption={ selectedDeliveryOption }
             setSelectedDeliveryOption={ handleSelectedDeliveryOption }
             setPreferenceId = { (preferenceId: string) => setPreferenceId(preferenceId) }
-
+            couponDiscount={ couponDiscount }
         />
     );
 }

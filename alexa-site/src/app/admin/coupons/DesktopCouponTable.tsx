@@ -70,7 +70,7 @@ const DesktopCouponTable: React.FC<DesktopCouponTableProps> = ({ coupons, onEdit
                                     onClick={ () => onEdit(coupon) }
                                     className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors"
                                 >
-                  Editar
+                                    Editar
                                 </button>
                                 <button
                                     onClick={ () => {
@@ -80,7 +80,7 @@ const DesktopCouponTable: React.FC<DesktopCouponTableProps> = ({ coupons, onEdit
                                     } }
                                     className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
                                 >
-                  Excluir
+                                    Excluir
                                 </button>
                             </td>
                         </tr>

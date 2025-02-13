@@ -13,25 +13,33 @@ export function useCoupon() {
 
     async function applyCoupon(code: string, cartPrice: number, carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[]): Promise<CouponValidationResponse> {
     // Procura o cupom pelo código (garantindo tratamento de case se necessário)
-        const constraints = [ where('codigo', '==', code) ];
-        const coupons = await couponCollection.getDocumentsWithConstraints(constraints);
-        if (coupons.length === 0) {
+        const coupon = await couponCollection.getDocumentById(code);
+        if (!coupon || !coupon.exist) {
             return { valido: false, mensagemErro: 'Cupom inválido' };
         }
-        const coupon = coupons[0];
-
         // Valida status e datas de validade
         const now = new Date();
         if (coupon.status !== 'ativo') {
             return { valido: false, mensagemErro: 'Cupom inválido' };
         }
-        if (coupon.dataInicio.toDate() > now || coupon.dataExpiracao.toDate() < now) {
+        if (coupon.dataInicio.toDate() > now) {
+            return { valido: false, mensagemErro: 'Cupom inválido' };
+        }
+        if (coupon.dataExpiracao.toDate() < now) {
             return { valido: false, mensagemErro: 'Cupom expirado' };
+        }
+        // valida itens promocionais no carrinho
+        if (carrinho && carrinho.length > 0 && !coupon.condicoes.primeiraCompraApenas) {
+            for (const item of carrinho) {
+                if (item.value.promotionalPrice && item.value.promotionalPrice > 0) {
+                    return { valido: false, mensagemErro: 'Este cupom não é válido para carrinhos com itens promocionais' };
+                }
+            }
         }
 
         // Validação dos limites de uso global
         if (coupon.limiteUsoGlobal !== null) {
-            const globalCount = await usageCollection.getCount([ where('cupomId', '==', coupon.id) ]);
+            const globalCount = await usageCollection.getCount([ where('cupomId', '==', code) ]);
             if (globalCount >= coupon.limiteUsoGlobal) {
                 return { valido: false, mensagemErro: 'Cupom esgotado' };
             }
@@ -52,7 +60,7 @@ export function useCoupon() {
             const mensagemErro = 'Essa compra não atende aos requisitos do cupom: ' + coupon.condicoes.textoExplicativo;
             const invalidConditionResult = { valido: false, mensagemErro };
             // condicao de valor mínimo de compra
-            if (coupon.condicoes.valorMinimoCompra && cartPrice < coupon.condicoes.valorMinimoCompra) {
+            if (coupon.condicoes.valorMinimoCompra && (cartPrice < coupon.condicoes.valorMinimoCompra)) {
                 return invalidConditionResult;
             }
             // condicao de categorias permitidas
@@ -71,6 +79,7 @@ export function useCoupon() {
                     }
                 }
             }
+
             // condicao de primeira compra
             if (coupon.condicoes.primeiraCompraApenas && userInfo) {
                 const comprasDoUsuarios = await ordersCollection.getDocumentsWithConstraints([
@@ -90,7 +99,7 @@ export function useCoupon() {
         }
 
         // Calcula o desconto conforme o tipo do cupom
-        let desconto = 0;
+        let desconto: number | 'freteGratis' = 0;
         if (coupon.tipo === 'percentual') {
             desconto = cartPrice * (coupon.valor / 100);
         } else if (coupon.tipo === 'fixo') {
@@ -98,7 +107,7 @@ export function useCoupon() {
         } else if (coupon.tipo === 'freteGratis') {
             // Caso o cupom seja para frete grátis, o desconto será aplicado na taxa de entrega,
             // portanto, neste contexto, o desconto do carrinho permanece zero.
-            desconto = 0;
+            desconto = 'freteGratis';
         }
 
         return { valido: true, descontoAplicado: desconto, coupon };

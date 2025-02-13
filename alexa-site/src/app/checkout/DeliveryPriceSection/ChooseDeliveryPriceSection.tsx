@@ -16,6 +16,8 @@ interface ChooseDeliveryPriceSectionProps {
     setSelectedDeliveryOption: (option: string | null) => void;
     setShowPaymentSection: (showPaymentSection: boolean) => void;
     setPreferenceId: (preferenceId: string) => void;
+    couponDiscount: number | 'freteGratis';
+
 }
 
 export default function ChooseDeliveryPriceSection({
@@ -27,6 +29,8 @@ export default function ChooseDeliveryPriceSection({
     setSelectedDeliveryOption,
     setShowPaymentSection,
     setPreferenceId,
+    couponDiscount,
+
 }: ChooseDeliveryPriceSectionProps) {
     
     // Encontra a opção de frete mais barata
@@ -50,7 +54,10 @@ export default function ChooseDeliveryPriceSection({
         throw new Error('Preço inválido');
     }
 
-    const precoFaltanteParaFreteGratis = valorMinimoParaFreteGratis - cartPrice;
+    const freeShippingCoupon: boolean = !!couponDiscount && couponDiscount === 'freteGratis';
+    const discountValue: number = typeof couponDiscount === 'number' ? couponDiscount : 0;
+
+    const precoFaltanteParaFreteGratis = freeShippingCoupon ? 0 : valorMinimoParaFreteGratis - cartPrice + discountValue;
     const precoFaltanteEmPorcentagem = (cartPrice / valorMinimoParaFreteGratis) * 100 + '%';
 
     const handleOptionChange = async(value: string) => {

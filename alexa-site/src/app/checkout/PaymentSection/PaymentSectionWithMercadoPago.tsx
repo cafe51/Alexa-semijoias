@@ -16,6 +16,7 @@ interface PaymentSectionWithMercadoPagoProps {
     setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void;
     setIsProcessingPayment: (isProcessing: boolean) => void;
     setIsPaymentFinished: (isPaymentFinished: boolean) => void;
+    couponDiscount: number | 'freteGratis'
 
 }
 
@@ -30,8 +31,11 @@ export default function PaymentSectionWithMercadoPago({
     setShowPaymentFailSection,
     setIsProcessingPayment,
     setIsPaymentFinished,
+    couponDiscount,
 }: PaymentSectionWithMercadoPagoProps) {
     const [loadingPayment, setLoadingPayment] = useState(false);
+    const couponDiscountIsFreeShipping = !!couponDiscount && (couponDiscount === 'freteGratis');
+    const couponDiscountValue = (!couponDiscountIsFreeShipping && !!couponDiscount) ? couponDiscount : 0;
 
     return (
         <>
@@ -44,7 +48,7 @@ export default function PaymentSectionWithMercadoPago({
             {
                 !loadingPayment && !state.editingAddressMode && userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price !== null && state.deliveryOption.price !== undefined && preferenceId && !showPaymentFailSection &&
             <PaymentBrick
-                totalAmount={ cartPrice + state.deliveryOption.price }
+                totalAmount={ cartPrice + state.deliveryOption.price - couponDiscountValue }
                 user={ userInfo }
                 state={ state }
                 preferenceId={ preferenceId }

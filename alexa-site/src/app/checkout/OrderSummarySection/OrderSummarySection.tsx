@@ -7,7 +7,7 @@ interface OrderSummarySectionProps {
   state: UseCheckoutStateType;
   carrinho: ProductCartType[] | null;
   cartPrice: number;
-  couponDiscount: number;
+  couponDiscount: number | 'freteGratis';
   handleShowFullOrderSummary: (option: boolean) => void;
 }
 
@@ -18,6 +18,9 @@ export default function OrderSummarySection({
     couponDiscount,
     handleShowFullOrderSummary,
 }: OrderSummarySectionProps) {
+    const couponDiscountIsFreeShipping = !!couponDiscount && (couponDiscount === 'freteGratis');
+    const couponDiscountValue = !couponDiscountIsFreeShipping && !!couponDiscount ? couponDiscount : 0;
+
     if (showFullOrderSummary) return (
         <OrderSummary
             handleShowFullOrderSummary={ handleShowFullOrderSummary }
@@ -31,7 +34,7 @@ export default function OrderSummarySection({
     return (
         <OrderSummaryShort
             handleShowFullOrderSummary={ handleShowFullOrderSummary }
-            totalPrice={ (cartPrice - couponDiscount) + (deliveryOption?.price || 0) }
+            totalPrice={ (cartPrice - (couponDiscountIsFreeShipping ? 0 : couponDiscountValue)) + (couponDiscountIsFreeShipping ? 0 : (deliveryOption?.price || 0)) }
             couponDiscount={ couponDiscount }
         />
     );

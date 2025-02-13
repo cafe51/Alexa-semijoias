@@ -3,29 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatPrice } from '@/app/utils/formatPrice';
 
 interface DeliveryPriceSectionFilledProps {
-    handleSelectedDeliveryOption:  (option: string | null) => void;
     type: string;
     price: number;
     term: number;
-    setShowPaymentSection: (showPaymentSection: boolean) => void;
-    fetchDeliveryOptions: () => void;
-
+    handleOptionChange: () => void;
 }
 
 
 export default function DeliveryPriceSectionFilled({
-    handleSelectedDeliveryOption,
-    setShowPaymentSection,
-    fetchDeliveryOptions,
+    handleOptionChange,
     price,
     term,
     type,
 } : DeliveryPriceSectionFilledProps) {
-    const handleOptionChange = () => {
-        fetchDeliveryOptions();
-        handleSelectedDeliveryOption(null);
-        setShowPaymentSection(false);
-    };
+
 
     return(
         <Card className="border-[#F8C3D3] shadow-md rounded">

@@ -10,7 +10,7 @@ interface OrderSummaryProps {
     carrinho: ProductCartType[] | null;
     subtotalPrice: number | undefined;
     frete: number | undefined;
-    couponDiscount?: number;
+    couponDiscount: number | 'freteGratis';
 }
 
 export default function OrderSummary({ handleShowFullOrderSummary, carrinho, subtotalPrice, frete, couponDiscount = 0 }: OrderSummaryProps) {

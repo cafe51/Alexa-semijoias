@@ -12,7 +12,7 @@ export type CouponUsageType = {
 
 export type CouponValidationResponse = {
     valido: boolean;
-    descontoAplicado?: number; // Apenas se o cupom for válido
+    descontoAplicado?: number | 'freteGratis'; // Apenas se o cupom for válido
     mensagemErro?: string; // Se inválido, exibir o motivo do erro
     coupon?: CouponType;
 };
@@ -43,7 +43,7 @@ export type CouponType = {
 
     cumulativo: boolean; // Permite uso com outros cupons?
     
-    status: 'ativo' | 'expirado' | 'desativado'; // Estado atual do cupom
+    status: 'ativo' | 'desativado'; // Estado atual do cupom
 
     criadoEm: Timestamp; // Data de criação
     atualizadoEm: Timestamp; // Última atualização
