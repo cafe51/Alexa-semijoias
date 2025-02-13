@@ -50,6 +50,17 @@ export async function POST(request: NextRequest) {
         
         await sendgrid.send(message);
 
+        const messageSaleForAdmin = {
+            to: 'alexasemijoias@alexasemijoias.com',
+            from: 'contato@alexasemijoias.com.br',
+            subject: 'Venda Realizada ' + orderData.valor.soma,
+            html: '',
+        };
+
+
+        await sendgrid.send(messageSaleForAdmin);
+
+
         return NextResponse.json({  message: 'E-mail de confirmação enviado' }, { status: 200 });
     } catch (error) {
         console.error('Erro ao processar confirmação do pedido:', error);
