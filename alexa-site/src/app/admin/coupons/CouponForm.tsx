@@ -201,7 +201,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
           condicoes.somenteUsuarios = selectedUsers.map((user) => user.userId);
       }
       if (limitationType === 'categorias' && selectedCategories.length > 0) {
-          condicoes.categoriasPermitidas = selectedCategories.map((cat) => cat.id);
+          condicoes.categoriasPermitidas = selectedCategories.map((cat) => cat.sectionName);
       } else if (limitationType === 'produtos' && selectedProducts.length > 0) {
           condicoes.produtosEspecificos = selectedProducts.map((prod) => prod.id);
       }
