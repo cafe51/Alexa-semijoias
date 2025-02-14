@@ -1,89 +1,98 @@
-import { projectFirestoreDataBase } from '@/app/firebase/config';
-import { CouponType, FireBaseDocument } from '@/app/utils/types';
-import { 
-    collection, 
-    query, 
-    where, 
-    getDocs,
-    doc,
-    runTransaction, 
-} from 'firebase/firestore';
+import { adminDb } from '@/app/firebase/admin-config';
+import { CouponType, FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 
-export async function updateProductStock(productId: string, skuId: string,quantity: number,operation: '+' | '-') {
-    const productRef = doc(projectFirestoreDataBase, 'products', productId);
-    
-    await runTransaction(projectFirestoreDataBase, async(transaction) => {
+/**
+ * Atualiza o estoque de um produto com base na variação (SKU)
+ */
+export async function updateProductStock(
+    productId: string,
+    skuId: string,
+    quantity: number,
+    operation: '+' | '-',
+) {
+    const productRef = adminDb.collection('products').doc(productId);
+
+    await adminDb.runTransaction(async(transaction) => {
         const productDoc = await transaction.get(productRef);
-        if (!productDoc.exists()) {
+        if (!productDoc.exists) {
             throw new Error(`Product ${productId} not found`);
         }
 
-        const productData = productDoc.data();
-        const variationIndex = productData.productVariations.findIndex((v: any) => v.sku === skuId);
-        
+        const productData = productDoc.data() as ProductBundleType & FireBaseDocument;
+        const variationIndex = productData.productVariations.findIndex(
+            (v) => v.sku === skuId,
+        );
+
         if (variationIndex === -1) {
             throw new Error(`SKU ${skuId} not found in product ${productId}`);
         }
 
-        const newStock = operation === '+' 
-            ? productData.productVariations[variationIndex].estoque + quantity
-            : productData.productVariations[variationIndex].estoque - quantity;
+        const currentStock = productData.productVariations[variationIndex].estoque;
+        const newStock =
+      operation === '+'
+          ? currentStock + quantity
+          : currentStock - quantity;
 
         if (newStock < 0) {
-            throw new Error(`Insufficient stock for product ${productId}, SKU ${skuId}`);
+            throw new Error(
+                `Insufficient stock for product ${productId}, SKU ${skuId}`,
+            );
         }
 
         productData.productVariations[variationIndex].estoque = newStock;
-        productData.estoqueTotal = operation === '+'
-            ? productData.estoqueTotal + quantity
-            : productData.estoqueTotal - quantity;
+        productData.estoqueTotal =
+      operation === '+'
+          ? productData.estoqueTotal + quantity
+          : productData.estoqueTotal - quantity;
 
         transaction.update(productRef, productData);
     });
 }
 
-export async function updateCuponsDocStock(cuponId: string, operation: '+' | '-') {
-    const cuponRef = doc(projectFirestoreDataBase, 'cupons', cuponId);
-    await runTransaction(projectFirestoreDataBase, async(transaction) => {
+/**
+ * Atualiza o estoque (limite de uso) de um cupom
+ */
+export async function updateCuponsDocStock(
+    cuponId: string,
+    operation: '+' | '-',
+) {
+    const cuponRef = adminDb.collection('cupons').doc(cuponId);
+
+    await adminDb.runTransaction(async(transaction) => {
         const cuponDoc = await transaction.get(cuponRef);
-        if (!cuponDoc.exists()) {
+        if (!cuponDoc.exists) {
             throw new Error(`Cupom ${cuponId} not found`);
         }
 
         const cuponData = cuponDoc.data() as CouponType & FireBaseDocument;
-        if(cuponData.limiteUsoGlobal !== null) {
-            const newStock = operation === '+' 
-                ? cuponData.limiteUsoGlobal + 1
-                : cuponData.limiteUsoGlobal - 1;
+        if (cuponData.limiteUsoGlobal !== null) {
+            const newStock =
+        operation === '+'
+            ? cuponData.limiteUsoGlobal + 1
+            : cuponData.limiteUsoGlobal - 1;
 
             cuponData.limiteUsoGlobal = newStock;
             transaction.update(cuponRef, cuponData);
         }
-
     });
 }
 
-/** Deleta o(s) documento(s) de couponUsages com base no campo cuponId */
+/**
+ * Deleta os documentos de `couponUsages` com base no campo orderId
+ */
 export async function deleteCouponUsageDoc(orderId: string) {
-    // Executa a query fora da transação para obter os documentos correspondentes ao cuponId
-    const couponUsageQuery = query(
-        collection(projectFirestoreDataBase, 'couponUsages'),
-        where('orderId', '==', orderId),
-    );
-  
-    const querySnapshot = await getDocs(couponUsageQuery);
-  
-    if (querySnapshot.empty) {
+    const couponUsageQuerySnapshot = await adminDb
+        .collection('couponUsages')
+        .where('orderId', '==', orderId)
+        .get();
+
+    if (couponUsageQuerySnapshot.empty) {
         throw new Error(`Cupom usage com orderId ${orderId} não encontrado`);
     }
-  
-    // Agora executa a transação para deletar cada documento encontrado
-    await runTransaction(projectFirestoreDataBase, async(transaction) => {
-        for (const docSnap of querySnapshot.docs) {
-            const docRef = docSnap.ref;
-            // (Opcional) Leitura do documento dentro da transação para garantir a consistência
-            await transaction.get(docRef);
-            transaction.delete(docRef);
-        }
+
+    await adminDb.runTransaction(async(transaction) => {
+        couponUsageQuerySnapshot.docs.forEach((docSnap) => {
+            transaction.delete(docSnap.ref);
+        });
     });
 }

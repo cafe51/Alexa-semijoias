@@ -1,8 +1,6 @@
-// src/app/api/webhookListener/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { projectFirestoreDataBase } from '@/app/firebase/config';
+import { adminDb } from '@/app/firebase/admin-config';
 import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/types';
 import { consoleLogPaymentResponseData, consoleLogWebHookResponse } from '@/app/utils/consoleLogPaymentResponseData';
 import sendgrid from '@sendgrid/mail';
@@ -20,7 +18,6 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         consoleLogWebHookResponse(body);
 
-
         if (body.type !== 'payment') {
             return NextResponse.json({ message: 'Ignored non-payment webhook' }, { status: 200 });
         }
@@ -30,17 +27,16 @@ export async function POST(req: NextRequest) {
         consoleLogPaymentResponseData(paymentInfo);
 
         const orderId = paymentId.toString();
+        const orderRef = adminDb.collection('pedidos').doc(orderId);
+        const orderDoc = await orderRef.get();
 
-        const orderRef = doc(projectFirestoreDataBase, 'pedidos', orderId);
+        if (orderDoc.exists) {
+            const orderData = orderDoc.data() as OrderType & FireBaseDocument;
+            const userRef = adminDb.collection('usuarios').doc(orderData.userId);
+            const userDoc = await userRef.get();
 
-        const orderSnap = await getDoc(orderRef);
-
-        if (orderSnap.exists()) {
-            const orderData = orderSnap.data() as OrderType & FireBaseDocument;
-            const userRef = doc(projectFirestoreDataBase, 'usuarios', orderData.userId);
-            const userSnap = await getDoc(userRef);
-            if(userSnap.exists()) {
-                const userData = userSnap.data() as UserType & FireBaseDocument;
+            if (userDoc.exists) {
+                const userData = userDoc.data() as UserType & FireBaseDocument;
                 const cancelMessageEmail = generateEmailMessage('orderCancellation', userData, orderId, orderData);
                 const approvedMessageEmail = generateEmailMessage('paymentConfirmation', userData, orderId, orderData);
 
@@ -58,15 +54,15 @@ export async function POST(req: NextRequest) {
                 case 'cancelled':
                 case 'rejected':
                     newStatus = 'cancelado';
-                    // Return items to stock
+                    // Devolvendo os itens para o estoque
                     for (const item of orderData.cartSnapShot) {
                         await updateProductStock(item.productId, item.skuId, item.quantidade, '+');
                     }
-                    if(orderData.couponId && orderData.couponId.length > 0) {
+                    if (orderData.couponId && orderData.couponId.length > 0) {
                         await updateCuponsDocStock(orderData.couponId, '+');
                         await deleteCouponUsageDoc(orderData.id);
                     }
-                
+
                     if (cancelMessageEmail && orderData.status !== 'entregue' && orderData.status !== 'cancelado') {
                         await sendgrid.send(cancelMessageEmail);
                     }
@@ -74,14 +70,14 @@ export async function POST(req: NextRequest) {
                 default:
                     newStatus = 'aguardando pagamento';
                 }
-                await updateDoc(orderRef, { 
+
+                await orderRef.update({
                     status: newStatus,
                     updatedAt: new Date(),
                 });
-        
+
                 console.log(`Updated order ${orderId} status to ${newStatus}`);
             }
-
         }
 
         return NextResponse.json({ success: true });
