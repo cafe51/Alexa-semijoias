@@ -35,6 +35,7 @@ export default function Checkout() {
 
     // Estados para o cupom
     const [ couponDiscount, setCouponDiscount ] = useState<number | 'freteGratis'>(0);
+    const [ couponCode, setCouponCode ] = useState<string>('');
 
     const {
         state,
@@ -148,6 +149,8 @@ export default function Checkout() {
                         hiddenPaymentSection={ () => setShowPaymentSection(false) }
                         setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
                         couponDiscount={ couponDiscount }
+                        couponCode={ couponCode }
+                        setCouponCode={ (code: string) => setCouponCode(code) }
                     />
                     <AccountSection 
                         handleShowLoginSection={ handleShowLoginSection } 
@@ -185,7 +188,7 @@ export default function Checkout() {
                         setIsProcessingPayment={ setIsProcessingPayment }
                         setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                         couponDiscount={ couponDiscount }
-
+                        couponId={ couponCode }
                     />
                 </div>
             ) : screenSize === 'medium' ? (
@@ -208,6 +211,10 @@ export default function Checkout() {
                                 hiddenPaymentSection={ () => setShowPaymentSection(false) }
                                 setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
                                 couponDiscount={ couponDiscount }
+                                couponCode={ couponCode }
+
+                                setCouponCode={ (code: string) => setCouponCode(code) }
+
                             />
                             <AddressSection 
                                 handleAddressChange={ handleAddressChange } 
@@ -245,7 +252,7 @@ export default function Checkout() {
                                 setIsProcessingPayment={ setIsProcessingPayment }
                                 setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                                 couponDiscount={ couponDiscount }
-
+                                couponId={ couponCode }
                             />
                         </div>
                     </div>
@@ -268,6 +275,10 @@ export default function Checkout() {
                             hiddenPaymentSection={ () => setShowPaymentSection(false) }
                             setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
                             couponDiscount={ couponDiscount }
+                            couponCode={ couponCode }
+
+                            setCouponCode={ (code: string) => setCouponCode(code) }
+
                         />
                         <AddressSection 
                             handleAddressChange={ handleAddressChange } 
@@ -305,6 +316,7 @@ export default function Checkout() {
                             setIsProcessingPayment={ setIsProcessingPayment }
                             setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                             couponDiscount={ couponDiscount }
+                            couponId={ couponCode }
 
                         />
                     </div>

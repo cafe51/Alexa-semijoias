@@ -3,10 +3,9 @@ import { Timestamp, WhereFilterOp } from 'firebase/firestore';
 import { SavedSubSectionType } from '../hooks/useSectionManagement';
 
 export type CouponUsageType = {
-    id: string;
     cupomId: string; // Referência ao ID do cupom
-    usuarioId: string; // ID do usuário que utilizou o cupom
-    pedidoId: string; // ID do pedido onde o cupom foi aplicado
+    userId: string; // ID do usuário que utilizou o cupom
+    orderId: string; // ID do pedido onde o cupom foi aplicado
     dataUso: Timestamp; // Data de utilização do cupom
 };
 
@@ -27,7 +26,6 @@ export type CouponConditionType = {
 };
 
 export type CouponType = {
-    id: string; // ID do cupom
     codigo: string; // Código do cupom (único e case-insensitive)
     descricao: string; // Texto explicativo do cupom para exibição ao usuário
     tipo: 'percentual' | 'fixo' | 'freteGratis'; // Tipo de cupom
@@ -333,6 +331,7 @@ export type OrderType = {
     cartSnapShot: CartHistoryType[],
     status: StatusType,
     valor: ValueType,
+    couponId?: string | null,
     userId: string,
     endereco: AddressType
 

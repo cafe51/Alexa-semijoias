@@ -3,7 +3,7 @@
 import { IPaymentFormData } from '@mercadopago/sdk-react/bricks/payment/type';
 import { IBrickError } from '@mercadopago/sdk-react/bricks/util/types/common';
 import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';
-import { FireBaseDocument, OrderType, PixPaymentResponseType, ProductCartType, StatusType, UseCheckoutStateType, UserType } from '../utils/types';
+import { CouponType, CouponUsageType, FireBaseDocument, OrderType, PixPaymentResponseType, ProductCartType, StatusType, UseCheckoutStateType, UserType } from '../utils/types';
 import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
@@ -11,10 +11,15 @@ import { MetaConversionsService } from '../utils/meta-conversions/service';
 import { createPayment, sendEmailConfirmation } from '../utils/apiCall';
 import { handlePaymentFailure } from '../utils/paymentStatusHandler';
 import { createAdditionalInfo, createNewOrderObject, createPayer, createPayerAddInfo } from '../utils/orderHelpers';
+import { Timestamp } from 'firebase/firestore';
 
 export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: boolean) => void) => {
     const router = useRouter();
     const { addDocument: createNewOrder, getDocumentById: getOrderById } = useCollection<OrderType>('pedidos');
+    const { addDocument: createCouponUsageDoc } = useCollection<CouponUsageType>('couponUsages');
+    const { updateDocumentField: updateCouponDoc, getDocumentById: getCouponById } = useCollection<CouponType>('cupons');
+
+
     const { updateTheProductDocumentStock } = useManageProductStock();
 
     const finishPayment = async(
@@ -28,6 +33,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
         carrinho: ProductCartType[],
         setLoadingPayment: (isPaymentLoading: boolean) => void,
         pixPaymentResponse?: PixPaymentResponseType,
+        couponId?: string,
     ) => {
         const { address, deliveryOption } = state;
 
@@ -46,10 +52,29 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             address,
             deliveryOption,
             pixPaymentResponse,
+            couponId,
         );
 
         try {
             await createNewOrder(newOrder, paymentId);
+
+            if(couponId && couponId.length > 0) {
+                const coupon = await getCouponById(couponId);
+                if(coupon) {
+                    await createCouponUsageDoc({
+                        cupomId: couponId,
+                        userId: user.id,
+                        orderId: paymentId,
+                        dataUso: Timestamp.now(),
+                    });
+                }
+                if (coupon.limiteUsoGlobal !== null && coupon.limiteUsoGlobal > 0) {
+                    // Atualiza o limite de uso global do cupom
+                    updateCouponDoc(couponId, 'atualizadoEm', Timestamp.now());
+                    updateCouponDoc(couponId, 'limiteUsoGlobal', coupon.limiteUsoGlobal - 1);
+                }         
+
+            }
 
             for (const cartItem of carrinho) {
                 const { productId, skuId, quantidade } = cartItem as ProductCartType & FireBaseDocument;
@@ -86,6 +111,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
         setShowPaymentFailSection: (showPaymentFailSection: boolean | string) => void,
         setShowPaymentSection: (showPaymentSection: boolean) => void,
         setLoadingPayment: (isPaymentLoading: boolean) => void,
+        couponId?: string,
     ): Promise<void> => {
 
         try {
@@ -145,6 +171,8 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
                 carrinho,
                 setLoadingPayment,
                 pixPaymentResponse,
+                couponId,
+
             );
 
             if(paymentResponse.payment_type_id && paymentResponse.payment_type_id !== 'credit_card') {

@@ -59,14 +59,18 @@ export function useCoupon() {
         if (coupon.condicoes) {
             const mensagemErro = 'Essa compra não atende aos requisitos do cupom: ' + coupon.condicoes.textoExplicativo;
             const invalidConditionResult = { valido: false, mensagemErro };
+            // console.log('cartPrice', cartPrice);
+            // console.log('coupon.condicoes.valorMinimoCompra', coupon.condicoes.valorMinimoCompra);
             // condicao de valor mínimo de compra
-            if (coupon.condicoes.valorMinimoCompra && (cartPrice < coupon.condicoes.valorMinimoCompra)) {
+            if (coupon.condicoes.valorMinimoCompra && (cartPrice <= coupon.condicoes.valorMinimoCompra)) {
                 return invalidConditionResult;
             }
             // condicao de categorias permitidas
             if (coupon.condicoes.categoriasPermitidas && coupon.condicoes.categoriasPermitidas.length > 0) {
                 for (const categoria of coupon.condicoes.categoriasPermitidas) {
                     if (!carrinho.some(item => item.categories.includes(categoria))) {
+                        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAA');
+                        console.log('item.categories', carrinho);
                         return invalidConditionResult;
                     }
                 }

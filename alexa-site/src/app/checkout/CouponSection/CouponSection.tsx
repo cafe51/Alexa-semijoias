@@ -15,13 +15,24 @@ interface CouponSectionProps {
     hiddenPaymentSection: () => void;
     setCouponDiscount: (discount: number | 'freteGratis') => void;
     couponDiscount: number | 'freteGratis'
+    couponCode: string | undefined;
+    setCouponCode: (code: string) => void;
 }
 
-export default function CouponSection({ cartPrice, carrinho, fetchDeliveryOptions, resetSelectedDeliveryOption, hiddenPaymentSection, setCouponDiscount, couponDiscount }: CouponSectionProps) {
+export default function CouponSection({
+    cartPrice,
+    carrinho,
+    fetchDeliveryOptions,
+    resetSelectedDeliveryOption,
+    hiddenPaymentSection,
+    setCouponDiscount,
+    couponDiscount,
+    couponCode,
+    setCouponCode,
+}: CouponSectionProps) {
     const { userInfo } = useUserInfo();
-    const [couponCode, setCouponCode] = useState('');
     const [message, setMessage] = useState('');
-    const [textMessageColor, setTextMessageColor] = useState('bg-red-500');
+    const [textMessageColor, setTextMessageColor] = useState('text-red-500');
     const { applyCoupon } = useCoupon();
 
     const resetDeliveryOption = () => {

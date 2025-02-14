@@ -17,6 +17,7 @@ export const createNewOrderObject = (
     address: AddressType,
     deliveryOption: DeliveryOptionType | null,
     pixPaymentResponse?: PixPaymentResponseType,
+    couponId?: string,
 ): OrderType => {
     const deliveryPrice = deliveryOption?.price || 0;
     const totalQuantity = carrinho.reduce((acc, item) => acc + Number(item.quantidade), 0) || 0;
@@ -37,6 +38,7 @@ export const createNewOrderObject = (
         deliveryOption: deliveryOption ? deliveryOption : { name: '--', price: 0, deliveryTime: 0 },
         pixResponse: pixPaymentResponse || null,
         paymentId,
+        couponId,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
     };

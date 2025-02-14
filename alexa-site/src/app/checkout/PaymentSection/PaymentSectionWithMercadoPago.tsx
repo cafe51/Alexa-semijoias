@@ -17,7 +17,7 @@ interface PaymentSectionWithMercadoPagoProps {
     setIsProcessingPayment: (isProcessing: boolean) => void;
     setIsPaymentFinished: (isPaymentFinished: boolean) => void;
     couponDiscount: number | 'freteGratis'
-
+    couponId?: string;
 }
 
 export default function PaymentSectionWithMercadoPago({
@@ -32,6 +32,7 @@ export default function PaymentSectionWithMercadoPago({
     setIsProcessingPayment,
     setIsPaymentFinished,
     couponDiscount,
+    couponId,
 }: PaymentSectionWithMercadoPagoProps) {
     const [loadingPayment, setLoadingPayment] = useState(false);
     const couponDiscountIsFreeShipping = !!couponDiscount && (couponDiscount === 'freteGratis');
@@ -57,6 +58,7 @@ export default function PaymentSectionWithMercadoPago({
                 setIsProcessingPayment={ setIsProcessingPayment }
                 setIsPaymentFinished={ setIsPaymentFinished }
                 setLoadingPayment={ (isPaymentLoading: boolean) => setLoadingPayment(isPaymentLoading) }
+                couponId={ couponId }
             />
             }
             {

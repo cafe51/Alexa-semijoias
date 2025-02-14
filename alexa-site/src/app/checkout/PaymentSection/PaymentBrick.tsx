@@ -18,6 +18,7 @@ interface PaymentBrickProps {
     setIsProcessingPayment: (isProcessing: boolean) => void;
     setIsPaymentFinished: (isPaymentFinished: boolean) => void;
     setLoadingPayment: (isPaymentLoading: boolean) => void;
+    couponId?: string;
 }
 
 export default function PaymentBrick({ 
@@ -30,6 +31,7 @@ export default function PaymentBrick({
     setIsProcessingPayment,
     setIsPaymentFinished,
     setLoadingPayment,
+    couponId,
 }: PaymentBrickProps) {
     const { carrinho } = useUserInfo();
 
@@ -138,7 +140,7 @@ export default function PaymentBrick({
                     content_ids: carrinho?.map(item => item.skuId),
                     num_items: carrinho?.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0),
                 });
-                return onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection, setLoadingPayment);
+                return onSubmit(params, totalAmount, user, state, carrinho || [], setShowPaymentFailSection, setShowPaymentSection, setLoadingPayment, couponId);
             } }
             onReady={ onReady }
             onError={ onError }
