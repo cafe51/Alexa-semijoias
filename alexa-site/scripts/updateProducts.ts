@@ -1,6 +1,6 @@
 import { collection, getDocs, doc, Firestore, updateDoc } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
-import { ProductBundleType } from '../functions/src/types';
+import { ProductBundleType } from '@/app/utils/types';
 
 // Função principal que atualiza os documentos em batches de 50
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
