@@ -1,6 +1,6 @@
 // app/admin/coupons/CouponForm.tsx
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     CouponType,
     CouponConditionType,
@@ -13,6 +13,7 @@ import { Timestamp } from 'firebase/firestore';
 import CategorySelectorModal from './CategorySelectorModal';
 import UserSelectorModal from './UserSelectorModal';
 import ProductSelectorModal from './ProductSelectorModal';
+import { useCollection } from '@/app/hooks/useCollection';
 
 interface CouponFormProps {
   initialData?: (CouponType & { exist: boolean }) | null;
@@ -56,7 +57,14 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
 
   // ===== ESTADOS PARA A LIMITAÇÃO: categorias x produtos =====
   type LimitationType = 'none' | 'categorias' | 'produtos';
-  const [limitationType, setLimitationType] = useState<LimitationType>('none');
+  const itHasCategoriesLimitation = initialData?.condicoes?.categoriasPermitidas && initialData?.condicoes?.categoriasPermitidas.length > 0;
+  const itHasProductsLimitation = initialData?.condicoes?.produtosEspecificos && initialData?.condicoes?.produtosEspecificos.length > 0;
+  const [limitationType, setLimitationType] = useState<LimitationType>(itHasCategoriesLimitation ? 'categorias' : (itHasProductsLimitation ? 'produtos' : 'none'));
+
+  const initialSelectedCategories = initialData?.condicoes?.categoriasPermitidas && initialData?.condicoes?.categoriasPermitidas.length > 0 && initialData.condicoes.categoriasPermitidas;
+
+  const initialSelectedProducts = initialData?.condicoes?.produtosEspecificos && initialData?.condicoes?.produtosEspecificos.length > 0 && initialData.condicoes.produtosEspecificos;
+
   const [selectedCategories, setSelectedCategories] = useState<(SectionType & FireBaseDocument)[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<(ProductBundleType & FireBaseDocument)[]>([]);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -66,6 +74,43 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
   const [openDados, setOpenDados] = useState(true);
   const [openCondicoes, setOpenCondicoes] = useState(true);
 
+  const { getAllDocuments: getAllSectionsDocs } = useCollection<SectionType>('siteSections');
+  const { getDocumentById: getProductDocById } = useCollection<ProductBundleType>('products');
+
+
+  useEffect(() => {
+      async function getAllProductsDocsListAndUpdateSelectedProducts(initialSelectedProducts: string[]) {
+          if (initialSelectedProducts) {
+              for (const product of initialSelectedProducts) {
+                  const doc = await getProductDocById(product);
+                  if (doc) {
+                      setSelectedProducts((prev) => [...prev, doc]);
+                  }
+              }
+          }
+      }
+
+      async function getAllSectionsDocsListAndUpdateSelectedCategories(initialSelectedCategories: string[]) {
+          if (initialSelectedCategories) {
+              for (const category of initialSelectedCategories) {
+                  const docs = await getAllSectionsDocs([{ field: 'sectionName', operator: '==', value: category }]);
+                  if (docs && docs.length > 0) {
+                      setSelectedCategories((prev) => [...prev, docs[0]]);
+                  }
+              }
+          }
+      }
+
+      if (initialSelectedCategories) {
+          getAllSectionsDocsListAndUpdateSelectedCategories(initialSelectedCategories);
+      }
+
+      if(initialSelectedProducts) {
+          getAllProductsDocsListAndUpdateSelectedProducts(initialSelectedProducts);
+      }
+  }, []);
+
+  // ===== ESTADOS PARA O TIPO DE LIMITAÇÃO =====
   // --- Quando o usuário escolhe uma limitação, limpa o outro grupo automaticamente ---
   const handleLimitationChange = (value: LimitationType) => {
       setLimitationType(value);
@@ -90,7 +135,7 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
           condicoes.somenteUsuarios = selectedUsers.map((user) => user.userId);
       }
       if (limitationType === 'categorias' && selectedCategories.length > 0) {
-          condicoes.categoriasPermitidas = selectedCategories.map((cat) => cat.id);
+          condicoes.categoriasPermitidas = selectedCategories.map((cat) => cat.sectionName);
       } else if (limitationType === 'produtos' && selectedProducts.length > 0) {
           condicoes.produtosEspecificos = selectedProducts.map((prod) => prod.id);
       }
