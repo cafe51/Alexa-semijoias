@@ -68,8 +68,10 @@ export function useCoupon() {
             // condicao de categorias permitidas
             if (coupon.condicoes.categoriasPermitidas && coupon.condicoes.categoriasPermitidas.length > 0) {
                 for (const categoria of coupon.condicoes.categoriasPermitidas) {
-                    if (!carrinho.some(item => item.categories.includes(categoria))) {
+                    if (!carrinho.some(item => item.sections.includes(categoria))) {
                         console.log('AAAAAAAAAAAAAAAAAAAAAAAAAA');
+                        console.log('coupon.condicoes.categoriasPermitidas', coupon.condicoes.categoriasPermitidas);
+
                         console.log('item.categories', carrinho);
                         return invalidConditionResult;
                     }

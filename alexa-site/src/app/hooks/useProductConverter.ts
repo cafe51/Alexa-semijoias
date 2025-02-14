@@ -109,6 +109,8 @@ export function useProductConverter() {
                     productId,
                     name: editableProduct.name,
                     value: editableProduct.value,
+                    sections: editableProduct.sections,
+                    subsections: editableProduct.subsections,
                     categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
                     sku: skuGenerated,
                     barcode: finalBarCode,
@@ -171,6 +173,8 @@ export function useProductConverter() {
                     sku: skuGenerated,
                     barcode: codigoDeBarra,
                     categories: [...categories, ...editableProduct.categoriesFromFirebase],
+                    sections: editableProduct.sections,
+                    subsections: editableProduct.subsections,
                 },
             ],
         };

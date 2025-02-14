@@ -69,7 +69,7 @@ export default function CouponSection({
     if (!userInfo) return null;
 
     return (
-        <div className="p-4 border rounded mt-4 secColor border-[#F8C3D3] hidden">
+        <div className="p-4 border rounded mt-4 secColor border-[#F8C3D3]">
             <div className='flex justify-between'>
                 <Input 
                     type="text" 

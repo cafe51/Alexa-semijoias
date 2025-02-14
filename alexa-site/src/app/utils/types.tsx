@@ -26,6 +26,7 @@ export type CouponConditionType = {
 };
 
 export type CouponType = {
+    id: string; // ID do cupom (gerado automaticamente)
     codigo: string; // Código do cupom (único e case-insensitive)
     descricao: string; // Texto explicativo do cupom para exibição ao usuário
     tipo: 'percentual' | 'fixo' | 'freteGratis'; // Tipo de cupom
@@ -118,6 +119,9 @@ export type VariationProductType = {
 }
 
 export type ProductVariation = {
+    sections: string[],
+    subsections?: string[], // do tipo 'sectionName:subsectionName'[]
+
     categories: string[],
     barcode: string, 
     customProperties?: { [key: string]: string },
@@ -252,6 +256,9 @@ export type ProductCartType = {
     dimensions: { largura: number, altura: number, comprimento: number }
     peso: number;
     customProperties?: { [key: string]: string },
+
+    sections: string[],
+    subsections?: string[], // do tipo 'sectionName:subsectionName'[]
 
 
     //o que vem de CartInfoType

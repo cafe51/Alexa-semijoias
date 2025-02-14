@@ -79,6 +79,9 @@ const CouponForm: React.FC<CouponFormProps> = ({ initialData, onSubmit, onCancel
 
 
   useEffect(() => {
+      console.log('AAAAAAAAAAAAaa');
+      console.log('initialSelectedCategories', initialSelectedCategories);
+
       async function getAllProductsDocsListAndUpdateSelectedProducts(initialSelectedProducts: string[]) {
           if (initialSelectedProducts) {
               for (const product of initialSelectedProducts) {

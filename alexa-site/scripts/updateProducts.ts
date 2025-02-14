@@ -1,74 +1,53 @@
-// Este é um módulo ES6
-import { collection, getDocs, doc, Firestore, setDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, Firestore, updateDoc } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '../src/app/firebase/config';
-// import { ProductVariation } from '@/app/utils/types';
-import { createSlugName, createSubsectionsWithSlug } from '@/app/utils/createSlugName';
-import { SectionType } from '@/app/utils/types';
+import { ProductBundleType } from '../functions/src/types';
 
-// Função principal que irá atualizar os documentos
+// Função principal que atualiza os documentos em batches de 50
 export const updateProducts = async(db: Firestore = projectFirestoreDataBase) => {
     try {
-        // sections: string[],
-        // subsections?: string[], // do tipo 'sectionName:subsectionName'[]
-        // categories: string[],
-        // Referência para a coleção 'products'
-        const sectionCollection = collection(db, 'siteSections');
-        const sectionsSnapshot = await getDocs(sectionCollection);
+    // Obtém todos os documentos da coleção "products"
+        const docsCollection = collection(db, 'products');
+        const docsSnapshot = await getDocs(docsCollection);
+        const allDocs = docsSnapshot.docs;
 
-        // const sectionWithSlugNameCollection = collection(db, 'siteSectionsWithSlugName');
-        // const sectionsWithSlugNameSnapshot = await getDocs(sectionWithSlugNameCollection);
-        
-        const sectionsPromises = sectionsSnapshot.docs.map(async(docSnap) => {
-            // const docRef = doc(db, 'siteSections', docSnap.id);
-            const docRefOfSectionWithSlugName = doc(db, 'siteSectionsWithSlugName', docSnap.id);
+        console.log(`Total de documentos a atualizar: ${allDocs.length}`);
 
-            const section = docSnap.data() as SectionType;
+        const batchSize = 50;
 
-            const sectionName = section.sectionName;
-            const subsections = section.subsections;
+        // Processa os documentos em batches
+        for (let i = 0; i < allDocs.length; i += batchSize) {
+            const currentBatchDocs = allDocs.slice(i, i + batchSize);
+            console.log(`Atualizando documentos ${i + 1} até ${i + currentBatchDocs.length}...`);
 
-            const newSubsections = subsections ? createSubsectionsWithSlug(subsections) : []; 
-            const sectionSlugName = createSlugName(sectionName);
+            // Cria as promessas de atualização para o batch atual
+            const batchPromises = currentBatchDocs.map(async(docSnap) => {
+                const docRef = doc(db, 'products', docSnap.id);
+                const docData = docSnap.data() as ProductBundleType;
 
-            return setDoc(docRefOfSectionWithSlugName, {
-                sectionName,
-                sectionSlugName,
-                subsections: newSubsections,
+                const productSections = docData.sections;
+                const productSubsections = docData.subsections;
+
+                // Atualiza cada variação do produto com as seções e subseções
+                const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map((variation) => ({
+                    ...variation,
+                    sections: productSections,
+                    subsections: productSubsections,
+                }));
+
+                return updateDoc(docRef, {
+                    productVariations: newProductVariations,
+                });
             });
 
-            // if(subsections && subsections.length > 0) {
-            //     return updateDoc(docRef, {
-            //         slugSectionName: slugSectionName,
-            //         subsections: newSubsections,
-            //     });
-            // }
-            // return updateDoc(docRef, {
-            //     slugSectionName: slugSectionName,
-            // });
-        });
+            // Aguarda todas as atualizações do batch atual
+            await Promise.all(batchPromises);
+            console.log(`Batch de documentos ${i + 1} até ${i + currentBatchDocs.length} atualizado com sucesso.`);
 
-        // const productCollection = collection(db, 'products');
-        // const productsSnapShot = await getDocs(productCollection);
-
-        // const productsPromises = productsSnapShot.docs.map(async(docSnap) => {
-        //     const docRef = doc(db, 'products', docSnap.id);
-        //     const product = docSnap.data() as ProductBundleType;
-        //     const subsections = product.subsections;
-        //     const newSubsections = subsections?.map(subsection => {
-        //         const subsectionName = subsection.split(':')[1];
-        //         return `${subsection}:${createSlugName(subsectionName)}`;
-        //     });
-        //     return updateDoc(docRef, {
-        //         subsections: newSubsections,
-        //     });
-        // });
-
-        // Executa todas as promessas
-        await Promise.all(sectionsPromises);
-        // await Promise.all(productsPromises);
+            // Delay opcional de 1 segundo entre os batches para verificação
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
 
         console.log('Todos os produtos foram atualizados com sucesso.');
-
     } catch (error) {
         console.error('Erro ao atualizar produtos:', error);
         throw error;

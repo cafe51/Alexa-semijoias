@@ -1,6 +1,7 @@
+import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import { Timestamp } from 'firebase/firestore';
 
-export const emptyProductBundleInitialState = {
+export const emptyProductBundleInitialState: ProductBundleType & FireBaseDocument = {
     exist: false,
     id: '',
     categories: [''],
@@ -22,6 +23,8 @@ export const emptyProductBundleInitialState = {
             productId: '',
             sku: '',
             value: { cost: 0, price: 0, promotionalPrice: 0 },
+            sections: [],
+            subsections: [],
         },
     ],
     sections: [''],
