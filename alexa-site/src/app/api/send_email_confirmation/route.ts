@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
             to: 'alexasemijoias@alexasemijoias.com',
             from: 'contato@alexasemijoias.com.br',
             subject: 'Venda Realizada ' + orderData.valor.soma,
-            html: '',
+            html: '<p>Olá Alexa Semijoias!</p><p>Sua venda foi realizada com sucesso.</p>',
         };
 
 
