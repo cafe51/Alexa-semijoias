@@ -89,7 +89,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                     onClick={ () => setShowModalConfirmationRetryOrder(false) }
                                 >
                                     <XCircle className="mr-2 h-4 w-4" />
-                                Cancelar
+                                Voltar
                                 </Button>
                             </div>
                         </div>
