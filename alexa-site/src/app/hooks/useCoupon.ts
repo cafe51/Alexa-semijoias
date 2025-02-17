@@ -6,7 +6,7 @@ import { useUserInfo } from './useUserInfo';
 
 export function useCoupon() {
     const couponCollection = useCollection<CouponType>('cupons');
-    const usageCollection = useCollection<CouponUsageType>('usoCupons');
+    const usageCollection = useCollection<CouponUsageType>('couponUsages');
     const ordersCollection = useCollection<CouponUsageType>('pedidos');
 
     const { userInfo } = useUserInfo();
@@ -48,7 +48,7 @@ export function useCoupon() {
         if (userInfo && userInfo.userId && coupon.limiteUsoPorUsuario !== null) {
             const userCount = await usageCollection.getCount([
                 where('cupomId', '==', coupon.id),
-                where('usuarioId', '==', userInfo.userId),
+                where('userId', '==', userInfo.userId),
             ]);
             if (userCount >= coupon.limiteUsoPorUsuario) {
                 return { valido: false, mensagemErro: 'Você já usou esse cupom o máximo de vezes possíveis' };
@@ -68,11 +68,7 @@ export function useCoupon() {
             // condicao de categorias permitidas
             if (coupon.condicoes.categoriasPermitidas && coupon.condicoes.categoriasPermitidas.length > 0) {
                 for (const categoria of coupon.condicoes.categoriasPermitidas) {
-                    if (!carrinho.some(item => item.sections.includes(categoria))) {
-                        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAA');
-                        console.log('coupon.condicoes.categoriasPermitidas', coupon.condicoes.categoriasPermitidas);
-
-                        console.log('item.categories', carrinho);
+                    if (!carrinho.every(item => item.sections.includes(categoria))) {
                         return invalidConditionResult;
                     }
                 }

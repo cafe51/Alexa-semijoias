@@ -327,6 +327,7 @@ export default function Checkout() {
                             <PriceSummarySection
                                 frete={ ((state.deliveryOption?.price) ? state.deliveryOption?.price : 0) }
                                 subtotalPrice={ cartPrice }
+                                couponDiscount={ couponDiscount }
                             />
                             <section className="flex flex-col gap-1 w-full border border-gray-100 shadow-lg mt-4">
                                 <div className="flex justify-between w-full p-4">

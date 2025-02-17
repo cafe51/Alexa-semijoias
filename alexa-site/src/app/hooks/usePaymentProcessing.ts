@@ -57,30 +57,30 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
 
         try {
             await createNewOrder(newOrder, paymentId);
-
+            console.log('XXXXXXXXXXXXXXx');
+            console.log('couponId.length', couponId!.length > 0);
+            for (const cartItem of carrinho) {
+                const { productId, skuId, quantidade } = cartItem as ProductCartType & FireBaseDocument;
+                await updateTheProductDocumentStock(productId, skuId, quantidade, '-');
+            }
             if(couponId && couponId.length > 0) {
                 const coupon = await getCouponById(couponId);
+                console.log('XXXXXXXXXXXXXXx');
+                console.log('coupon', coupon);
                 if(coupon) {
-                    await createCouponUsageDoc({
+                    if (coupon.limiteUsoGlobal !== null && coupon.limiteUsoGlobal > 0) {
+                        // Atualiza o limite de uso global do cupom
+                        updateCouponDoc(couponId, 'atualizadoEm', Timestamp.now());
+                        updateCouponDoc(couponId, 'limiteUsoGlobal', coupon.limiteUsoGlobal - 1);
+                    }
+                    createCouponUsageDoc({
                         cupomId: couponId,
                         userId: user.id,
                         orderId: paymentId,
                         dataUso: Timestamp.now(),
                     });
                 }
-                if (coupon.limiteUsoGlobal !== null && coupon.limiteUsoGlobal > 0) {
-                    // Atualiza o limite de uso global do cupom
-                    updateCouponDoc(couponId, 'atualizadoEm', Timestamp.now());
-                    updateCouponDoc(couponId, 'limiteUsoGlobal', coupon.limiteUsoGlobal - 1);
-                }         
-
             }
-
-            for (const cartItem of carrinho) {
-                const { productId, skuId, quantidade } = cartItem as ProductCartType & FireBaseDocument;
-                await updateTheProductDocumentStock(productId, skuId, quantidade, '-');
-            }
-
 
             console.log('Pedido finalizado com sucesso');
 

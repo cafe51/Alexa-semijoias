@@ -50,11 +50,14 @@ export default function CouponSection({
         if (!couponCode || !carrinho) return;
         const result = await applyCoupon(couponCode.trim(), cartPrice, carrinho);
         if (result.valido) {
+            console.log('result', result);
+            console.log(carrinho);
             setMessage('Cupom aplicado com sucesso!');
             setTextMessageColor('text-green-500');
             onCouponApplied(result.descontoAplicado || 0);
         } else {
             setMessage(result.mensagemErro || 'Erro ao aplicar cupom');
+            setTextMessageColor('text-red-500');
             setCouponDiscount(0);
         }
     };

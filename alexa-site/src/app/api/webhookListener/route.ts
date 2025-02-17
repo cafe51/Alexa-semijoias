@@ -54,21 +54,24 @@ export async function POST(req: NextRequest) {
                 case 'cancelled':
                 case 'rejected':
                     newStatus = 'cancelado';
+                    break;
+                default:
+                    newStatus = 'aguardando pagamento';
+                }
+
+                if(newStatus === 'cancelado') {
                     // Devolvendo os itens para o estoque
                     for (const item of orderData.cartSnapShot) {
                         await updateProductStock(item.productId, item.skuId, item.quantidade, '+');
                     }
                     if (orderData.couponId && orderData.couponId.length > 0) {
                         await updateCuponsDocStock(orderData.couponId, '+');
-                        await deleteCouponUsageDoc(orderData.id);
+                        await deleteCouponUsageDoc(paymentId);
                     }
 
-                    if (cancelMessageEmail && orderData.status !== 'entregue' && orderData.status !== 'cancelado') {
+                    if (cancelMessageEmail) {
                         await sendgrid.send(cancelMessageEmail);
                     }
-                    break;
-                default:
-                    newStatus = 'aguardando pagamento';
                 }
 
                 await orderRef.update({
