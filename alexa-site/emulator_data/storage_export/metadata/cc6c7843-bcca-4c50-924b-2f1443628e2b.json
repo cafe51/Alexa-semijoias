@@ -1,0 +1,19 @@
+{
+  "name": "images/anbukakashi.jpg",
+  "bucket": "alexa-semijoias.appspot.com",
+  "metageneration": 1,
+  "generation": 1739547359846,
+  "contentType": "image/jpeg",
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "downloadTokens": [
+    "732466db-72f1-46c9-86c0-ff0086680193"
+  ],
+  "etag": "Uwy2AnwAOneJk5dClX1MCWbgQFA",
+  "customMetadata": {},
+  "timeCreated": "2025-02-14T15:35:59.846Z",
+  "updated": "2025-02-14T15:35:59.846Z",
+  "size": 51451,
+  "md5Hash": "N8NMcwoKhq9WUgg06wHmAA==",
+  "crc32c": "283181079"
+}
