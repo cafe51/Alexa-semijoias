@@ -88,7 +88,7 @@ export type CategoryType = {
     categoryName: string;
 }
 
-export type ProductVariationsType = {
+export type ProductVariationsType = { //tipagem dos documentos da coleção productVariations
     productId: string;
     sku: string;
     barCode: string;
@@ -194,7 +194,7 @@ export type StateNewProductType = {
 
 }
 
-export type SectionSlugType = {
+export type SectionSlugType = { // tipagem dos documentos da coleção siteSectionsWithSlugName
     sectionName: string,
     sectionSlugName: string,
     subsections?: {
@@ -203,7 +203,7 @@ export type SectionSlugType = {
     }[],
 }
 
-export type SectionType = {
+export type SectionType = { //tipagem dos documentos da coleção siteSections
     sectionName: string,
     subsections?: string[] | null | undefined,
 }

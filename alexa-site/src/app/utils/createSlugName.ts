@@ -1,3 +1,4 @@
+// src/app/utils/createSlugName.ts
 import { SectionSlugType, SectionType } from './types';
 
 export function createSlugName(productName: string): string {
