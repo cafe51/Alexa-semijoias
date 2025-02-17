@@ -5,6 +5,7 @@ import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import Product from '@/app/components/ProductPage/Product';
 import toTitleCase from '@/app/utils/toTitleCase';
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     try {
@@ -105,8 +106,8 @@ async function getProductBySlug(slug: string) {
 export default async function ProductScreenPage({ params: { slug } }: { params: { slug: string } }) {
     const product = await getProductBySlug(slug);
     
-    if (!product) {
-        throw new Error('Produto não encontrado');
+    if (!product || !product.exist) {
+        notFound();
     }
     
     return (
