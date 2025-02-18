@@ -36,12 +36,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
                 title: toTitleCase(product.name),
                 description: product.description,
                 url: `/product/${params.slug}`,
-                images: product.images.map(img => ({
-                    url: img.localUrl,
+                images: {
+                    url: product.images[0]?.localUrl || '',
                     width: 800,
                     height: 600,
-                    alt: `${product.name} - ${img.index + 1}`,
-                })),
+                    alt: `${product.name} - ${product.images[0]?.localUrl || '' }`,
+                },
                 type: 'website',
                 siteName: 'Alexa Semijoias',
             },
