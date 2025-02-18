@@ -1,9 +1,10 @@
 // src/app/components/ProductPage/ProductJsonLd.tsx
-
 'use client';
 
+import toTitleCase from '@/app/utils/toTitleCase';
 import { ProductBundleType, ProductVariation } from '@/app/utils/types';
 import { FireBaseDocument } from '@/app/utils/types';
+import { getGoogleProductCategory } from '@/app/utils/getGoogleProductCategory';
 
 interface ProductJsonLdProps {
     product: ProductBundleType & FireBaseDocument;
@@ -11,20 +12,20 @@ interface ProductJsonLdProps {
 }
 
 export default function ProductJsonLd({ product, selectedVariation }: ProductJsonLdProps) {
-    // Pega a primeira variação se nenhuma estiver selecionada
+    // Usa a variação selecionada ou a primeira
     const variation = selectedVariation || product.productVariations[0];
     
-    // Constrói a URL da imagem principal
+    // URL da imagem principal
     const mainImage = product.images[0]?.localUrl || '';
 
-    // Constrói o objeto JSON-LD
+    // Constrói o objeto JSON‑LD
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Product',
         '@id': product.id,
         'content_id': product.id,
         'productID': variation.sku,
-        'name': product.name,
+        'name': toTitleCase(product.name),
         'description': product.description,
         'url': `https://www.alexasemijoias.com.br/product/${product.slug}`,
         'image': mainImage,
@@ -40,7 +41,6 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
             '@type': 'Organization',
             'name': 'Alexa Semijoias',
         },
-
         'offers': {
             '@type': 'Offer',
             'url': `https://www.alexasemijoias.com.br/product/${product.slug}`,
@@ -65,9 +65,12 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
                 'propertyID': 'categories',
                 'value': product.categories.join(', '),
             },
-
+            {
+                '@type': 'PropertyValue',
+                'propertyID': 'google_product_category',
+                'value': getGoogleProductCategory(product).toString(),
+            },
         ],
-
     };
 
     return (

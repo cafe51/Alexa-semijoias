@@ -6,6 +6,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import Product from '@/app/components/ProductPage/Product';
 import toTitleCase from '@/app/utils/toTitleCase';
 import { notFound } from 'next/navigation';
+import { getGoogleProductCategory } from '@/app/utils/getGoogleProductCategory';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     try {
@@ -67,7 +68,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
                 'product:price:currency': 'BRL',
                 'product:retailer_item_id': variation.sku,
                 'product:category': product.categories.join(','),
-                // 'product:weight': `${variation.peso}g`,
+                'google_product_category': getGoogleProductCategory(product).toString(),
             },
         };
     } catch (error) {
