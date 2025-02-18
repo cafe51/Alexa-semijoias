@@ -27,21 +27,30 @@ export const updateProducts = async() => {
                 const docRef = docSnap.ref;
                 const docData = docSnap.data() as ProductBundleType;
 
-                const productSections = docData.sections;
-                const productSubsections = docData.subsections;
+                if(docData.sections.includes('anéis')) {
+                    const productVariationSubsection = docData.productVariations[0].subsections;
+                    const firstProductVariationSubSection = productVariationSubsection ? productVariationSubsection[0] : [];
+                    let newSubsection: string[] = [];
+                    if (firstProductVariationSubSection === 'anéis:com pedras')
+                        newSubsection = ['anéis:anéis com pedras'];
+                    if (firstProductVariationSubSection === 'anéis:sem pedras')
+                        newSubsection = ['anéis:anéis sem pedras'];
+    
+    
+                    // Atualiza cada variação do produto com as seções e subseções
+                    const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map(
+                        (variation) => ({
+                            ...variation,
+                            subsections: newSubsection,
+                        }),
+                    );
+    
+                    batch.update(docRef, {
+                        subsections: newSubsection,
+                        productVariations: newProductVariations,
+                    });
+                }
 
-                // Atualiza cada variação do produto com as seções e subseções
-                const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map(
-                    (variation) => ({
-                        ...variation,
-                        sections: productSections,
-                        subsections: productSubsections,
-                    }),
-                );
-
-                batch.update(docRef, {
-                    productVariations: newProductVariations,
-                });
             });
 
             // Comita o batch atual
