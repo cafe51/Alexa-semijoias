@@ -97,7 +97,7 @@ const SectionsManagement: React.FC = () => {
             try {
                 // Atualiza a coleção siteSections
                 await updateDocumentField(editingSection.id, 'sectionName', formData.sectionName);
-                await updateDocumentField(editingSection.id, 'subsections', validSubs);
+                await updateDocumentField(editingSection.id, 'subsections', formData.subsections);
 
                 // Atualiza o documento correspondente em siteSectionsWithSlugName
                 const slugName = createSlugName(formData.sectionName);
@@ -105,17 +105,24 @@ const SectionsManagement: React.FC = () => {
                     {
                         sectionName: formData.sectionName,
                         sectionSlugName: slugName,
-                        subsections: validSubs.length > 0 ? createSubsectionsWithSlug(validSubs) : [],
+                        subsections:
+                        formData.subsections.length > 0
+                            ? createSubsectionsWithSlug(formData.subsections)
+                            : [],
                     },
                     editingSection.id,
                 );
+              
 
-                // Atualiza os produtos associados à seção
-                await updateProductsOnSectionNameChange(editingSection.sectionName, formData.sectionName);
+                // Atualiza os produtos associados à seção (incluindo as variações)
+                await updateProductsOnSectionNameChange(
+                    editingSection.sectionName,
+                    formData.sectionName,
+                );
                 await updateProductsOnSubsectionsChange(
                     editingSection.sectionName,
                     editingSection.subsections || [],
-                    validSubs,
+                    formData.subsections,
                 );
 
                 toast({

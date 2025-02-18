@@ -1,106 +1,205 @@
+import { updateDoc, doc } from 'firebase/firestore';
+import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { useCollection } from './useCollection';
-import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
+import { ProductBundleType } from '@/app/utils/types';
 
 export const useSectionUpdates = () => {
     const productsCollection = useCollection<ProductBundleType>('products');
 
-    // Função auxiliar para processar atualizações em lotes de 20
-    const batchProcess = async <T>(items: T[], callback: (item: T) => Promise<void>) => {
-        const chunkSize = 20;
-        for (let i = 0; i < items.length; i += chunkSize) {
-            const chunk = items.slice(i, i + chunkSize);
-            await Promise.all(chunk.map(callback));
-        }
-    };
-
-    const updateProductsOnSectionNameChange = async(oldName: string, newName: string) => {
+    const updateProductsOnSectionNameChange = async(
+        oldSectionName: string,
+        newSectionName: string,
+    ) => {
         const products = await productsCollection.getAllDocuments([
-            { field: 'sections', operator: 'array-contains', value: oldName },
+            { field: 'sections', operator: 'array-contains', value: oldSectionName },
         ]);
-        await batchProcess(products, async(product) => {
-            const updatedSections = product.sections.map((s: string) => (s === oldName ? newName : s));
-            if (JSON.stringify(updatedSections) !== JSON.stringify(product.sections)) {
-                await productsCollection.updateDocumentField(product.id, 'sections', updatedSections);
-            }
-            if (product.subsections && Array.isArray(product.subsections)) {
-                const updatedSubs = product.subsections.map((sub: string) => {
-                    const [sec, subName] = sub.split(':');
-                    return sec === oldName ? `${newName}:${subName}` : sub;
+
+        await Promise.all(
+            products.map(async(product) => {
+                // Atualiza o array de sections
+                const updatedSections = product.sections.map((s) =>
+                    s === oldSectionName ? newSectionName : s,
+                );
+
+                // Atualiza o array de subsections do produto (formato "section:subsection")
+                const updatedSubsections = product.subsections
+                    ? product.subsections.map((sub) => {
+                        if (sub.startsWith(`${oldSectionName}:`)) {
+                            return sub.replace(`${oldSectionName}:`, `${newSectionName}:`);
+                        }
+                        return sub;
+                    })
+                    : product.subsections;
+
+                // Atualiza também os arrays aninhados em productVariations
+                const updatedProductVariations = product.productVariations
+                    ? product.productVariations.map((variation) => {
+                        const varUpdatedSections = variation.sections.map((s) =>
+                            s === oldSectionName ? newSectionName : s,
+                        );
+                        const varUpdatedSubsections = variation.subsections
+                            ? variation.subsections.map((sub) => {
+                                if (sub.startsWith(`${oldSectionName}:`)) {
+                                    return sub.replace(
+                                        `${oldSectionName}:`,
+                                        `${newSectionName}:`,
+                                    );
+                                }
+                                return sub;
+                            })
+                            : variation.subsections;
+                        return {
+                            ...variation,
+                            sections: varUpdatedSections,
+                            subsections: varUpdatedSubsections,
+                        };
+                    })
+                    : product.productVariations;
+
+                await updateDoc(doc(projectFirestoreDataBase, 'products', product.id), {
+                    sections: updatedSections,
+                    subsections: updatedSubsections,
+                    productVariations: updatedProductVariations,
                 });
-                if (JSON.stringify(updatedSubs) !== JSON.stringify(product.subsections)) {
-                    await productsCollection.updateDocumentField(product.id, 'subsections', updatedSubs);
-                }
-            }
-        });
+            }),
+        );
     };
 
     const updateProductsOnSubsectionsChange = async(
         sectionName: string,
-        oldSubs: string[],
-        newSubs: string[],
+        oldSubsections: string[],
+        newSubsections: string[],
     ) => {
-    // Calcula as subseções que foram removidas
-        const removedSubs = oldSubs.filter(sub => !newSubs.includes(sub));
-        if (removedSubs.length === 0) return;
+        const products = await productsCollection.getAllDocuments([
+            { field: 'sections', operator: 'array-contains', value: sectionName },
+        ]);
 
-        const updatedProductsMap = new Map<string, ProductBundleType & FireBaseDocument>();
-        for (const removedSub of removedSubs) {
-            const products = await productsCollection.getAllDocuments([
-                { field: 'subsections', operator: 'array-contains', value: `${sectionName}:${removedSub}` },
-            ]);
-            for (const product of products) {
-                updatedProductsMap.set(product.id, product);
-            }
-        }
-        const updatedProducts = Array.from(updatedProductsMap.values());
-        await batchProcess(updatedProducts, async(product) => {
-            if (product.subsections && Array.isArray(product.subsections)) {
-                const updatedSubs = product.subsections.filter((sub) => {
-                    return !removedSubs.some(r => sub === `${sectionName}:${r}`);
+        await Promise.all(
+            products.map(async(product) => {
+                // Para cada produto, percorre os itens do array de subsections (formato "section:subsection")
+                const updatedSubsections = product.subsections
+                    ? product.subsections
+                        .map((sub) => {
+                            if (sub.startsWith(`${sectionName}:`)) {
+                                const currentSub = sub.split(':')[1];
+                                const idx = oldSubsections.indexOf(currentSub);
+                                if (idx !== -1 && newSubsections[idx]?.trim()) {
+                                    return `${sectionName}:${newSubsections[idx].trim()}`;
+                                }
+                                // Se não houver correspondência (por exemplo, foi removida), retorna null para filtrar
+                                return null;
+                            }
+                            return sub;
+                        })
+                        .filter((sub) => sub !== null) as string[]
+                    : product.subsections;
+
+                // Atualiza também os productVariations
+                const updatedProductVariations = product.productVariations
+                    ? product.productVariations.map((variation) => {
+                        const updatedVarSubsections = variation.subsections
+                            ? variation.subsections
+                                .map((sub) => {
+                                    if (sub.startsWith(`${sectionName}:`)) {
+                                        const currentSub = sub.split(':')[1];
+                                        const idx = oldSubsections.indexOf(currentSub);
+                                        if (idx !== -1 && newSubsections[idx]?.trim()) {
+                                            return `${sectionName}:${newSubsections[idx].trim()}`;
+                                        }
+                                        return null;
+                                    }
+                                    return sub;
+                                })
+                                .filter((sub) => sub !== null) as string[]
+                            : variation.subsections;
+                        return {
+                            ...variation,
+                            subsections: updatedVarSubsections,
+                        };
+                    })
+                    : product.productVariations;
+
+                await updateDoc(doc(projectFirestoreDataBase, 'products', product.id), {
+                    subsections: updatedSubsections,
+                    productVariations: updatedProductVariations,
                 });
-                if (updatedSubs.length !== product.subsections.length) {
-                    await productsCollection.updateDocumentField(product.id, 'subsections', updatedSubs);
-                }
-            }
-        });
+            }),
+        );
     };
 
     const removeSectionFromProducts = async(sectionName: string) => {
         const products = await productsCollection.getAllDocuments([
             { field: 'sections', operator: 'array-contains', value: sectionName },
         ]);
-        await batchProcess(products, async(product) => {
-            const updatedSections = product.sections.filter((s: string) => s !== sectionName);
-            if (updatedSections.length !== product.sections.length) {
-                await productsCollection.updateDocumentField(product.id, 'sections', updatedSections);
-            }
-            if (product.subsections && Array.isArray(product.subsections)) {
-                const updatedSubs = product.subsections.filter((sub: string) => !sub.startsWith(`${sectionName}:`));
-                if (updatedSubs.length !== product.subsections.length) {
-                    await productsCollection.updateDocumentField(product.id, 'subsections', updatedSubs);
-                }
-            }
-        });
+        await Promise.all(
+            products.map(async(product) => {
+                const updatedSections = product.sections.filter(
+                    (s) => s !== sectionName,
+                );
+                const updatedSubsections = product.subsections
+                    ? product.subsections.filter((sub) => !sub.startsWith(`${sectionName}:`))
+                    : product.subsections;
+                const updatedProductVariations = product.productVariations
+                    ? product.productVariations.map((variation) => {
+                        const varUpdatedSections = variation.sections.filter(
+                            (s) => s !== sectionName,
+                        );
+                        const varUpdatedSubsections = variation.subsections
+                            ? variation.subsections.filter(
+                                (sub) => !sub.startsWith(`${sectionName}:`),
+                            )
+                            : variation.subsections;
+                        return {
+                            ...variation,
+                            sections: varUpdatedSections,
+                            subsections: varUpdatedSubsections,
+                        };
+                    })
+                    : product.productVariations;
+                await updateDoc(doc(projectFirestoreDataBase, 'products', product.id), {
+                    sections: updatedSections,
+                    subsections: updatedSubsections,
+                    productVariations: updatedProductVariations,
+                });
+            }),
+        );
     };
 
-    const removeSubsectionFromProducts = async(sectionName: string, subsectionName: string) => {
+    const removeSubsectionFromProducts = async(
+        sectionName: string,
+        subsection: string,
+    ) => {
         const products = await productsCollection.getAllDocuments([
             {
                 field: 'subsections',
                 operator: 'array-contains',
-                value: `${sectionName}:${subsectionName}`,
+                value: `${sectionName}:${subsection}`,
             },
         ]);
-        await batchProcess(products, async(product) => {
-            if (product.subsections && Array.isArray(product.subsections)) {
-                const updatedSubs = product.subsections.filter(
-                    (sub: string) => sub !== `${sectionName}:${subsectionName}`,
-                );
-                if (updatedSubs.length !== product.subsections.length) {
-                    await productsCollection.updateDocumentField(product.id, 'subsections', updatedSubs);
-                }
-            }
-        });
+        await Promise.all(
+            products.map(async(product) => {
+                const updatedSubsections = product.subsections
+                    ? product.subsections.filter((sub) => sub !== `${sectionName}:${subsection}`)
+                    : product.subsections;
+                const updatedProductVariations = product.productVariations
+                    ? product.productVariations.map((variation) => {
+                        const updatedVarSubsections = variation.subsections
+                            ? variation.subsections.filter(
+                                (sub) => sub !== `${sectionName}:${subsection}`,
+                            )
+                            : variation.subsections;
+                        return {
+                            ...variation,
+                            subsections: updatedVarSubsections,
+                        };
+                    })
+                    : product.productVariations;
+                await updateDoc(doc(projectFirestoreDataBase, 'products', product.id), {
+                    subsections: updatedSubsections,
+                    productVariations: updatedProductVariations,
+                });
+            }),
+        );
     };
 
     return {
