@@ -1,3 +1,4 @@
+// src/app/admin/sections/SectionCard.tsx
 import { FireBaseDocument, SectionType } from '@/app/utils/types';
 import { Button } from '@/components/ui/button';
 

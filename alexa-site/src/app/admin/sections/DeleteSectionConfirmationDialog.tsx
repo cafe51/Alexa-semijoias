@@ -3,13 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface DeleteSectionConfirmationDialogProps {
-    deleteModalOpen: boolean;
-    setDeleteModalOpen: (value: boolean) => void;
-    deleteType: 'section' | 'subsection' | null
-    sectionToDelete: (SectionType & FireBaseDocument) | null
-    subsectionToDelete: string | null;
-    affectedCount: number;
-    confirmDelete: () => void;
+  deleteModalOpen: boolean;
+  setDeleteModalOpen: (value: boolean) => void;
+  deleteType: 'section' | 'subsection' | null;
+  sectionToDelete: (SectionType & FireBaseDocument) | null;
+  subsectionToDelete: string | null;
+  affectedCount: number;
+  confirmDelete: () => void;
+  isProcessing: boolean;
 }
 
 export default function DeleteSectionConfirmationDialog({
@@ -20,6 +21,7 @@ export default function DeleteSectionConfirmationDialog({
     subsectionToDelete,
     affectedCount,
     confirmDelete,
+    isProcessing,
 }: DeleteSectionConfirmationDialogProps) {
     return (
         <Dialog open={ deleteModalOpen } onOpenChange={ setDeleteModalOpen }>
@@ -31,35 +33,35 @@ export default function DeleteSectionConfirmationDialog({
                     { deleteType === 'section' ? (
                         <div>
                             <p>
-                                Você está prestes a deletar a seção <strong>{ sectionToDelete?.sectionName }</strong>.
+                Você está prestes a deletar a seção <strong>{ sectionToDelete?.sectionName }</strong>.
                             </p>
                             { sectionToDelete?.subsections && sectionToDelete.subsections.length > 0 && (
                                 <p>
-                                    As seguintes subseções serão removidas: { sectionToDelete.subsections.join(', ') }
+                  As seguintes subseções serão removidas: { sectionToDelete.subsections.join(', ') }
                                 </p>
                             ) }
                             <p>
-                                Produtos afetados: <strong>{ affectedCount }</strong>
+                Produtos afetados: <strong>{ affectedCount }</strong>
                             </p>
                         </div>
                     ) : (
                         <div>
                             <p>
-                                Você está prestes a deletar a subseção <strong>{ subsectionToDelete }</strong> da seção{ ' ' }
+                Você está prestes a deletar a subseção <strong>{ subsectionToDelete }</strong> da seção{ ' ' }
                                 <strong>{ sectionToDelete?.sectionName }</strong>.
                             </p>
                             <p>
-                                Produtos afetados: <strong>{ affectedCount }</strong>
+                Produtos afetados: <strong>{ affectedCount }</strong>
                             </p>
                         </div>
                     ) }
                 </DialogDescription>
                 <DialogFooter className="mt-4">
-                    <Button variant="destructive" onClick={ confirmDelete }>
-                        Confirmar
+                    <Button variant="destructive" onClick={ confirmDelete } disabled={ isProcessing }>
+                        { isProcessing ? 'Processando...' : 'Confirmar' }
                     </Button>
-                    <Button variant="outline" onClick={ () => setDeleteModalOpen(false) }>
-                        Cancelar
+                    <Button variant="outline" onClick={ () => setDeleteModalOpen(false) } disabled={ isProcessing }>
+            Cancelar
                     </Button>
                 </DialogFooter>
             </DialogContent>

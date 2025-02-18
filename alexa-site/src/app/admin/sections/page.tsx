@@ -9,6 +9,7 @@ import { where } from 'firebase/firestore';
 import DeleteSectionConfirmationDialog from './DeleteSectionConfirmationDialog';
 import SectionForm from './SectionForm';
 import SectionCard from './SectionCard';
+import { toast } from '@/hooks/use-toast'; // Supondo que você possua um hook de toast
 
 const SectionsManagement: React.FC = () => {
     // Instâncias dos hooks para as coleções
@@ -17,7 +18,6 @@ const SectionsManagement: React.FC = () => {
         addDocument,
         updateDocumentField,
         deleteDocument,
-        getDocumentById,
     } = useCollection<SectionType>('siteSections');
     const sectionSlugCollection = useCollection<SectionSlugType>('siteSectionsWithSlugName');
     const productsCollectionForCount = useCollection<ProductBundleType>('products');
@@ -43,6 +43,8 @@ const SectionsManagement: React.FC = () => {
     const [deleteType, setDeleteType] = useState<'section' | 'subsection' | null>(null);
     const [subsectionToDelete, setSubsectionToDelete] = useState<string | null>(null);
     const [affectedCount, setAffectedCount] = useState<number>(0);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     useEffect(() => {
         fetchSections();
@@ -55,6 +57,11 @@ const SectionsManagement: React.FC = () => {
             setSections(docs);
         } catch (error) {
             console.error('Erro ao buscar seções:', error);
+            toast({
+                title: 'Erro ao buscar seções',
+                description: 'Ocorreu um erro ao carregar as seções. Tente novamente.',
+                variant: 'destructive',
+            });
         }
         setLoading(false);
     };
@@ -82,7 +89,7 @@ const SectionsManagement: React.FC = () => {
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.sectionName.trim()) return;
-
+        setIsSubmitting(true);
         // Sempre envia um array válido (mesmo que vazio)
         const validSubs = formData.subsections;
 
@@ -111,12 +118,21 @@ const SectionsManagement: React.FC = () => {
                     validSubs,
                 );
 
+                toast({
+                    title: 'Seção atualizada',
+                    description: 'A seção foi atualizada com sucesso.',
+                });
                 await fetchSections();
                 setShowForm(false);
                 setEditingSection(null);
                 setFormData({ sectionName: '', subsections: [] });
             } catch (error) {
                 console.error('Erro ao atualizar seção:', error);
+                toast({
+                    title: 'Erro ao atualizar seção',
+                    description: 'Ocorreu um erro ao atualizar a seção.',
+                    variant: 'destructive',
+                });
             }
         } else {
             try {
@@ -135,13 +151,23 @@ const SectionsManagement: React.FC = () => {
                 };
                 await sectionSlugCollection.addDocument(newSectionSlug, newId);
 
+                toast({
+                    title: 'Seção criada',
+                    description: 'A nova seção foi criada com sucesso.',
+                });
                 await fetchSections();
                 setShowForm(false);
                 setFormData({ sectionName: '', subsections: [] });
             } catch (error) {
                 console.error('Erro ao criar nova seção:', error);
+                toast({
+                    title: 'Erro ao criar seção',
+                    description: 'Ocorreu um erro ao criar a nova seção.',
+                    variant: 'destructive',
+                });
             }
         }
+        setIsSubmitting(false);
     };
 
     const handleEditSection = (section: SectionType & FireBaseDocument) => {
@@ -177,17 +203,23 @@ const SectionsManagement: React.FC = () => {
 
     const confirmDelete = async() => {
         if (!sectionToDelete || !deleteType) return;
+        setIsDeleting(true);
         try {
             if (deleteType === 'section') {
                 await removeSectionFromProducts(sectionToDelete.sectionName);
                 await deleteDocument(sectionToDelete.id);
                 await sectionSlugCollection.deleteDocument(sectionToDelete.id);
+                toast({
+                    title: 'Seção deletada',
+                    description: 'A seção e suas subseções foram removidas com sucesso.',
+                });
             } else if (deleteType === 'subsection' && subsectionToDelete) {
                 const updatedSubs = (sectionToDelete.subsections || []).filter((s) => s !== subsectionToDelete);
                 if (updatedSubs.length !== (sectionToDelete.subsections || []).length) {
                     await updateDocumentField(sectionToDelete.id, 'subsections', updatedSubs);
                 }
-                const slugDoc = (await getDocumentById(sectionToDelete.id)) as (SectionSlugType & FireBaseDocument);
+                // Usa o getDocumentById do sectionSlugCollection para obter os dados corretos
+                const slugDoc = await sectionSlugCollection.getDocumentById(sectionToDelete.id);
                 if (slugDoc.exist && slugDoc.subsections) {
                     const updatedSlugSubs = slugDoc.subsections.filter((s) => {
                         if (typeof s === 'object' && s !== null && 'subsectionName' in s) {
@@ -204,11 +236,21 @@ const SectionsManagement: React.FC = () => {
                     }
                 }
                 await removeSubsectionFromProducts(sectionToDelete.sectionName, subsectionToDelete);
+                toast({
+                    title: 'Subseção deletada',
+                    description: 'A subseção foi removida com sucesso.',
+                });
             }
             await fetchSections();
         } catch (error) {
             console.error('Erro ao deletar:', error);
+            toast({
+                title: 'Erro ao deletar',
+                description: 'Ocorreu um erro ao deletar a seção/subseção.',
+                variant: 'destructive',
+            });
         }
+        setIsDeleting(false);
         setDeleteModalOpen(false);
         setSectionToDelete(null);
         setDeleteType(null);
@@ -229,34 +271,32 @@ const SectionsManagement: React.FC = () => {
         Adicionar Nova Seção
             </Button>
 
-            { loading
-                ? (
-                    <p>Carregando...</p>
-                ) : <SectionCard handleDelete={ handleDelete } handleEditSection={ handleEditSection } sections={ sections } />
-            }
+            { loading ? (
+                <p>Carregando...</p>
+            ) : (
+                <SectionCard handleDelete={ handleDelete } handleEditSection={ handleEditSection } sections={ sections } />
+            ) }
 
-            { /* Modal do formulário */ }
-            {
-                showForm && (
-                    <SectionForm
-                        showForm={ showForm }
-                        setShowForm={ setShowForm }
-                        editingSection={ editingSection }
-                        setEditingSection={ setEditingSection }
-                        setFormData={ setFormData }
-                        formData={ formData }
-                        handleSubmit={ handleSubmit }
-                        handleFormChange={ handleFormChange }
-                        handleSubsectionChange={ handleSubsectionChange }
-                        handleAddSubsectionInput={ handleAddSubsectionInput }
-                        handleRemoveSubsectionInput={ handleRemoveSubsectionInput }
-                    />
-                )
-            }
+            { /** Modal do formulário */ }
+            { showForm && (
+                <SectionForm
+                    showForm={ showForm }
+                    setShowForm={ setShowForm }
+                    editingSection={ editingSection }
+                    setEditingSection={ setEditingSection }
+                    setFormData={ setFormData }
+                    formData={ formData }
+                    handleSubmit={ handleSubmit }
+                    handleFormChange={ handleFormChange }
+                    handleSubsectionChange={ handleSubsectionChange }
+                    handleAddSubsectionInput={ handleAddSubsectionInput }
+                    handleRemoveSubsectionInput={ handleRemoveSubsectionInput }
+                    isSubmitting={ isSubmitting }
+                />
+            ) }
 
-            { /* Modal de confirmação */ }
-            { deleteModalOpen && 
-            (
+            { /** Modal de confirmação */ }
+            { deleteModalOpen && (
                 <DeleteSectionConfirmationDialog
                     deleteModalOpen={ deleteModalOpen }
                     setDeleteModalOpen={ setDeleteModalOpen }
@@ -265,6 +305,7 @@ const SectionsManagement: React.FC = () => {
                     subsectionToDelete={ subsectionToDelete }
                     affectedCount={ affectedCount }
                     confirmDelete={ confirmDelete }
+                    isProcessing={ isDeleting }
                 />
             ) }
         </div>
