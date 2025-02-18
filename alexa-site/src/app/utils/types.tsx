@@ -205,7 +205,7 @@ export type SectionSlugType = { // tipagem dos documentos da coleção siteSecti
 
 export type SectionType = { //tipagem dos documentos da coleção siteSections
     sectionName: string,
-    subsections?: string[] | null | undefined,
+    subsections?: string[] | null | undefined, // do tipo 'subsectionName'[]
 }
 
 export type UseCheckoutStateType = {

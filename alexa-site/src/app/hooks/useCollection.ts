@@ -30,7 +30,7 @@ export const useCollection = <T>(collectionName: string) => {
         await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
     }, [collectionName]);
 
-    const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object) => {
+    const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object | null) => {
         try {
             const docRef = doc(projectFirestoreDataBase, collectionName, id);
             console.log('chamou update', id, field, value, docRef);
