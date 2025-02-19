@@ -12,8 +12,8 @@ import Notification from '@/app/components/Notification';
 import { useProductPagination } from '@/app/hooks/useProductPagination';
 import { Pagination } from '@/app/components/Pagination';
 import ProductSorter from '@/app/components/ProductList/ProductSorter';
-import ProductFilter from './components/ProductFilter';
 import ProductPageModals from './ProductPageModals';
+import ProductFilters from './ProductFilters';
 
 interface NotificationState {
     message: string;
@@ -126,46 +126,24 @@ export default function ProductsDashboard() {
                 showProductQuantitiesModal={ () => setShowProductQuantitiesModal(true) }
                 setShowCreateNewProductModal={ () => setShowCreateNewProductModal(true) }
             /> 
-            <div className="flex justify-between items-center mb-4 gap-4">
+            <section className="flex justify-between items-center mb-4 gap-4">
                 <ProductSorter
                     currentSort={ currentSort }
                     onSortChange={ onSortChange }
                 />
-                <button
-                    onClick={ () => setShowFilterModal(true) }
-                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium transition-colors"
-                >
-                    Filtros
-                </button>
-            </div>
-
-            <ProductFilter
-                showStoreProducts={ showStoreProducts }
-                setShowStoreProducts={ setShowStoreProducts }
-                showOutStoreProducts={ showOutStoreProducts }
-                setShowOutStoreProducts={ setShowOutStoreProducts }
-                estoqueRange={ estoqueRange }
-                setEstoqueRange={ setEstoqueRange }
-                priceRange={ priceRange }
-                setPriceRange={ setPriceRange }
-                isOpen={ showFilterModal }
-                onClose={ () => setShowFilterModal(false) }
-            />
-            <ProductPageModals
-                showProductQuantitiesModal={ showProductQuantitiesModal }
-                setShowProductQuantitiesModal={ (showProductQuantitiesModal: boolean) => setShowProductQuantitiesModal(showProductQuantitiesModal) }
-                productBundleEditable={ productBundleEditable }
-                selectedProduct={ selectedProduct }
-                showEditionModal={ showEditionModal }
-                setShowEditionModal={ (showEditionModal: boolean) => setShowEditionModal(showEditionModal) }
-                showCreateNewProductModal={ showCreateNewProductModal }
-                setShowCreateNewProductModal={ (showCreateNewProductModal: boolean) => setShowCreateNewProductModal(showCreateNewProductModal) }
-                showProductDetailModal={ showProductDetailModal }
-                setShowProductDetailModal={ (showProductDetailModal: boolean) => setShowProductDetailModal(showProductDetailModal) }
-                handleProductEdited={ handleProductEdited }
-                useProductDataHandlers={ useProductDataHandlers }
-                siteSections={ siteSections }
-            />
+                <ProductFilters
+                    showStoreProducts={ showStoreProducts }
+                    setShowStoreProducts={ setShowStoreProducts }
+                    showOutStoreProducts={ showOutStoreProducts }
+                    setShowOutStoreProducts={ setShowOutStoreProducts }
+                    estoqueRange={ estoqueRange }
+                    setEstoqueRange={ setEstoqueRange }
+                    priceRange={ priceRange }
+                    setPriceRange={ setPriceRange }
+                    setShowFilterModal={ (showFilterModal: boolean) => setShowFilterModal(showFilterModal) }
+                    showFilterModal={ showFilterModal }
+                />
+            </section>
             <section className="flex flex-col gap-4 w-full">
                 { isLoading && products.length === 0 ? (
                     <div className="text-center py-4 text-[#333333]">Carregando produtos...</div>
@@ -200,6 +178,21 @@ export default function ProductsDashboard() {
                     onClose={ () => setNotification(null) }
                 />
             ) }
+            <ProductPageModals
+                showProductQuantitiesModal={ showProductQuantitiesModal }
+                setShowProductQuantitiesModal={ (showProductQuantitiesModal: boolean) => setShowProductQuantitiesModal(showProductQuantitiesModal) }
+                productBundleEditable={ productBundleEditable }
+                selectedProduct={ selectedProduct }
+                showEditionModal={ showEditionModal }
+                setShowEditionModal={ (showEditionModal: boolean) => setShowEditionModal(showEditionModal) }
+                showCreateNewProductModal={ showCreateNewProductModal }
+                setShowCreateNewProductModal={ (showCreateNewProductModal: boolean) => setShowCreateNewProductModal(showCreateNewProductModal) }
+                showProductDetailModal={ showProductDetailModal }
+                setShowProductDetailModal={ (showProductDetailModal: boolean) => setShowProductDetailModal(showProductDetailModal) }
+                handleProductEdited={ handleProductEdited }
+                useProductDataHandlers={ useProductDataHandlers }
+                siteSections={ siteSections }
+            />
         </main>
     );
 }

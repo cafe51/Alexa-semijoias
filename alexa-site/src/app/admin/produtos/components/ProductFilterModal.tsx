@@ -12,7 +12,7 @@ const MAX_PRICE_PRODUCTION = 2000;
 const MAX_STOCK = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' ? MAX_STOCK_EMULATOR : MAX_STOCK_PRODUCTION;
 const MAX_PRICE = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' ? MAX_PRICE_EMULATOR : MAX_PRICE_PRODUCTION;
 
-interface ProductFilterProps {
+interface ProductFilterModalProps {
     showStoreProducts: boolean;
     setShowStoreProducts: (value: boolean) => void;
     showOutStoreProducts: boolean;
@@ -26,7 +26,7 @@ interface ProductFilterProps {
 }
 
 
-export default function ProductFilter({ 
+export default function ProductFilterModal({ 
     showStoreProducts, 
     setShowStoreProducts,
     showOutStoreProducts,
@@ -37,7 +37,7 @@ export default function ProductFilter({
     setPriceRange,
     isOpen,
     onClose,
-}: ProductFilterProps) {
+}: ProductFilterModalProps) {
     return (
         <SlideUpModal
             isOpen={ isOpen }
