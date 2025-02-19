@@ -1,5 +1,5 @@
 // src/app/hooks/useProductPagination.ts
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNumberedPagination } from './useNumberedPagination';
 import { FilterOptionForUseSnapshot, ProductBundleType, SortOption } from '@/app/utils/types';
 import removeAccents from '../utils/removeAccents';
@@ -25,9 +25,17 @@ export const useProductPagination = () => {
         orderBy: 'updatingDate', 
         direction: 'desc',
     });
-    // NOVOS ESTADOS PARA FILTRAGEM POR SEÇÃO E SUBSEÇÃO
+    // Estados para filtragem por seção e subseção
     const [selectedSection, setSelectedSection] = useState<string>('');
     const [selectedSubsection, setSelectedSubsection] = useState<string>('');
+
+    // Novo useEffect: se searchTerm estiver preenchido, reseta os filtros de seção e subseção
+    useEffect(() => {
+        if (searchTerm.trim() !== '') {
+            setSelectedSection('');
+            setSelectedSubsection('');
+        }
+    }, [searchTerm]);
 
     const ordination = useMemo<{field: string, direction: 'asc' | 'desc'}>(() => 
         ({ field: currentSort.orderBy, direction: currentSort.direction }),
@@ -43,23 +51,28 @@ export const useProductPagination = () => {
             { field: 'value.price', operator: '>=', value: priceRange[0] },
             { field: 'value.price', operator: '<=', value: priceRange[1] },
         ];
-    
+
         if (searchTerm) {
             const normalizedTerm = removeAccents(searchTerm.toLowerCase());
             baseFilters.push({ field: 'keyWords', operator: 'array-contains', value: normalizedTerm });
-        }
-    
-        if (selectedSection) {
-            if (selectedSubsection) {
-                // Se subseção estiver selecionada, filtra apenas pelo campo "subsections"
-                const filterValue = `${selectedSection}:${selectedSubsection}`;
-                baseFilters.push({ field: 'subsections', operator: 'array-contains', value: filterValue });
-            } else {
-                // Se somente a seção estiver selecionada, filtra pelo campo "sections"
-                baseFilters.push({ field: 'sections', operator: 'array-contains', value: selectedSection });
+        } else {
+            if (selectedSection) {
+                if (selectedSubsection) {
+                    baseFilters.push({ 
+                        field: 'subsections', 
+                        operator: 'array-contains', 
+                        value: `${selectedSection}:${selectedSubsection}`, 
+                    });
+                } else {
+                    baseFilters.push({ 
+                        field: 'sections', 
+                        operator: 'array-contains', 
+                        value: selectedSection, 
+                    });
+                }
             }
         }
-    
+
         return baseFilters;
     }, [
         searchTerm,
@@ -154,7 +167,6 @@ export const useProductPagination = () => {
         setEstoqueRange,
         priceRange,
         setPriceRange,
-        // Novos estados para filtragem por seção e subseção
         selectedSection,
         setSelectedSection,
         selectedSubsection,
