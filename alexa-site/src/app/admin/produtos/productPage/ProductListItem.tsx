@@ -93,9 +93,9 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                     sizes='300px'
                 />
             </div>
-            <div className='w-full flex flex-col justify-between py-4 pr-4'>
+            <div className='w-full flex flex-col justify-between py-2 pr-4'>
                 <div className="flex justify-between items-center w-full">
-                    <p className="font-bold text-[#333333] overflow-hidden">{ toTitleCase(product.name) }</p> 
+                    <p className="font-bold text-[#333333] line-clamp-2">{ toTitleCase(product.name) }</p> 
                     <button className="text-[#C48B9F]" onClick={ handleEditClick }>
                         <FiEdit size={ 20 } />
                     </button>
