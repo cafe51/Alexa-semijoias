@@ -25,13 +25,15 @@ export const useProductPagination = () => {
         orderBy: 'updatingDate', 
         direction: 'desc',
     });
+    // NOVOS ESTADOS PARA FILTRAGEM POR SEÇÃO E SUBSEÇÃO
+    const [selectedSection, setSelectedSection] = useState<string>('');
+    const [selectedSubsection, setSelectedSubsection] = useState<string>('');
 
     const ordination = useMemo<{field: string, direction: 'asc' | 'desc'}>(() => 
         ({ field: currentSort.orderBy, direction: currentSort.direction }),
     [currentSort]);
 
     const ITEMS_PER_PAGE = useMemo(() => 20, []);
-
     const collectionName = useMemo(() => 'products', []);
 
     const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[] | null>(() => {
@@ -41,21 +43,30 @@ export const useProductPagination = () => {
             { field: 'value.price', operator: '>=', value: priceRange[0] },
             { field: 'value.price', operator: '<=', value: priceRange[1] },
         ];
-
-        // Se existe um termo de busca, verifica no campo keyWords
+    
         if (searchTerm) {
             const normalizedTerm = removeAccents(searchTerm.toLowerCase());
-            return [
-                ...baseFilters,
-                { field: 'keyWords', operator: 'array-contains', value: normalizedTerm },
-            ];
+            baseFilters.push({ field: 'keyWords', operator: 'array-contains', value: normalizedTerm });
         }
-
+    
+        if (selectedSection) {
+            if (selectedSubsection) {
+                // Se subseção estiver selecionada, filtra apenas pelo campo "subsections"
+                const filterValue = `${selectedSection}:${selectedSubsection}`;
+                baseFilters.push({ field: 'subsections', operator: 'array-contains', value: filterValue });
+            } else {
+                // Se somente a seção estiver selecionada, filtra pelo campo "sections"
+                baseFilters.push({ field: 'sections', operator: 'array-contains', value: selectedSection });
+            }
+        }
+    
         return baseFilters;
     }, [
         searchTerm,
         estoqueRange,
         priceRange,
+        selectedSection,
+        selectedSubsection,
     ]);
 
     const filtrosFinais = useMemo<FilterOptionForUseSnapshot[] | null>(() => {
@@ -64,13 +75,12 @@ export const useProductPagination = () => {
         const filtrosShowProduct: FilterOptionForUseSnapshot[] = [];
 
         if (showStoreProducts && showOutStoreProducts) {
-            // Não adiciona filtro, mostra todos
+            // Sem filtro adicional
         } else if (showStoreProducts) {
             filtrosShowProduct.push({ field: 'showProduct', operator: '==', value: true });
         } else if (showOutStoreProducts) {
             filtrosShowProduct.push({ field: 'showProduct', operator: '==', value: false });
         } else {
-            // Nenhum produto deve ser mostrado
             return [{ field: 'showProduct', operator: '==', value: 'none' }];
         }
 
@@ -106,7 +116,7 @@ export const useProductPagination = () => {
     const handleSortChange = useCallback((sortOption: SortOption) => {
         try {
             setCurrentSort(sortOption);
-            goToPage(1); // Volta para a primeira página ao mudar a ordenação
+            goToPage(1);
         } catch (error) {
             console.error('Erro ao mudar ordenação:', error);
             setError('Falha ao ordenar produtos. Por favor, tente novamente.');
@@ -144,5 +154,10 @@ export const useProductPagination = () => {
         setEstoqueRange,
         priceRange,
         setPriceRange,
+        // Novos estados para filtragem por seção e subseção
+        selectedSection,
+        setSelectedSection,
+        selectedSubsection,
+        setSelectedSubsection,
     };
 };

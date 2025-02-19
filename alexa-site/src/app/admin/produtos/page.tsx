@@ -1,12 +1,11 @@
 // src/app/admin/produtos/page.tsx
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { FireBaseDocument, ProductBundleType, ProductVariationsType, SectionType, StateNewProductType } from '@/app/utils/types';
+import { FireBaseDocument, ProductBundleType, SectionType, StateNewProductType } from '@/app/utils/types';
 import { emptyProductBundleInitialState } from './productPage/emptyProductBundleInitialState';
 import { initialEmptyState } from '@/app/hooks/useNewProductState';
 import { useProductConverter } from '@/app/hooks/useProductConverter';
 import ProductListItem from './productPage/ProductListItem';
-import ProductsHeader from './components/ProductsHeader';
 import { useCollection } from '@/app/hooks/useCollection';
 import useFirebaseUpload from '@/app/hooks/useFirebaseUpload';
 import Notification from '@/app/components/Notification';
@@ -15,6 +14,7 @@ import { Pagination } from '@/app/components/Pagination';
 import ProductSorter from '@/app/components/ProductList/ProductSorter';
 import ProductPageModals from './ProductPageModals';
 import ProductFilters from './ProductFilters';
+import ProductsHeader from './components/ProductsHeader';
 
 interface NotificationState {
     message: string;
@@ -53,12 +53,16 @@ export default function ProductsDashboard() {
         setEstoqueRange,
         priceRange,
         setPriceRange,
+        selectedSection,
+        setSelectedSection,
+        selectedSubsection,
+        setSelectedSubsection,
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
     const { deleteDocument: deleteProductBundle, getDocumentById: getProductById } = useCollection<ProductBundleType>('products');
     const { deleteImage } = useFirebaseUpload();
-    const { deleteDocument: deleteProductVariation, getAllDocuments: getAllProductVariations } = useCollection<ProductVariationsType>('productVariations');
+    const { deleteDocument: deleteProductVariation, getAllDocuments: getAllProductVariations } = useCollection<ProductBundleType>('productVariations');
     const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
 
     useEffect(() => {
@@ -88,21 +92,14 @@ export default function ProductsDashboard() {
 
     const handleDelete = useCallback(async(id: string) => {
         try {
-            // Buscar o produto para ter acesso às URLs das imagens
             const product = await getProductById(id);
             if (!product.exist) {
                 throw new Error('Produto não encontrado');
             }
-
-            // Deletar todas as imagens do produto do Firebase Storage
             const deleteImagePromises = product.images.map(image => deleteImage(image.localUrl));
             await Promise.all(deleteImagePromises);
-
-            // Deletar as variações do produto
             const productVariationsFromCollection = await getAllProductVariations([{ field: 'productId', operator: '==', value: id }]);
             await Promise.all(productVariationsFromCollection.map((pv) => deleteProductVariation(pv.id)));
-
-            // Deletar o documento do produto
             await deleteProductBundle(id);
             refresh();
             setNotification({ message: 'Produto excluído com sucesso', type: 'success' });
@@ -126,6 +123,8 @@ export default function ProductsDashboard() {
                 searchTerm={ searchTerm }
                 showProductQuantitiesModal={ () => setShowProductQuantitiesModal(true) }
                 setShowCreateNewProductModal={ () => setShowCreateNewProductModal(true) }
+                selectedSection={ selectedSection }
+                selectedSubsection={ selectedSubsection }
             /> 
             <section className="flex justify-between items-center mb-4 gap-4">
                 <ProductSorter
@@ -143,6 +142,11 @@ export default function ProductsDashboard() {
                     setPriceRange={ setPriceRange }
                     setShowFilterModal={ (showFilterModal: boolean) => setShowFilterModal(showFilterModal) }
                     showFilterModal={ showFilterModal }
+                    selectedSection={ selectedSection }
+                    setSelectedSection={ setSelectedSection }
+                    selectedSubsection={ selectedSubsection }
+                    setSelectedSubsection={ setSelectedSubsection }
+                    siteSections={ siteSections }
                 />
             </section>
             <section className="flex flex-col gap-4 w-full">

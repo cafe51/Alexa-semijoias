@@ -333,7 +333,7 @@ export type SortOption = {
     label: string;
     orderBy: string;
     direction: 'asc' | 'desc';
-  };
+};
 
 export type AddressType = { numero: string, referencia: string } & ViaCepResponse;
 

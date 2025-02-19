@@ -1,22 +1,36 @@
-// src/app/admin/produtos/componentes/ProductsHeader.tsx
+import toTitleCase from '@/app/utils/toTitleCase';
 
+// src/app/admin/produtos/componentes/ProductsHeader.tsx
 interface ProductsHeaderProps {
     totalProducts: number;
     setSearchTerm: (searchTerm: string) => void;
     searchTerm: string;
     showProductQuantitiesModal: () => void;
     setShowCreateNewProductModal: () => void;
+    // Novos props para exibir os filtros ativos
+    selectedSection?: string;
+    selectedSubsection?: string;
 }
 
-export default function ProductsHeader({ totalProducts, setSearchTerm, searchTerm, showProductQuantitiesModal, setShowCreateNewProductModal }: ProductsHeaderProps) {
+export default function ProductsHeader({ 
+    totalProducts, 
+    setSearchTerm, 
+    searchTerm, 
+    showProductQuantitiesModal, 
+    setShowCreateNewProductModal,
+    selectedSection,
+    selectedSubsection,
+}: ProductsHeaderProps) {
+    const title = selectedSection ? `${toTitleCase(selectedSection)} - ${selectedSubsection && toTitleCase(selectedSubsection)}` : 'Todos os produtos';
     return (
         <div className="bg-white shadow-md p-6 mb-6 rounded-lg w-full">
-            <div className="flex flex-wrap justify-between items-center gap-4">
+            <div></div>
+            <div className="flex flex-col justify-center items-center gap-4">
                 <button
-                    className='text-2xl font-bold text-[#333333] p-4 border-2 border-[#C48B9F] hover:border-[#D4AF37] transition rounded-xl'
+                    className="text-2xl font-bold text-[#333333] p-4 border-2 border-[#C48B9F] hover:border-[#D4AF37] transition rounded-xl"
                     onClick={ showProductQuantitiesModal }
                 >
-                    Produtos ({ totalProducts })
+                    { title } ({ totalProducts })
                 </button>
                 <button
                     className="bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition"
@@ -34,14 +48,6 @@ export default function ProductsHeader({ totalProducts, setSearchTerm, searchTer
                     onChange={ (e) => setSearchTerm(e.target.value) }
                     placeholder="Buscar produtos..."
                 />
-                {
-                    // <button
-                    //     type="submit"
-                    //     className="bg-[#F8C3D3] text-[#333333] font-medium py-3 px-6 rounded-lg hover:bg-[#C48B9F] hover:text-white transition"
-                    // >
-                    // Buscar
-                    // </button>
-                }
             </form>
         </div>
     );

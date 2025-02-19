@@ -1,7 +1,6 @@
 // src/app/components/ProductList/ProductSorter.tsx
 'use client';
 
-import React from 'react';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 import { SortOption } from '@/app/utils/types';
 
