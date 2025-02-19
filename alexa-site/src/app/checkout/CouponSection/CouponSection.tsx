@@ -6,32 +6,30 @@ import { FireBaseDocument, ProductCartType } from '@/app/utils/types';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '@/app/utils/constants';
 
 interface CouponSectionProps {
-    cartPrice: number;
     carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null
     fetchDeliveryOptions: () => void;
     resetSelectedDeliveryOption: () => void;
     hiddenPaymentSection: () => void;
     setCouponDiscount: (discount: number | 'freteGratis') => void;
     couponDiscount: number | 'freteGratis'
-    couponCode: string | undefined;
     setCouponCode: (code: string) => void;
 }
 
 export default function CouponSection({
-    cartPrice,
     carrinho,
     fetchDeliveryOptions,
     resetSelectedDeliveryOption,
     hiddenPaymentSection,
     setCouponDiscount,
     couponDiscount,
-    couponCode,
     setCouponCode,
 }: CouponSectionProps) {
     const { userInfo } = useUserInfo();
     const [message, setMessage] = useState('');
+    const [couponCodeInput, setCouponCodeInput] = useState('');
     const [textMessageColor, setTextMessageColor] = useState('text-red-500');
     const { applyCoupon } = useCoupon();
 
@@ -47,11 +45,25 @@ export default function CouponSection({
     };
 
     const handleApply = async() => {
-        if (!couponCode || !carrinho) return;
-        const result = await applyCoupon(couponCode.trim(), cartPrice, carrinho);
+        if (!couponCodeInput || !carrinho) return;
+        const removePromotionalPriceCondition = couponCodeInput.trim() === COUPONREVENDEDORAFIRSTCODE || couponCodeInput.trim() === COUPONREVENDEDORAVIP;
+        const cartToCouponGenerate = removePromotionalPriceCondition ? carrinho.map((item) => ({
+            ...item,
+            value: {
+                ...item.value,
+                promotionalPrice: 0,
+            },
+        })) : carrinho;
+        const cartPrice = 
+            Number(cartToCouponGenerate
+                ?.map((items) => (Number(items.quantidade) * (items.value.promotionalPrice ? items.value.promotionalPrice : items.value.price)))
+                .reduce((a, b) => a + b, 0));
+        
+        const result = await applyCoupon(couponCodeInput.trim(), cartPrice, cartToCouponGenerate);
         if (result.valido) {
             console.log('result', result);
             console.log(carrinho);
+            setCouponCode(couponCodeInput);
             setMessage('Cupom aplicado com sucesso!');
             setTextMessageColor('text-green-500');
             onCouponApplied(result.descontoAplicado || 0);
@@ -65,6 +77,7 @@ export default function CouponSection({
     const handleRemove = () => {
         resetDeliveryOption();
         setCouponCode('');
+        setCouponCodeInput('');
         setMessage('');
         setCouponDiscount(0);
     };
@@ -77,8 +90,8 @@ export default function CouponSection({
                 <Input 
                     type="text" 
                     placeholder="Seu cupom" 
-                    value={ couponCode } 
-                    onChange={ (e) => setCouponCode(e.target.value) } 
+                    value={ couponCodeInput } 
+                    onChange={ (e) => setCouponCodeInput(e.target.value) } 
                     className="border text-lg text-center bg-white px-2 mr-2"
                     readOnly={ couponDiscount === 'freteGratis' || couponDiscount > 0 }
                 />

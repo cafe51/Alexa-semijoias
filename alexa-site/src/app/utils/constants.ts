@@ -1,1 +1,5 @@
 export const ITEMS_PER_PAGE = 10; // Número padrão de itens por página para paginação
+export const COUPONREVENDEDORAFIRSTCODE = 'REVENDEDORA50';
+export const COUPONREVENDEDORAMINIMUNLIMIT= 'R$ 3000,00';
+export const COUPONREVENDEDORAVIP = 'REVENDEDORA';
+export const COUPONREVENDEDORAVIPMINIMUNLIMIT= 'R$ 1000,00';

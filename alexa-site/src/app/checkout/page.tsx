@@ -18,6 +18,7 @@ import SummaryCard from './OrderSummarySection/SummaryCard';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { useCollection } from '../hooks/useCollection';
 import CouponSection from './CouponSection/CouponSection';
+import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '../utils/constants';
 
 export default function Checkout() {
     const router = useRouter();
@@ -36,6 +37,7 @@ export default function Checkout() {
     // Estados para o cupom
     const [ couponDiscount, setCouponDiscount ] = useState<number | 'freteGratis'>(0);
     const [ couponCode, setCouponCode ] = useState<string>('');
+    const [ carrinhoState, setCarrinhoState ] = useState<ProductCartType[] | null>(null);
 
     const {
         state,
@@ -47,6 +49,33 @@ export default function Checkout() {
         handleShowFullOrderSummary,
         fetchDeliveryOptions,
     } = useCheckoutState();
+
+    useEffect(() => {
+        setCarrinhoState(carrinho);
+        console.log('definiu carrinhoState');
+    }, [carrinho]);
+
+    useEffect(() => {
+        const removePromotionalPriceCondition = couponCode.trim() === COUPONREVENDEDORAFIRSTCODE || couponCode.trim() === COUPONREVENDEDORAVIP;
+        if(removePromotionalPriceCondition) {
+            if(!carrinho) return;
+            console.log('map cart revendedora coupon');
+            setCarrinhoState(carrinho.map((item) => ({
+                ...item,
+                value: {
+                    ...item.value,
+                    promotionalPrice: 0,
+                },
+            })));
+        } else {
+            if(!carrinho) return;
+            console.log('map cart normal coupon');
+            setCarrinhoState(carrinho);
+        }
+        
+    }, [couponCode, carrinho]);
+
+
 
     useEffect(() => {
         window.scrollTo({
@@ -111,14 +140,14 @@ export default function Checkout() {
     }, [userInfo?.address]);
 
     useEffect(() => {
-        if (carrinho) {
+        if (carrinhoState) {
             setCartPrice(
-                Number(carrinho
+                Number(carrinhoState
                     ?.map((items) => (Number(items.quantidade) * (items.value.promotionalPrice ? items.value.promotionalPrice : items.value.price)))
                     .reduce((a, b) => a + b, 0)),
             );
         }
-    }, [carrinho]);
+    }, [carrinhoState]);
 
 
     if(loadingScreen) return (
@@ -134,7 +163,7 @@ export default function Checkout() {
                 // Layout Mobile
                 <div className="space-y-4">
                     <OrderSummarySection 
-                        carrinho={ carrinho } 
+                        carrinho={ carrinhoState } 
                         cartPrice={ cartPrice }
                         couponDiscount={ couponDiscount }
                         handleShowFullOrderSummary={ handleShowFullOrderSummary }
@@ -142,14 +171,12 @@ export default function Checkout() {
                     />
                     { /* Seção de cupom */ }
                     <CouponSection 
-                        cartPrice={ cartPrice }
-                        carrinho={ carrinho }
+                        carrinho={ carrinhoState }
                         fetchDeliveryOptions={ fetchDeliveryOptions }
                         resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }
                         hiddenPaymentSection={ () => setShowPaymentSection(false) }
                         setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
                         couponDiscount={ couponDiscount }
-                        couponCode={ couponCode }
                         setCouponCode={ (code: string) => setCouponCode(code) }
                     />
                     <AccountSection 
@@ -164,7 +191,7 @@ export default function Checkout() {
                         state={ state }
                     />
                     <DeliveryPriceSection
-                        carrinho={ carrinho }
+                        carrinho={ carrinhoState }
                         userInfo={ userInfo }
                         cartPrice={ cartPrice } 
                         deliveryOptions={ deliveryOptions }
@@ -204,14 +231,13 @@ export default function Checkout() {
                                 setIsCartLoading={ setIsCartLoading }
                             />
                             <CouponSection 
-                                cartPrice={ cartPrice }
-                                carrinho={ carrinho }
+                                carrinho={ carrinhoState }
                                 fetchDeliveryOptions={ fetchDeliveryOptions }
                                 resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }
                                 hiddenPaymentSection={ () => setShowPaymentSection(false) }
                                 setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
                                 couponDiscount={ couponDiscount }
-                                couponCode={ couponCode }
+    
 
                                 setCouponCode={ (code: string) => setCouponCode(code) }
 
@@ -228,7 +254,7 @@ export default function Checkout() {
                         <div className="space-y-4">
                             <DeliveryPriceSection
                                 cartPrice={ cartPrice } 
-                                carrinho={ carrinho }
+                                carrinho={ carrinhoState }
                                 userInfo={ userInfo }
                                 deliveryOptions={ deliveryOptions }
                                 handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
@@ -268,14 +294,13 @@ export default function Checkout() {
                             setIsCartLoading={ setIsCartLoading }
                         />
                         <CouponSection 
-                            cartPrice={ cartPrice }
-                            carrinho={ carrinho }
+                            carrinho={ carrinhoState }
                             fetchDeliveryOptions={ fetchDeliveryOptions }
                             resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }
                             hiddenPaymentSection={ () => setShowPaymentSection(false) }
                             setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
                             couponDiscount={ couponDiscount }
-                            couponCode={ couponCode }
+
 
                             setCouponCode={ (code: string) => setCouponCode(code) }
 
@@ -292,7 +317,7 @@ export default function Checkout() {
                     <div className="space-y-8">
                         <DeliveryPriceSection
                             cartPrice={ cartPrice } 
-                            carrinho={ carrinho }
+                            carrinho={ carrinhoState }
                             userInfo={ userInfo }
                             deliveryOptions={ deliveryOptions }
                             handleSelectedDeliveryOption={ handleSelectedDeliveryOption }
@@ -333,14 +358,14 @@ export default function Checkout() {
                                 <div className="flex justify-between w-full p-4">
                                     <h3 className="text-center self-center md:text-2xl">
                                         Produtos {
-                                            (carrinho && carrinho.length > 0) ? <span className="text-black">
-                                                ( { carrinho.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) } )    
+                                            (carrinhoState && carrinhoState.length > 0) ? <span className="text-black">
+                                                ( { carrinhoState.map((items) => (Number(items.quantidade))).reduce((a, b) => a + b, 0) } )    
                                             </span> : null
                                         }
                                     </h3>
                                     <Link href={ '/carrinho' }><h3 className="text-center text-sm self-center text-[#D4AF37] md:text-lg">Editar produtos</h3></Link>
                                 </div>
-                                { carrinho ? carrinho.map((produto: ProductCartType) => {
+                                { carrinhoState ? carrinhoState.map((produto: ProductCartType) => {
                                     if (produto && produto.quantidade && produto.quantidade > 0) {
                                         return <SummaryCard key={ produto.skuId } produto={ produto } />;
                                     } else return false;

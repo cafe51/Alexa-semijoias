@@ -3,6 +3,7 @@ import { useCollection } from './useCollection';
 import { CouponType, CouponUsageType, CouponValidationResponse, FireBaseDocument, ProductCartType } from '@/app/utils/types';
 import { where } from 'firebase/firestore';
 import { useUserInfo } from './useUserInfo';
+import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '../utils/constants';
 
 export function useCoupon() {
     const couponCollection = useCollection<CouponType>('cupons');
@@ -29,12 +30,25 @@ export function useCoupon() {
             return { valido: false, mensagemErro: 'Cupom expirado' };
         }
         // valida itens promocionais no carrinho
-        if (carrinho && carrinho.length > 0 && !coupon.condicoes.primeiraCompraApenas) {
+        if (
+            carrinho && carrinho.length > 0
+            && !coupon.condicoes.primeiraCompraApenas
+            && !(coupon.id === COUPONREVENDEDORAFIRSTCODE)
+            && !(coupon.id === COUPONREVENDEDORAVIP)
+        ) {
             for (const item of carrinho) {
                 if (item.value.promotionalPrice && item.value.promotionalPrice > 0) {
                     return { valido: false, mensagemErro: 'Este cupom não é válido para carrinhos com itens promocionais' };
                 }
             }
+        }
+
+        if(coupon.id === COUPONREVENDEDORAVIP) {
+            const usageCountOfCouponRevendedoraFirst = await usageCollection.getCount([ where('cupomId', '==', COUPONREVENDEDORAFIRSTCODE) ]);
+            if(usageCountOfCouponRevendedoraFirst <= 0) {
+                return { valido: false, mensagemErro: `Cupon válido para revenda. Torne-se um(a) revendedor(a) usando o cupom ${COUPONREVENDEDORAFIRSTCODE}.` };
+            }
+            
         }
 
         // Validação dos limites de uso global
@@ -62,7 +76,9 @@ export function useCoupon() {
             // console.log('cartPrice', cartPrice);
             // console.log('coupon.condicoes.valorMinimoCompra', coupon.condicoes.valorMinimoCompra);
             // condicao de valor mínimo de compra
-            if (coupon.condicoes.valorMinimoCompra && (cartPrice <= coupon.condicoes.valorMinimoCompra)) {
+            if (coupon.condicoes.valorMinimoCompra && (cartPrice < coupon.condicoes.valorMinimoCompra)) {
+                console.log('coupon.condicoes.valorMinimoCompra', coupon.condicoes.valorMinimoCompra);
+
                 return invalidConditionResult;
             }
             // condicao de categorias permitidas

@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { nameGenerator } from '../../../app/utils/nameGenerator';
 import { convertArrayToString } from '../../../app/utils/convertArrayToString';
 import { trackPixelEvent } from '@/app/utils/metaPixel';
+import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '@/app/utils/constants';
 
 interface PaymentBrickProps {
     totalAmount: number;
@@ -47,11 +48,13 @@ export default function PaymentBrick({
     // Usa o hook personalizado
     const { onSubmit, onError, onReady } = usePaymentProcessing(setIsPaymentFinished);
 
+    const atacado = couponId?.trim() === COUPONREVENDEDORAFIRSTCODE || couponId?.trim() === COUPONREVENDEDORAVIP;
+
     const customization: IPaymentBrickCustomization = {
         paymentMethods: {
             bankTransfer: 'all',
             creditCard: 'all',
-            maxInstallments: 6,
+            maxInstallments: atacado ? 3 : 6,
         },
         visual: {
             style: {
@@ -89,7 +92,7 @@ export default function PaymentBrick({
                     totalItemsAmount: Number(totalAmount),
                 },
                 shipping: { // opcional
-                    costs: 5, // opcional
+                    costs: state.deliveryOption?.price ? state.deliveryOption?.price : undefined, // opcional
                     shippingMode: state.deliveryOption?.name ? state.deliveryOption?.name : 'not_specified', // opcional
                     // description: "<SHIPPING_DESCRIPTION>", // opcional
                     receiverAddress: {
