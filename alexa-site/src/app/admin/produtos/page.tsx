@@ -1,3 +1,4 @@
+// src/app/admin/produtos/page.tsx
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType, ProductVariationsType, SectionType, StateNewProductType } from '@/app/utils/types';

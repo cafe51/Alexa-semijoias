@@ -1,7 +1,7 @@
+// src/app/hooks/useProductPagination.ts
 import { useState, useCallback, useMemo } from 'react';
 import { useNumberedPagination } from './useNumberedPagination';
-import { FilterOptionForUseSnapshot, ProductBundleType } from '@/app/utils/types';
-import { SortOption } from '@/app/components/ProductList/ProductSorter';
+import { FilterOptionForUseSnapshot, ProductBundleType, SortOption } from '@/app/utils/types';
 import removeAccents from '../utils/removeAccents';
 
 const MAX_STOCK_EMULATOR = 9999999999;

@@ -1,3 +1,4 @@
+// src/app/hooks/useNumberedPagination.ts
 import { useState, useCallback, useEffect } from 'react';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { collection, query, where, getDocs, orderBy, limit, startAfter, QueryConstraint, getCountFromServer, DocumentData } from 'firebase/firestore';

@@ -2,11 +2,11 @@
 'use client';
 
 import { useState } from 'react';
-import { ProductBundleType, FireBaseDocument } from '@/app/utils/types';
+import { ProductBundleType, FireBaseDocument, SortOption } from '@/app/utils/types';
 import ProductCard from './ProductCard';
 import LoadingIndicator from '../LoadingIndicator';
 import ButtonPaginator from '../ButtonPaginator';
-import ProductSorter, { SortOption } from './ProductSorter';
+import ProductSorter from './ProductSorter';
 import SectionPageTitle from '@/app/section/SectionPageTitle';
 import { useProducts } from '@/app/hooks/useProducts';
 

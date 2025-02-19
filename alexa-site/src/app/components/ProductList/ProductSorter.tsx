@@ -3,13 +3,7 @@
 
 import React from 'react';
 import { CaretSortIcon } from '@radix-ui/react-icons';
-
-export type SortOption = {
-  value: string;
-  label: string;
-  orderBy: string;
-  direction: 'asc' | 'desc';
-};
+import { SortOption } from '@/app/utils/types';
 
 const sortOptions: SortOption[] = [
     { value: 'newest', label: 'Novidades', orderBy: 'creationDate', direction: 'desc' },

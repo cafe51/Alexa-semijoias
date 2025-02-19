@@ -328,6 +328,13 @@ export type ViaCepResponse = {
     erro?: boolean;
 };
 
+export type SortOption = {
+    value: string;
+    label: string;
+    orderBy: string;
+    direction: 'asc' | 'desc';
+  };
+
 export type AddressType = { numero: string, referencia: string } & ViaCepResponse;
 
 export type StatusType = 'aguardando pagamento' | 'preparando para o envio' | 'pedido enviado' | 'cancelado' | 'entregue';

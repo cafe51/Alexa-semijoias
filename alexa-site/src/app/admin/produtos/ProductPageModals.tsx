@@ -1,3 +1,4 @@
+// src/app/admin/produtos/ProductPageModals.tsx
 import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
 import ProductEditionForm from './ProductEditionForm';
 import ProductQuantitiesList from './ProductQuantitiesList';
