@@ -26,29 +26,29 @@ export default function PriceSummarySection({ subtotalPrice, frete, couponDiscou
         <div className="flex flex-col secColor p-4 rounded-md shadow-lg gap-2 md:p-6 md:gap-4">
             
             <div className="flex justify-between items-center mb-2">
-                <span className="text-sm md:text-xl font-bold">Subtotal</span>
-                <span className="text-sm font-medium md:text-xl">{ computedSubtotal > 0 ? formatPrice(computedSubtotal) : '--' }</span>
+                <span className=" md:text-xl font-bold">Subtotal</span>
+                <span className=" font-medium md:text-xl">{ computedSubtotal > 0 ? formatPrice(computedSubtotal) : '--' }</span>
             </div>
 
             { !couponDiscountIsFreeShipping && couponDiscount > 0 && (
                 <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm md:text-xl font-bold">Desconto</span>
-                    <span className="text-sm font-medium md:text-xl">- { formatPrice(couponDiscountValue) }</span>
+                    <span className=" md:text-xl font-bold">Desconto</span>
+                    <span className=" font-medium md:text-xl">- { formatPrice(couponDiscountValue) }</span>
                 </div>
             ) }
 
             { couponDiscountIsFreeShipping && (
                 <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm md:text-xl font-bold">Desconto</span>
-                    <span className="text-sm font-medium md:text-xl">Frete Grátis</span>
+                    <span className=" md:text-xl font-bold">Desconto</span>
+                    <span className=" font-medium md:text-xl">Frete Grátis</span>
                 </div>
             ) }
 
             { computedFreteIsFreeShipping && (
                 <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm md:text-xl font-bold">Frete</span>
-                    <span className="text-sm font-medium md:text-xl line-through">{ frete && frete > 0 ? formatPrice(frete) : '' }</span>
-                    <span className="text-sm font-medium md:text-xl">FRETE GRATIS</span>
+                    <span className=" md:text-xl font-bold">Frete</span>
+                    <span className=" font-medium md:text-xl line-through">{ frete && frete > 0 ? formatPrice(frete) : '' }</span>
+                    <span className=" font-medium md:text-xl">FRETE GRATIS</span>
 
                 </div>
             ) }
@@ -56,21 +56,21 @@ export default function PriceSummarySection({ subtotalPrice, frete, couponDiscou
             {
                 !computedFreteIsFreeShipping && (
                     <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm md:text-xl font-bold">Frete</span>
-                        <span className="text-sm font-medium md:text-xl">{ computedFrete ? formatPrice(computedFrete) : '--' }</span>
+                        <span className=" md:text-xl font-bold">Frete</span>
+                        <span className=" font-medium md:text-xl">{ computedFrete ? formatPrice(computedFrete) : '--' }</span>
                     </div>
                 )
             }
             
             <div className="border-t mt-2 pt-2">
                 <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold md:text-2xl">Total</span>
+                    <span className=" font-semibold md:text-2xl">Total</span>
                     <span className="text-lg font-semibold md:text-2xl">
                         { total > 0 ? formatPrice(total) : '--' }
                     </span>
                 </div>
                 { !adminDashboard && 
-                    <div className="text-sm text-[#D4AF37] font-medium md:text-lg">
+                    <div className=" text-[#D4AF37] font-medium md:text-lg">
                         ou 6x { total > 0 ? formatPrice(total / 6) : '--' } sem juros
                     </div>
                 }

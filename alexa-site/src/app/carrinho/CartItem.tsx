@@ -12,6 +12,7 @@ import Image from 'next/image';
 import DisplayCustomProperties from '../components/DisplayCustomProperties';
 import QuantitySelectionCartBox from '../components/QuantitySelectionCartBox';
 import toTitleCase from '../utils/toTitleCase';
+import CartCardPrice from './CartCardPrice';
 
 interface CartItemProps {
     cartItem: ProductCartType | (ProductCartType & FireBaseDocument);
@@ -47,6 +48,7 @@ export default function CartItem({ cartItem }: CartItemProps) {
     const removeAll = () => {
         return user ? deleteDocument(cartId) : removeItemFromLocalStorageCart(cartItem.skuId);
     };
+
     return (
         <Card className="min-h-28 mb-4 overflow-hidden max-w-2xl mx-auto shadow-md shadow-[#C48B9F]">
             <CardContent className="p-0">
@@ -97,9 +99,7 @@ export default function CartItem({ cartItem }: CartItemProps) {
                                 stock={ cartItem.estoque }
                                 isLoadingButton={ isLoadingButton }
                             />
-                            <p className="font-semibold text-sm md:text-lg lg:text-xl xl:text-2xl">
-                                { formatPrice((cartItem.value.promotionalPrice || cartItem.value.price) * cartItem.quantidade) }
-                            </p>
+                            <CartCardPrice value={ cartItem.value } quantidade={ cartItem.quantidade } />
                         </div>
                     </div>
                 </div>
