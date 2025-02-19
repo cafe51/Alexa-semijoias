@@ -1,8 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType, ProductVariationsType, SectionType, StateNewProductType } from '@/app/utils/types';
-import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
-import DashboardProductDetails from './productPage/DashboardProductDetails';
 import { emptyProductBundleInitialState } from './productPage/emptyProductBundleInitialState';
 import { initialEmptyState } from '@/app/hooks/useNewProductState';
 import { useProductConverter } from '@/app/hooks/useProductConverter';
@@ -14,10 +12,8 @@ import Notification from '@/app/components/Notification';
 import { useProductPagination } from '@/app/hooks/useProductPagination';
 import { Pagination } from '@/app/components/Pagination';
 import ProductSorter from '@/app/components/ProductList/ProductSorter';
-import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import ProductQuantitiesList from './ProductQuantitiesList';
-import ProductEditionForm from './ProductEditionForm';
 import ProductFilter from './components/ProductFilter';
+import ProductPageModals from './ProductPageModals';
 
 interface NotificationState {
     message: string;
@@ -155,58 +151,21 @@ export default function ProductsDashboard() {
                 isOpen={ showFilterModal }
                 onClose={ () => setShowFilterModal(false) }
             />
-            {
-                showProductQuantitiesModal && <ModalMaker
-                    closeModelClick={ () => setShowProductQuantitiesModal(false) }
-                    title="Quantidades de Produtos"
-                >
-                    {
-                        siteSections && siteSections.length > 0 &&
-                        <ProductQuantitiesList siteSections={ siteSections } />
-                    }
-                </ModalMaker>
-            }
-
-            { /* Renderiza o modal somente quando ele estiver aberto, garantindo que o formulário seja desmontado ao fechar */ }
-            { showEditionModal && (
-                <SlideInModal
-                    isOpen={ showEditionModal }
-                    closeModelClick={ () => setShowEditionModal(false) }
-                    title="Editar Produto"
-                >
-                    <ProductEditionForm
-                        // Usamos uma key baseada no id do produto para forçar a reinicialização do componente
-                        key={ selectedProduct.id }
-                        product={ productBundleEditable }
-                        useProductDataHandlers={ useProductDataHandlers }
-                        productFromFirebase={ selectedProduct }
-                        setRefreshProducts={ handleProductEdited }
-                    />
-                </SlideInModal>
-            ) }
-
-            { showCreateNewProductModal && (
-                <SlideInModal
-                    isOpen={ showCreateNewProductModal }
-                    closeModelClick={ () => setShowCreateNewProductModal(false) }
-                    title="Criar Novo Produto"
-                >
-                    <ProductEditionForm
-                        key="new"
-                        useProductDataHandlers={ useProductDataHandlers }
-                        goToProductPage={ handleProductEdited }
-                    />
-                </SlideInModal>
-            ) }
-
-            <SlideInModal
-                slideDirection='left'
-                isOpen={ showProductDetailModal }
-                closeModelClick={ () => setShowProductDetailModal(false) }
-                title="Detalhes do produto"
-            >
-                <DashboardProductDetails product={ selectedProduct } />
-            </SlideInModal>
+            <ProductPageModals
+                showProductQuantitiesModal={ showProductQuantitiesModal }
+                setShowProductQuantitiesModal={ (showProductQuantitiesModal: boolean) => setShowProductQuantitiesModal(showProductQuantitiesModal) }
+                productBundleEditable={ productBundleEditable }
+                selectedProduct={ selectedProduct }
+                showEditionModal={ showEditionModal }
+                setShowEditionModal={ (showEditionModal: boolean) => setShowEditionModal(showEditionModal) }
+                showCreateNewProductModal={ showCreateNewProductModal }
+                setShowCreateNewProductModal={ (showCreateNewProductModal: boolean) => setShowCreateNewProductModal(showCreateNewProductModal) }
+                showProductDetailModal={ showProductDetailModal }
+                setShowProductDetailModal={ (showProductDetailModal: boolean) => setShowProductDetailModal(showProductDetailModal) }
+                handleProductEdited={ handleProductEdited }
+                useProductDataHandlers={ useProductDataHandlers }
+                siteSections={ siteSections }
+            />
             <section className="flex flex-col gap-4 w-full">
                 { isLoading && products.length === 0 ? (
                     <div className="text-center py-4 text-[#333333]">Carregando produtos...</div>
