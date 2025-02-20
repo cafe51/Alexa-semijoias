@@ -116,7 +116,7 @@ export default function ProductsDashboard() {
     }, [refresh]);
 
     return (
-        <main className="md:m-auto md:mt-24 md:w-2/3 lg:w-1/2 mt-24 px-4 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
+        <main className="md:m-auto md:w-2/3 lg:w-1/2 px-4 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
             <ProductsHeader
                 totalProducts={ totalDocuments }
                 setSearchTerm={ (searchTerm: string) => setSearchTerm(searchTerm) }
