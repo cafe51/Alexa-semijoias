@@ -18,6 +18,10 @@ import ProductsHeader from './components/ProductsHeader';
 import MultiSelectModal from './components/MultiSelectModal';
 import MassDeleteConfirmationModal from './components/MassDeleteConfirmationModal';
 import MassDeleteErrorModal from './components/MassDeleteErrorModal';
+// Novos modais para modificação em massa:
+import MassModifyModal from './components/MassModifyModal';
+import MassModifyConfirmationModal from './components/MassModifyConfirmationModal';
+import MassModifyErrorModal from './components/MassModifyErrorModal';
 
 interface NotificationState {
     message: string;
@@ -25,6 +29,7 @@ interface NotificationState {
 }
 
 export default function ProductsDashboard() {
+    // Estados já existentes
     const [showEditionModal, setShowEditionModal] = useState(false);
     const [showCreateNewProductModal, setShowCreateNewProductModal] = useState(false);
     const [showProductDetailModal, setShowProductDetailModal] = useState(false);
@@ -43,6 +48,22 @@ export default function ProductsDashboard() {
     // Estados para erros na deleção em massa
     const [failedDeletions, setFailedDeletions] = useState<{ productName: string, error: string }[]>([]);
     const [showMassDeleteErrorModal, setShowMassDeleteErrorModal] = useState(false);
+
+    // Novos estados para modificação em massa
+    const [showMassModifyModal, setShowMassModifyModal] = useState(false);
+    const [showMassModifyConfirmation, setShowMassModifyConfirmation] = useState(false);
+    const [showMassModifyErrorModal, setShowMassModifyErrorModal] = useState(false);
+    const [isModifyingMass, setIsModifyingMass] = useState(false);
+    const [massModifyOptions, setMassModifyOptions] = useState<{
+        showProduct: boolean | null;
+        lancamento: boolean | null;
+        removePromotion: boolean;
+    }>({
+        showProduct: null,
+        lancamento: null,
+        removePromotion: false,
+    });
+    const [failedMassModifications, setFailedMassModifications] = useState<{ productName: string, error: string }[]>([]);
 
     const { 
         products, 
@@ -74,7 +95,12 @@ export default function ProductsDashboard() {
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
-    const { deleteDocument: deleteProductBundle, getDocumentById: getProductById } = useCollection<ProductBundleType>('products');
+    // Incluímos o updateDocumentField para as atualizações
+    const { 
+        deleteDocument: deleteProductBundle, 
+        getDocumentById: getProductById,
+        updateDocumentField,
+    } = useCollection<ProductBundleType>('products');
     const { deleteImage } = useFirebaseUpload();
     const { deleteDocument: deleteProductVariation, getAllDocuments: getAllProductVariations } = useCollection<ProductVariationsType>('productVariations');
     const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
@@ -95,7 +121,6 @@ export default function ProductsDashboard() {
     }, [selectedProduct]);
 
     const handleProductSelection = useCallback((product: ProductBundleType & FireBaseDocument) => {
-        // Seleção normal para edição (apenas se o modo multiseleção não estiver ativo)
         if (!multiSelectMode) {
             setSelectedProduct(product);
             setShowEditionModal(true);
@@ -103,7 +128,6 @@ export default function ProductsDashboard() {
     }, [multiSelectMode]);
 
     const handleProductDetail = useCallback((product: ProductBundleType & FireBaseDocument) => {
-        // Visualização dos detalhes (apenas se o modo multiseleção não estiver ativo)
         if (!multiSelectMode) {
             setSelectedProduct(product);
             setShowProductDetailModal(true);
@@ -157,7 +181,7 @@ export default function ProductsDashboard() {
         setSelectedProducts([]);
     }, []);
 
-    // Função de deleção em massa atualizada para prosseguir mesmo com erros
+    // Função de deleção em massa (já existente)
     const handleMassDelete = useCallback(async() => {
         setIsDeletingMass(true);
         const localFailedDeletions: { productName: string, error: string }[] = [];
@@ -200,6 +224,64 @@ export default function ProductsDashboard() {
     const handleSelectAll = useCallback(() => {
         setSelectedProducts(products);
     }, [products]);
+
+    // FUNÇÃO DE MODIFICAÇÃO EM MASSA
+    const handleMassModify = useCallback(async() => {
+        setIsModifyingMass(true);
+        const localFailedUpdates: { productName: string, error: string }[] = [];
+        const batchSize = 5;
+
+        for (let i = 0; i < selectedProducts.length; i += batchSize) {
+            const batch = selectedProducts.slice(i, i + batchSize);
+            await Promise.all(batch.map(async(product) => {
+                try {
+                    const prod = await getProductById(product.id);
+                    if (!prod.exist) {
+                        throw new Error('Produto não encontrado');
+                    }
+                    const updates: { [key: string]: any } = {};
+                    let shouldUpdate = false;
+                    // Atualiza showProduct se o usuário escolheu modificar e o valor for diferente
+                    if (massModifyOptions.showProduct !== null && prod.showProduct !== massModifyOptions.showProduct) {
+                        updates['showProduct'] = massModifyOptions.showProduct;
+                        shouldUpdate = true;
+                    }
+                    // Atualiza lancamento se necessário
+                    if (massModifyOptions.lancamento !== null && prod.lancamento !== massModifyOptions.lancamento) {
+                        updates['lancamento'] = massModifyOptions.lancamento;
+                        shouldUpdate = true;
+                    }
+                    // Se solicitado, retira da promoção (definindo promotionalPrice para 0)
+                    if (massModifyOptions.removePromotion && prod.value.promotionalPrice !== 0) {
+                        updates['value.promotionalPrice'] = 0;
+                        shouldUpdate = true;
+                    }
+                    if (shouldUpdate) {
+                        updates['updatingDate'] = new Date();
+                        // Atualiza cada campo necessário utilizando o hook useCollection
+                        const updatePromises = Object.keys(updates).map(key =>
+                            updateDocumentField(product.id, key, updates[key]),
+                        );
+                        await Promise.all(updatePromises);
+                    }
+                } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : String(error);
+                    localFailedUpdates.push({ productName: product.name, error: errorMessage });
+                }
+            }));
+        }
+        refresh();
+        setMultiSelectMode(false);
+        setSelectedProducts([]);
+        if (localFailedUpdates.length > 0) {
+            setFailedMassModifications(localFailedUpdates);
+            setShowMassModifyErrorModal(true);
+        } else {
+            setNotification({ message: 'Produtos modificados com sucesso', type: 'success' });
+        }
+        setIsModifyingMass(false);
+        setShowMassModifyConfirmation(false);
+    }, [selectedProducts, massModifyOptions, getProductById, updateDocumentField, refresh]);
 
     return (
         <main className="md:m-auto md:w-2/3 px-0 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
@@ -299,8 +381,9 @@ export default function ProductsDashboard() {
                     selectedCount={ selectedProducts.length }
                     onCancel={ handleCancelMultiSelect }
                     onDelete={ () => setShowMassDeleteConfirmation(true) }
-                    isDeleting={ isDeletingMass }
                     onSelectAll={ handleSelectAll }
+                    onModify={ () => setShowMassModifyModal(true) }
+                    isDeleting={ isDeletingMass }
                 />
             ) }
             { showMassDeleteConfirmation && (
@@ -316,6 +399,32 @@ export default function ProductsDashboard() {
                     isOpen={ showMassDeleteErrorModal }
                     errorItems={ failedDeletions }
                     onClose={ () => setShowMassDeleteErrorModal(false) }
+                />
+            ) }
+            { showMassModifyModal && (
+                <MassModifyModal
+                    onClose={ () => setShowMassModifyModal(false) }
+                    onConfirm={ (options) => {
+                        setMassModifyOptions(options);
+                        setShowMassModifyModal(false);
+                        setShowMassModifyConfirmation(true);
+                    } }
+                />
+            ) }
+            { showMassModifyConfirmation && (
+                <MassModifyConfirmationModal
+                    isModifying={ isModifyingMass }
+                    modifications={ massModifyOptions }
+                    selectedCount={ selectedProducts.length }
+                    onClose={ () => setShowMassModifyConfirmation(false) }
+                    onConfirm={ handleMassModify }
+                />
+            ) }
+            { showMassModifyErrorModal && (
+                <MassModifyErrorModal
+                    isOpen={ showMassModifyErrorModal }
+                    errorItems={ failedMassModifications }
+                    onClose={ () => setShowMassModifyErrorModal(false) }
                 />
             ) }
         </main>
