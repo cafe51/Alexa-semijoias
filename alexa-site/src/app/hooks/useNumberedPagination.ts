@@ -1,4 +1,3 @@
-// src/app/hooks/useNumberedPagination.ts
 import { useState, useCallback, useEffect } from 'react';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { collection, query, where, getDocs, orderBy, limit, startAfter, QueryConstraint, getCountFromServer, DocumentData } from 'firebase/firestore';
@@ -12,7 +11,7 @@ type OrderByOption = {
 export const useNumberedPagination = <T>(
     collectionName: string,
     filterOptions: FilterOptionForUseSnapshot[] | null,
-    itemsPerPage: number = 20,
+    itemsPerPage: number | 'all' = 10,
     orderByOption: OrderByOption = null,
 ) => {
     const [documents, setDocuments] = useState<(T & FireBaseDocument)[] | null>(null);
@@ -39,10 +38,14 @@ export const useNumberedPagination = <T>(
             const snapshot = await getCountFromServer(q);
             const total = snapshot.data().count;
             setTotalDocuments(total);
-            setTotalPages(Math.ceil(total / itemsPerPage));
+            if (itemsPerPage === 'all') {
+                setTotalPages(1);
+            } else {
+                setTotalPages(Math.ceil(total / itemsPerPage));
+            }
 
-            // Busca todas as referências dos documentos ordenados
-            if (orderByOption) {
+            // Busca todas as referências dos documentos ordenados (somente se necessário para paginação)
+            if (orderByOption && itemsPerPage !== 'all') {
                 const orderedQuery = query(
                     ref,
                     ...queryConstraints,
@@ -76,26 +79,37 @@ export const useNumberedPagination = <T>(
                 queryConstraints.push(orderBy(orderByOption.field, orderByOption.direction));
             }
 
-            // Calcula o índice inicial baseado na página atual
-            const startIndex = (page - 1) * itemsPerPage;
-            
-            // Se não for a primeira página, usa o documento anterior como ponto de partida
-            if (page > 1 && allDocumentRefs[startIndex - 1]) {
-                queryConstraints.push(startAfter(allDocumentRefs[startIndex - 1]));
+            if (itemsPerPage === 'all') {
+                // Busca todos os documentos de uma única vez
+                const q = query(ref, ...queryConstraints);
+                const snapshot = await getDocs(q);
+                const results = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    exist: doc.exists(),
+                    ...doc.data() as T,
+                }));
+                setDocuments(results);
+            } else {
+                // Paginação tradicional usando limit e startAfter
+                const startIndex = (page - 1) * itemsPerPage;
+                
+                if (page > 1 && allDocumentRefs[startIndex - 1]) {
+                    queryConstraints.push(startAfter(allDocumentRefs[startIndex - 1]));
+                }
+
+                queryConstraints.push(limit(itemsPerPage));
+
+                const q = query(ref, ...queryConstraints);
+                const snapshot = await getDocs(q);
+
+                const results = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    exist: doc.exists(),
+                    ...doc.data() as T,
+                }));
+
+                setDocuments(results);
             }
-
-            queryConstraints.push(limit(itemsPerPage));
-
-            const q = query(ref, ...queryConstraints);
-            const snapshot = await getDocs(q);
-
-            const results = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                exist: doc.exists(),
-                ...doc.data() as T,
-            }));
-
-            setDocuments(results);
         } catch (error) {
             console.error('Erro ao buscar documentos:', error);
             setError('Falha ao carregar produtos');
@@ -110,17 +124,15 @@ export const useNumberedPagination = <T>(
         setCurrentPage(page);
     }, [totalPages]);
 
-    // Efeito para buscar o total de páginas na montagem do componente
+    // Efeito para buscar o total de páginas na montagem do componente ou quando os filtros/itens por página mudam
     useEffect(() => {
         fetchTotalPages();
     }, [fetchTotalPages]);
 
-    // Efeito para buscar documentos quando a página atual muda
+    // Efeito para buscar documentos quando a página atual muda ou quando os itens por página mudam
     useEffect(() => {
         fetchPage(currentPage);
     }, [currentPage, fetchPage]);
-    
-    useEffect(() => {console.log('documents AAAAAAAAAAAAAAAaa', documents); }, [documents]);
     
     return {
         documents,

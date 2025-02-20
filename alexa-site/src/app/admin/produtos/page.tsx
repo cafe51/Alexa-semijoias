@@ -1,4 +1,3 @@
-// src/app/admin/produtos/page.tsx
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType, SectionType, StateNewProductType } from '@/app/utils/types';
@@ -57,6 +56,8 @@ export default function ProductsDashboard() {
         setSelectedSection,
         selectedSubsection,
         setSelectedSubsection,
+        itemsPerPage,
+        setItemsPerPage,
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
@@ -116,7 +117,7 @@ export default function ProductsDashboard() {
     }, [refresh]);
 
     return (
-        <main className="md:m-auto md:w-2/3 lg:w-1/2 px-4 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
+        <main className="md:m-auto md:mt-24 md:w-2/3 lg:w-1/2 mt-24 px-4 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
             <ProductsHeader
                 totalProducts={ totalDocuments }
                 setSearchTerm={ (searchTerm: string) => setSearchTerm(searchTerm) }
@@ -125,6 +126,8 @@ export default function ProductsDashboard() {
                 setShowCreateNewProductModal={ () => setShowCreateNewProductModal(true) }
                 selectedSection={ selectedSection }
                 selectedSubsection={ selectedSubsection }
+                itemsPerPage={ itemsPerPage }
+                setItemsPerPage={ setItemsPerPage }
             /> 
             <section className="flex justify-between items-center mb-4 gap-4">
                 <ProductSorter

@@ -1,15 +1,18 @@
 import toTitleCase from '@/app/utils/toTitleCase';
+import SetItemsPerPage from './SetItemsPerPage';
 
-// src/app/admin/produtos/componentes/ProductsHeader.tsx
 interface ProductsHeaderProps {
     totalProducts: number;
     setSearchTerm: (searchTerm: string) => void;
     searchTerm: string;
     showProductQuantitiesModal: () => void;
     setShowCreateNewProductModal: () => void;
-    // Novos props para exibir os filtros ativos
+    // Props para os filtros de seção e subseção
     selectedSection?: string;
     selectedSubsection?: string;
+    // Novas props para configuração de itens por página
+    itemsPerPage: number | 'all';
+    setItemsPerPage: (value: number | 'all') => void;
 }
 
 export default function ProductsHeader({ 
@@ -20,6 +23,8 @@ export default function ProductsHeader({
     setShowCreateNewProductModal,
     selectedSection,
     selectedSubsection,
+    itemsPerPage,
+    setItemsPerPage,
 }: ProductsHeaderProps) {
     const title = selectedSection ? `${toTitleCase(selectedSection)} - ${selectedSubsection && toTitleCase(selectedSubsection)}` : 'Todos os produtos';
     return (
@@ -32,13 +37,17 @@ export default function ProductsHeader({
                 >
                     { title } ({ totalProducts })
                 </button>
-                <button
-                    className="bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition"
-                    type="button"
-                    onClick={ setShowCreateNewProductModal }
-                >
-                    Adicionar Produto
-                </button>
+                <div className="flex justify-between items-end w-full">
+                    <SetItemsPerPage itemsPerPage={ itemsPerPage } setItemsPerPage={ setItemsPerPage } />
+
+                    <button
+                        className="bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition"
+                        type="button"
+                        onClick={ setShowCreateNewProductModal }
+                    >
+                        Adicionar Produto
+                    </button>
+                </div>
             </div>
             <form onSubmit={ () => {} } className="flex flex-col md:flex-row gap-4 mt-4">
                 <input

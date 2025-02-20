@@ -1,4 +1,3 @@
-// src/app/hooks/useProductPagination.ts
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNumberedPagination } from './useNumberedPagination';
 import { FilterOptionForUseSnapshot, ProductBundleType, SortOption } from '@/app/utils/types';
@@ -29,7 +28,10 @@ export const useProductPagination = () => {
     const [selectedSection, setSelectedSection] = useState<string>('');
     const [selectedSubsection, setSelectedSubsection] = useState<string>('');
 
-    // Novo useEffect: se searchTerm estiver preenchido, reseta os filtros de seção e subseção
+    // Novo estado: itens por página (10, 50, 100 ou "all")
+    const [itemsPerPage, setItemsPerPage] = useState<number | 'all'>(10);
+
+    // Se searchTerm estiver preenchido, reseta os filtros de seção e subseção
     useEffect(() => {
         if (searchTerm.trim() !== '') {
             setSelectedSection('');
@@ -41,7 +43,6 @@ export const useProductPagination = () => {
         ({ field: currentSort.orderBy, direction: currentSort.direction }),
     [currentSort]);
 
-    const ITEMS_PER_PAGE = useMemo(() => 20, []);
     const collectionName = useMemo(() => 'products', []);
 
     const pedidosFiltrados = useMemo<FilterOptionForUseSnapshot[] | null>(() => {
@@ -112,7 +113,7 @@ export const useProductPagination = () => {
     } = useNumberedPagination<ProductBundleType>(
         collectionName,
         filtrosFinais,
-        ITEMS_PER_PAGE,
+        itemsPerPage,
         ordination,
     );
 
@@ -171,5 +172,7 @@ export const useProductPagination = () => {
         setSelectedSection,
         selectedSubsection,
         setSelectedSubsection,
+        itemsPerPage,
+        setItemsPerPage,
     };
 };
