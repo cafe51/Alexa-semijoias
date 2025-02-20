@@ -1,3 +1,4 @@
+// src/app/admin/produtos/hooks/useProductPagination.ts
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNumberedPagination } from './useNumberedPagination';
 import { FilterOptionForUseSnapshot, ProductBundleType, SortOption } from '@/app/utils/types';

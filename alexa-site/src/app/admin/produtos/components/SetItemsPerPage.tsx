@@ -1,3 +1,4 @@
+// src/app/admin/produtos/components/SetItemsPerPage.tsx
 interface SetItemsPerPageProps {
     itemsPerPage: number | 'all';
     setItemsPerPage: (value: number | 'all') => void;

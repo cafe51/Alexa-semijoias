@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+// src/app/admin/produtos/productPage/ProductListItem.tsx
+import React, { useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { FiEdit } from 'react-icons/fi';
 import { PiTrashSimpleBold } from 'react-icons/pi';
@@ -15,6 +16,11 @@ interface ProductListItemProps {
     setShowProductDetailModal: (product: ProductBundleType & FireBaseDocument) => void;
     deleteDocument: (id: string) => void;
     setRefreshProducts: () => void;
+    // Propriedades para o modo de multiseleção
+    multiSelectMode?: boolean;
+    isSelected?: boolean;
+    onActivateMultiSelect?: (product: ProductBundleType & FireBaseDocument) => void;
+    onToggleSelect?: (product: ProductBundleType & FireBaseDocument) => void;
 }
 
 const DeleteConfirmationModal: React.FC<{
@@ -31,16 +37,14 @@ const DeleteConfirmationModal: React.FC<{
                 <div className='flex justify-between w-full'>
                     <div className='w-5/12'>
                         <LargeButton color='red' onClick={ onConfirm }>
-                        Sim
+                            Sim
                         </LargeButton>
                     </div>
-
                     <div className='w-5/12'>
                         <LargeButton color='green' onClick={ onClose }>
-                        Não
+                            Não
                         </LargeButton>
                     </div>
-
                 </div>
             </div>
         </ModalMaker>
@@ -55,20 +59,111 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
     setShowProductDetailModal,
     deleteDocument,
     setRefreshProducts,
+    multiSelectMode = false,
+    isSelected = false,
+    onActivateMultiSelect,
+    onToggleSelect,
 }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const longPressTriggered = useRef(false);
+    const justActivated = useRef(false);
+    // Guarda as coordenadas iniciais do toque
+    const touchStartCoords = useRef<{ x: number; y: number } | null>(null);
 
-    const handleEditClick = useCallback(() => {
+    // Eventos para desktop
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if ((e.target as HTMLElement).tagName !== 'BUTTON' && !multiSelectMode) {
+            longPressTriggered.current = false;
+            justActivated.current = false;
+            timerRef.current = setTimeout(() => {
+                longPressTriggered.current = true;
+                justActivated.current = true;
+                if (onActivateMultiSelect) {
+                    onActivateMultiSelect(product);
+                }
+            }, 2000);
+        }
+    };
+
+    const handleMouseUp = (e: React.MouseEvent) => {
+        if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+        if (!multiSelectMode) {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+                timerRef.current = null;
+            }
+            if (!longPressTriggered.current) {
+                setShowProductDetailModal(product);
+            }
+        } else {
+            if (justActivated.current) {
+                justActivated.current = false;
+            } else if (onToggleSelect) {
+                onToggleSelect(product);
+            }
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+    };
+
+    // Eventos para mobile
+    const handleTouchStart = (e: React.TouchEvent) => {
+        const touch = e.touches[0];
+        touchStartCoords.current = { x: touch.clientX, y: touch.clientY };
+        if (!multiSelectMode) {
+            longPressTriggered.current = false;
+            justActivated.current = false;
+            timerRef.current = setTimeout(() => {
+                longPressTriggered.current = true;
+                justActivated.current = true;
+                if (onActivateMultiSelect) {
+                    onActivateMultiSelect(product);
+                }
+            }, 2000);
+        }
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+        const touch = e.changedTouches[0];
+        const start = touchStartCoords.current;
+        const threshold = 10; // px de tolerância para distinguir tap de scroll
+        if (start) {
+            const dx = Math.abs(touch.clientX - start.x);
+            const dy = Math.abs(touch.clientY - start.y);
+            if (dx > threshold || dy > threshold) {
+                // Se houver movimento significativo, não trata como tap
+                touchStartCoords.current = null;
+                return;
+            }
+        }
+        if (!multiSelectMode) {
+            if (!longPressTriggered.current) {
+                setShowProductDetailModal(product);
+            }
+        } else {
+            if (justActivated.current) {
+                justActivated.current = false;
+            } else if (onToggleSelect) {
+                onToggleSelect(product);
+            }
+        }
+        touchStartCoords.current = null;
+    };
+
+    const handleEditClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
         setSelectedProduct(product);
     }, [product, setSelectedProduct]);
-
-    const handleProductImageClick = useCallback(() => {
-        setShowProductDetailModal(product);
-    }, [product, setShowProductDetailModal]);
-
-    const handleDeleteClick = useCallback(() => {
-        setShowDeleteModal(true);
-    }, []);
 
     const handleDeleteConfirm = useCallback(() => {
         deleteDocument(product.id);
@@ -77,18 +172,25 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
     }, [product.id, deleteDocument, setRefreshProducts]);
 
     return (
-        <div className="flex gap-4 bg-white shadow-lg rounded-lg transition transform hover:scale-105 w-full">
-            <DeleteConfirmationModal isOpen={ showDeleteModal } onClose={ () => setShowDeleteModal(false) } onConfirm={ handleDeleteConfirm } />
-            <div
-                className="relative rounded-lg rounded-r-none h-28 w-28 overflow-hidden bg-gray-100"
-                onClick={ handleProductImageClick }
-            >
+        <div 
+            className={ `flex gap-4 bg-white shadow-lg rounded-lg transition transform w-full ${multiSelectMode && isSelected ? 'border-4 border-blue-500' : 'hover:scale-105'}` }
+            onMouseDown={ handleMouseDown }
+            onMouseUp={ handleMouseUp }
+            onMouseLeave={ handleMouseLeave }
+            onTouchStart={ handleTouchStart }
+            onTouchEnd={ handleTouchEnd }
+        >
+            <DeleteConfirmationModal 
+                isOpen={ showDeleteModal } 
+                onClose={ () => setShowDeleteModal(false) } 
+                onConfirm={ handleDeleteConfirm } 
+            />
+            <div className="relative rounded-lg rounded-r-none h-28 w-28 overflow-hidden bg-gray-100">
                 <Image
                     className="object-cover w-full h-full"
                     src={ product.images?.[0]?.localUrl || blankImage }
                     alt="Foto do produto"
                     fill
-                    // loading="lazy"
                     priority
                     sizes='300px'
                 />
@@ -96,20 +198,21 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
             <div className='w-full flex flex-col justify-between py-2 pr-4'>
                 <div className="flex justify-between items-center w-full">
                     <p className="font-bold text-[#333333] line-clamp-2">{ toTitleCase(product.name) }</p> 
-                    <button className="text-[#C48B9F]" onClick={ handleEditClick }>
-                        <FiEdit size={ 20 } />
-                    </button>
+                    { !multiSelectMode && (
+                        <button className="text-[#C48B9F]" onClick={ handleEditClick }>
+                            <FiEdit size={ 20 } />
+                        </button>
+                    ) }
                 </div>
-                
-
                 <div className="flex justify-between items-center w-full shrink-0">
                     <p className="text-[#333333]">Estoque: <span className="font-bold">{ product.estoqueTotal }</span></p>
                     <p className="text-[#D4AF37] font-bold">{ formatPrice(product.value.price) }</p>
-                    <button className="text-red-500" onClick={ handleDeleteClick }>
-                        <PiTrashSimpleBold size={ 20 } />
-                    </button>
+                    { !multiSelectMode && (
+                        <button className="text-red-500" onClick={ () => setShowDeleteModal(true) }>
+                            <PiTrashSimpleBold size={ 20 } />
+                        </button>
+                    ) }
                 </div>
-
             </div>
         </div>
     );

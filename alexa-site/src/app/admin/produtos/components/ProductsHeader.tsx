@@ -1,3 +1,4 @@
+// src/app/admin/produtos/components/ProductsHeader.tsx
 import toTitleCase from '@/app/utils/toTitleCase';
 import SetItemsPerPage from './SetItemsPerPage';
 
