@@ -10,6 +10,8 @@ import LargeButton from '@/app/components/LargeButton';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import toTitleCase from '@/app/utils/toTitleCase';
 
+const LONG_PRESS_THRESHOLD = 1000;
+
 interface ProductListItemProps {
     product: ProductBundleType & FireBaseDocument;
     setSelectedProduct: (product: ProductBundleType & FireBaseDocument) => void;
@@ -33,7 +35,9 @@ const DeleteConfirmationModal: React.FC<{
     return (
         <ModalMaker closeModelClick={ onClose } title='Deletar produto'>
             <div className='flex flex-col gap-2 p-2'>
-                <p className='text-sm text-center p-2 py-4 font-bold'>Tem certeza que deseja deletar esse produto?</p>
+                <p className='text-sm text-center p-2 py-4 font-bold'>
+                    Tem certeza que deseja deletar esse produto?
+                </p>
                 <div className='flex justify-between w-full'>
                     <div className='w-5/12'>
                         <LargeButton color='red' onClick={ onConfirm }>
@@ -82,7 +86,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                 if (onActivateMultiSelect) {
                     onActivateMultiSelect(product);
                 }
-            }, 2000);
+            }, LONG_PRESS_THRESHOLD);
         }
     };
 
@@ -125,7 +129,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                 if (onActivateMultiSelect) {
                     onActivateMultiSelect(product);
                 }
-            }, 2000);
+            }, LONG_PRESS_THRESHOLD);
         }
     };
 
@@ -182,6 +186,12 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
             onMouseLeave={ handleMouseLeave }
             onTouchStart={ handleTouchStart }
             onTouchEnd={ handleTouchEnd }
+            onContextMenu={ e => e.preventDefault() }
+            style={ { 
+                userSelect: 'none', 
+                WebkitUserSelect: 'none', 
+                WebkitTouchCallout: 'none', 
+            } }
         >
             <DeleteConfirmationModal 
                 isOpen={ showDeleteModal } 
@@ -195,10 +205,11 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                     alt="Foto do produto"
                     fill
                     priority
-                    sizes='300px'
+                    sizes="300px"
+                    draggable={ false }
                 />
             </div>
-            <div className='w-full flex flex-col justify-between py-2 pr-4'>
+            <div className="w-full flex flex-col justify-between py-2 pr-4">
                 <div className="flex justify-between items-center w-full">
                     <p className="font-bold text-[#333333] line-clamp-2">{ toTitleCase(product.name) }</p> 
                     { !multiSelectMode && (
