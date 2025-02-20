@@ -1,6 +1,4 @@
-/* 
 // src/app/admin/produtos/page.tsx
-*/
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType, ProductVariationsType, SectionType, StateNewProductType } from '@/app/utils/types';
@@ -19,6 +17,7 @@ import ProductFilters from './ProductFilters';
 import ProductsHeader from './components/ProductsHeader';
 import MultiSelectModal from './components/MultiSelectModal';
 import MassDeleteConfirmationModal from './components/MassDeleteConfirmationModal';
+import MassDeleteErrorModal from './components/MassDeleteErrorModal';
 
 interface NotificationState {
     message: string;
@@ -41,6 +40,9 @@ export default function ProductsDashboard() {
     const [selectedProducts, setSelectedProducts] = useState<(ProductBundleType & FireBaseDocument)[]>([]);
     const [isDeletingMass, setIsDeletingMass] = useState(false);
     const [showMassDeleteConfirmation, setShowMassDeleteConfirmation] = useState(false);
+    // Estados para erros na deleção em massa
+    const [failedDeletions, setFailedDeletions] = useState<{ productName: string, error: string }[]>([]);
+    const [showMassDeleteErrorModal, setShowMassDeleteErrorModal] = useState(false);
 
     const { 
         products, 
@@ -155,30 +157,43 @@ export default function ProductsDashboard() {
         setSelectedProducts([]);
     }, []);
 
+    // Função de deleção em massa atualizada para prosseguir mesmo com erros
     const handleMassDelete = useCallback(async() => {
         setIsDeletingMass(true);
-        try {
-            await Promise.all(selectedProducts.map(async(product) => {
-                const prod = await getProductById(product.id);
-                if (!prod.exist) {
-                    throw new Error('Produto não encontrado: ' + product.id);
+        const localFailedDeletions: { productName: string, error: string }[] = [];
+        const batchSize = 5; // quantidade de deleções concorrentes
+
+        for (let i = 0; i < selectedProducts.length; i += batchSize) {
+            const batch = selectedProducts.slice(i, i + batchSize);
+            await Promise.all(batch.map(async(product) => {
+                try {
+                    const prod = await getProductById(product.id);
+                    if (!prod.exist) {
+                        throw new Error('Produto não encontrado');
+                    }
+                    const deleteImagePromises = prod.images.map(image => deleteImage(image.localUrl));
+                    await Promise.all(deleteImagePromises);
+                    const productVariationsFromCollection = await getAllProductVariations([{ field: 'productId', operator: '==', value: product.id }]);
+                    await Promise.all(productVariationsFromCollection.map((pv) => deleteProductVariation(pv.id)));
+                    await deleteProductBundle(product.id);
+                } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : String(error);
+                    localFailedDeletions.push({ productName: product.name, error: errorMessage });
                 }
-                const deleteImagePromises = prod.images.map(image => deleteImage(image.localUrl));
-                await Promise.all(deleteImagePromises);
-                const productVariationsFromCollection = await getAllProductVariations([{ field: 'productId', operator: '==', value: product.id }]);
-                await Promise.all(productVariationsFromCollection.map((pv) => deleteProductVariation(pv.id)));
-                await deleteProductBundle(product.id);
             }));
-            refresh();
+        }
+        refresh();
+        setMultiSelectMode(false);
+        setSelectedProducts([]);
+        if (localFailedDeletions.length > 0) {
+            setFailedDeletions(localFailedDeletions);
+        } else {
             setNotification({ message: 'Produtos excluídos com sucesso', type: 'success' });
-            setMultiSelectMode(false);
-            setSelectedProducts([]);
-        } catch (error) {
-            console.error('Erro ao excluir produtos em massa:', error);
-            setNotification({ message: 'Falha ao excluir produtos. Por favor, tente novamente.', type: 'error' });
-        } finally {
-            setIsDeletingMass(false);
-            setShowMassDeleteConfirmation(false);
+        }
+        setIsDeletingMass(false);
+        setShowMassDeleteConfirmation(false);
+        if (localFailedDeletions.length > 0) {
+            setShowMassDeleteErrorModal(true);
         }
     }, [selectedProducts, getProductById, deleteImage, getAllProductVariations, deleteProductVariation, deleteProductBundle, refresh]);
 
@@ -285,7 +300,7 @@ export default function ProductsDashboard() {
                     onCancel={ handleCancelMultiSelect }
                     onDelete={ () => setShowMassDeleteConfirmation(true) }
                     isDeleting={ isDeletingMass }
-                    onSelectAll={ handleSelectAll }  // nova prop para selecionar todos
+                    onSelectAll={ handleSelectAll }
                 />
             ) }
             { showMassDeleteConfirmation && (
@@ -294,6 +309,13 @@ export default function ProductsDashboard() {
                     onClose={ () => setShowMassDeleteConfirmation(false) }
                     onConfirm={ handleMassDelete }
                     isDeleting={ isDeletingMass }
+                />
+            ) }
+            { showMassDeleteErrorModal && (
+                <MassDeleteErrorModal
+                    isOpen={ showMassDeleteErrorModal }
+                    errorItems={ failedDeletions }
+                    onClose={ () => setShowMassDeleteErrorModal(false) }
                 />
             ) }
         </main>
