@@ -182,6 +182,10 @@ export default function ProductsDashboard() {
         }
     }, [selectedProducts, getProductById, deleteImage, getAllProductVariations, deleteProductVariation, deleteProductBundle, refresh]);
 
+    const handleSelectAll = useCallback(() => {
+        setSelectedProducts(products);
+    }, [products]);
+
     return (
         <main className="md:m-auto md:w-2/3 px-0 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
             <ProductsHeader
@@ -281,6 +285,7 @@ export default function ProductsDashboard() {
                     onCancel={ handleCancelMultiSelect }
                     onDelete={ () => setShowMassDeleteConfirmation(true) }
                     isDeleting={ isDeletingMass }
+                    onSelectAll={ handleSelectAll }  // nova prop para selecionar todos
                 />
             ) }
             { showMassDeleteConfirmation && (
