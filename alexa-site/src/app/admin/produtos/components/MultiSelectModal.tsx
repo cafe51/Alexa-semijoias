@@ -16,7 +16,7 @@ interface MultiSelectModalProps {
 export default function MultiSelectModal({ isOpen, selectedCount, onCancel, onDelete, isDeleting }: MultiSelectModalProps) {
     return (
         <div className={ `fixed inset-x-0 bottom-0 z-50 transform transition-transform duration-300 ${isOpen ? 'translate-y-0' : 'translate-y-full'}` }>
-            <div className="bg-white p-4 rounded-t-md shadow-md w-full">
+            <div className="bg-white p-4 rounded-t-md w-full shadow-[0_-4px_8px_rgba(0,0,0,0.5)]">
                 <div className="flex justify-between items-center">
                     <h3 className="font-bold text-lg">Opções de Multiseleção</h3>
                     <button onClick={ onCancel }>

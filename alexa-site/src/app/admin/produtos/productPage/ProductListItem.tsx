@@ -1,5 +1,5 @@
 // src/app/admin/produtos/productPage/ProductListItem.tsx
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { FiEdit } from 'react-icons/fi';
 import { PiTrashSimpleBold } from 'react-icons/pi';
@@ -178,9 +178,19 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
         setShowDeleteModal(false);
     }, [product.id, deleteDocument, setRefreshProducts]);
 
+    const multiSelectStyle = useMemo(() => {
+        if (multiSelectMode && isSelected) {
+            return 'scale-110 border-t-2 border-x-2 border-b-4 border-[#C48B9F] shadow-[#C48B9F] shadow-lg bg-[#C48B9F]/10 hover:bg-[#C48B9F]/20 ';
+        }
+        if (multiSelectMode && !isSelected) {
+            return 'hover:scale-50';
+        }
+        return '';
+    }, [multiSelectMode, isSelected]);
+
     return (
         <div 
-            className={ `flex gap-4 bg-white shadow-lg rounded-lg transition transform w-full ${multiSelectMode && isSelected ? 'border-4 border-blue-500' : 'hover:scale-105'}` }
+            className={ ` flex gap-4 bg-white shadow-lg rounded-lg transition transform w-full ${multiSelectStyle}` }
             onMouseDown={ handleMouseDown }
             onMouseUp={ handleMouseUp }
             onMouseLeave={ handleMouseLeave }
