@@ -19,6 +19,7 @@ interface ProductFilterModalProps {
     selectedSubsection: string;
     setSelectedSubsection: (value: string) => void;
     siteSections: (SectionType & FireBaseDocument)[];
+    disableFilterChange: boolean;
 }
 
 export default function ProductFilters({
@@ -37,11 +38,13 @@ export default function ProductFilters({
     selectedSubsection,
     setSelectedSubsection,
     siteSections,
+    disableFilterChange,
 }: ProductFilterModalProps) {
     return (
         <>
             <button
                 onClick={ () => setShowFilterModal(true) }
+                disabled={ disableFilterChange }
                 className="
                     px-4 rounded-md block mb-4
                     w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] 
@@ -52,7 +55,13 @@ export default function ProductFilters({
                     border border-[#C48B9F] 
                     transition-colors 
                     hover:bg-[#C48B9F] 
-                    hover:text-white"
+                    hover:text-white
+                    disabled:cursor-not-allowed
+                    disabled:border-[#C48B9F]/50
+                    disabled:text-[#C48B9F]/50
+                    disabled:hover:bg-transparent
+                    disabled:hover:text-[#C48B9F]/50
+                    "
             >
                 Filtros
             </button>

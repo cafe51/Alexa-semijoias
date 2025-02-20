@@ -18,13 +18,15 @@ const sortOptions: SortOption[] = [
 type ProductSorterProps = {
   onSortChange: (option: SortOption) => void;
   currentSort: string;
+  disableSortChange: boolean;
 };
 
-export default function ProductSorter({ onSortChange, currentSort }: ProductSorterProps) {
+export default function ProductSorter({ onSortChange, currentSort, disableSortChange }: ProductSorterProps) {
     return (
         <div className="relative inline-block mb-4">
             <select
                 value={ currentSort }
+                disabled={ disableSortChange }
                 onChange={ (e) => {
                     const selectedValue = e.target.value;
                     const option = sortOptions.find((opt) => opt.value === selectedValue);
@@ -33,21 +35,26 @@ export default function ProductSorter({ onSortChange, currentSort }: ProductSort
                     }
                 } }
                 className="
-          block 
-          w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] 
-          h-11 sm:h-12 md:h-14 lg:h-16
-          pl-3 pr-10 py-2 
-          text-base md:text-lg lg:text-xl 
-          font-medium 
-          bg-[#FAF9F6] 
-          text-[#333333] 
-          border border-[#C48B9F] 
-          rounded-md 
-          shadow-sm 
-          appearance-none 
-          transition-colors 
-          hover:bg-[#C48B9F] 
-          hover:text-white
+            block 
+            w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] 
+            h-11 sm:h-12 md:h-14 lg:h-16
+            pl-3 pr-10 py-2 
+            text-base md:text-lg lg:text-xl 
+            font-medium 
+            bg-[#FAF9F6] 
+            text-[#333333] 
+            border border-[#C48B9F] 
+            rounded-md 
+            shadow-sm 
+            appearance-none 
+            transition-colors 
+            hover:bg-[#C48B9F] 
+            hover:text-white
+            disabled:cursor-not-allowed
+            disabled:border-[#C48B9F]/50
+            disabled:text-[#C48B9F]/50
+            disabled:hover:bg-transparent
+            disabled:hover:text-[#C48B9F]/50
         "
             >
                 { sortOptions.map((option) => (
@@ -57,7 +64,9 @@ export default function ProductSorter({ onSortChange, currentSort }: ProductSort
                 )) }
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <CaretSortIcon className="h-6 w-6 "  />
+                <button className='p-0 m-0 border-none bg-transparent cursor-pointer disabled:text-[#C48B9F]/50' disabled={ disableSortChange }>
+                    <CaretSortIcon className="h-6 w-6 "  /> 
+                </button>
             </div>
         </div>
     );

@@ -194,11 +194,13 @@ export default function ProductsDashboard() {
                 selectedSubsection={ selectedSubsection }
                 itemsPerPage={ itemsPerPage }
                 setItemsPerPage={ setItemsPerPage }
+                disablePaginationSizeChange={ multiSelectMode }
             /> 
             <section className="flex justify-between items-center mb-4 gap-4">
                 <ProductSorter
                     currentSort={ currentSort }
                     onSortChange={ onSortChange }
+                    disableSortChange={ multiSelectMode }
                 />
                 <ProductFilters
                     showStoreProducts={ showStoreProducts }
@@ -216,6 +218,7 @@ export default function ProductsDashboard() {
                     selectedSubsection={ selectedSubsection }
                     setSelectedSubsection={ setSelectedSubsection }
                     siteSections={ siteSections }
+                    disableFilterChange={ multiSelectMode }
                 />
             </section>
             <section className="flex flex-col gap-4 w-full">

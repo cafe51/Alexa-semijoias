@@ -14,6 +14,9 @@ interface ProductsHeaderProps {
     // Novas props para configuração de itens por página
     itemsPerPage: number | 'all';
     setItemsPerPage: (value: number | 'all') => void;
+
+    disablePaginationSizeChange: boolean;
+
 }
 
 export default function ProductsHeader({ 
@@ -26,6 +29,7 @@ export default function ProductsHeader({
     selectedSubsection,
     itemsPerPage,
     setItemsPerPage,
+    disablePaginationSizeChange,
 }: ProductsHeaderProps) {
     const title = selectedSection ? `${toTitleCase(selectedSection)} - ${selectedSubsection && toTitleCase(selectedSubsection)}` : 'Todos os produtos';
     return (
@@ -38,10 +42,14 @@ export default function ProductsHeader({
                     { title } ({ totalProducts })
                 </button>
                 <div className="flex justify-between items-end w-full">
-                    <SetItemsPerPage itemsPerPage={ itemsPerPage } setItemsPerPage={ setItemsPerPage } />
+                    <SetItemsPerPage itemsPerPage={ itemsPerPage } setItemsPerPage={ setItemsPerPage } disablePaginationSizeChange={ disablePaginationSizeChange } />
 
                     <button
-                        className="bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition"
+                        className="
+                        bg-[#C48B9F] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#D4AF37] transition
+                        disabled:bg-[#C48B9F]/50 disabled:text-[#333333]/20 disabled:cursor-not-allowed
+                        "
+                        disabled={ disablePaginationSizeChange }
                         type="button"
                         onClick={ setShowCreateNewProductModal }
                     >
@@ -51,11 +59,19 @@ export default function ProductsHeader({
             </div>
             <form onSubmit={ () => {} } className="flex flex-col md:flex-row gap-4 mt-4">
                 <input
-                    className="p-3 border border-[#C48B9F] rounded-lg flex-grow text-[#333333] placeholder-[#C48B9F] focus:outline-none"
+                    className="
+                    p-3 border border-[#C48B9F] rounded-lg flex-grow text-[#333333] placeholder-[#C48B9F] focus:outline-none
+                    disabled:cursor-not-allowed
+                    disabled:border-[#C48B9F]/50
+                    disabled:text-[#C48B9F]/50
+                    disabled:hover:bg-transparent
+                    disabled:hover:text-[#C48B9F]/50
+                    "
                     type="text"
                     value={ searchTerm }
                     onChange={ (e) => setSearchTerm(e.target.value) }
                     placeholder="Buscar produtos..."
+                    disabled={ disablePaginationSizeChange }
                 />
             </form>
         </div>
