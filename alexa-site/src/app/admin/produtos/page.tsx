@@ -22,6 +22,7 @@ import MassDeleteErrorModal from './components/MassDeleteErrorModal';
 import MassModifyModal from './components/MassModifyModal';
 import MassModifyConfirmationModal from './components/MassModifyConfirmationModal';
 import MassModifyErrorModal from './components/MassModifyErrorModal';
+import adjustPriceTo99 from '@/app/utils/adjustPriceTo99';
 
 interface NotificationState {
     message: string;
@@ -58,10 +59,20 @@ export default function ProductsDashboard() {
         showProduct: boolean | null;
         lancamento: boolean | null;
         removePromotion: boolean;
+        priceModification: {
+            value: number | null;
+            type: 'percentual' | 'fixo' | null;
+            operation: 'increase' | 'decrease' | null;
+        }
     }>({
         showProduct: null,
         lancamento: null,
         removePromotion: false,
+        priceModification: {
+            value: null,
+            type: null,
+            operation: null,
+        },
     });
     const [failedMassModifications, setFailedMassModifications] = useState<{ productName: string, error: string }[]>([]);
 
@@ -230,7 +241,7 @@ export default function ProductsDashboard() {
         setIsModifyingMass(true);
         const localFailedUpdates: { productName: string, error: string }[] = [];
         const batchSize = 5;
-
+    
         for (let i = 0; i < selectedProducts.length; i += batchSize) {
             const batch = selectedProducts.slice(i, i + batchSize);
             await Promise.all(batch.map(async(product) => {
@@ -241,7 +252,7 @@ export default function ProductsDashboard() {
                     }
                     const updates: { [key: string]: any } = {};
                     let shouldUpdate = false;
-                    // Atualiza showProduct se o usuário escolheu modificar e o valor for diferente
+                    // Atualiza showProduct se necessário
                     if (massModifyOptions.showProduct !== null && prod.showProduct !== massModifyOptions.showProduct) {
                         updates['showProduct'] = massModifyOptions.showProduct;
                         shouldUpdate = true;
@@ -251,14 +262,42 @@ export default function ProductsDashboard() {
                         updates['lancamento'] = massModifyOptions.lancamento;
                         shouldUpdate = true;
                     }
-                    // Se solicitado, retira da promoção (definindo promotionalPrice para 0)
+                    // Remove promoção se solicitado
                     if (massModifyOptions.removePromotion && prod.value.promotionalPrice !== 0) {
                         updates['value.promotionalPrice'] = 0;
                         shouldUpdate = true;
                     }
+                    // Atualiza preço se houver modificação configurada e se o valor foi informado
+                    if (
+                        massModifyOptions.priceModification &&
+                      massModifyOptions.priceModification.value !== null &&
+                      !isNaN(massModifyOptions.priceModification.value)
+                    ) {
+                        const { value, type, operation } = massModifyOptions.priceModification;
+                        let newPrice: number = prod.value.price;
+                        if (type === 'fixo') {
+                            if (operation === 'increase') {
+                                newPrice = prod.value.price + value;
+                            } else if (operation === 'decrease') {
+                                newPrice = prod.value.price - value;
+                                if (newPrice < 0) newPrice = 0;
+                            }
+                        } else if (type === 'percentual') {
+                            if (operation === 'increase') {
+                                newPrice = prod.value.price + (prod.value.price * (value / 100));
+                            } else if (operation === 'decrease') {
+                                newPrice = prod.value.price - (prod.value.price * (value / 100));
+                                if (newPrice < 0) newPrice = 0;
+                            }
+                            newPrice = adjustPriceTo99(newPrice);
+                        }
+                        if (newPrice !== prod.value.price) {
+                            updates['value.price'] = newPrice;
+                            shouldUpdate = true;
+                        }
+                    }
                     if (shouldUpdate) {
                         updates['updatingDate'] = new Date();
-                        // Atualiza cada campo necessário utilizando o hook useCollection
                         const updatePromises = Object.keys(updates).map(key =>
                             updateDocumentField(product.id, key, updates[key]),
                         );
@@ -282,6 +321,8 @@ export default function ProductsDashboard() {
         setIsModifyingMass(false);
         setShowMassModifyConfirmation(false);
     }, [selectedProducts, massModifyOptions, getProductById, updateDocumentField, refresh]);
+    
+    
 
     return (
         <main className="md:m-auto md:w-2/3 px-0 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">

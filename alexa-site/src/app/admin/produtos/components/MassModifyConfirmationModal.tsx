@@ -6,7 +6,16 @@ import LargeButton from '@/app/components/LargeButton';
 
 interface MassModifyConfirmationModalProps {
   isModifying: boolean;
-  modifications: { showProduct: boolean | null; lancamento: boolean | null; removePromotion: boolean };
+  modifications: { 
+    showProduct: boolean | null; 
+    lancamento: boolean | null; 
+    removePromotion: boolean;
+    priceModification: {
+       value: number | null;
+       type: 'percentual' | 'fixo' | null;
+       operation: 'increase' | 'decrease' | null;
+    }
+  };
   selectedCount: number;
   onClose: () => void;
   onConfirm: () => void;
@@ -23,6 +32,14 @@ export default function MassModifyConfirmationModal({ isModifying, modifications
     if (modifications.removePromotion) {
         modificationDetails.push('Retirar da promoção');
     }
+    if (modifications.priceModification && modifications.priceModification.value !== null && modifications.priceModification.type && modifications.priceModification.operation) {
+        const { value, type, operation } = modifications.priceModification;
+        if (type === 'fixo') {
+            modificationDetails.push(`Preço: ${operation === 'increase' ? 'Aumentar' : 'Diminuir'} R$ ${value.toFixed(2)} (fixo)`);
+        } else if (type === 'percentual') {
+            modificationDetails.push(`Preço: ${operation === 'increase' ? 'Aumentar' : 'Diminuir'} ${value}% (percentual)`);
+        }
+    }
 
     return (
         <ModalMaker closeModelClick={ onClose } title="Confirmar Modificações em Massa">
@@ -34,9 +51,7 @@ export default function MassModifyConfirmationModal({ isModifying, modifications
                     )) }
                 </ul>
                 <div className="flex justify-end gap-4">
-                    <LargeButton color="gray" onClick={ onClose }>
-            Cancelar
-                    </LargeButton>
+                    <LargeButton color="gray" onClick={ onClose }>Cancelar</LargeButton>
                     <LargeButton color="blue" onClick={ onConfirm } disabled={ isModifying }>
                         { isModifying ? 'Modificando...' : 'Confirmar' }
                     </LargeButton>
