@@ -183,7 +183,7 @@ export default function ProductsDashboard() {
     }, [selectedProducts, getProductById, deleteImage, getAllProductVariations, deleteProductVariation, deleteProductBundle, refresh]);
 
     return (
-        <main className="md:m-auto md:w-2/3  px-4 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
+        <main className="md:m-auto md:w-2/3 px-0 sm:px-6 md:px-8 lg:px-12 bg-[#FAF9F6]">
             <ProductsHeader
                 totalProducts={ totalDocuments }
                 setSearchTerm={ (searchTerm: string) => setSearchTerm(searchTerm) }

@@ -29,8 +29,7 @@ export default function ProductsHeader({
 }: ProductsHeaderProps) {
     const title = selectedSection ? `${toTitleCase(selectedSection)} - ${selectedSubsection && toTitleCase(selectedSubsection)}` : 'Todos os produtos';
     return (
-        <div className="bg-white shadow-md p-6 mb-6 rounded-lg w-full">
-            <div></div>
+        <div className="px-0 py-0 md:p-6 mb-6 rounded-lg w-full"> 
             <div className="flex flex-col justify-center items-center gap-4">
                 <button
                     className="text-2xl font-bold text-[#333333] p-4 border-2 border-[#C48B9F] hover:border-[#D4AF37] transition rounded-xl"
@@ -46,7 +45,7 @@ export default function ProductsHeader({
                         type="button"
                         onClick={ setShowCreateNewProductModal }
                     >
-                        Adicionar Produto
+                        + Produto
                     </button>
                 </div>
             </div>
