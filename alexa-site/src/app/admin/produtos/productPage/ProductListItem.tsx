@@ -136,25 +136,28 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
         }
         const touch = e.changedTouches[0];
         const start = touchStartCoords.current;
-        const threshold = 10; // px de tolerância para distinguir tap de scroll
+        const threshold = 10; // tolerância em pixels para diferenciar tap de scroll
+        let isTap = true;
         if (start) {
             const dx = Math.abs(touch.clientX - start.x);
             const dy = Math.abs(touch.clientY - start.y);
             if (dx > threshold || dy > threshold) {
-                // Se houver movimento significativo, não trata como tap
-                touchStartCoords.current = null;
-                return;
+                isTap = false;
             }
         }
-        if (!multiSelectMode) {
-            if (!longPressTriggered.current) {
-                setShowProductDetailModal(product);
+        if (multiSelectMode) {
+            if (isTap) {
+                // Previne o disparo de um onClick extra
+                e.preventDefault();
             }
-        } else {
             if (justActivated.current) {
                 justActivated.current = false;
-            } else if (onToggleSelect) {
+            } else if (onToggleSelect && isTap) {
                 onToggleSelect(product);
+            }
+        } else {
+            if (isTap && !longPressTriggered.current) {
+                setShowProductDetailModal(product);
             }
         }
         touchStartCoords.current = null;
