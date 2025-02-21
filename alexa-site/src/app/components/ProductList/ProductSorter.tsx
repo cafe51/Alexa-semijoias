@@ -18,7 +18,7 @@ const sortOptions: SortOption[] = [
 type ProductSorterProps = {
   onSortChange: (option: SortOption) => void;
   currentSort: string;
-  disableSortChange: boolean;
+  disableSortChange?: boolean;
 };
 
 export default function ProductSorter({ onSortChange, currentSort, disableSortChange }: ProductSorterProps) {

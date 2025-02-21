@@ -191,11 +191,6 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
     return (
         <div 
             className={ ` flex gap-4 bg-white shadow-lg rounded-lg transition transform w-full ${multiSelectStyle}` }
-            onMouseDown={ handleMouseDown }
-            onMouseUp={ handleMouseUp }
-            onMouseLeave={ handleMouseLeave }
-            onTouchStart={ handleTouchStart }
-            onTouchEnd={ handleTouchEnd }
             onContextMenu={ e => e.preventDefault() }
             style={ { 
                 userSelect: 'none', 
@@ -208,36 +203,50 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                 onClose={ () => setShowDeleteModal(false) } 
                 onConfirm={ handleDeleteConfirm } 
             />
-            <div className="relative rounded-lg rounded-r-none h-28 w-28 overflow-hidden bg-gray-100">
-                <Image
-                    className="object-cover w-full h-full"
-                    src={ product.images?.[0]?.localUrl || blankImage }
-                    alt="Foto do produto"
-                    fill
-                    priority
-                    sizes="300px"
-                    draggable={ false }
-                />
-            </div>
-            <div className="w-full flex flex-col justify-between py-2 pr-4">
-                <div className="flex justify-between items-center w-full">
-                    <p className="font-bold text-[#333333] line-clamp-2">{ toTitleCase(product.name) }</p> 
-                    { !multiSelectMode && (
-                        <button className="text-[#C48B9F]" onClick={ handleEditClick }>
-                            <FiEdit size={ 20 } />
-                        </button>
-                    ) }
+            <div
+                className='flex gap-2'
+                onMouseDown={ handleMouseDown }
+                onMouseUp={ handleMouseUp }
+                onMouseLeave={ handleMouseLeave }
+                onTouchStart={ handleTouchStart }
+                onTouchEnd={ handleTouchEnd }
+            >
+                <div
+                    className="relative rounded-lg rounded-r-none h-28 w-28 overflow-hidden bg-gray-100"
+                >
+                    <Image
+                        className="object-cover w-full h-full"
+                        src={ product.images?.[0]?.localUrl || blankImage }
+                        alt="Foto do produto"
+                        fill
+                        priority
+                        sizes="300px"
+                        draggable={ false }
+                    />
                 </div>
-                <div className="flex justify-between items-center w-full shrink-0">
-                    <p className="text-[#333333]">Estoque: <span className="font-bold">{ product.estoqueTotal }</span></p>
-                    <p className="text-[#D4AF37] font-bold">{ formatPrice(product.value.price) }</p>
-                    { !multiSelectMode && (
-                        <button className="text-red-500" onClick={ () => setShowDeleteModal(true) }>
-                            <PiTrashSimpleBold size={ 20 } />
-                        </button>
-                    ) }
+                <div
+                    className="w-full flex flex-col justify-between py-2 pr-4"
+
+                >
+                    <div className="flex justify-between items-center w-full">
+                        <p className="font-bold text-[#333333] line-clamp-2">{ toTitleCase(product.name) }</p> 
+                    </div>
+                    <div className="flex justify-between items-center w-full shrink-0">
+                        <p className="text-[#333333]">Estoque: <span className="font-bold">{ product.estoqueTotal }</span></p>
+                        <p className="text-[#D4AF37] font-bold">{ formatPrice(product.value.price) }</p>
+
+                    </div>
                 </div>
             </div>
+            
+            { !multiSelectMode &&<div className='flex flex-col justify-between p-1'>
+                <button className="text-[#C48B9F]" onClick={ handleEditClick }>
+                    <FiEdit size={ 20 } />
+                </button>
+                <button className="text-red-500" onClick={ () => setShowDeleteModal(true) }>
+                    <PiTrashSimpleBold size={ 20 } />
+                </button>
+            </div> }
         </div>
     );
 });
