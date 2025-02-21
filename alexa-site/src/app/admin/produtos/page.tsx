@@ -242,14 +242,23 @@ export default function ProductsDashboard() {
         const localFailedUpdates: { productName: string, error: string }[] = [];
         const batchSize = 5;
     
-        for (let i = 0; i < selectedProducts.length; i += batchSize) {
-            const batch = selectedProducts.slice(i, i + batchSize);
+        // Ordena os produtos selecionados por updatingDate (dos mais antigos para os mais recentes)
+        const sortedProducts = [...selectedProducts].sort((a, b) => {
+            // a.updatingDate e b.updatingDate são Timestamps; convertemos para Date para a comparação
+            const dateA = a.updatingDate.toDate().getTime();
+            const dateB = b.updatingDate.toDate().getTime();
+            return dateA - dateB;
+        });
+    
+        for (let i = 0; i < sortedProducts.length; i += batchSize) {
+            const batch = sortedProducts.slice(i, i + batchSize);
             await Promise.all(batch.map(async(product) => {
                 try {
                     const prod = await getProductById(product.id);
                     if (!prod.exist) {
                         throw new Error('Produto não encontrado');
                     }
+                    // Usamos "const" para o objeto de updates
                     const updates: { [key: string]: any } = {};
                     let shouldUpdate = false;
                     // Atualiza showProduct se necessário
@@ -297,6 +306,7 @@ export default function ProductsDashboard() {
                         }
                     }
                     if (shouldUpdate) {
+                        // Atualiza o campo updatingDate com a data atual
                         updates['updatingDate'] = new Date();
                         const updatePromises = Object.keys(updates).map(key =>
                             updateDocumentField(product.id, key, updates[key]),
@@ -321,6 +331,7 @@ export default function ProductsDashboard() {
         setIsModifyingMass(false);
         setShowMassModifyConfirmation(false);
     }, [selectedProducts, massModifyOptions, getProductById, updateDocumentField, refresh]);
+    
     
     
 
