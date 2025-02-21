@@ -180,10 +180,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
 
     const multiSelectStyle = useMemo(() => {
         if (multiSelectMode && isSelected) {
-            return 'scale-110 border-t-4 border-x-4 border-b-6 border-[#C48B9F] shadow-[#C48B9F] shadow-lg bg-[#C48B9F]/30 hover:bg-[#C48B9F]/10 ';
-        }
-        if (multiSelectMode && !isSelected) {
-            return 'hover:scale-110';
+            return 'scale-110 border-t-4 border-x-4 border-b-6 border-[#C48B9F] shadow-[#C48B9F] shadow-lg bg-[#C48B9F]/40 hover:bg-[#C48B9F]/10 ';
         }
         return '';
     }, [multiSelectMode, isSelected]);

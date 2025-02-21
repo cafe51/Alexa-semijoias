@@ -17,7 +17,7 @@ interface MultiSelectModalProps {
 export default function MultiSelectModal({ isOpen, selectedCount, onCancel, onDelete, onSelectAll, onModify, isDeleting }: MultiSelectModalProps) {
     return (
         <div className={ `fixed inset-x-0 bottom-0 z-50 transform transition-transform duration-300 ${isOpen ? 'translate-y-0' : 'translate-y-full'}` }>
-            <div className="bg-white p-4 rounded-t-md w-full shadow-[0_-4px_8px_rgba(0,0,0,0.5)]">
+            <div className="bg-white p-4 rounded-t-md w-full md:w-2/3 lg:w-1/4 md:m-auto shadow-[0_-4px_8px_rgba(0,0,0,0.5)]">
                 <div className="flex justify-between items-center">
                     <h3 className="font-bold text-lg text-center">{ selectedCount } { selectedCount > 1 ? 'itens selecionados' : 'item selecionado' }</h3>
                     <button onClick={ onCancel }>

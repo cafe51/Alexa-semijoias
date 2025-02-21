@@ -2,7 +2,6 @@
 'use client';
 import React, { useState } from 'react';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
-import LargeButton from '@/app/components/LargeButton';
 
 interface MassModifyModalProps {
   onClose: () => void;
@@ -19,74 +18,86 @@ interface MassModifyModalProps {
 }
 
 export default function MassModifyModal({ onClose, onConfirm }: MassModifyModalProps) {
+    // Estado para visibilidade (showProduct): true (Mostrar), false (Ocultar) ou null (Não alterar)
     const [showProduct, setShowProduct] = useState<boolean | null>(null);
+    // Estado para lançamento: true (Sim), false (Não) ou null (Não alterar)
     const [lancamento, setLancamento] = useState<boolean | null>(null);
+    // Estado para remoção da promoção (valor true indica que o produto terá o preço promocional zerado)
     const [removePromotion, setRemovePromotion] = useState(false);
 
-    // Estados para modificação de preço
+    // Estados para modificação de preço:
+    // Valor numérico para a alteração
     const [priceValue, setPriceValue] = useState<number | null>(null);
-    const [priceType, setPriceType] = useState<'percentual' | 'fixo' | null>(null);
-    const [priceOperation, setPriceOperation] = useState<'increase' | 'decrease' | null>(null);
+    // Tipo de alteração: 'fixo' ou 'percentual'
+    const [priceType, setPriceType] = useState<'percentual' | 'fixo' | null>('fixo');
+    // Operação: 'increase' para aumento ou 'decrease' para desconto
+    const [priceOperation, setPriceOperation] = useState<'increase' | 'decrease' | null>('increase');
 
     const handleSubmit = () => {
         onConfirm({ 
             showProduct, 
             lancamento, 
             removePromotion, 
-            priceModification: {
-                value: priceValue,
-                type: priceType,
-                operation: priceOperation,
-            },
+            priceModification: (priceValue !== null && priceType && priceOperation)
+                ? { value: priceValue, type: priceType, operation: priceOperation }
+                : { value: null, type: null, operation: null },
         });
     };
 
     return (
-        <ModalMaker closeModelClick={ onClose } title="Modificar Produtos Selecionados">
-            <div className="p-4 flex flex-col gap-4">
+        <ModalMaker closeModelClick={ onClose } title="Opções Avançadas">
+            <div className="p-2 flex flex-col gap-8 w-full">
+                { /* Visibilidade na Loja */ }
                 <div>
-                    <p className="font-bold mb-2">Visibilidade na Loja:</p>
-                    <div className="flex gap-4">
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="showProduct" value="true" checked={ showProduct === true } onChange={ () => setShowProduct(true) } />
-              Mostrar
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="showProduct" value="false" checked={ showProduct === false } onChange={ () => setShowProduct(false) } />
-              Ocultar
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="showProduct" value="null" checked={ showProduct === null } onChange={ () => setShowProduct(null) } />
-              Não alterar
-                        </label>
-                    </div>
+                    <label className="block font-medium mb-2 text-gray-700">Visibilidade</label>
+                    <select
+                        value={ showProduct === null ? 'null' : showProduct ? 'true' : 'false' }
+                        onChange={ (e) => {
+                            const val = e.target.value;
+                            if(val === 'true') setShowProduct(true);
+                            else if(val === 'false') setShowProduct(false);
+                            else setShowProduct(null);
+                        } }
+                        className="w-full p-2 bg-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
+                    >
+                        <option value="null">Não alterar</option>
+                        <option value="true">Mostrar</option>
+                        <option value="false">Ocultar</option>
+                    </select>
                 </div>
+                { /* Lançamento */ }
                 <div>
-                    <p className="font-bold mb-2">Lançamento:</p>
-                    <div className="flex gap-4">
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="lancamento" value="true" checked={ lancamento === true } onChange={ () => setLancamento(true) } />
-              Sim
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="lancamento" value="false" checked={ lancamento === false } onChange={ () => setLancamento(false) } />
-              Não
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="lancamento" value="null" checked={ lancamento === null } onChange={ () => setLancamento(null) } />
-              Não alterar
-                        </label>
-                    </div>
+                    <label className="block font-medium mb-2 text-gray-700">Lançamento:</label>
+                    <select
+                        value={ lancamento === null ? 'null' : lancamento ? 'true' : 'false' }
+                        onChange={ (e) => {
+                            const val = e.target.value;
+                            if(val === 'true') setLancamento(true);
+                            else if(val === 'false') setLancamento(false);
+                            else setLancamento(null);
+                        } }
+                        className="w-full p-2 bg-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
+                    >
+                        <option value="null">Não alterar</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
                 </div>
+                { /* Promoção */ }
                 <div>
-                    <label className="flex items-center gap-2">
-                        <input type="checkbox" checked={ removePromotion } onChange={ () => setRemovePromotion(!removePromotion) } />
-            Retirar da promoção (definir preço promocional para 0)
-                    </label>
+                    <label className="block font-medium mb-2 text-gray-700">Promoção:</label>
+                    <select
+                        value={ removePromotion ? 'true' : 'false' }
+                        onChange={ (e) => setRemovePromotion(e.target.value === 'true') }
+                        className="w-full p-2 bg-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
+                    >
+                        <option value="false">Não alterar</option>
+                        <option value="true">Remover</option>
+                    </select>
                 </div>
-                { /* Nova seção para modificação de preço */ }
+                { /* Modificação de Preço */ }
                 <div>
-                    <p className="font-bold mb-2">Preço:</p>
+                    <label className="block font-medium mb-2 text-gray-700">Preço:</label>
                     <div className="flex flex-col gap-2">
                         <input
                             type="number"
@@ -94,33 +105,40 @@ export default function MassModifyModal({ onClose, onConfirm }: MassModifyModalP
                             placeholder="Valor para modificação"
                             value={ priceValue !== null ? priceValue : '' }
                             onChange={ (e) => setPriceValue(e.target.value ? parseFloat(e.target.value) : null) }
-                            className="p-2 border rounded-md"
+                            className="w-full p-2 bg-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
                         />
-                        <div className="flex gap-4">
-                            <label className="flex items-center gap-2">
-                                <input type="radio" name="priceType" value="fixo" checked={ priceType === 'fixo' } onChange={ () => setPriceType('fixo') } />
-                Fixo
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="radio" name="priceType" value="percentual" checked={ priceType === 'percentual' } onChange={ () => setPriceType('percentual') } />
-                Percentual
-                            </label>
-                        </div>
-                        <div className="flex gap-4">
-                            <label className="flex items-center gap-2">
-                                <input type="radio" name="priceOperation" value="increase" checked={ priceOperation === 'increase' } onChange={ () => setPriceOperation('increase') } />
-                Aumentar
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="radio" name="priceOperation" value="decrease" checked={ priceOperation === 'decrease' } onChange={ () => setPriceOperation('decrease') } />
-                Diminuir
-                            </label>
-                        </div>
+                        <select
+                            value={ priceType ? priceType : '' }
+                            onChange={ (e) => {
+                                const val = e.target.value;
+                                setPriceType(val === 'fixo' || val === 'percentual' ? val : null);
+                            } }
+                            className="w-full p-2 bg-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
+                        >
+                            <option value="fixo">Fixo</option>
+                            <option value="percentual">Percentual</option>
+                        </select>
+                        <select
+                            value={ priceOperation ? priceOperation : '' }
+                            onChange={ (e) => {
+                                const val = e.target.value;
+                                setPriceOperation(val === 'increase' || val === 'decrease' ? val : null);
+                            } }
+                            className="w-full p-2 bg-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
+                        >
+                            <option value="increase">Aumentar</option>
+                            <option value="decrease">Diminuir</option>
+                        </select>
                     </div>
                 </div>
-                <div className="flex justify-end gap-4">
-                    <LargeButton color="gray" onClick={ onClose }>Cancelar</LargeButton>
-                    <LargeButton color="blue" onClick={ handleSubmit }>Confirmar</LargeButton>
+                { /* Botões de Ação */ }
+                <div className="mt-8 flex justify-between ">
+                    <button  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors" onClick={ onClose }>
+            Cancelar
+                    </button>
+                    <button className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors" onClick={ handleSubmit }>
+            Aplicar
+                    </button>
                 </div>
             </div>
         </ModalMaker>
