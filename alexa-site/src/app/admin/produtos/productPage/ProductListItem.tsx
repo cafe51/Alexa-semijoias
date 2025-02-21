@@ -10,7 +10,7 @@ import LargeButton from '@/app/components/LargeButton';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import toTitleCase from '@/app/utils/toTitleCase';
 
-const LONG_PRESS_THRESHOLD = 1000;
+const LONG_PRESS_THRESHOLD = 2000;
 
 interface ProductListItemProps {
     product: ProductBundleType & FireBaseDocument;
