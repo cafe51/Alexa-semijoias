@@ -24,12 +24,16 @@ interface ProductFilterModalProps {
     setPriceRange: (value: [number, number]) => void;
     isOpen: boolean;
     onClose: () => void;
-    // Novas props para filtragem por seção e subseção
     selectedSection: string;
     setSelectedSection: (value: string) => void;
     selectedSubsection: string;
     setSelectedSubsection: (value: string) => void;
     siteSections: (SectionType & FireBaseDocument)[];
+    // Novos filtros:
+    showPromotional: boolean;
+    setShowPromotional: (value: boolean) => void;
+    showLancamento: boolean;
+    setShowLancamento: (value: boolean) => void;
 }
 
 export default function ProductFilterModal({ 
@@ -48,6 +52,10 @@ export default function ProductFilterModal({
     selectedSubsection,
     setSelectedSubsection,
     siteSections,
+    showPromotional,
+    setShowPromotional,
+    showLancamento,
+    setShowLancamento,
 }: ProductFilterModalProps) {
     // Obtém as subseções disponíveis para a seção selecionada
     const currentSection = siteSections.find(s => s.sectionName === selectedSection);
@@ -149,6 +157,34 @@ export default function ProductFilterModal({
                     max={ MAX_PRICE }
                     step={ 1 }
                 />
+
+                { /* Novos filtros para Promoção e Lançamento */ }
+                <div className="flex flex-col gap-4">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="show-promotional"
+                            checked={ showPromotional }
+                            onCheckedChange={ setShowPromotional }
+                            aria-labelledby="show-promotional-label"
+                            className="focus:ring focus:ring-blue-500"
+                        />
+                        <Label id="show-promotional-label" htmlFor="show-promotional">
+                            Apenas produtos em promoção
+                        </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="show-lancamento"
+                            checked={ showLancamento }
+                            onCheckedChange={ setShowLancamento }
+                            aria-labelledby="show-lancamento-label"
+                            className="focus:ring focus:ring-blue-500"
+                        />
+                        <Label id="show-lancamento-label" htmlFor="show-lancamento">
+                            Apenas produtos em lançamento
+                        </Label>
+                    </div>
+                </div>
             </div>
         </SlideUpModal>
     );

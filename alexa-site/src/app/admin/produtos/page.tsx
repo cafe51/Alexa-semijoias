@@ -103,6 +103,10 @@ export default function ProductsDashboard() {
         setSelectedSubsection,
         itemsPerPage,
         setItemsPerPage,
+        setShowLancamento,
+        showLancamento,
+        setShowPromotional,
+        showPromotional,
     } = useProductPagination();
     
     const { useProductDataHandlers } = useProductConverter();
@@ -356,6 +360,10 @@ export default function ProductsDashboard() {
                     disableSortChange={ multiSelectMode }
                 />
                 <ProductFilters
+                    setShowLancamento={ setShowLancamento }
+                    showLancamento={ showLancamento }
+                    setShowPromotional={ setShowPromotional }
+                    showPromotional={ showPromotional }
                     showStoreProducts={ showStoreProducts }
                     setShowStoreProducts={ setShowStoreProducts }
                     showOutStoreProducts={ showOutStoreProducts }

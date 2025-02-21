@@ -1,4 +1,4 @@
-// src/app/admin/produtos/components/ProductFilters.tsx
+// src/app/admin/produtos/ProductFilters.tsx
 import { SectionType, FireBaseDocument } from '@/app/utils/types';
 import ProductFilterModal from './components/ProductFilterModal';
 
@@ -13,13 +13,18 @@ interface ProductFilterModalProps {
     setPriceRange: (value: [number, number]) => void;
     setShowFilterModal: (value: boolean) => void;
     showFilterModal: boolean;
-    // Novas props para filtragem por seção e subseção
+    // Props de seção e subseção
     selectedSection: string;
     setSelectedSection: (value: string) => void;
     selectedSubsection: string;
     setSelectedSubsection: (value: string) => void;
     siteSections: (SectionType & FireBaseDocument)[];
     disableFilterChange: boolean;
+    // Novos filtros
+    showPromotional: boolean;
+    setShowPromotional: (value: boolean) => void;
+    showLancamento: boolean;
+    setShowLancamento: (value: boolean) => void;
 }
 
 export default function ProductFilters({
@@ -39,6 +44,10 @@ export default function ProductFilters({
     setSelectedSubsection,
     siteSections,
     disableFilterChange,
+    showPromotional,
+    setShowPromotional,
+    showLancamento,
+    setShowLancamento,
 }: ProductFilterModalProps) {
     return (
         <>
@@ -81,6 +90,10 @@ export default function ProductFilters({
                 selectedSubsection={ selectedSubsection }
                 setSelectedSubsection={ setSelectedSubsection }
                 siteSections={ siteSections }
+                showPromotional={ showPromotional }
+                setShowPromotional={ setShowPromotional }
+                showLancamento={ showLancamento }
+                setShowLancamento={ setShowLancamento }
             />
         </>
     );

@@ -32,6 +32,10 @@ export const useProductPagination = () => {
     // Novo estado: itens por página (10, 50, 100 ou "all")
     const [itemsPerPage, setItemsPerPage] = useState<number | 'all'>(10);
 
+    // NOVOS ESTADOS PARA OS FILTROS:
+    const [showPromotional, setShowPromotional] = useState(false);
+    const [showLancamento, setShowLancamento] = useState(false);
+
     // Se searchTerm estiver preenchido, reseta os filtros de seção e subseção
     useEffect(() => {
         if (searchTerm.trim() !== '') {
@@ -74,6 +78,13 @@ export const useProductPagination = () => {
                 }
             }
         }
+        // Adiciona os filtros para promoção e lançamento, se ativados
+        if (showPromotional) {
+            baseFilters.push({ field: 'promotional', operator: '==', value: true });
+        }
+        if (showLancamento) {
+            baseFilters.push({ field: 'lancamento', operator: '==', value: true });
+        }
 
         return baseFilters;
     }, [
@@ -82,6 +93,8 @@ export const useProductPagination = () => {
         priceRange,
         selectedSection,
         selectedSubsection,
+        showPromotional,
+        showLancamento,
     ]);
 
     const filtrosFinais = useMemo<FilterOptionForUseSnapshot[] | null>(() => {
@@ -175,5 +188,9 @@ export const useProductPagination = () => {
         setSelectedSubsection,
         itemsPerPage,
         setItemsPerPage,
+        showPromotional,
+        setShowPromotional,
+        showLancamento,
+        setShowLancamento,
     };
 };
