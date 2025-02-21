@@ -4,11 +4,12 @@ import Image from 'next/image';
 import { FiEdit } from 'react-icons/fi';
 import { PiTrashSimpleBold } from 'react-icons/pi';
 import blankImage from '../../../../../public/blankImage.png';
-import { formatPrice } from '@/app/utils/formatPrice';
 import ModalMaker from '@/app/components/ModalMakers/ModalMaker';
 import LargeButton from '@/app/components/LargeButton';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import toTitleCase from '@/app/utils/toTitleCase';
+import CartCardPrice from '@/app/carrinho/CartCardPrice';
+import ProductCardBadgesAdmin from './ProductCardBadgesAdmin';
 
 const LONG_PRESS_THRESHOLD = 2000;
 
@@ -220,6 +221,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                         sizes="300px"
                         draggable={ false }
                     />
+                    <ProductCardBadgesAdmin product={ product }/>
                 </div>
                 <div
                     className="w-full flex flex-col justify-between py-2 pr-4"
@@ -230,8 +232,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                     </div>
                     <div className="flex justify-between items-center w-full shrink-0">
                         <p className="text-[#333333]">Estoque: <span className="font-bold">{ product.estoqueTotal }</span></p>
-                        <p className="text-[#D4AF37] font-bold">{ formatPrice(product.value.price) }</p>
-
+                        <CartCardPrice value={ product.value } quantidade={ 1 } />
                     </div>
                 </div>
             </div>
