@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useCoupon } from '@/app/hooks/useCoupon';
 import { FireBaseDocument, ProductCartType } from '@/app/utils/types';
-import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '@/app/utils/constants';
@@ -27,7 +26,6 @@ export default function CouponSection({
     couponDiscount,
     setCouponCode,
 }: CouponSectionProps) {
-    const { userInfo } = useUserInfo();
     const [message, setMessage] = useState('');
     const [couponCodeInput, setCouponCodeInput] = useState('');
     const [textMessageColor, setTextMessageColor] = useState('text-red-500');
@@ -82,8 +80,6 @@ export default function CouponSection({
         setCouponDiscount(0);
     };
 
-    if (!userInfo) return null;
-
     return (
         <div className="p-4 border rounded mt-4 secColor border-[#F8C3D3]">
             <div className='flex justify-between'>
@@ -97,8 +93,8 @@ export default function CouponSection({
                 />
                 {
                     ((couponDiscount !== 'freteGratis' && couponDiscount > 0) || couponDiscount === 'freteGratis')
-                        ? <Button onClick={ handleRemove } className="bg-red-500 text-white text-lg">Remover Cupom</Button>
-                        : <Button onClick={ handleApply } className="bg-blue-500 text-white text-lg mr-2">Aplicar Cupom</Button>
+                        ? <Button onClick={ handleRemove } className="bg-red-500 text-white text-lg">Remover</Button>
+                        : <Button onClick={ handleApply } className=" bg-[#D4AF37] hover:bg-[#C48B9F] text-white text-base md:text-lg lg:text-xl py-0 ">Aplicar</Button>
                 }
 
             </div>

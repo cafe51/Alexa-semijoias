@@ -10,13 +10,13 @@ interface AccountSectionProps {
     state: UseCheckoutStateType
     handleShowLoginSection: (isLogin: boolean) => void;
     setIsCartLoading: Dispatch<SetStateAction<boolean>>;
-
+    cleanCoupon?: () => void;
   }
 
-export default function AccountSection({ state, handleShowLoginSection, setIsCartLoading }: AccountSectionProps) {
+export default function AccountSection({ state, handleShowLoginSection, setIsCartLoading, cleanCoupon }: AccountSectionProps) {
     const { userInfo } = useUserInfo();
 
-    if (userInfo) return <AccountSectionFilled nome={ userInfo.nome } cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.phone }  />;
+    if (userInfo) return <AccountSectionFilled nome={ userInfo.nome } cpf={ userInfo.cpf } email={ userInfo.email } telefone={ userInfo.phone } cleanCoupon={ cleanCoupon } />;
     
     if(state.showLoginSection && !userInfo) return <LoginSection setShowLogin={ handleShowLoginSection } setIsCartLoading={ setIsCartLoading }/>;
     

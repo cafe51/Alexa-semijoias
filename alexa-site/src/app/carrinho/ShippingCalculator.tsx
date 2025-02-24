@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+// src/app/carrinho/ShippingCalculator.tsx
+import { useState } from 'react';
+import { ShippingOptionType } from '../utils/types';
+import { formatPrice } from '../utils/formatPrice';
+import fetchAddressFromCEP from '../utils/fetchAddressFromCEP';
+import getShippingOptions from '../utils/getShippingOptions';
+import { formatCep } from '../utils/formatCep';
+import InputField from '../checkout/AddressSection/InputField';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { formatPrice } from '../utils/formatPrice';
-import fetchAddressFromCEP from '../utils/fetchAddressFromCEP';
-import { ShippingOptionType } from '../utils/types';
-import getShippingOptions from '../utils/getShippingOptions';
-import InputField from '../checkout/AddressSection/InputField';
-import { formatCep } from '../utils/formatCep';
+
 
 interface ShippingCalculatorProps {
     onSelectShipping: (optionId: string) => void;

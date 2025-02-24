@@ -6,11 +6,13 @@ import CartItem from './CartItem';
 import CartHeader from './CartHeader';
 import { ArrowLeft,  ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
 import OrderSummary from './OrderSummary';
 import ContinueShoppingButton from './ContinueShoppingButton';
 import LoadingIndicator from '../components/LoadingIndicator';
+import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '../utils/constants';
+import CouponSection from '../checkout/CouponSection/CouponSection';
 
 interface CartItem {
   skuId: string;
@@ -22,11 +24,6 @@ interface CartItem {
 }
 
 export default function Carrinho() {
-    const [shipping, setShipping] = useState<number | null>(null);
-    const [loadingComponent, setLoadingComponent] = useState(true);
-    const { carrinho } = useUserInfo();
-    const router = useRouter();
-
     useEffect(() => {
         window.scrollTo({
             top: 0,
@@ -35,19 +32,57 @@ export default function Carrinho() {
         setLoadingComponent(false);
     }, []);
 
+    const [shipping, setShipping] = useState<number | null>(null);
+    const [cartPrice, setCartPrice] = useState(0);
+    const [loadingComponent, setLoadingComponent] = useState(true);
+    const { carrinho } = useUserInfo();
+    const router = useRouter();
+    
+
+    // Estados para o cupom
+    const [ couponDiscount, setCouponDiscount ] = useState<number | 'freteGratis'>(0);
+    const [ couponCode, setCouponCode ] = useState<string>('');
+    const [ carrinhoState, setCarrinhoState ] = useState<ProductCartType[] | null>(null);
+
+
+    useEffect(() => {
+        setCarrinhoState(carrinho);
+        console.log('definiu carrinhoState');
+    }, [carrinho]);
+
+    useEffect(() => {
+        const removePromotionalPriceCondition = couponCode.trim() === COUPONREVENDEDORAFIRSTCODE || couponCode.trim() === COUPONREVENDEDORAVIP;
+        if(removePromotionalPriceCondition) {
+            if(!carrinho) return;
+            console.log('map cart revendedora coupon');
+            setCarrinhoState(carrinho.map((item) => ({
+                ...item,
+                value: {
+                    ...item.value,
+                    promotionalPrice: 0,
+                },
+            })));
+        } else {
+            if(!carrinho) return;
+            console.log('map cart normal coupon');
+            setCarrinhoState(carrinho);
+        }
+        
+    }, [couponCode, carrinho]);
+
+    useEffect(() => {
+        if (carrinhoState) {
+            setCartPrice(
+                Number(carrinhoState
+                    ?.map((items) => (Number(items.quantidade) * (items.value.promotionalPrice ? items.value.promotionalPrice : items.value.price)))
+                    .reduce((a, b) => a + b, 0)),
+            );
+        }
+    }, [carrinhoState]);
+
     const selectShipping = (price: string) => {
         setShipping(Number(price)); // Parse para número
     };
-
-    const subtotal = useMemo(() => {
-        if(!carrinho || carrinho.length === 0) return 0;
-        const subtotal = carrinho.map((item) => (Number(item.value.promotionalPrice || item.value.price) * item.quantidade)).reduce((a, b) => a + b, 0);
-        return subtotal;
-    }, [carrinho]);
-
-    const total = useMemo(() => {
-        return subtotal + (shipping || 0);
-    }, [subtotal, shipping]);
 
     if(loadingComponent) return (
         <section className='flex flex-col items-center justify-center h-3/6'>
@@ -85,14 +120,25 @@ export default function Carrinho() {
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     <CartItemList cartItems={ carrinho } />
-                    <OrderSummary 
-                        carrinho={ carrinho }
-                        subtotal={ subtotal }
-                        shipping={ shipping }
-                        total={ total }
-                        onSelectShipping={ selectShipping }
-                        onCheckout={ () => router.push('/checkout') }
-                    />
+                    <div className='flex flex-col gap-4'>
+                        <CouponSection 
+                            carrinho={ carrinhoState }
+                            fetchDeliveryOptions={ () => {} }
+                            resetSelectedDeliveryOption={ () => () => {} }
+                            hiddenPaymentSection={ () => {} }
+                            setCouponDiscount={ (discount: number | 'freteGratis') => setCouponDiscount(discount) }
+                            couponDiscount={ couponDiscount }
+                            setCouponCode={ (code: string) => setCouponCode(code) }
+                        />
+                        <OrderSummary 
+                            carrinho={ carrinho }
+                            subtotal={ cartPrice }
+                            shipping={ shipping }
+                            onSelectShipping={ selectShipping }
+                            onCheckout={ () => router.push('/checkout') }
+                            couponDiscount={ couponDiscount }
+                        />
+                    </div>
                 </div>
 
                 <ContinueShoppingButton className="mt-8 sm:hidden" router={ router }/>

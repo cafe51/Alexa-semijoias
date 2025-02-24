@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { useLogout } from '@/app/hooks/useLogout';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
+import { useEffect } from 'react';
 
 interface AccountSectionFilledProps {
     nome: string;
@@ -10,12 +11,17 @@ interface AccountSectionFilledProps {
     cpf: string;
     telefone: string | undefined;
     adminDashboard?: boolean;
+    cleanCoupon?: () => void;
   }
 
-export default function AccountSectionFilled({ nome, email, cpf, telefone, adminDashboard=false }: AccountSectionFilledProps) {
+export default function AccountSectionFilled({ nome, email, cpf, telefone, adminDashboard=false, cleanCoupon }: AccountSectionFilledProps) {
     const { logout } = useLogout();
     const { carrinho } = useUserInfo();
     const { setLocalCart } = useLocalStorage();
+
+    useEffect(() => {
+        cleanCoupon && cleanCoupon();
+    }, []);
 
     const changeAccount = () => {
         if(carrinho && carrinho.length > 0) {

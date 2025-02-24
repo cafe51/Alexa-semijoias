@@ -183,6 +183,10 @@ export default function Checkout() {
                         handleShowLoginSection={ handleShowLoginSection } 
                         state={ state } 
                         setIsCartLoading={ setIsCartLoading }
+                        cleanCoupon={ () => {
+                            setCouponCode('');
+                            setCouponDiscount(0);
+                        } }
                     />
                     <AddressSection 
                         handleAddressChange={ handleAddressChange } 
@@ -229,7 +233,21 @@ export default function Checkout() {
                                 handleShowLoginSection={ handleShowLoginSection } 
                                 state={ state } 
                                 setIsCartLoading={ setIsCartLoading }
+                                cleanCoupon={ () => {
+                                    setCouponCode('');
+                                    setCouponDiscount(0);
+                                } }
                             />
+                            <AddressSection 
+                                handleAddressChange={ handleAddressChange } 
+                                handleEditingAddressMode={ handleEditingAddressMode }
+                                resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }  
+                                state={ state }
+                            />
+                        </div>
+                        
+                        { /* Coluna 2 */ }
+                        <div className="space-y-4">
                             <CouponSection 
                                 carrinho={ carrinhoState }
                                 fetchDeliveryOptions={ fetchDeliveryOptions }
@@ -242,16 +260,6 @@ export default function Checkout() {
                                 setCouponCode={ (code: string) => setCouponCode(code) }
 
                             />
-                            <AddressSection 
-                                handleAddressChange={ handleAddressChange } 
-                                handleEditingAddressMode={ handleEditingAddressMode }
-                                resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) }  
-                                state={ state }
-                            />
-                        </div>
-                        
-                        { /* Coluna 2 */ }
-                        <div className="space-y-4">
                             <DeliveryPriceSection
                                 cartPrice={ cartPrice } 
                                 carrinho={ carrinhoState }
@@ -292,7 +300,21 @@ export default function Checkout() {
                             handleShowLoginSection={ handleShowLoginSection } 
                             state={ state } 
                             setIsCartLoading={ setIsCartLoading }
+                            cleanCoupon={ () => {
+                                setCouponCode('');
+                                setCouponDiscount(0);
+                            } }
                         />
+                        <AddressSection 
+                            handleAddressChange={ handleAddressChange } 
+                            handleEditingAddressMode={ handleEditingAddressMode }
+                            resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) } 
+                            state={ state }
+                        />
+                    </div>
+    
+                    { /* Coluna 2: Entrega e Pagamento */ }
+                    <div className="space-y-8">
                         <CouponSection 
                             carrinho={ carrinhoState }
                             fetchDeliveryOptions={ fetchDeliveryOptions }
@@ -305,16 +327,6 @@ export default function Checkout() {
                             setCouponCode={ (code: string) => setCouponCode(code) }
 
                         />
-                        <AddressSection 
-                            handleAddressChange={ handleAddressChange } 
-                            handleEditingAddressMode={ handleEditingAddressMode }
-                            resetSelectedDeliveryOption={ () => handleSelectedDeliveryOption(null) } 
-                            state={ state }
-                        />
-                    </div>
-    
-                    { /* Coluna 2: Entrega e Pagamento */ }
-                    <div className="space-y-8">
                         <DeliveryPriceSection
                             cartPrice={ cartPrice } 
                             carrinho={ carrinhoState }
