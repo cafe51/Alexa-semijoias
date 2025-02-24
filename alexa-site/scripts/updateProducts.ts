@@ -1,3 +1,4 @@
+import adjustPriceTo99 from '@/app/utils/adjustPriceTo99';
 import { adminDb } from '../src/app/firebase/admin-config';
 import { ProductBundleType } from '@/app/utils/types';
 
@@ -27,29 +28,33 @@ export const updateProducts = async() => {
                 const docRef = docSnap.ref;
                 const docData = docSnap.data() as ProductBundleType;
 
-                if(docData.sections.includes('anéis')) {
-                    const productVariationSubsection = docData.productVariations[0].subsections;
-                    const firstProductVariationSubSection = productVariationSubsection ? productVariationSubsection[0] : [];
-                    let newSubsection: string[] = [];
-                    if (firstProductVariationSubSection === 'anéis:com pedras')
-                        newSubsection = ['anéis:anéis com pedras'];
-                    if (firstProductVariationSubSection === 'anéis:sem pedras')
-                        newSubsection = ['anéis:anéis sem pedras'];
+                const costPrice = docData.value.cost;
+                const valuePrice = costPrice * 8;
     
+                const newValue: ProductBundleType['value']  = {
+                    ...docData.value,
+                    price: adjustPriceTo99(valuePrice),
+                };
+
+
+
     
-                    // Atualiza cada variação do produto com as seções e subseções
-                    const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map(
-                        (variation) => ({
-                            ...variation,
-                            subsections: newSubsection,
-                        }),
-                    );
+                // Atualiza cada variação do produto com as seções e subseções
+                const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map(
+                    (variation) => ({
+                        ...variation,
+                        value: newValue,
+                    }),
+                );
+
+                const finalPrice = docData.value.promotionalPrice ? docData.value.promotionalPrice : newValue.price;
     
-                    batch.update(docRef, {
-                        subsections: newSubsection,
-                        productVariations: newProductVariations,
-                    });
-                }
+                batch.update(docRef, {
+                    value: newValue,
+                    productVariations: newProductVariations,
+                    finalPrice: finalPrice,
+                });
+
 
             });
 
