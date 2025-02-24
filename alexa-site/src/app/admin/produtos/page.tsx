@@ -277,7 +277,17 @@ export default function ProductsDashboard() {
                     }
                     // Remove promoção se solicitado
                     if (massModifyOptions.removePromotion && prod.value.promotionalPrice !== 0) {
+                        const newProductVariations = prod.productVariations.map(variation => ({
+                            ...variation,
+                            value: {
+                                ...variation.value,
+                                promotionalPrice: 0,
+                            },
+                        }));
+                        updates['productVariations'] = newProductVariations;
                         updates['value.promotionalPrice'] = 0;
+                        updates['finalPrice'] = prod.value.price;
+                        updates['promotional'] = false;
                         shouldUpdate = true;
                     }
                     // Atualiza preço se houver modificação configurada e se o valor foi informado
@@ -303,9 +313,21 @@ export default function ProductsDashboard() {
                                 if (newPrice < 0) newPrice = 0;
                             }
                             newPrice = adjustPriceTo99(newPrice);
+
                         }
                         if (newPrice !== prod.value.price) {
+                            const newProductVariations = prod.productVariations.map(variation => ({
+                                ...variation,
+                                value: {
+                                    ...variation.value,
+                                    price: newPrice,
+                                },
+                            }));
+                            const finalPrice = product.value.promotionalPrice ? product.value.promotionalPrice : newPrice;
                             updates['value.price'] = newPrice;
+                            updates['productVariations'] = newProductVariations;
+                            updates['finalPrice'] = finalPrice;
+
                             shouldUpdate = true;
                         }
                     }

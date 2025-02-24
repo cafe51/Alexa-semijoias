@@ -5,6 +5,7 @@ import { marginProfitValue } from '@/app/utils/marginProfitValue';
 import { formatPrice } from '@/app/utils/formatPrice';
 
 export default function DashboardProductDetails({ product }: {product:  ProductBundleType & FireBaseDocument}) {
+    console.log('product dashboard details: ', product);
     return (
         <section className='flex flex-col gap-4 w-full px-4 '>
             <div className='flex flex-wrap gap-2'>

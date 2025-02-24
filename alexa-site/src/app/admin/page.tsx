@@ -83,7 +83,6 @@ const AdminDashboard = () => {
                 <h1>Área do desenvolvedor</h1>
                 <ChangeDataBaseButton />
                 <SendEmailsTest />
-                
             </div>
             }
         </div>

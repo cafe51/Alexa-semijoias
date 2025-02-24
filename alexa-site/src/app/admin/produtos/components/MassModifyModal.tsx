@@ -96,7 +96,7 @@ export default function MassModifyModal({ onClose, onConfirm }: MassModifyModalP
                     </select>
                 </div>
                 { /* Modificação de Preço */ }
-                <div>
+                <div className='hidden'>
                     <label className="block font-medium mb-2 text-gray-700">Preço:</label>
                     <div className="flex flex-col gap-2">
                         <input
