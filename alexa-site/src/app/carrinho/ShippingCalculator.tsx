@@ -18,12 +18,14 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import FreeShippingSection from '../checkout/DeliveryPriceSection/FreeShippingSection';
+import FreeShippingWarning from '../components/FreeShippingWarning';
 
 interface ShippingCalculatorProps {
   onSelectShipping: (optionPrice: string) => void;
   selectedShipping: number | null;
   cartPrice: number;
   couponDiscount: number | 'freteGratis';
+  showFreeShippingSection?: boolean;
 }
 
 export default function ShippingCalculator({
@@ -31,6 +33,7 @@ export default function ShippingCalculator({
     selectedShipping,
     cartPrice,
     couponDiscount,
+    showFreeShippingSection = true,
 }: ShippingCalculatorProps) {
     const [cep, setCep] = useState('');
     const [shippingOptions, setShippingOptions] = useState<ShippingOptionType[]>([]);
@@ -150,22 +153,31 @@ export default function ShippingCalculator({
                                     <span className="line-through text-sm text-gray-400">
                                         { formatPrice(freeShippingData.cheapestOption!.price) }
                                     </span>
-                                    <span className="text-[#D4AF37] text-base font-bold ml-2">GRÁTIS</span>
+                                    { !showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> FRETE GRÁTIS</span> }
+                                    { !!showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> GRÁTIS</span> }
                                 </div>
 
                             </div>
-                        ) : (
-                            <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
-                                { formatPrice(selectedShipping) }
-                            </span>
-                        ) }
+                        ) : 
+                            showFreeShippingSection
+                                ? (
+                                    <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
+                                        { formatPrice(selectedShipping) }
+                                    </span>
+                                )
+                                : (
+                                    <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
+                                        { 'FRETE: ' + formatPrice(selectedShipping) }
+                                    </span>
+                                )
+                        }
                     </Button>
                 ) : (
                     <Button
                         variant="link"
                         className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] text-sm md:text-base lg:text-lg"
                     >
-            Calcular frete
+                        Calcular frete
                     </Button>
                 ) }
             </DialogTrigger>
@@ -196,7 +208,10 @@ export default function ShippingCalculator({
                 ) }
                 { (!error && showOptions) && (
                     <>
-                        { shippingOptions.length > 0 && (
+                        {
+                            !showFreeShippingSection && <FreeShippingWarning precoDoProduto={ cartPrice } precoParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis + cartPrice } />
+                        }
+                        { shippingOptions.length > 0 && showFreeShippingSection && (
                             <FreeShippingSection
                                 precoFaltanteEmPorcentagem={ freeShippingData.precoFaltanteEmPorcentagem }
                                 precoFaltanteParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis }

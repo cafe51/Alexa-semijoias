@@ -346,7 +346,13 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                             setShowTooltip={ setShowTooltip }
                         />
                         <div className="py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg *:text-lg *:uppercase borderColor text-center w-full flex justify-center mt-2">
-                            <ShippingCalculator onSelectShipping={ selectShipping } selectedShipping={ Number(shipping) } />
+                            <ShippingCalculator
+                                onSelectShipping={ selectShipping }
+                                selectedShipping={ shipping ? Number(shipping) : null }
+                                couponDiscount={ 0 }
+                                cartPrice={ (product.value.promotionalPrice || product.value.price) * quantity }
+                                showFreeShippingSection={ false }
+                            />
                         </div>
                         <ShareSection url={ `www.alexasemijoias.com.br/product/${createSlugName(product.name)}` } />
                     </section>
