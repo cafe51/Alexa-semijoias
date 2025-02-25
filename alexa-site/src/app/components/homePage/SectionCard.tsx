@@ -54,7 +54,7 @@ function SectionCard({ section, product }: SectionCardProps) {
                     </div>
 
                     <div className="absolute bottom-0 left-0 right-0 text-center pb-4">
-                        <h2 className="text-4xl text-white px-4 ">
+                        <h2 className="font-normal text-4xl text-white px-4 ">
                             { section.toUpperCase() }
                         </h2>
                     </div>

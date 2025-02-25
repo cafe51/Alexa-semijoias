@@ -47,7 +47,7 @@ export default function SectionsCarousel({ sections }: SectionsCarouselProps) {
                             </CarouselContent>
   
                             { sections.length > 3 && (
-                                <div className=" xl:flex justify-end mt-4 ">
+                                <div className="hidden xl:flex justify-end mt-4 gap-2">
                                     <CarouselPrevious className="bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
                                     <CarouselNext className="bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
                                 </div>
