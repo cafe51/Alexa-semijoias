@@ -38,6 +38,7 @@ const SocialIcon = ({ Icon, link, linkName }: { Icon: React.ForwardRefExoticComp
     >
 
         <Icon size={ 24 } className="hover:scale-110 transition-transform duration-300" />
+        <span className="sr-only">{ linkName }</span>
     </Link>
 );
 
