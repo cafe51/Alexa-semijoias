@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         return {
             title: `${toTitleCase(product.name)}`,
             description: product.description.split('.')[0] || `${toTitleCase(product.name)} - Semijoias de Verdade.`,
-            keywords: [...new Set([...(product.categories || []), ...product.categories, product.sections[0], subsectionName, 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
+            keywords: [...new Set([...(product.sections[0], subsectionName, product.categories || []), ...product.categories, 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
             robots: {
                 index: true,
