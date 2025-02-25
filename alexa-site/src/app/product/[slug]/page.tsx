@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         const variation = product.productVariations[0];
 
         return {
-            title: `${toTitleCase(product.name)} | Alexa Semijoias`,
+            title: `${toTitleCase(product.name)}`,
             description: product.description || `${toTitleCase(product.name)} - Semijoias de Verdade.`,
             keywords: [...new Set([...(product.categories || []), ...product.categories, 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes', product.name])].join(', '),
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
