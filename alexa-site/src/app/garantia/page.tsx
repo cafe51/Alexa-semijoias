@@ -3,14 +3,14 @@ import { Shield, AlertCircle, CheckCircle, XCircle, Clock, RefreshCcw, CreditCar
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
+import ContactSection from './ContactSection';
 
 const WarrantyHeader = () => (
     <header className="py-16 md:py-24 px-6 md:px-8 bg-[#D4AF37] text-white text-center">
         <Shield className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6" />
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Política de Garantia</h1>
         <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed">
-            Entenda nossa política de garantia e como protegemos suas joias preciosas.
+            Entenda nossa política de garantia e como protegemos suas semijoias.
         </p>
     </header>
 );
@@ -41,13 +41,11 @@ const WarrantyCoverage = ({ title, items, Icon: Icon, bgColor }: WarrantyCoverag
 const WarrantyCoverageSection = () => {
     const coverageData = {
         covered: [
-            'Peças com defeitos que ocorreram no processo de fabricação',
-            'Casos em que o banho da peça apresentou descascamento, total ou parcial',
-            'Fechos que se quebraram ou racharam',
+            'Peças com defeitos que ocorreram no processo de fabricação do banho',
         ],
         notCovered: [
             'Escurecimento devido à sujeira acumulada',
-            'Quebras por impacto',
+            'Quebras',
             'Peças que estejam faltando partes',
             'Arranhões causados por uso inadequado',
             'Danos por rompimento',
@@ -93,7 +91,7 @@ const WarrantyPolicySection = () => {
         },
         { 
             title: 'Cobertura', 
-            content: 'A cobertura será aplicada apenas para defeitos que sejam claramente de fabricação. Danos causados por mau uso não estão cobertos pela garantia.',
+            content: 'A cobertura será aplicada apenas para defeitos que sejam claramente de fabricação do banho. Danos causados por mau uso não estão cobertos pela garantia.',
             icon: Shield,
         },
         { 
@@ -156,7 +154,7 @@ const FAQSection = () => {
     const faqs = [
         { 
             question: 'Como faço para acionar a garantia?', 
-            answer: 'Para acionar a garantia, entre em contato com nosso atendimento ao cliente através do e-mail ou telefone fornecidos em nossa página de contato. Tenha em mãos o certificado de garantia e a nota fiscal da compra.', 
+            answer: 'Para acionar a garantia, entre em contato com nosso atendimento ao cliente através do e-mail ou telefone fornecidos em nossa página de contato.', 
         },
         { 
             question: 'Posso estender o prazo da garantia?', 
@@ -190,17 +188,7 @@ const FAQSection = () => {
     );
 };
 
-const ContactSection = () => (
-    <section className="py-16 md:py-20 px-6 md:px-8 bg-[#C48B9F] text-white text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">Ainda tem dúvidas?</h2>
-        <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            Nossa equipe está pronta para ajudar você com qualquer questão sobre nossa garantia.
-        </p>
-        <Button className="bg-white text-[#C48B9F] hover:bg-[#D4AF37] hover:text-white transition-colors duration-300 px-8 py-6 text-lg font-semibold">
-            Entre em Contato
-        </Button>
-    </section>
-);
+
 
 const WarrantyPage = () => {
     return (
