@@ -36,6 +36,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             className="text-[#C48B9F] h-fit w-fit p-1"
             // Se o usuário estiver logado, o botão direciona para "minha conta", caso contrário, para "login"
             aria-label={ userInfo ? 'Acessar minha conta' : 'Entrar' }
+            title={ userInfo ? 'Acessar minha conta' : 'Entrar' }
             onClick={ () => (userInfo ? router.push('/minha-conta') : router.push('/login')) }
         >
             <User className={ isMobile ? 'h-6 w-6' : 'h-14 w-14' } />
@@ -48,6 +49,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             size={ isMobile ? 'icon' : 'lg' }
             className="text-[#C48B9F] h-fit w-fit p-1"
             aria-label="Acessar área administrativa"
+            title='Acessar área administrativa'
             onClick={ () => router.push('/admin') }
         >
             <Settings className={ isMobile ? 'h-6 w-6' : 'h-14 w-14' } />

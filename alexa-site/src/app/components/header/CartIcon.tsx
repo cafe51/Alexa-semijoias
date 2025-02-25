@@ -23,7 +23,12 @@ export default function CartIcon({ isMobile }: {isMobile: boolean}) {
     }, [carrinho]);
 
     return (
-        <Link className='relative w-full flex text-[#C48B9F]' href={ '/carrinho' }>
+        <Link
+            className='relative w-full flex text-[#C48B9F]'
+            href={ '/carrinho' }
+            title='Carrinho de compras'
+            aria-label='Carrinho de compras'
+        >
             <FiShoppingCart size={ isMobile ? 24 : 52 } data-testid='cartIcon'/>
             <span className={ `flex items-center justify-center text-white bg-[#C48B9F] rounded-full ${ isMobile ?'absolute -top-3 -right-3 w-5 h-5 text-xs' : 'w-7 h-7 text-lg'} ${ loadingIcon ? 'animate-spin' : ''}` }>
                 {
