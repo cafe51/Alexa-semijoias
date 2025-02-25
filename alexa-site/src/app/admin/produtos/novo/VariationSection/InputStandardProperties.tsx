@@ -33,6 +33,7 @@ export default function InputStandardProperties({
     function handleImageChange(foundedImage: ImageProductDataType | undefined) {
         handleProductDefaultPropertyChange(foundedImage ? foundedImage.index : 0, 'imageIndex');
     }
+    console.log('AAAAAAAAAAAAAAA', typeof peso, typeof (Number(peso).toFixed(2))); console;
     
     return(
         <section className='flex flex-col gap-4 bg-gray-100 p-2 w-full rounded-lg'>
@@ -52,14 +53,18 @@ export default function InputStandardProperties({
 
                 <InputSection
                     handleChange={ (value: any, field: string | undefined) => handleProductDefaultPropertyChange(value, field!) }
-                    stateToBeChange={ { peso } }
+                    stateToBeChange={ { peso: (peso).toFixed(2) } }
                 />
             </div>
             
             <div className='flex flex-wrap gap-2 w-full py-2 justify-self-start border-t-2 border-gray-200'>
                 <InputSection
                     handleChange={  (input, field) => handleProductDefaultPropertyChange({ ...dimensions, [field!]: input }, 'dimensions') }
-                    stateToBeChange={ dimensions }
+                    stateToBeChange={ {
+                        altura: dimensions.altura * 100,
+                        largura: dimensions.largura * 100,
+                        comprimento: dimensions.comprimento * 100,
+                    } }
                 />
             </div>
 
