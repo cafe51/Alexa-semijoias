@@ -5,7 +5,7 @@ import HomeContent from './components/homePage/HomeContent';
 export const metadata: Metadata = {
     title: 'Alexa Semijoias | Semijoias de Verdade',
     description:
-    'Descubra Alexa Semijoias. Compre em até 6x sem juros com entrega para todo Brasil.',
+    'Descubra Alexa Semijoias. Semijoias com banho de 10 milésimos de ouro 18k. Joias em aço. Entrega para todo o brasil. Seja uma revendedora Alexa.', 
     keywords: [
         'semijoias',
         'joias',

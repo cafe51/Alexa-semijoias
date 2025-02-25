@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
         return {
             title: `${toTitleCase(product.name)} | Alexa Semijoias`,
-            description: product.description || `${toTitleCase(product.name)} - Compre em até 6x sem juros com frete grátis. Semijoias de Verdade.`,
+            description: product.description || `${toTitleCase(product.name)} - Semijoias de Verdade.`,
             keywords: [...new Set([...(product.categories || []), ...product.categories, 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes', product.name])].join(', '),
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
             robots: {
