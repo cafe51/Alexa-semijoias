@@ -14,7 +14,7 @@ export const updateProducts = async() => {
 
         console.log(`Total de documentos a atualizar: ${allDocs.length}`);
 
-        const batchSize = 50;
+        const batchSize = 20;
 
         // Processa os documentos em batches
         for (let i = 0; i < allDocs.length; i += batchSize) {
@@ -28,33 +28,36 @@ export const updateProducts = async() => {
                 const docRef = docSnap.ref;
                 const docData = docSnap.data() as ProductBundleType;
 
-                const costPrice = docData.value.cost;
-                const valuePrice = costPrice * 8;
+
+
+                if(docData.value.cost && (docData.value.cost >= 0)) {
+                    const costPrice = docData.value.cost;
+
+                    // const costPrice = (docData.value.cost <= 0) ? 10 : docData.value.cost;
+
+                    const valuePrice = costPrice * 7;
+                    const newValue: ProductBundleType['value']  = {
+                        ...docData.value,
+                        price: adjustPriceTo99(valuePrice),
+                    };
     
-                const newValue: ProductBundleType['value']  = {
-                    ...docData.value,
-                    price: adjustPriceTo99(valuePrice),
-                };
-
-
-
+        
+                    // Atualiza cada variação do produto com as seções e subseções
+                    const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map(
+                        (variation) => ({
+                            ...variation,
+                            value: newValue,
+                        }),
+                    );
     
-                // Atualiza cada variação do produto com as seções e subseções
-                const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map(
-                    (variation) => ({
-                        ...variation,
+                    const finalPrice = docData.value.promotionalPrice ? docData.value.promotionalPrice : newValue.price;
+        
+                    batch.update(docRef, {
                         value: newValue,
-                    }),
-                );
-
-                const finalPrice = docData.value.promotionalPrice ? docData.value.promotionalPrice : newValue.price;
-    
-                batch.update(docRef, {
-                    value: newValue,
-                    productVariations: newProductVariations,
-                    finalPrice: finalPrice,
-                });
-
+                        productVariations: newProductVariations,
+                        finalPrice: finalPrice,
+                    });
+                }
 
             });
 
