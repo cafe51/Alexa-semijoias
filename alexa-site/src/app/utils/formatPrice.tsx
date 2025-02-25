@@ -22,9 +22,9 @@ export function formatInputMode(value: string, unitType: 'currency' | 'dimension
         case 'currency':
             return 'R$ 0,00';
         case 'dimension':
-            return '0,00 cm';
+            return 'cm 0,00';
         case 'weight':
-            return '0,00 g';
+            return 'g 0,00';
         }
     }
 
@@ -44,8 +44,8 @@ export function formatInputMode(value: string, unitType: 'currency' | 'dimension
     case 'currency':
         return `R$ ${formattedValue}`;
     case 'dimension':
-        return `${formattedValue} cm`;
+        return `cm ${formattedValue}`;
     case 'weight':
-        return `${formattedValue} g`;
+        return `g ${formattedValue}`;
     }
 }
