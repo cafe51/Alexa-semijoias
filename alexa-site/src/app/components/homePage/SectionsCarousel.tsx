@@ -39,7 +39,7 @@ export default function SectionsCarousel({ sections }: SectionsCarouselProps) {
                                 { sections.map((item, index) => (
                                     <CarouselItem
                                         key={ index }
-                                        className="pl-2 md:pl-4 basis-4/5 sm:basis-2/3 md:basis-2/3 lg:basis-2/5 xl:basis-1/3 transition-opacity duration-300"
+                                        className="pl-2 md:pl-4 basis-11/12 md:basis-2/3 lg:basis-2/5 transition-opacity duration-300"
                                     >
                                         <SectionCard section={ item.section } product={ item.product } />
                                     </CarouselItem>
@@ -47,7 +47,7 @@ export default function SectionsCarousel({ sections }: SectionsCarouselProps) {
                             </CarouselContent>
   
                             { sections.length > 3 && (
-                                <div className="hidden xl:flex justify-end mt-4 gap-2">
+                                <div className=" xl:flex justify-end mt-4 ">
                                     <CarouselPrevious className="bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
                                     <CarouselNext className="bg-white/80 hover:bg-[#F8C3D3]/20 border-[#F8C3D3]" />
                                 </div>

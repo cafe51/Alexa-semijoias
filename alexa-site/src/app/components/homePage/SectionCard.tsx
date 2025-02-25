@@ -33,17 +33,17 @@ function SectionCard({ section, product }: SectionCardProps) {
 
     return (
         <Card className="relative overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col">
-            <Link href={ `/section/${sectionSlug}` } className="block">
+            <Link href={ `/section/${sectionSlug}` } className="block ">
                 <div className="relative">
-                    <div className="relative aspect-square bg-skeleton">
+                    <div className="relative aspect-[4/5] bg-skeleton">
                         <Image
                             className="rounded-lg object-cover"
                             src={ imageUrl }
                             title={ `Seção de ${section}` }
                             alt={ `Seção de ${section}` }
                             // Define tamanhos responsivos para que o navegador escolha a imagem ideal
-                            sizes="(max-width: 640px) 150px, 200px"
-                            quality={ 75 } // Ajuste a qualidade conforme necessário
+                            sizes={ '3000px' }
+                            quality={ 100 } // Ajuste a qualidade conforme necessário
                             loading="lazy" // Use "eager" se for conteúdo crítico (acima da dobra)
                             fill
                             // Caso você tenha um blurDataURL, pode adicioná-lo aqui:

@@ -6,9 +6,9 @@ export default function FeaturedProducts({ featuredProducts }: { featuredProduct
 
     return (
         <section className="py-8 sm:py-12 md:py-16 px-4 bg-[#F8C3D3] bg-opacity-20">
-            <div className="max-w-6xl mx-auto">
+            <div className="mx-auto">
                 <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-12">DESTAQUES</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 min-h-[300px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 min-h-[300px]">
                     { hasProducts ? (
                         featuredProducts.map((product) => (
                             <div 
@@ -20,7 +20,7 @@ export default function FeaturedProducts({ featuredProducts }: { featuredProduct
                         ))
                     ) : (
                         // Placeholders para manter o layout consistente
-                        Array.from({ length: 3 }).map((_, index) => (
+                        Array.from({ length: 4 }).map((_, index) => (
                             <div key={ index } className="w-full max-w-xs mx-auto">
                                 <div className="aspect-square bg-skeleton animate-pulse rounded-lg" />
                             </div>
