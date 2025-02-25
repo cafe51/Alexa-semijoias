@@ -188,7 +188,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
 
     return (
         <div 
-            className={ ` flex gap-4 bg-white shadow-lg rounded-lg transition transform w-full ${multiSelectStyle}` }
+            className={ ` flex bg-white shadow-lg rounded-lg transition transform justify-between ${multiSelectStyle}` }
             onContextMenu={ e => e.preventDefault() }
             style={ { 
                 userSelect: 'none', 
@@ -202,7 +202,7 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                 onConfirm={ handleDeleteConfirm } 
             />
             <div
-                className='flex gap-2'
+                className='flex gap-2 w-full'
                 onMouseDown={ handleMouseDown }
                 onMouseUp={ handleMouseUp }
                 onMouseLeave={ handleMouseLeave }
@@ -223,14 +223,11 @@ const ProductListItem: React.FC<ProductListItemProps> = React.memo(({
                     />
                     <ProductCardBadgesAdmin product={ product }/>
                 </div>
-                <div
-                    className="w-full flex flex-col justify-between py-2 pr-4"
-
-                >
+                <div className="w-full flex flex-col justify-between py-2 pr-0">
                     <div className="flex justify-between items-center w-full">
                         <p className="font-bold text-[#333333] line-clamp-2">{ toTitleCase(product.name) }</p> 
                     </div>
-                    <div className="flex justify-between items-center w-full shrink-0">
+                    <div className="flex justify-between items-center w-full">
                         <p className="text-[#333333]">Estoque: <span className="font-bold">{ product.estoqueTotal }</span></p>
                         <CartCardPrice value={ product.value } quantidade={ 1 } />
                     </div>
