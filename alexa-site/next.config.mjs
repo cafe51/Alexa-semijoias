@@ -40,11 +40,24 @@ const nextConfig = {
             },
         ],
     },
+    async headers() {
+        return [
+            {
+                // Aplica a todas as rotas
+                source: '/(.*)',
+                headers: [
+                    {
+                        key: 'X-Robots-Tag',
+                        value: 'index, follow', // ou ajuste conforme sua necessidade (por exemplo, 'noindex, nofollow')
+                    },
+                ],
+            },
+        ];
+    },
     async redirects() {
         return [
             {
-            // Redireciona requisições feitas para a versão non-www para a versão www.
-            // Quando o host for "alexasemijoias.com.br", redireciona para "https://www.alexasemijoias.com.br"
+                // Redireciona requisições feitas para a versão non-www para a versão www.
                 source: '/:path*',
                 has: [
                     {
@@ -56,20 +69,20 @@ const nextConfig = {
                 permanent: true,
             },
             {
-            // Redireciona "/index.html" para "/"
+                // Redireciona "/index.html" para "/"
                 source: '/index.html',
                 destination: '/',
                 permanent: true,
             },
             {
-            // Redireciona "/index.php" para "/"
+                // Redireciona "/index.php" para "/"
                 source: '/index.php',
                 destination: '/',
                 permanent: true,
             },
         ];
     },
-    
 };
-
+  
 export default nextConfig;
+  
