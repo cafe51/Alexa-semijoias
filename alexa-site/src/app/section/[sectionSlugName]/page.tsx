@@ -54,13 +54,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
     return {
         title: `${toTitleCase(deslugedSectionName)} | Alexa Semijoias`,
-        description: `Explore ${toTitleCase(deslugedSectionName)}. Semijoias de verdade.`,
+        description: `${toTitleCase(deslugedSectionName)}. Semijoias de verdade.`,
+        keywords: [...new Set([deslugedSectionName, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
+
         alternates: {
             canonical: canonicalUrl,
         },
         openGraph: {
             title: `${toTitleCase(deslugedSectionName)} | Alexa Semijoias`,
-            description: `Explore ${toTitleCase(deslugedSectionName)}. Semijoias de verdade.`,
+            description: `${toTitleCase(deslugedSectionName)}. Semijoias de verdade.`,
             url: canonicalUrl,
         },
         other: {

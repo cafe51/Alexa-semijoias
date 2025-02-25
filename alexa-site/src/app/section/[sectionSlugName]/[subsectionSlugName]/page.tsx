@@ -65,13 +65,14 @@ export async function generateMetadata({ params: { sectionSlugName, subsectionSl
   
     return {
         title: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)} | Alexa Semijoias`,
-        description: `Explore ${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
+        description: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
+        keywords: [...new Set([deslugedSection, deslugedSubsection, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
         alternates: {
             canonical: canonicalUrl,
         },
         openGraph: {
             title: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)} | Alexa Semijoias`,
-            description: `Explore ${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
+            description: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
             url: canonicalUrl,
         },
         other: {
