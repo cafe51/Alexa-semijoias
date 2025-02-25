@@ -34,6 +34,7 @@ const SocialIcon = ({ Icon, link, linkName }: { Icon: React.ForwardRefExoticComp
         rel="noopener noreferrer"
         className="text-[#333333] hover:text-[#D4AF37] transition-colors duration-300 p-2"
         aria-label={ linkName }
+        title={ linkName }
     >
 
         <Icon size={ 24 } className="hover:scale-110 transition-transform duration-300" />
