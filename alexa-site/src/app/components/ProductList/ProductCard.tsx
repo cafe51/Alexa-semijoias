@@ -58,6 +58,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                             quality={ 75 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
                         />
                     </div>
+                    <span className="sr-only">{ toTitleCase(product.name) }</span>
                     <ProductCardBadges product={ product }/>
                     <OutOfStockLayer outOfStock={ product.estoqueTotal <= 0 }/>
                 </Link>
