@@ -47,14 +47,12 @@ export default function InputStandardProperties({
                 <InputSection
                     handleChange={ (value: any, field: string | undefined) => handleProductDefaultPropertyChange(value, field!) }
                     stateToBeChange={ { estoque } }
-                    unitType='weight'
                     integer
                 />
 
                 <InputSection
                     handleChange={ (value: any, field: string | undefined) => handleProductDefaultPropertyChange(value, field!) }
                     stateToBeChange={ { peso } }
-                    unitType='weight'
                 />
             </div>
             
@@ -62,8 +60,6 @@ export default function InputStandardProperties({
                 <InputSection
                     handleChange={  (input, field) => handleProductDefaultPropertyChange({ ...dimensions, [field!]: input }, 'dimensions') }
                     stateToBeChange={ dimensions }
-                    unitType='dimension'
-
                 />
             </div>
 
