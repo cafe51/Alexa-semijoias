@@ -18,10 +18,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         const mainImage = product.images[0]?.localUrl || '';
         const variation = product.productVariations[0];
 
+        const subsectionName = product.subsections ? product.subsections[0].split(':')[1] : '';
+         
+
         return {
             title: `${toTitleCase(product.name)}`,
-            description: product.description || `${toTitleCase(product.name)} - Semijoias de Verdade.`,
-            keywords: [...new Set([...(product.categories || []), ...product.categories, 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes', product.name])].join(', '),
+            description: product.description.split('.')[0] || `${toTitleCase(product.name)} - Semijoias de Verdade.`,
+            keywords: [...new Set([...(product.categories || []), ...product.categories, product.sections[0], subsectionName, 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
             robots: {
                 index: true,
