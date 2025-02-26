@@ -289,7 +289,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
 
     return (
         <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-0 md:px-8 mb-8 md:mt-16 animate-fadeIn">
-            { product && <ProductJsonLd product={ product } selectedVariation={ productVariationsSelected[0] } /> }
+            { product && <ProductJsonLd product={ product } /> }
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row gap-8 flex-shrink-0 min-h-[600px]">

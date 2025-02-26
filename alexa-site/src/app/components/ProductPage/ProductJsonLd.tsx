@@ -2,21 +2,21 @@
 'use client';
 
 import toTitleCase from '@/app/utils/toTitleCase';
-import { ProductBundleType, ProductVariation } from '@/app/utils/types';
+import { ProductBundleType } from '@/app/utils/types';
 import { FireBaseDocument } from '@/app/utils/types';
 import { getGoogleProductCategory } from '@/app/utils/getGoogleProductCategory';
 
 interface ProductJsonLdProps {
     product: ProductBundleType & FireBaseDocument;
-    selectedVariation?: ProductVariation;
 }
 
-export default function ProductJsonLd({ product, selectedVariation }: ProductJsonLdProps) {
+export default function ProductJsonLd({ product }: ProductJsonLdProps) {
     // Usa a variação selecionada ou a primeira
-    const variation = selectedVariation || product.productVariations[0];
     
     // URL da imagem principal
-    const mainImage = product.images[0]?.localUrl || '';
+    const mainImage = product.images[0]?.localUrl || 'https://www.alexasemijoias.com.br/favicon.ico';
+
+    const subsectionName = product.subsections ? product.subsections[0].split(':')[1] : '';
 
     // Constrói o objeto JSON‑LD
     const jsonLd = {
@@ -24,9 +24,10 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
         '@type': 'Product',
         '@id': product.id,
         'content_id': product.id,
-        'productID': variation.sku,
+        'productID': product.id,
         'name': toTitleCase(product.name),
-        'description': product.description,
+        'description': product.description.split('.')[0] || product.description,
+        'keywords': [...new Set([product.sections[0], subsectionName, ...(product.categories || []), ...product.categories,  'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
         'url': `https://www.alexasemijoias.com.br/product/${product.slug}`,
         'image': mainImage,
         'brand': {
@@ -34,20 +35,32 @@ export default function ProductJsonLd({ product, selectedVariation }: ProductJso
             'name': 'Alexa Semijoias',
             'url': 'https://www.alexasemijoias.com.br',
         },
-        'category': product.categories.join(', '),
-        'material': 'Semijoia',
+        'category': product.sections[0],
+        'weight': {
+            '@type': 'QuantitativeValue',
+            'value': product.productVariations[0].peso,
+        },
+        'material': 'Semijoia, banho ouro 18k, aço inox',
         'itemCondition': 'https://schema.org/NewCondition',
         'manufacturer': {
             '@type': 'Organization',
             'name': 'Alexa Semijoias',
         },
+        'hasMerchantReturnPolicy': {
+            '@type': 'MerchantReturnPolicy',
+            'applicableCountry': 'BR',
+            'merchantReturnDays': '30',
+            'merchantReturnLink': 'https://www.alexasemijoias.com.br/garantia',
+            'refundType': 'https://schema.org/FullRefund',
+        },
+        
         'offers': {
             '@type': 'Offer',
             'url': `https://www.alexasemijoias.com.br/product/${product.slug}`,
-            'price': variation.value.price.toString(),
+            'price': product.value.price,
             'priceCurrency': 'BRL',
             'itemCondition': 'https://schema.org/NewCondition',
-            'availability': variation.estoque > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            'availability': product.estoqueTotal > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
             'seller': {
                 '@type': 'Organization',
                 'name': 'Alexa Semijoias',

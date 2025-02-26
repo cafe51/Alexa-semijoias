@@ -96,7 +96,7 @@ export type ProductVariationsType = { //tipagem dos documentos da coleção prod
 
 export type ImageProductDataType = {
     file?: File;
-    localUrl: string;
+    localUrl: string; // está escrito local mas é a url da imagem no firebase
     index: number;
 }
 
@@ -132,7 +132,7 @@ export type ProductVariation = {
     sku: string,
     value: { price: number, promotionalPrice: number, cost: number }
     productId: string;
-    image: string;
+    image: string; // url completa da imagem
 }
 
 export type ProductBundleType = {

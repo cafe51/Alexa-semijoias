@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
                 'product:price:amount': variation.value.price.toString(),
                 'product:price:currency': 'BRL',
                 'product:retailer_item_id': variation.sku,
-                'product:category': product.categories.join(','),
+                'product:category': [...new Set([product.sections[0], subsectionName, ...(product.categories || []), ...product.categories, 'semijoias', 'joias', 'acessórios'])].join(', '),
                 'google_product_category': getGoogleProductCategory(product).toString(),
             },
         };
