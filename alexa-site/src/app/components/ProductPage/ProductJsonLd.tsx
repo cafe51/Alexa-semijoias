@@ -73,15 +73,22 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             price: basePrice,
             priceCurrency: 'BRL',
             itemCondition: 'https://schema.org/NewCondition',
-            availability:
-        estoque > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            availability: estoque > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
             seller: {
                 '@type': 'Organization',
                 name: 'Alexa Semijoias',
                 url: 'https://www.alexasemijoias.com.br',
             },
+            hasMerchantReturnPolicy: {
+                '@type': 'MerchantReturnPolicy',
+                applicableCountry: 'BR',
+                merchantReturnDays: 30,
+                merchantReturnLink: 'https://www.alexasemijoias.com.br/garantia',
+                refundType: 'https://schema.org/FullRefund',
+            },
             ...(shippingDetails ? { shippingDetails } : {}),
         };
+
         if (product.promotional && product.value.promotionalPrice) {
             offer.priceSpecification = [
                 {
