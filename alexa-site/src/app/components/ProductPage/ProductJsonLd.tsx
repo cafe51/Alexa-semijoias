@@ -11,7 +11,7 @@ interface ProductJsonLdProps {
 }
 
 export default function ProductJsonLd({ product }: ProductJsonLdProps) {
-    // Conjunto de imagens: usa todas se disponíveis, ou fallback
+    // Define todas as imagens ou fallback
     const images =
     product.images && product.images.length > 0
         ? product.images.map((img) => img.localUrl)
@@ -26,11 +26,11 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
     const mainCategory = product.sections[0] || '';
     const subsectionName = product.subsections ? product.subsections[0].split(':')[1] : '';
 
-    // Define cor e material com base na seção
-    const color = product.sections.includes('joias em aço inox') ? 'Prata' : 'Dourado';
+    // Define a cor base e material com base nas seções
+    const baseColor = product.sections.includes('joias em aço inox') ? 'Prata' : 'Dourado';
     const material = product.sections.includes('joias em aço inox') ? 'Aço Inox' : 'Metal banhado a ouro 18k';
 
-    // Configura detalhes de frete com base no preço do produto
+    // Configuração dos detalhes de frete
     let shippingDetails: any;
     if (product.value.price >= 350) {
         shippingDetails = {
@@ -61,7 +61,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         };
     }
 
-    // Função auxiliar para criar a oferta com preço, disponibilidade e, se for o caso, especificação de preços promocionais
+    // Função auxiliar para gerar a oferta para cada variação
     function createOffer(estoque: number) {
         const basePrice =
       product.promotional && product.value.promotionalPrice
@@ -73,7 +73,8 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             price: basePrice,
             priceCurrency: 'BRL',
             itemCondition: 'https://schema.org/NewCondition',
-            availability: estoque > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            availability:
+        estoque > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
             seller: {
                 '@type': 'Organization',
                 name: 'Alexa Semijoias',
@@ -99,7 +100,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         return offer;
     }
 
-    // Propriedades comuns a todos os modelos (ProductGroup e Product)
+    // Propriedades comuns a todos os modelos
     const commonProperties = {
         name: toTitleCase(product.name),
         description,
@@ -115,7 +116,6 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             suggestedMinAge: 13,
             suggestedMaxAge: 99,
         },
-        color,
         category: mainCategory,
         material,
         manufacturer: {
@@ -168,18 +168,27 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             '@id': product.id,
             url: productPageUrl,
             ...commonProperties,
-            hasVariant: product.productVariations.map((variation) => ({
-                '@type': 'Product',
-                name: toTitleCase(product.name),
-                sku: variation.sku,
-                image: variation.image || images[0],
-                weight: {
-                    '@type': 'QuantitativeValue',
-                    value: variation.peso,
-                    unitCode: 'GRM',
-                },
-                offers: createOffer(variation.estoque),
-            })),
+            // Para variantes, definimos a cor individualmente
+            hasVariant: product.productVariations.map((variation) => {
+                // Se existir a chave "cor" em customProperties, combina a cor base com o valor customizado
+                const variantColor =
+          variation.customProperties && variation.customProperties.cor
+              ? `${baseColor}/${variation.customProperties.cor}`
+              : baseColor;
+                return {
+                    '@type': 'Product',
+                    name: toTitleCase(product.name),
+                    sku: variation.sku,
+                    image: variation.image || images[0],
+                    color: variantColor,
+                    weight: {
+                        '@type': 'QuantitativeValue',
+                        value: variation.peso,
+                        unitCode: 'GRM',
+                    },
+                    offers: createOffer(variation.estoque),
+                };
+            }),
         };
 
         return (
@@ -189,8 +198,12 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             />
         );
     } else {
-    // Caso haja somente uma variação, gera o JSON‑LD no formato Product
+    // Caso haja somente uma variação
         const variation = product.productVariations[0];
+        const variantColor =
+      variation.customProperties && variation.customProperties.cor
+          ? `${baseColor}/${variation.customProperties.cor}`
+          : baseColor;
         const productData = {
             '@context': 'https://schema.org',
             '@type': 'Product',
@@ -198,6 +211,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             url: productPageUrl,
             ...commonProperties,
             sku: variation.sku,
+            color: variantColor,
             weight: {
                 '@type': 'QuantitativeValue',
                 value: variation.peso,
