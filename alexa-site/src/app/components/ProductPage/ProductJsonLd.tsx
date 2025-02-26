@@ -24,7 +24,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         : product.description;
 
     const mainCategory = product.sections[0] || '';
-    const subsectionName = product.subsections ? product.subsections[0].split(':')[1] : '';
+    const subsectionName = product.subsections && product.subsections.length > 0 ? product.subsections[0].split(':')[1] : '';
 
     // Define a cor base e material com base nas seções
     const baseColor = product.sections.includes('joias em aço inox') ? 'Prata' : 'Dourado';
