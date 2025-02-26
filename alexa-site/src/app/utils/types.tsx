@@ -96,7 +96,7 @@ export type ProductVariationsType = { //tipagem dos documentos da coleção prod
 
 export type ImageProductDataType = {
     file?: File;
-    localUrl: string; // está escrito local mas é a url da imagem no firebase
+    localUrl: string; // é a url da imagem no firebase
     index: number;
 }
 
@@ -119,20 +119,20 @@ export type VariationProductType = {
 }
 
 export type ProductVariation = {
-    sections: string[],
-    subsections?: string[], // do tipo 'sectionName:subsectionName'[]
+    sections: string[], // valor sempre igual para todas as variações
+    subsections?: string[], // do tipo 'sectionName:subsectionName'[] e sempre igual para todas as variações
 
-    categories: string[],
+    categories: string[], // valor sempre igual para todas as variações
     barcode: string, 
-    customProperties?: { [key: string]: string },
+    customProperties?: { [key: string]: string }, // valor como: { 'cor': 'azul', 'tamanho': 'M' } as propriedades são customizadas no momento de criação do produto.
     dimensions: { largura: number, altura: number, comprimento: number }
     estoque: number,
-    name: string,
+    name: string, // valor sempre igual para todas as variações
     peso: number,
     sku: string,
-    value: { price: number, promotionalPrice: number, cost: number }
+    value: { price: number, promotionalPrice: number, cost: number } // valor sempre igual para todas as variações
     productId: string;
-    image: string; // url completa da imagem
+    image: string; // url com link para imagem no firebase, cada variação possui sua própria imagem
 }
 
 export type ProductBundleType = {
@@ -158,7 +158,7 @@ export type ProductBundleType = {
     subsections?: string[], // do tipo 'sectionName:subsectionName'[]
     value: { price: number, promotionalPrice: number, cost: number }
     variations?: string[],
-    images: ImageProductDataType[],
+    images: ImageProductDataType[], // array com todas as imagens de todas as variações
 
     keyWords?: string[],
 
