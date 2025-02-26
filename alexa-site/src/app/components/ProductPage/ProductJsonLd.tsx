@@ -84,7 +84,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             },
             hasMerchantReturnPolicy: {
                 '@type': 'MerchantReturnPolicy',
-                returnFees: 'https://schema.org/NoReturnFees',
+                returnFees: 'https://schema.org/FreeReturn',
                 returnMethod: 'https://schema.org/ReturnByMail',
                 applicableCountry: 'BR',
                 merchantReturnDays: 30,
@@ -139,7 +139,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         // pode ser mantido aqui para reforçar as informações comuns.
         hasMerchantReturnPolicy: {
             '@type': 'MerchantReturnPolicy',
-            returnFees: 'https://schema.org/NoReturnFees',
+            returnFees: 'https://schema.org/FreeReturn',
             returnMethod: 'https://schema.org/ReturnByMail',
             applicableCountry: 'BR',
             merchantReturnDays: 30,
