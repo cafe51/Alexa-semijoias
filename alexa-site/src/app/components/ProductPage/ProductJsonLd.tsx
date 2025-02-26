@@ -173,7 +173,9 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             'acessórios',
             'folheados',
             'presentes',
-        ].join(', '),
+        ]
+            .filter((keyword) => keyword)
+            .join(', '),
     };
 
     const productPageUrl = `https://www.alexasemijoias.com.br/product/${product.slug}`;
