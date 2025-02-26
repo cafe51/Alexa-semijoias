@@ -84,6 +84,8 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             },
             hasMerchantReturnPolicy: {
                 '@type': 'MerchantReturnPolicy',
+                returnFees: 'https://schema.org/NoReturnFees',
+                returnMethod: 'https://schema.org/ReturnByMail',
                 applicableCountry: 'BR',
                 merchantReturnDays: 30,
                 merchantReturnLink: 'https://www.alexasemijoias.com.br/garantia',
@@ -137,6 +139,8 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         // pode ser mantido aqui para reforçar as informações comuns.
         hasMerchantReturnPolicy: {
             '@type': 'MerchantReturnPolicy',
+            returnFees: 'https://schema.org/NoReturnFees',
+            returnMethod: 'https://schema.org/ReturnByMail',
             applicableCountry: 'BR',
             merchantReturnDays: 30,
             merchantReturnLink: 'https://www.alexasemijoias.com.br/garantia',
