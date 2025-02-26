@@ -30,7 +30,10 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
     const baseColor = product.sections.includes('joias em aço inox') ? 'Prata' : 'Dourado';
     const material = product.sections.includes('joias em aço inox') ? 'Aço Inox' : 'Metal banhado a ouro 18k';
 
-    // Configuração dos detalhes de frete
+    // Configuração dos detalhes de frete para frete gratuito
+    // OBS.: Se o valor do frete for relativo à localização (por exemplo, calculado a partir do CEP do comprador),
+    // não é possível definir um valor fixo em shippingDetails. Neste caso, recomenda-se omitir shippingDetails
+    // dos dados estruturados ou definir uma taxa padrão para uma região ampla.
     let shippingDetails: any;
     if (product.value.price >= 350) {
         shippingDetails = {
@@ -85,6 +88,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
                 merchantReturnDays: 30,
                 merchantReturnLink: 'https://www.alexasemijoias.com.br/garantia',
                 refundType: 'https://schema.org/FullRefund',
+                returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
             },
             ...(shippingDetails ? { shippingDetails } : {}),
         };
@@ -129,12 +133,15 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             '@type': 'Organization',
             name: 'Alexa Semijoias',
         },
+        // Embora o hasMerchantReturnPolicy também esteja incluído dentro de offers,
+        // pode ser mantido aqui para reforçar as informações comuns.
         hasMerchantReturnPolicy: {
             '@type': 'MerchantReturnPolicy',
             applicableCountry: 'BR',
             merchantReturnDays: 30,
             merchantReturnLink: 'https://www.alexasemijoias.com.br/garantia',
             refundType: 'https://schema.org/FullRefund',
+            returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
         },
         additionalProperty: [
             {
@@ -175,7 +182,6 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             '@id': product.id,
             url: productPageUrl,
             ...commonProperties,
-            // Para variantes, definimos a cor individualmente
             hasVariant: product.productVariations.map((variation) => {
                 // Se existir a chave "cor" em customProperties, combina a cor base com o valor customizado
                 const variantColor =
