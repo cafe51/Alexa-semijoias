@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         const mainImage = product.images[0]?.localUrl || '';
         const variation = product.productVariations[0];
 
-        const subsectionName = product.subsections ? product.subsections[0].split(':')[1] : '';
+        const subsectionName = product.subsections && product.subsections.length > 0 ? product.subsections[0].split(':')[1] : '';
          
 
         return {
@@ -75,6 +75,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
             },
         };
     } catch (error) {
+        console.log('Erro ao gerar metadata:', error);
         return {
             title: 'Produto - Alexa Semijoias',
             description: 'Descubra nossa coleção exclusiva de semijoias.',
