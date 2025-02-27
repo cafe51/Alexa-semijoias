@@ -195,7 +195,9 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
               : baseColor;
                 return {
                     '@type': 'Product',
+                    ...commonProperties,
                     name: toTitleCase(product.name),
+
                     sku: variation.sku,
                     image: variation.image || images[0],
                     color: variantColor,
