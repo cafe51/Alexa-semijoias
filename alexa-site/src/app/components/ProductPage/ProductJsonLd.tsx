@@ -186,6 +186,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             '@type': 'ProductGroup',
             '@id': product.id,
             url: productPageUrl,
+            productGroupID: product.id,
             ...commonProperties,
             hasVariant: product.productVariations.map((variation) => {
                 // Se existir a chave "cor" em customProperties, combina a cor base com o valor customizado
