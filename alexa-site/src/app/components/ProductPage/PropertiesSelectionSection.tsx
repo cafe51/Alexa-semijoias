@@ -9,6 +9,7 @@ import Image from 'next/image';
 import QuantitySelectionCartBox from '../QuantitySelectionCartBox';
 import toTitleCase from '@/app/utils/toTitleCase';
 import OutOfStockMessage from '../ProductList/OutOfStockMessage';
+import StockWarning from './StockWarning';
 
 interface PropertiesSelectionSectionProps {
     carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[] | null;
@@ -249,6 +250,8 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
                         stock={ maxAvailableQuantity }
                         isLoadingButton={ isLoadingButton }
                     />
+
+                    { maxAvailableQuantity <= 3 && <StockWarning stock={ maxAvailableQuantity } /> }
                 </div>
             ) }
         </div>

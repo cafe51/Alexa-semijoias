@@ -12,6 +12,7 @@ import { trackPixelEvent } from '@/app/utils/metaPixel';
 import toTitleCase from '@/app/utils/toTitleCase';
 import OutOfStockMessage from '../OutOfStockMessage';
 import { MetaConversionsService } from '@/app/utils/meta-conversions/service';
+import StockWarning from '../../ProductPage/StockWarning';
 
 interface DynamicObjectCardsProps {
   object: ProductBundleType & FireBaseDocument;
@@ -287,6 +288,8 @@ const DynamicObjectCards: React.FC<DynamicObjectCardsProps> = ({
                         stock={ availableStock(productVariationsSelected[0].estoque) }
                         isLoadingButton={ isLoadingButton }
                     />
+
+                    { availableStock(productVariationsSelected[0].estoque) <= 3 && <StockWarning stock={ availableStock(productVariationsSelected[0].estoque) } /> }
 
                     <PriceSection
                         product={ object }

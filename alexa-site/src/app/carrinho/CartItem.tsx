@@ -13,6 +13,7 @@ import DisplayCustomProperties from '../components/DisplayCustomProperties';
 import QuantitySelectionCartBox from '../components/QuantitySelectionCartBox';
 import toTitleCase from '../utils/toTitleCase';
 import CartCardPrice from './CartCardPrice';
+import StockWarning from '../components/ProductPage/StockWarning';
 
 interface CartItemProps {
     cartItem: ProductCartType | (ProductCartType & FireBaseDocument);
@@ -53,7 +54,7 @@ export default function CartItem({ cartItem }: CartItemProps) {
         <Card className="min-h-28 mb-4 overflow-hidden max-w-2xl mx-auto shadow-md shadow-[#C48B9F]">
             <CardContent className="p-0">
                 <div className="flex flex-row gap-2  md:gap-4">
-                    <div className='w-24 h-24 md:w-28 md:h-28 lg:w-40 lg:h-40 xl:w-56 xl:h-56 relative overflow-hidden flex-shrink-0'>
+                    <div className='h-40 md:h-56 lg:h-56 xl:h-56 aspect-[4/5] relative overflow-hidden flex-shrink-0'>
                         <Image
                             className='rounded-lg rounded-bl-none rounded-tr-none object-cover scale-100'
                             src={ cartItem.image ? cartItem.image : blankImage }
@@ -102,7 +103,10 @@ export default function CartItem({ cartItem }: CartItemProps) {
                             <CartCardPrice value={ cartItem.value } quantidade={ cartItem.quantidade } />
                         </div>
                     </div>
+                    
                 </div>
+                { cartItem.estoque <= 3 && <StockWarning stock={ cartItem.estoque } /> }
+
             </CardContent>
         </Card>
     );

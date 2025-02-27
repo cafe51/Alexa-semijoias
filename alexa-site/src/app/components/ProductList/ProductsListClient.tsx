@@ -49,6 +49,11 @@ export default function ProductsListClient({
         direction: currentSort.direction,
         searchTerm,
     });
+
+    // scroll to top when mount component
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     
     useEffect(() => {
         // Se não há mais produtos para carregar ou já está carregando, não faz nada

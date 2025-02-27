@@ -21,6 +21,7 @@ import ShareSection from './ShareSection';
 import { createSlugName } from '@/app/utils/createSlugName';
 import SelectionTooltip from '../SelectionTooltip';
 import dynamic from 'next/dynamic';
+import StockWarning from './StockWarning';
 
 const RecommendedProducts = dynamic(
     () => import('@/app/components/ProductPage/RecommendedProducts'),
@@ -340,6 +341,7 @@ export default function Product({ id, initialProduct, initialSelectedOptions = {
                                 />
                             </CardContent>
                         ) }
+                        { product.productVariations.length === 1 && product.estoqueTotal <= 5 && <StockWarning stock={ product.estoqueTotal } /> }
                         <PriceSection
                             product={ product }
                             isLoadingButton={ isLoadingButton }
