@@ -102,7 +102,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const menuSections = await getSiteSections();
 
     return (
-        <html lang="pt-BR" className={ montserrat.className }>
+        <html lang="pt-BR" className={ `${montserrat.className} scroll-smooth` } style={ { scrollBehavior: 'auto' } }>
             <head>
                 { /* As meta tags serão injetadas automaticamente com a API de metadata do Next.js */ }
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -111,6 +111,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="apple-touch-icon" href="/favicon.ico" />
                 <link rel="icon" href="/favicon.ico" />
+                
+                { /* Script para garantir que a página sempre comece no topo */ }
+                <script
+                    dangerouslySetInnerHTML={ {
+                        __html: `
+                            if (typeof window !== 'undefined') {
+                                window.history.scrollRestoration = 'manual';
+                                window.onload = function() {
+                                    window.scrollTo(0, 0);
+                                }
+                            }
+                        `,
+                    } }
+                />
 
                 { /* JSON‑LD: Structured Data para Organization */ }
                 <script

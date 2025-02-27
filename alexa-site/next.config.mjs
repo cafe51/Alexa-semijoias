@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    // Configuração para garantir que a página sempre comece no topo
+    scrollRestoration: 'auto',
+    
     images: {
         remotePatterns: [
             {
@@ -85,4 +88,3 @@ const nextConfig = {
 };
   
 export default nextConfig;
-  

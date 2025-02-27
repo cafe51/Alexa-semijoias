@@ -1,7 +1,7 @@
 // src/app/components/ProductList/ProductsListClient.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ProductBundleType, FireBaseDocument, SortOption } from '@/app/utils/types';
 import ProductCard from './ProductCard';
 import LoadingIndicator from '../LoadingIndicator';
@@ -34,6 +34,8 @@ export default function ProductsListClient({
         direction: 'desc', 
     });
 
+    const paginatorRef = useRef<HTMLDivElement>(null);
+
     const { 
         products: productsToShow, 
         isLoading, 
@@ -47,6 +49,36 @@ export default function ProductsListClient({
         direction: currentSort.direction,
         searchTerm,
     });
+    
+    useEffect(() => {
+        // Se não há mais produtos para carregar ou já está carregando, não faz nada
+        if (!hasMore || isLoading || !paginatorRef.current) return;
+        
+        // Cria um Intersection Observer para detectar quando o botão fica visível
+        const observer = new IntersectionObserver((entries) => {
+            // Se o botão está visível na tela e há mais produtos para carregar
+            if (entries[0].isIntersecting && hasMore && !isLoading) {
+                // Aciona o carregamento de mais produtos
+                loadMore();
+            }
+        }, {
+            // Define a margem de observação (pode ser ajustada conforme necessário)
+            rootMargin: '0px',
+            // Define o quanto do elemento precisa estar visível para acionar (0 a 1)
+            threshold: 0.1,
+        });
+        
+        // Começa a observar o elemento do botão
+        observer.observe(paginatorRef.current);
+        
+        // Limpa o observer quando o componente é desmontado
+        return () => {
+            if (paginatorRef.current) {
+                observer.unobserve(paginatorRef.current);
+            }
+            observer.disconnect();
+        };
+    }, [hasMore, isLoading, loadMore, paginatorRef]);
 
     if (isLoading && productsToShow.length === 0) {
         return <LoadingIndicator />;
@@ -58,7 +90,7 @@ export default function ProductsListClient({
         }
         return <h1 className="text-center mt-8">Ainda não há produtos nessa seção</h1>;
     }
-
+    
     return (
         <main>
             { productsToShow.length > 0 && (
@@ -81,9 +113,11 @@ export default function ProductsListClient({
                         )) }
                     </div>
                     { hasMore && (
-                        <ButtonPaginator loadMore={ loadMore } isLoading={ isLoading }>
-              Carregar mais
-                        </ButtonPaginator>
+                        <div ref={ paginatorRef }>
+                            <ButtonPaginator loadMore={ loadMore } isLoading={ isLoading }>
+                                Mostrar mais
+                            </ButtonPaginator>
+                        </div>
                     ) }
                 </>
             ) }
