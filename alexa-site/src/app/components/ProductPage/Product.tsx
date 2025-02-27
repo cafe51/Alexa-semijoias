@@ -31,7 +31,13 @@ const TEXTO_DA_QUALIDADE_DA_SEMIJOIA = '\n\n\nNossas semijoias são de alto padr
 const TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO = '\n\n\nO aço inox de alta qualidade garante uma durabilidade superior, evitando manchas, oxidação e desbotamento, mesmo com o uso diário. São peças feitas para brilhar tanto quanto você, sem perder seu charme ao longo do tempo. Para toda a vida. ';
 const TEXTO_DA_GARANTIA = '\n\nCom 1 ano de garantia, você pode usar suas peças com confiança, sabendo que elas foram feitas para te acompanhar em todos os momentos especiais.\n';
 
-export default function Product({ id, initialProduct }: { id: string; initialProduct: ProductBundleType & FireBaseDocument }) {
+interface ProductProps {
+    id: string;
+    initialProduct: ProductBundleType & FireBaseDocument;
+    initialSelectedOptions?: { [key: string]: string };
+}
+
+export default function Product({ id, initialProduct, initialSelectedOptions = {} }: ProductProps) {
     const { carrinho, userInfo } = useUserInfo();
     const [shipping, setShipping] = useState<string | null>(null);
     // Estado local do produto – inicializado com os dados do SSR e atualizado via API
@@ -42,16 +48,17 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
     const [localCartQuantity, setLocalCartQuantity] = useState<{ [key: string]: number }>({});
     const [showTooltip, setShowTooltip] = useState(false);
 
+    // Agora, passa a configuração inicial de seleção para o hook
     const {
         currentPhase, setCurrentPhase,
         selectedOptions, setSelectedOptions,
-        errorMessage, setErrorMessage,
-        quantity, setQuantity,
         availableOptions,
         allOptions,
+        errorMessage, setErrorMessage,
         productVariationsSelected,
         keys,
-    } = useDynamicObjectCardsLogic(product, carrinho);
+        quantity, setQuantity,
+    } = useDynamicObjectCardsLogic(product, carrinho, initialSelectedOptions);
 
     useEffect(() => {
         window.scrollTo({
@@ -61,7 +68,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
     }, []);
 
     useEffect(() => {
-    // Dispara eventos de visualização do produto
+        // Dispara eventos de visualização do produto
         const productPrice = initialProduct.productVariations[0].value.price;
 
         // Meta Pixel
@@ -133,7 +140,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
     }, [id, initialProduct, userInfo]);
 
     useEffect(() => {
-    // Inicializa o localCartQuantity com as quantidades do carrinho
+        // Inicializa o localCartQuantity com as quantidades do carrinho
         const initialQuantities: { [key: string]: number } = {};
         carrinho?.forEach(item => {
             initialQuantities[item.skuId] = item.quantidade;
@@ -152,8 +159,6 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
         return selectedVariation.estoque <= cartQuantity;
     }, [productVariationsSelected, localCartQuantity]);
 
-    // NOVA FUNÇÃO: Antes de finalizar a compra buscamos os dados atualizados do produto.
-    // Se o estoque total ou o da variação estiverem zerados, alertamos o usuário e "resetamos" a seleção.
     const handleFinishBuyClick = useCallback(async() => {
         setIsloadingButton(true);
         try {
@@ -172,7 +177,6 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                 return;
             }
 
-            // Recupera a variação atualizada com base no SKU selecionado
             const selectedSku = productVariationsSelected[0]?.sku;
             const updatedVariation = updatedProduct.productVariations.find(
                 (pv) => pv.sku === selectedSku,
@@ -186,7 +190,6 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
 
             if (updatedVariation.estoque <= 0) {
                 alert('A variação selecionada está esgotada.');
-                // Reseta a seleção para que o usuário refaça a escolha
                 setCurrentPhase(0);
                 setSelectedOptions({});
                 setQuantity(1);
@@ -197,7 +200,6 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
             const price = updatedProduct.value.promotionalPrice || updatedProduct.value.price;
             const totalValue = price * quantity;
 
-            // Envio de eventos de rastreamento
             trackPixelEvent('AddToCart', {
                 content_type: 'product',
                 content_ids: [updatedProduct.id],
@@ -245,10 +247,8 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                 },
             });
 
-            // Adiciona ao carrinho utilizando a variação atualizada
             handleAddToCart(carrinho, updatedVariation, setIsloadingButton, quantity);
 
-            // Atualiza a quantidade do carrinho localmente
             setLocalCartQuantity(prev => ({
                 ...prev,
                 [updatedVariation.sku]: (prev[updatedVariation.sku] || 0) + quantity,
@@ -307,11 +307,14 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                                 )) }
                                 { product.lancamento && <Badge variant="destructive" className="bg-[#C48B9F] text-white">Lançamento</Badge> }
                             </div>
-                            <p className="text-gray-600 md:text-base mb-6 whitespace-pre-line ">{
-                                product.description +
-                                (product.sections.includes('joias em aço inox') ?  TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO : TEXTO_DA_QUALIDADE_DA_SEMIJOIA)
-                            + (!product.sections.includes('joias em aço inox') ? TEXTO_DA_GARANTIA : '')
-                            }</p>
+                            <p className="text-gray-600 md:text-base mb-6 whitespace-pre-line ">
+                                { product.description +
+                                  (product.sections.includes('joias em aço inox')
+                                      ? TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO
+                                      : TEXTO_DA_QUALIDADE_DA_SEMIJOIA) +
+                                  (!product.sections.includes('joias em aço inox') ? TEXTO_DA_GARANTIA : '')
+                                }
+                            </p>
                         </div>
                         { !product.productVariations.some((pv) => pv.customProperties === undefined) && (
                             <CardContent className="p-0">
@@ -345,7 +348,7 @@ export default function Product({ id, initialProduct }: { id: string; initialPro
                             handleClick={ handleFinishBuyClick }
                             setShowTooltip={ setShowTooltip }
                         />
-                        <div className="py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg *:text-lg *:uppercase borderColor text-center w-full flex justify-center mt-2">
+                        <div className="py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg text-center w-full flex justify-center mt-2">
                             <ShippingCalculator
                                 onSelectShipping={ selectShipping }
                                 selectedShipping={ shipping ? Number(shipping) : null }

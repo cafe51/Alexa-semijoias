@@ -19,12 +19,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         const variation = product.productVariations[0];
 
         const subsectionName = product.subsections && product.subsections.length > 0 ? product.subsections[0].split(':')[1] : '';
-         
 
         return {
             title: `${toTitleCase(product.name)}`,
             description: product.description.split('.')[0] || `${toTitleCase(product.name)} - Semijoias de Verdade.`,
-            keywords: [...new Set([product.sections[0], subsectionName, ...(product.categories || []), ...product.categories,  'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])]
+            keywords: [...new Set([product.sections[0], subsectionName, ...(product.categories || []), 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])]
                 .filter((keyword) => keyword)
                 .join(', '),
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
@@ -72,7 +71,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
                 'product:price:amount': variation.value.price.toString(),
                 'product:price:currency': 'BRL',
                 'product:retailer_item_id': variation.sku,
-                'product:category': [...new Set([product.sections[0], subsectionName, ...(product.categories || []), ...product.categories, 'semijoias', 'joias', 'acessórios'])].join(', '),
+                'product:category': [...new Set([product.sections[0], subsectionName, ...(product.categories || []), 'semijoias', 'joias', 'acessórios'])].join(', '),
                 'google_product_category': getGoogleProductCategory(product).toString(),
             },
         };
@@ -110,14 +109,33 @@ async function getProductBySlug(slug: string) {
     } as ProductBundleType & FireBaseDocument;
 }
 
-export default async function ProductScreenPage({ params: { slug } }: { params: { slug: string } }) {
+export default async function ProductScreenPage({
+    params: { slug },
+    searchParams,
+}: {
+    params: { slug: string },
+    searchParams: { [key: string]: string | string[] | undefined }
+}) {
     const product = await getProductBySlug(slug);
     
     if (!product || !product.exist) {
         notFound();
     }
+
+    // Converte searchParams para um objeto simples, considerando que os parâmetros serão strings únicas
+    const initialSelectedOptions: { [key: string]: string } = {};
+    Object.keys(searchParams).forEach((key) => {
+        const value = searchParams[key];
+        if (typeof value === 'string') {
+            initialSelectedOptions[key] = value;
+        }
+    });
     
     return (
-        <Product id={ product.id } initialProduct={ product } />
+        <Product
+            id={ product.id }
+            initialProduct={ product }
+            initialSelectedOptions={ initialSelectedOptions }
+        />
     );
 }

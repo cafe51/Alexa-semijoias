@@ -10,7 +10,7 @@ import {
 
 export default function ImageCarousel({ productData: { images, name } }: { productData: ProductBundleType & FireBaseDocument }) {
 
-    console.log('PRODUCT ON CAROUSEL', images);
+    // console.log('PRODUCT ON CAROUSEL', images);
     return (
         <div className="w-full px-0 -mx-2 sm:mx-0">
             <Carousel className="w-full">
