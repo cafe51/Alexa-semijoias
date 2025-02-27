@@ -7,6 +7,7 @@ import { getSectionBySlug, getProductsForSection } from '@/app/firebase/admin-co
 import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
 import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
+import { ITEMS_PER_PAGE } from '@/app/utils/constants';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -82,7 +83,7 @@ export default async function Section({ params }: Props) {
     // Busca inicial dos produtos no servidor
     const { products, hasMore, lastVisible } = await getProductsForSection(
         sectionData.sectionName,
-        10,
+        ITEMS_PER_PAGE,
         { field: 'creationDate', direction: 'desc' },
     );
 

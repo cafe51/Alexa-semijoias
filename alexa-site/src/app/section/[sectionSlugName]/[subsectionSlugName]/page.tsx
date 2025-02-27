@@ -8,6 +8,7 @@ import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
 import { SectionSlugType } from '@/app/utils/types';
 import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
+import { ITEMS_PER_PAGE } from '@/app/utils/constants';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -97,7 +98,7 @@ export default async function SubSection({ params: { sectionSlugName, subsection
     // Busca inicial dos produtos filtrando também por subseção
     const { products, hasMore, lastVisible } = await getProductsForSection(
         sectionData.sectionName,
-        10,
+        ITEMS_PER_PAGE,
         { field: 'creationDate', direction: 'desc' },
         subsectionName, // novo parâmetro para filtrar por subseção
     );
