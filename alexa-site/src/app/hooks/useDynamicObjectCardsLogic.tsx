@@ -41,7 +41,7 @@ function useDynamicObjectCardsLogic(
 
     // Processa os parâmetros iniciais: somente se TODOS os parâmetros necessários forem passados
     useEffect(() => {
-        if (object && keys.length > 0) {
+        if (object && keys.length > 0 && Object.keys(initialSelectedOptions).length > 0) {
             console.log('CHAVES INICIAIS', Object.keys(initialSelectedOptions));    
             console.log('CHAVES DO PRODUTO', keys);
             // Se nem todas as chaves estiverem presentes, ignore os parâmetros
