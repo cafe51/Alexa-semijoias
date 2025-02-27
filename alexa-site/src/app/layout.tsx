@@ -172,7 +172,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     </UserInfoProvider>
                 </AuthContextProvider>
 
-                <GoogleTagManager gtmId="GTM-XYZ" />
+                <GoogleTagManager gtmId="GTM-K3CB5QZM" />
                 <GoogleAnalytics gaId="G-KLLD2T3EQ1" />
                 <Analytics />
                 <SpeedInsights />
