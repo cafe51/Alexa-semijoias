@@ -1,7 +1,7 @@
 // app/carrinho/tests/CartItem.test.tsx
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import CartItem from '../CartItem';
+import CartItem from '../CartItem/CartItem';
 import { ProductCartType } from '@/app/utils/types';
 import { useCollection } from '../../hooks/useCollection';
 import { AuthContextProvider } from '@/app/context/AuthContext';

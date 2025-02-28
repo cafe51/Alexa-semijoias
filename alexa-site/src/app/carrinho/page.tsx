@@ -2,7 +2,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useUserInfo } from '../hooks/useUserInfo';
-import CartItem from './CartItem';
+import CartItem from './CartItem/CartItem';
 import CartHeader from './CartHeader';
 import { ArrowLeft,  ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
