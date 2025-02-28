@@ -64,6 +64,12 @@ const MobileMenu = ({ isOpen, toggleMenu }: MobileMenuProps) => {
             enabled: true,
         },
         { 
+            icon: Settings, 
+            label: 'Seções', 
+            href: '/admin/sections',
+            enabled: true,
+        },
+        { 
             icon: Store, 
             label: 'Ir para Loja', 
             href: '/',
