@@ -189,14 +189,23 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             productGroupID: product.id,
             ...commonProperties,
             hasVariant: product.productVariations.map((variation) => {
-                // Se existir a chave "cor" em customProperties, combina a cor base com o valor customizado
-                const variantColor =
-          variation.customProperties && variation.customProperties.cor
-              ? `${baseColor}/${variation.customProperties.cor}`
-              : baseColor;
+                // Se existir a chave "cor" em customProperties, combina a cor base com o valor customizadoz
+                const variantColor = variation.customProperties && variation.customProperties.cor
+                    ? `${baseColor}/${variation.customProperties.cor}`
+                    : baseColor;
+
+                // verifica se existe a propriedade tamanho ou medida e atribui esse valor a size
+                const variantSize = variation.customProperties && variation.customProperties.tamanho
+                    ? variation.customProperties.tamanho
+                    : variation.customProperties && variation.customProperties.medida
+                        ? variation.customProperties.medida
+                        : null;
+
                 return {
                     '@type': 'Product',
                     ...commonProperties,
+                    ...variation.customProperties,
+                    size: variantSize ? variantSize.toString() : null, 
                     name: toTitleCase(product.name),
 
                     sku: variation.sku,
