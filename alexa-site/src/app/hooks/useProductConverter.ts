@@ -9,8 +9,10 @@ import { Timestamp } from 'firebase/firestore';
 import toTitleCase from '../utils/toTitleCase';
 import keyWordsCreator from '../utils/keyWordsCreator';
 import { createSlugName, createSubsectionsWithSlug } from '../utils/createSlugName';
+import { useUserInfo } from './useUserInfo';
 
 export function useProductConverter() {
+    const { userInfo } = useUserInfo();
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
 
     const { uploadImages, deleteImage } = useFirebaseUpload();
@@ -79,7 +81,7 @@ export function useProductConverter() {
             description: description.trim(),
             creationDate,
             subsections,
-            updatingDate: Timestamp.now(),
+            updatingDate: userInfo?.email === 'cafecafe51@hotmail.com' ? editableProduct.updatingDate : Timestamp.now(),
             sections, value, variations,
             finalPrice: value.promotionalPrice && value.promotionalPrice > 0 ? value.promotionalPrice : value.price,
             promotional: !!value.promotionalPrice && value.promotionalPrice > 0,
@@ -129,15 +131,6 @@ export function useProductConverter() {
         const categoriesKeyWords = categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat();
         const sectionsKeyWords = sections.map((sec) => keyWordsCreator(sec)).flat();
         const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
-        console.log('**********************');
-        console.log('**********************');
-
-        console.log('CATEGORIES KEYWORDS', categoriesFromFirebase);
-        console.log('CATEGORIES KEYWORDS', subsectionsKeyWords);
-
-        console.log('**********************');
-
-        console.log('**********************');
 
         return {
             slug: createSlugName(name.trim().toLowerCase()),
@@ -152,7 +145,7 @@ export function useProductConverter() {
             description: description.trim(),
             creationDate,
             subsections,
-            updatingDate: Timestamp.now(),
+            updatingDate: userInfo?.email === 'cafecafe51@hotmail.com' ? editableProduct.updatingDate : Timestamp.now(),
             finalPrice: value.promotionalPrice && value.promotionalPrice > 0 ? value.promotionalPrice : value.price,
             promotional: !!value.promotionalPrice && value.promotionalPrice > 0,
             sections, value,
