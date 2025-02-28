@@ -60,21 +60,21 @@ export function useProductConverter() {
             totalStock += pv.defaultProperties.estoque;
         }
 
-        const { description, name, sections, value, variations, creationDate, subsections, categories } = editableProduct;
+        const { description, name, sections, value, variations, creationDate, subsections, categories, categoriesFromFirebase } = editableProduct;
 
-        const categoriesKeyWords = categories.map((cat) => keyWordsCreator(cat)).flat();
+        const categoriesKeyWords = categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat();
         const sectionsKeyWords = sections.map((sec) => keyWordsCreator(sec)).flat();
         const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
 
         return {
             name: name.trim().toLowerCase(),
             slug: createSlugName(name.trim().toLowerCase()),
-            keyWords: [
+            keyWords: Array.from(new Set([
                 ...keyWordsCreator(name.trim().toLowerCase()),
                 ...categoriesKeyWords,
                 ...sectionsKeyWords,
                 ...subsectionsKeyWords,
-            ],
+            ])),
             randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
@@ -121,24 +121,33 @@ export function useProductConverter() {
     };
 
     const hasNoProductVariations = (editableProduct: StateNewProductType, imagesData: ImageProductDataType[], productId: string): ProductBundleType => {
-        const { description, name, sections, value, creationDate, subsections, categories } = editableProduct;
+        const { description, name, sections, value, creationDate, subsections, categories, categoriesFromFirebase } = editableProduct;
 
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
-        const categoriesKeyWords = categories.map((cat) => keyWordsCreator(cat)).flat();
+        const categoriesKeyWords = categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat();
         const sectionsKeyWords = sections.map((sec) => keyWordsCreator(sec)).flat();
         const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
+        console.log('**********************');
+        console.log('**********************');
+
+        console.log('CATEGORIES KEYWORDS', categoriesFromFirebase);
+        console.log('CATEGORIES KEYWORDS', subsectionsKeyWords);
+
+        console.log('**********************');
+
+        console.log('**********************');
 
         return {
             slug: createSlugName(name.trim().toLowerCase()),
             name: name.trim().toLowerCase(),
-            keyWords: [
+            keyWords: Array.from(new Set([
                 ...keyWordsCreator(name.trim().toLowerCase()),
                 ...categoriesKeyWords,
                 ...sectionsKeyWords,
                 ...subsectionsKeyWords,
-            ],
+            ])),
             randomIndex: extractRandomIndex(productId),
             description: description.trim(),
             creationDate,
@@ -151,7 +160,7 @@ export function useProductConverter() {
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imagesData,
-            categories: [...categories, ...editableProduct.categoriesFromFirebase],
+            categories: Array.from(new Set([...categories, ...categoriesFromFirebase])),
             estoqueTotal: editableProduct.estoque ? editableProduct.estoque : 0,
             productVariations: [
                 {   productId,
