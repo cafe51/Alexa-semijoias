@@ -22,15 +22,16 @@ import { createSlugName } from '@/app/utils/createSlugName';
 import SelectionTooltip from '../SelectionTooltip';
 import dynamic from 'next/dynamic';
 import StockWarning from './StockWarning';
+import toTitleCase from '@/app/utils/toTitleCase';
 
 const RecommendedProducts = dynamic(
     () => import('@/app/components/ProductPage/RecommendedProducts'),
     { ssr: true },
 );
 
-const TEXTO_DA_QUALIDADE_DA_SEMIJOIA = '\n\n\nNossas semijoias são de alto padrão pois são cuidadosamente folheadas a ouro 18K com um banho reforçado, garantindo um brilho intenso e resistência superior.';
-const TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO = '\n\n\nO aço inox de alta qualidade garante uma durabilidade superior, evitando manchas, oxidação e desbotamento, mesmo com o uso diário. São peças feitas para brilhar tanto quanto você, sem perder seu charme ao longo do tempo. Para toda a vida. ';
-const TEXTO_DA_GARANTIA = '\n\nCom 1 ano de garantia, você pode usar suas peças com confiança, sabendo que elas foram feitas para te acompanhar em todos os momentos especiais.\n';
+const TEXTO_DA_QUALIDADE_DA_SEMIJOIA = '\nNossas peças são de alto padrão, pois são cuidadosamente expostas ao banho de ouro 18k que garante um brilho intenso e resistência superior.';
+const TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO = '\nO aço inox de alta qualidade garante uma durabilidade superior, evitando manchas, oxidação e desbotamento, mesmo com o uso diário. São peças feitas para brilhar tanto quanto você, sem perder seu charme ao longo do tempo. Para toda a vida. ';
+const TEXTO_DA_GARANTIA = '\n\n Quem conhece nossas semijoias desfruta de confiança e tranquilidade, pois nossos acessórios possuem 1 ano de garantia para defeito de fabricação no banho de ouro 18k.\n';
 
 interface ProductProps {
     id: string;
@@ -310,9 +311,10 @@ export default function Product({ id, initialProduct, initialSelectedOptions = {
                             </div>
                             <p className="text-gray-600 md:text-base mb-6 whitespace-pre-line ">
                                 { product.description +
-                                  (product.sections.includes('joias em aço inox')
-                                      ? TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO
-                                      : TEXTO_DA_QUALIDADE_DA_SEMIJOIA) +
+                                '\n\n' + toTitleCase(product.name) + ' ' + 'é uma verdadeira semijoia, uma peça com a garantia de qualidade Alexa Semijoias.' +
+                                (product.sections.includes('joias em aço inox')
+                                    ? TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO
+                                    : TEXTO_DA_QUALIDADE_DA_SEMIJOIA) +
                                   (!product.sections.includes('joias em aço inox') ? TEXTO_DA_GARANTIA : '')
                                 }
                             </p>
