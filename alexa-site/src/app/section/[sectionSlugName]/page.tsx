@@ -8,6 +8,7 @@ import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
 import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
 import { ITEMS_PER_PAGE } from '@/app/utils/constants';
+import { getBreadcrumbItems, generateBreadcrumbJsonLD } from '@/app/utils/breadcrumbUtils';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -17,61 +18,36 @@ type Props = {
 
 async function fetchAndValidateSection(sectionSlugName: string) {
     const sectionData = await getSectionBySlug(sectionSlugName);
-    if (!sectionData) {
-        return null;
-    }
-    return sectionData;
+    return sectionData || null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const sectionData = await fetchAndValidateSection(params.sectionSlugName);
-  
+
     if (!sectionData) {
         return { title: 'Página não encontrada', robots: { index: false } };
     }
-  
-    const deslugedSectionName = sectionData.sectionName;
-    const canonicalUrl = `${BASE_URL}/section/${params.sectionSlugName}`;
-  
-    // JSON‑LD para Breadcrumbs
-    const breadcrumbList = {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-            {
-                '@type': 'ListItem',
-                position: 1,
-                name: 'Home',
-                item: BASE_URL,
-            },
-            {
-                '@type': 'ListItem',
-                position: 2,
-                name: toTitleCase(deslugedSectionName),
-                item: canonicalUrl,
-            },
-        ],
-    };
-  
-    return {
-        title: `${toTitleCase(deslugedSectionName)} | Alexa Semijoias`,
-        description: `${toTitleCase(deslugedSectionName)}. Semijoias de verdade.`,
-        keywords: [...new Set([deslugedSectionName, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
 
-        alternates: {
-            canonical: canonicalUrl,
-        },
+    const sectionName = sectionData.sectionName;
+    const canonicalUrl = `${BASE_URL}/section/${params.sectionSlugName}`;
+    const breadcrumbItems = getBreadcrumbItems(sectionName);
+    const breadcrumbJsonLD = generateBreadcrumbJsonLD(breadcrumbItems);
+
+    return {
+        title: `${toTitleCase(sectionName)} | Alexa Semijoias`,
+        description: `${toTitleCase(sectionName)}. Semijoias de verdade.`,
+        keywords: [...new Set([sectionName, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
+        alternates: { canonical: canonicalUrl },
         openGraph: {
-            title: `${toTitleCase(deslugedSectionName)} | Alexa Semijoias`,
-            description: `${toTitleCase(deslugedSectionName)}. Semijoias de verdade.`,
+            title: `${toTitleCase(sectionName)} | Alexa Semijoias`,
+            description: `${toTitleCase(sectionName)}. Semijoias de verdade.`,
             url: canonicalUrl,
         },
         other: {
-            breadcrumb: JSON.stringify(breadcrumbList),
+            breadcrumb: breadcrumbJsonLD,
         },
     };
 }
-  
 
 export default async function Section({ params }: Props) {
     const sectionData = await fetchAndValidateSection(params.sectionSlugName);

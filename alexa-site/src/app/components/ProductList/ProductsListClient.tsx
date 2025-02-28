@@ -7,7 +7,9 @@ import ProductCard from './ProductCard';
 import LoadingIndicator from '../LoadingIndicator';
 import ButtonPaginator from '../ButtonPaginator';
 import ProductSorter from './ProductSorter';
-import SectionPageTitle from '@/app/section/SectionPageTitle';
+import Breadcrumbs from '@/app/components/Breadcrumbs';
+import { getBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
+import toTitleCase from '@/app/utils/toTitleCase';
 import { useProducts } from '@/app/hooks/useProducts';
 
 interface ProductsListClientProps {
@@ -50,33 +52,22 @@ export default function ProductsListClient({
         searchTerm,
     });
 
-    // scroll to top when mount component
+    // Rola para o topo ao montar o componente
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
     
     useEffect(() => {
-        // Se não há mais produtos para carregar ou já está carregando, não faz nada
         if (!hasMore || isLoading || !paginatorRef.current) return;
-        
-        // Cria um Intersection Observer para detectar quando o botão fica visível
         const observer = new IntersectionObserver((entries) => {
-            // Se o botão está visível na tela e há mais produtos para carregar
             if (entries[0].isIntersecting && hasMore && !isLoading) {
-                // Aciona o carregamento de mais produtos
                 loadMore();
             }
         }, {
-            // Define a margem de observação (pode ser ajustada conforme necessário)
             rootMargin: '0px',
-            // Define o quanto do elemento precisa estar visível para acionar (0 a 1)
             threshold: 0.1,
         });
-        
-        // Começa a observar o elemento do botão
         observer.observe(paginatorRef.current);
-        
-        // Limpa o observer quando o componente é desmontado
         return () => {
             if (paginatorRef.current) {
                 observer.unobserve(paginatorRef.current);
@@ -101,10 +92,12 @@ export default function ProductsListClient({
             { productsToShow.length > 0 && (
                 <>
                     { sectionName && (
-                        <SectionPageTitle 
-                            section={ sectionName } 
-                            subsection={ subsection } 
-                        />
+                        <div className="mb-6">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center uppercase text-[#333333]">
+                                { subsection ? toTitleCase(subsection) : toTitleCase(sectionName) }
+                            </h1>
+                            <Breadcrumbs items={ getBreadcrumbItems(sectionName, subsection) } />
+                        </div>
                     ) }
                     <div className='w-full flex justify-end'>
                         <ProductSorter 

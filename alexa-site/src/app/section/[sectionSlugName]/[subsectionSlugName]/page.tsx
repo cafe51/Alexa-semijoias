@@ -6,9 +6,9 @@ import { notFound } from 'next/navigation';
 import { getProductsForSection, getSectionBySlug } from '@/app/firebase/admin-config';
 import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
-import { SectionSlugType } from '@/app/utils/types';
 import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
 import { ITEMS_PER_PAGE } from '@/app/utils/constants';
+import { getBreadcrumbItems, generateBreadcrumbJsonLD } from '@/app/utils/breadcrumbUtils';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -19,12 +19,12 @@ type Props = {
   };
 };
 
-function verifySubsectionSlugExistence(section: SectionSlugType, subsectionSlugName: string) {
-    return section.subsections?.some((sub) => sub.subsectionSlugName === subsectionSlugName);
+function verifySubsectionSlugExistence(section: any, subsectionSlugName: string) {
+    return section.subsections?.some((sub: any) => sub.subsectionSlugName === subsectionSlugName);
 }
 
-function getSubsectionName(section: SectionSlugType, subsectionSlugName: string) {
-    return section.subsections?.find((sub) => sub.subsectionSlugName === subsectionSlugName)?.subsectionName;
+function getSubsectionName(section: any, subsectionSlugName: string) {
+    return section.subsections?.find((sub: any) => sub.subsectionSlugName === subsectionSlugName)?.subsectionName;
 }
 
 export async function generateMetadata({ params: { sectionSlugName, subsectionSlugName } }: Props): Promise<Metadata> {
@@ -38,31 +38,8 @@ export async function generateMetadata({ params: { sectionSlugName, subsectionSl
     const deslugedSubsection = getSubsectionName(sectionData, subsectionSlugName) || 'Subseção não encontrada';
     const canonicalUrl = `${BASE_URL}/section/${sectionSlugName}/${subsectionSlugName}`;
   
-    // JSON‑LD para Breadcrumbs
-    const breadcrumbList = {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-            {
-                '@type': 'ListItem',
-                position: 1,
-                name: 'Home',
-                item: BASE_URL,
-            },
-            {
-                '@type': 'ListItem',
-                position: 2,
-                name: toTitleCase(deslugedSection),
-                item: `${BASE_URL}/section/${sectionSlugName}`,
-            },
-            {
-                '@type': 'ListItem',
-                position: 3,
-                name: toTitleCase(deslugedSubsection),
-                item: canonicalUrl,
-            },
-        ],
-    };
+    const breadcrumbItems = getBreadcrumbItems(deslugedSection, deslugedSubsection);
+    const breadcrumbJsonLD = generateBreadcrumbJsonLD(breadcrumbItems);
   
     return {
         title: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)} | Alexa Semijoias`,
@@ -77,32 +54,31 @@ export async function generateMetadata({ params: { sectionSlugName, subsectionSl
             url: canonicalUrl,
         },
         other: {
-            breadcrumb: JSON.stringify(breadcrumbList),
+            breadcrumb: breadcrumbJsonLD,
         },
     };
 }
   
-
 export default async function SubSection({ params: { sectionSlugName, subsectionSlugName } }: Props) {
     const sectionData = await getSectionBySlug(sectionSlugName);
-
+  
     if (!sectionData || !verifySubsectionSlugExistence(sectionData, subsectionSlugName)) {
         notFound();
     }
-
+  
     const subsectionName = getSubsectionName(sectionData, subsectionSlugName);
     if (!subsectionName) {
         notFound();
     }
-
+  
     // Busca inicial dos produtos filtrando também por subseção
     const { products, hasMore, lastVisible } = await getProductsForSection(
         sectionData.sectionName,
         ITEMS_PER_PAGE,
         { field: 'creationDate', direction: 'desc' },
-        subsectionName, // novo parâmetro para filtrar por subseção
+        subsectionName,
     );
-
+  
     return (
         <PageContainer>
             <ProductsListClient
