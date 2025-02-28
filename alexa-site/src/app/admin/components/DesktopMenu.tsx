@@ -87,7 +87,7 @@ export default function DesktopMenu()  {
             <div className="mb-6">
                 <h2 className="text-2xl font-bold text-[#333333]">Admin</h2>
             </div>
-            <nav className="flex-1">
+            <nav className="flex-1" aria-label="Root Menu">
                 <ul className="space-y-2">
                     { menuItems.map((item, index) => (
                         <li key={ index }>

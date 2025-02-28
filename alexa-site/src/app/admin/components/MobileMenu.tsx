@@ -88,7 +88,7 @@ const MobileMenu = ({ isOpen, toggleMenu }: MobileMenuProps) => {
                 slideDirection="left"
             >
                 <div className="flex flex-col h-full bg-[#FAF9F6] p-4">
-                    <nav className="flex-1">
+                    <nav className="flex-1" aria-label="Root Menu">
                         <ul className="space-y-2">
                             { menuItems.map((item, index) => (
                                 <li key={ index }>

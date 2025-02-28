@@ -24,7 +24,7 @@ export default function DesktopMenu({ menuSections, router }: DesktopMenuProps) 
     };
 
     return (
-        <nav className="flex items-center justify-center space-x-8">
+        <nav className="flex items-center justify-center space-x-8" aria-label="Root Menu">
             { menuSections.map((section, index) => (
                 <Popover
                     key={ index }

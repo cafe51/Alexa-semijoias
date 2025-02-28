@@ -53,7 +53,7 @@ export default function MobileMenu({
                 className="w-4/5 sm:w-2/3 p-0 bg-transparent shadow-2xl shadow-slate-800"
             >
                 <DialogTitle hidden></DialogTitle>
-                <nav className="h-full flex flex-col">
+                <nav className="h-full flex flex-col" aria-label="Root Menu">
                     <div className="flex-1 overflow-hidden relative">
                         <div
                             className={ `absolute inset-0 transition-transform duration-300 ease-in-out ${
