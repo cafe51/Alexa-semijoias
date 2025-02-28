@@ -85,7 +85,6 @@ export default function InputSection({ handleChange, stateToBeChange, integer=fa
                         unitType = 'currency';
                         break;
                     }
-                    console.log(propertyName, propertyValue, propertyKey, unitType);
                     return (
                         <InputField
                             key={ propertyKey }
