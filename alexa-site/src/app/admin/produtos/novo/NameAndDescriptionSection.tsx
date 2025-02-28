@@ -124,6 +124,7 @@ export default function NameAndDescriptionSection({ state, handlers }: NameAndDe
                     name="name"
                     type="text"
                     value={ state.name }
+                    maxLength={ 45 }
                     onChange={ (e) => handlers.handleNameChange(e.target.value) }
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                     placeholder="Nome do produto"
