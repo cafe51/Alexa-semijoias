@@ -7,6 +7,8 @@ import Product from '@/app/components/ProductPage/Product';
 import toTitleCase from '@/app/utils/toTitleCase';
 import { notFound } from 'next/navigation';
 import { getGoogleProductCategory } from '@/app/utils/getGoogleProductCategory';
+import Breadcrumbs from '@/app/components/Breadcrumbs';
+import { getProductBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     try {
@@ -18,11 +20,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         const mainImage = product.images[0]?.localUrl || '';
         const variation = product.productVariations[0];
 
-        const subsectionName = product.subsections && product.subsections.length > 0 ? product.subsections[0].split(':')[1] : '';
+        const subsectionName =
+      product.subsections && product.subsections.length > 0
+          ? product.subsections[0].split(':')[1]
+          : '';
 
         return {
             title: `${toTitleCase(product.name)}`,
-            description: product.description.split('.')[0] || `${toTitleCase(product.name)} - Semijoias de Verdade.`,
+            description:
+        product.description.split('.')[0] ||
+        `${toTitleCase(product.name)} - Semijoias de Verdade.`,
             keywords: [...new Set([product.sections[0], subsectionName, ...(product.categories || []), 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])]
                 .filter((keyword) => keyword)
                 .join(', '),
@@ -44,7 +51,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
                     url: product.images[0]?.localUrl || '',
                     width: 800,
                     height: 600,
-                    alt: `${product.name} - ${product.images[0]?.localUrl || '' }`,
+                    alt: `${product.name} - ${product.images[0]?.localUrl || ''}`,
                 },
                 type: 'website',
                 siteName: 'Alexa Semijoias',
@@ -90,20 +97,18 @@ async function getProductBySlug(slug: string) {
     const q = query(productsRef, where('slug', '==', slug));
     const querySnapshot = await getDocs(q);
     const doc = querySnapshot.docs[0];
-    
+
     if (!doc) return null;
-    
+
     const data = doc.data();
     return {
         ...data,
-        creationDate: data.creationDate ? {
-            seconds: data.creationDate.seconds,
-            nanoseconds: data.creationDate.nanoseconds,
-        } : null,
-        updatingDate: data.updatingDate ? {
-            seconds: data.updatingDate.seconds,
-            nanoseconds: data.updatingDate.nanoseconds,
-        } : null,
+        creationDate: data.creationDate
+            ? { seconds: data.creationDate.seconds, nanoseconds: data.creationDate.nanoseconds }
+            : null,
+        updatingDate: data.updatingDate
+            ? { seconds: data.updatingDate.seconds, nanoseconds: data.updatingDate.nanoseconds }
+            : null,
         id: doc.id,
         exist: doc.exists(),
     } as ProductBundleType & FireBaseDocument;
@@ -113,16 +118,16 @@ export default async function ProductScreenPage({
     params: { slug },
     searchParams,
 }: {
-    params: { slug: string },
-    searchParams: { [key: string]: string | string[] | undefined }
+  params: { slug: string },
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
     const product = await getProductBySlug(slug);
-    
+
     if (!product || !product.exist) {
         notFound();
     }
 
-    // Converte searchParams para um objeto simples, considerando que os parâmetros serão strings únicas
+    // Converte searchParams para um objeto simples
     const initialSelectedOptions: { [key: string]: string } = {};
     Object.keys(searchParams).forEach((key) => {
         const value = searchParams[key];
@@ -130,12 +135,25 @@ export default async function ProductScreenPage({
             initialSelectedOptions[key] = value;
         }
     });
-    
+
+    // Preparar os dados para o breadcrumb:
+    // • Categoria: primeira entrada em product.sections
+    // • Subcategoria: se existir, extrai a parte após o ':' em product.subsections[0]
+    const category = product.sections && product.sections.length > 0 ? product.sections[0] : '';
+    const subcategory =
+    product.subsections && product.subsections.length > 0
+        ? product.subsections[0].split(':')[1]
+        : null;
+    const breadcrumbItems = getProductBreadcrumbItems(category, subcategory, product.name);
+
     return (
-        <Product
-            id={ product.id }
-            initialProduct={ product }
-            initialSelectedOptions={ initialSelectedOptions }
-        />
+        <main className="min-h-screen">
+            <Breadcrumbs items={ breadcrumbItems } />
+            <Product
+                id={ product.id }
+                initialProduct={ product }
+                initialSelectedOptions={ initialSelectedOptions }
+            />
+        </main>
     );
 }
