@@ -1,11 +1,16 @@
-import adjustPriceTo99 from '@/app/utils/adjustPriceTo99';
 import { adminDb } from '../src/app/firebase/admin-config';
 import { ProductBundleType } from '@/app/utils/types';
+import keyWordsCreator from '@/app/utils/keyWordsCreator';
 
 /**
- * Função principal que atualiza os documentos em batches de 50
+ * Atualiza os documentos da coleção "products" em batches.
+ * Em caso de erro em um documento, captura o erro e continua a execução.
+ * Ao final, exibe a lista dos documentos que não puderam ser atualizados.
  */
 export const updateProducts = async() => {
+    // Lista para armazenar os documentos que causaram erro
+    const failedDocs: { id: string; name: string }[] = [];
+
     try {
     // Obtém todos os documentos da coleção "products"
         const productsCollectionRef = adminDb.collection('products');
@@ -19,61 +24,76 @@ export const updateProducts = async() => {
         // Processa os documentos em batches
         for (let i = 0; i < allDocs.length; i += batchSize) {
             const currentBatchDocs = allDocs.slice(i, i + batchSize);
-            console.log(`Atualizando documentos ${i + 1} até ${i + currentBatchDocs.length}...`);
+            console.log(
+                `Atualizando documentos ${i + 1} até ${i + currentBatchDocs.length}...`,
+            );
 
-            // Cria um batch de escrita
-            const batch = adminDb.batch();
-
-            currentBatchDocs.forEach((docSnap) => {
+            // Atualiza cada documento individualmente
+            for (const docSnap of currentBatchDocs) {
                 const docRef = docSnap.ref;
                 const docData = docSnap.data() as ProductBundleType;
 
+                // Gera keyWords a partir dos campos do documento
+                const categoriesKeyWords =
+          docData.categories && docData.categories.length > 0
+              ? docData.categories.map((cat) => keyWordsCreator(cat)).flat()
+              : [];
+                const sectionsKeyWords =
+          docData.sections && docData.sections.length > 0
+              ? docData.sections.map((sec) => keyWordsCreator(sec)).flat()
+              : [];
+                const subsectionsKeyWords =
+          docData.subsections && docData.subsections.length > 0
+              ? docData.subsections
+                  .map((sub) => {
+                  // Considera que o formato é 'sectionName:subsectionName'
+                      const parts = sub.split(':');
+                      return parts.length > 1 ? keyWordsCreator(parts[1]) : [];
+                  })
+                  .flat()
+              : [];
 
+                const newKeyWords: ProductBundleType['keyWords'] = Array.from(
+                    new Set([
+                        ...keyWordsCreator(docData.name.trim().toLowerCase()),
+                        ...categoriesKeyWords,
+                        ...sectionsKeyWords,
+                        ...subsectionsKeyWords,
+                    ]),
+                );
 
-                if(docData.value.cost && (docData.value.cost >= 0)) {
-                    const costPrice = docData.value.cost;
+                console.log('************************8');
+                console.log('newKeyWords length, ', newKeyWords.length);
+                console.log('************************8');
 
-                    // const costPrice = (docData.value.cost <= 0) ? 10 : docData.value.cost;
-
-                    const valuePrice = costPrice * 7;
-                    const newValue: ProductBundleType['value']  = {
-                        ...docData.value,
-                        price: adjustPriceTo99(valuePrice),
-                    };
-    
-        
-                    // Atualiza cada variação do produto com as seções e subseções
-                    const newProductVariations: ProductBundleType['productVariations'] = docData.productVariations.map(
-                        (variation) => ({
-                            ...variation,
-                            value: newValue,
-                        }),
-                    );
-    
-                    const finalPrice = docData.value.promotionalPrice ? docData.value.promotionalPrice : newValue.price;
-        
-                    batch.update(docRef, {
-                        value: newValue,
-                        productVariations: newProductVariations,
-                        finalPrice: finalPrice,
+                // Tenta atualizar o documento
+                try {
+                    await docRef.update({
+                        keyWords: newKeyWords,
                     });
+                } catch (error) {
+                    console.error(
+                        `Erro ao atualizar documento ${docRef.id} (${docData.name}):`,
+                        error,
+                    );
+                    failedDocs.push({ id: docRef.id, name: docData.name });
                 }
+            }
 
-            });
-
-            // Comita o batch atual
-            await batch.commit();
-            console.log(
-                `Batch de documentos ${i + 1} até ${i + currentBatchDocs.length} atualizado com sucesso.`,
-            );
-
-            // Delay opcional de 1 segundo entre os batches para verificação
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            // Delay opcional entre os batches
+            await new Promise((resolve) => setTimeout(resolve, 5000));
         }
-
-        console.log('Todos os produtos foram atualizados com sucesso.');
     } catch (error) {
-        console.error('Erro ao atualizar produtos:', error);
-        throw error;
+        console.error('Erro geral ao atualizar produtos:', error);
+    }
+
+    // Exibe os documentos que não foram atualizados com sucesso
+    if (failedDocs.length > 0) {
+        console.log('Documentos que causaram erro:');
+        failedDocs.forEach((doc) =>
+            console.log(`ID: ${doc.id}, Name: ${doc.name}`),
+        );
+    } else {
+        console.log('Todos os produtos foram atualizados com sucesso.');
     }
 };
