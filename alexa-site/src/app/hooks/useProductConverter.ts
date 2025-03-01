@@ -64,9 +64,9 @@ export function useProductConverter() {
 
         const { description, name, sections, value, variations, creationDate, subsections, categories, categoriesFromFirebase } = editableProduct;
 
-        const categoriesKeyWords = categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat();
-        const sectionsKeyWords = sections.map((sec) => keyWordsCreator(sec)).flat();
-        const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
+        const categoriesKeyWords = (categoriesFromFirebase && categoriesFromFirebase.length > 0) ? categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat() : [];
+        const sectionsKeyWords = (sections && sections.length > 0) ? sections.map((sec) => keyWordsCreator(sec)).flat() : [];
+        const subsectionsKeyWords = (subsections && subsections.length > 0) ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
 
         return {
             name: name.trim().toLowerCase(),
@@ -128,9 +128,9 @@ export function useProductConverter() {
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
-        const categoriesKeyWords = categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat();
-        const sectionsKeyWords = sections.map((sec) => keyWordsCreator(sec)).flat();
-        const subsectionsKeyWords = subsections ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
+        const categoriesKeyWords = (categoriesFromFirebase && categoriesFromFirebase.length > 0) ? categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat() : [];
+        const sectionsKeyWords = (sections && sections.length > 0) ? sections.map((sec) => keyWordsCreator(sec)).flat() : [];
+        const subsectionsKeyWords = (subsections && subsections.length > 0) ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
 
         return {
             slug: createSlugName(name.trim().toLowerCase()),
