@@ -68,12 +68,7 @@ export default function DesktopMenu()  {
             enabled: true,
         },
         
-        {
-            icon: Settings,
-            label: 'Gerenciar Categorias',
-            href: '',
-            enabled: true,
-        },
+
     ];
 
     const handleLogout = async() => {
