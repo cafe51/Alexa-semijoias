@@ -12,7 +12,6 @@ import Logo from './Logo';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import SearchBar from './SearchBar';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
-import throttle from 'lodash/throttle';
 
 interface FullHeaderProps {
   initialMenuSections: (SectionType & FireBaseDocument)[];
@@ -59,12 +58,9 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     // Removemos o useEffect que buscava as seções (já estão nas props)
 
     useEffect(() => {
-        const handleScroll = throttle(() => {
-            setScrollPosition(window.pageYOffset);
-        }, 100);
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('scroll', () => setScrollPosition(window.pageYOffset)), { passive: true };
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('scroll', () => setScrollPosition(window.pageYOffset));
         };
     }, []);
 
