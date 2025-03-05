@@ -15,7 +15,7 @@ export default function SearchBar() {
     };
 
     return (
-        <div className="flex-grow max-w-4xl w-full pb-1 pt-1 md:mx-4">
+        <div className="flex-grow max-w-4xl w-full pb-1 pt-0 md:mx-4">
             <div className="relative">
                 <Input
                     className="pl-4 pr-14 py-0 md:py-6 w-full bg-[#F8C3D3]/50 border-none text-s md:text-lg md:rounded-xl focus:bg-white"

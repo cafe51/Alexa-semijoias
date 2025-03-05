@@ -33,7 +33,6 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             variant="ghost"
             size={ isMobile ? 'icon' : 'lg' }
             className="text-[#C48B9F] h-fit w-fit p-1"
-            // Se o usuário estiver logado, o botão direciona para "minha conta", caso contrário, para "login"
             aria-label={ userInfo ? 'Acessar minha conta' : 'Entrar' }
             title={ userInfo ? 'Acessar minha conta' : 'Entrar' }
             onClick={ () => (userInfo ? router.push('/minha-conta') : router.push('/login')) }
@@ -48,19 +47,18 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             size={ isMobile ? 'icon' : 'lg' }
             className="text-[#C48B9F] h-fit w-fit p-1"
             aria-label="Acessar área administrativa"
-            title='Acessar área administrativa'
+            title="Acessar área administrativa"
             onClick={ () => router.push('/admin') }
         >
             <Settings className={ isMobile ? 'h-6 w-6' : 'h-14 w-14' } />
         </Button>
     );
 
-    // Removemos o useEffect que buscava as seções (já estão nas props)
-
     useEffect(() => {
-        window.addEventListener('scroll', () => setScrollPosition(window.pageYOffset)), { passive: true };
+        const handleScroll = () => setScrollPosition(window.pageYOffset);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
-            window.removeEventListener('scroll', () => setScrollPosition(window.pageYOffset));
+            window.removeEventListener('scroll', handleScroll);
         };
     }, []);
 
@@ -77,8 +75,17 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
         };
     }, []);
 
-    const headerHeight = Math.max(60, 100 - scrollPosition * 0.2);
-    const headerOpacity = Math.max(0.8, 1 - scrollPosition * 0.002);
+    // Definindo valores máximos e mínimos para o header (mobile)
+    const MAX_HEADER_HEIGHT = 80; // altura original do header (e da logo)
+    const MIN_HEADER_HEIGHT = 60;
+    const headerHeightMobile = Math.max(
+        MIN_HEADER_HEIGHT,
+        MAX_HEADER_HEIGHT - scrollPosition * 0.2,
+    );
+    const headerOpacity = isMobile ? Math.max(0.8, 1 - scrollPosition * 0.002) : 1;
+
+    // Calcula a escala da logo baseada na altura do header mobile (garantindo escala 1 no topo)
+    const logoScale = isMobile ? headerHeightMobile / MAX_HEADER_HEIGHT : 1;
 
     const handleSectionClick = (section: SectionType) => {
         setActiveSection(section);
@@ -94,18 +101,18 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     return (
         <>
             <header
-                className={ `fixed top-0 left-0 right-0 px-4 z-50 bg-white ${
+                className={ `fixed top-0 left-0 right-0 px-4 py-0 z-50 bg-white ${
                     isMobile ? headerMobileStyle : headerDesktopStyle
                 }` }
                 style={ {
-                    height: isMobile ? `${headerHeight}px` : 'auto',
+                    height: isMobile ? `${headerHeightMobile}px ` : 'auto',
                     backgroundColor: isMobile
                         ? `rgba(255,255,255, ${headerOpacity})`
                         : 'white',
                 } }
             >
-                <div className="container mx-auto">
-                    <div className="flex items-center justify-between py-4">
+                <div className="container md:mx-auto py-0 ">
+                    <div className="flex items-center justify-between py-0 md:py-4">
                         { isMobile ? (
                             <>
                                 { menuSections && menuSections.length > 0 && (
@@ -120,9 +127,11 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                                         router={ router }
                                     />
                                 ) }
+                                { /* Logo com escala controlada para manter o tamanho original no topo */ }
                                 <div
                                     className="cursor-pointer"
                                     onClick={ () => router.push('/') }
+                                    style={ { transform: `scale(${logoScale})`, transition: 'transform 0.3s ease' } }
                                 >
                                     <Logo isMobile={ isMobile } />
                                 </div>
@@ -150,7 +159,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                                             </span>
                                         ) : (
                                             <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">
-                        Entrar
+                                                Entrar
                                             </span>
                                         ) }
                                     </div>
@@ -169,15 +178,15 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
             <div
                 style={ {
-                    height: isMobile ? `${headerHeight + 64}px` : '160px',
+                    height: isMobile ? `${0}px` : '0px',
                 } }
             />
             { /* Container da SearchBar mobile */ }
             { isMobile && (
                 <div
-                    className="fixed left-0 right-0 z-40 px-4 shadow-lg"
+                    className="fixed left-0 right-0 z-50 px-2 md:px-4 shadow-lg"
                     style={ {
-                        top: `${headerHeight}px`,
+                        top: `${headerHeightMobile * 0.8}px`,
                         backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
                     } }
                 >
