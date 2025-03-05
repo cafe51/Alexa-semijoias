@@ -1,3 +1,4 @@
+// src/app/components/ModalMakers/SlideInModal.tsx
 import { useEffect, useState } from 'react';
 import ModalHeader from './ModalHeader';
 

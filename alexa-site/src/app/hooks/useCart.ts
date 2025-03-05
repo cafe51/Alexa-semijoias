@@ -68,7 +68,6 @@ export const useCart = (
                             return {
                                 ...productVariation,
                                 ...cartInfo,
-                                // image: productVariation.image.localUrl,
                             };
                         }
                     }).filter(Boolean) as ((ProductCartType & FireBaseDocument)[]) | ProductCartType[];
@@ -80,7 +79,7 @@ export const useCart = (
         fetchProducts();
     }, [cartInfos, productVariations, user]); // Mantém as dependências para garantir que o efeito seja executado quando necessário
 
-    // console.log('AAAAA mappedProducts', mappedProducts);
+    console.log('AAAAA mappedProducts', mappedProducts);
 
     return { mappedProducts };
 };

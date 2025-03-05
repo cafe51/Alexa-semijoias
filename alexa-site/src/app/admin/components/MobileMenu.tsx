@@ -2,12 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Menu, ShoppingBag, Users, Settings, BarChart2, LogOut, Store, DollarSign, BadgePercent } from 'lucide-react';
+import { Menu, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useLogout } from '@/app/hooks/useLogout';
 import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { menuItems } from './menuItems';
 
 interface MobileMenuProps {
     isOpen: boolean;
@@ -18,64 +19,6 @@ const MobileMenu = ({ isOpen, toggleMenu }: MobileMenuProps) => {
     const router = useRouter();
     const { logout } = useLogout();
 
-    const menuItems = [
-        { 
-            icon: BarChart2, 
-            label: 'Painel de Controle', 
-            href: '/admin',
-            enabled: true,
-        },
-        { 
-            icon: ShoppingBag, 
-            label: 'Produtos', 
-            href: '/admin/produtos',
-            enabled: true,
-        },
-        { 
-            icon: Users, 
-            label: 'Clientes', 
-            href: '/admin/clientes',
-            enabled: true,
-        },
-        { 
-            icon: DollarSign, 
-            label: 'Vendas', 
-            href: '/admin/pedidos',
-            enabled: true,
-        },
-        { 
-            icon: BarChart2, 
-            label: 'Relatórios', 
-            href: '/admin/relatorios',
-            enabled: false,
-            message: 'Módulo de relatórios em desenvolvimento',
-        },
-        { 
-            icon: Settings, 
-            label: 'Configurações', 
-            href: '/admin/configuracoes',
-            enabled: false,
-            message: 'Módulo de configurações em desenvolvimento',
-        },
-        { 
-            icon: BadgePercent, 
-            label: 'Cupons', 
-            href: '/admin/coupons',
-            enabled: true,
-        },
-        { 
-            icon: Settings, 
-            label: 'Seções', 
-            href: '/admin/sections',
-            enabled: true,
-        },
-        { 
-            icon: Store, 
-            label: 'Ir para Loja', 
-            href: '/',
-            enabled: true,
-        },
-    ];
 
     const handleLogout = async() => {
         logout();
