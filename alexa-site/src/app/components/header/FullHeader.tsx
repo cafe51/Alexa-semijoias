@@ -101,7 +101,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     return (
         <>
             <header
-                className={ `fixed top-0 left-0 right-0 px-4 py-0 z-50 bg-white ${
+                className={ `fixed top-0 left-0 right-0 px-4 py-4 z-50 bg-white ${
                     isMobile ? headerMobileStyle : headerDesktopStyle
                 }` }
                 style={ {
@@ -186,7 +186,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                 <div
                     className="fixed left-0 right-0 z-50 px-2 md:px-4 shadow-lg"
                     style={ {
-                        top: `${headerHeightMobile * 0.8}px`,
+                        top: `${headerHeightMobile * 1}px`,
                         backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
                     } }
                 >

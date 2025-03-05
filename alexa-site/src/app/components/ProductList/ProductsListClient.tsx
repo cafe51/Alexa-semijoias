@@ -91,14 +91,12 @@ export default function ProductsListClient({
         <main>
             { productsToShow.length > 0 && (
                 <>
-                    { sectionName && (
-                        <div className="mb-6">
-                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center uppercase text-[#333333]">
-                                { subsection ? toTitleCase(subsection) : toTitleCase(sectionName) }
-                            </h1>
-                            <Breadcrumbs items={ getBreadcrumbItems(sectionName, subsection) } />
-                        </div>
-                    ) }
+                    <div className="mb-6">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center uppercase text-[#333333]">
+                            { subsection ? toTitleCase(subsection) : toTitleCase(sectionName || 'produtos') }
+                        </h1>
+                        <Breadcrumbs items={ getBreadcrumbItems(sectionName, subsection) } />
+                    </div>
                     <div className='w-full flex justify-end'>
                         <ProductSorter 
                             currentSort={ currentSort.value }

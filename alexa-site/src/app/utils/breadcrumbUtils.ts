@@ -9,12 +9,12 @@ export type BreadcrumbItem = {
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
-export function getBreadcrumbItems(section: string, subsection?: string): BreadcrumbItem[] {
+export function getBreadcrumbItems(section?: string | undefined, subsection?: string): BreadcrumbItem[] {
     const items: BreadcrumbItem[] = [
         { name: 'Início', url: BASE_URL },
-        { name: toTitleCase(section), url: `${BASE_URL}/section/${createSlugName(section)}` },
+        { name: toTitleCase(section || 'produtos'), url: `${BASE_URL}/section/${createSlugName(section || '')}` },
     ];
-    if (subsection) {
+    if (section && subsection) {
         items.push({ name: toTitleCase(subsection), url: `${BASE_URL}/section/${createSlugName(section)}/${createSlugName(subsection)}` });
     }
     return items;

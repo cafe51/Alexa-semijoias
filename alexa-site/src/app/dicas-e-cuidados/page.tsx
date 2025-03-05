@@ -30,12 +30,12 @@ const TipCard = ({ Icon, title, content }: { Icon: React.ForwardRefExoticCompone
 
 const CareSection = () => {
     const tips = [
-        { Icon: Droplet, title: 'Evite Contato com Água', content: 'Remova suas joias antes de nadar, tomar banho ou lavar as mãos para preservar o folheado.' },
-        { Icon: Sun, title: 'Proteja do Sol', content: 'Evite exposição prolongada ao sol, pois pode afetar o brilho e a cor das suas peças.' },
+        { Icon: Droplet, title: 'Evite Contato com Água', content: 'Remova suas joias antes de nadar, tomar banho ou lavar as mãos para preservar o banho de ouro.' },
+        { Icon: Sun, title: 'Proteja do Sol', content: 'Evite exposição prolongada ao sol, pois pode afetar o brilho e a cor das suas semijoias.' },
         { Icon: Wind, title: 'Guarde Adequadamente', content: 'Armazene suas joias separadamente em locais secos para evitar arranhões e oxidação.' },
         { Icon: Sparkles, title: 'Limpeza Suave', content: 'Use um pano macio e seco para limpar suas joias. Evite produtos químicos agressivos.' },
-        { Icon: AlertTriangle, title: 'Cuidado com Produtos', content: 'Aplique perfumes e cremes antes de colocar suas joias para evitar danos ao folheado.' },
-        { Icon: Heart, title: 'Uso Consciente', content: 'Alterne suas peças favoritas para prolongar a vida útil de todas as suas joias.' },
+        { Icon: AlertTriangle, title: 'Cuidado com Produtos', content: 'Aplique perfumes e cremes antes de colocar suas joias para evitar danos ao banho de ouro.' },
+        { Icon: Heart, title: 'Uso Consciente', content: 'Alterne suas peças favoritas para prolongar a vida útil de todas as suas semijoias.' },
     ];
 
     return (
