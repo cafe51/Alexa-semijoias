@@ -101,7 +101,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     return (
         <>
             <header
-                className={ `fixed top-0 left-0 right-0 px-4 py-4 z-50 bg-white ${
+                className={ `fixed top-0 left-0 right-0 px-4 py-0 z-50 bg-white ${
                     isMobile ? headerMobileStyle : headerDesktopStyle
                 }` }
                 style={ {
@@ -111,7 +111,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                         : 'white',
                 } }
             >
-                <div className="container md:mx-auto py-0 ">
+                <div className="container mx-auto py-0 ">
                     <div className="flex items-center justify-between py-0 md:py-4">
                         { isMobile ? (
                             <>
@@ -178,15 +178,15 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
             <div
                 style={ {
-                    height: isMobile ? `${0}px` : '0px',
+                    height: isMobile ? `${headerHeightMobile + 32}px` : '160px',
                 } }
             />
             { /* Container da SearchBar mobile */ }
             { isMobile && (
                 <div
-                    className="fixed left-0 right-0 z-50 px-2 md:px-4 shadow-lg"
+                    className="fixed left-0 right-0 z-50 px-4 shadow-lg"
                     style={ {
-                        top: `${headerHeightMobile * 1}px`,
+                        top: `${headerHeightMobile * 0.8 }px`,
                         backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
                     } }
                 >
