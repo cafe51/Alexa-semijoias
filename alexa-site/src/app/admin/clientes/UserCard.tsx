@@ -18,7 +18,6 @@ export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCa
     const pathname = usePathname();
     const [pedidos, setPedidos] = useState<(OrderType & FireBaseDocument)[] | null>(null);
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
-    const { updateDocumentField } = useCollection<UserType>('usuarios');
 
 
     const userQuery = useMemo<FilterOption[]>(() => 
@@ -45,9 +44,6 @@ export default function UserCard({ user, onEmailClick, onWhatsAppClick }: UserCa
 
     return (
         <div className="flex items-end flex-col border-b py-4 gap-4 ">
-            <button onClick={ () => {
-                updateDocumentField(user.id, 'id', user.userId);
-            } }>Change Id</button>
             <div className="flex justify-between items-center gap-4 w-full">
                 <Link
                     href={ `${ pathname }/${user?.id}` }
