@@ -149,8 +149,8 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         additionalProperty: [
             {
                 '@type': 'PropertyValue',
-                name: 'Gender',
-                value: 'Male',
+                name: 'gender',
+                value: 'female',
             },
             {
                 '@type': 'PropertyValue',
