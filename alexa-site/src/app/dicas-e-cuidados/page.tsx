@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import FAQSection from '../components/FAQSection';
 
 const TipCard = ({ Icon, title, content }: { Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>, title: string, content: string }) => (
     <Card className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 h-full flex flex-col items-center text-center">
@@ -52,33 +52,6 @@ const CareSection = () => {
     );
 };
 
-const FAQSection = () => {
-    const faqs = [
-        { question: 'Com que frequência devo limpar minhas semijoias?', answer: 'Recomenda-se limpar suas semijoias suavemente após cada uso com um pano macio e seco. Uma limpeza mais profunda pode ser feita mensalmente ou quando necessário.' },
-        { question: 'Posso usar minhas semijoias na praia ou piscina?', answer: 'Não é recomendado. O cloro, sal e areia podem danificar o folheado. Retire suas joias antes de entrar na água ou praticar atividades na praia.' },
-        { question: 'Como guardar minhas semijoias corretamente?', answer: 'Guarde cada peça separadamente em saquinhos de tecido ou em uma caixa de joias com compartimentos. Mantenha em local seco e longe da luz direta do sol.' },
-        { question: 'É normal que semijoias escureçam com o tempo?', answer: 'Sim, é normal que ocorra uma leve oxidação. Uma limpeza regular e armazenamento adequado podem retardar esse processo.' },
-        { question: 'Posso dormir com minhas semijoias?', answer: 'Não é recomendado. Dormir com joias pode causar desgaste prematuro, além de riscos de enroscar em roupas ou lençóis.' },
-    ];
-
-    return (
-        <section className="py-16 md:py-20 px-4 md:px-8 bg-[#F8C3D3] bg-opacity-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-[#333333] mb-12">Perguntas Frequentes</h2>
-            <Accordion type="single" collapsible className="max-w-3xl mx-auto space-y-4">
-                { faqs.map((faq, index) => (
-                    <AccordionItem key={ index } value={ `item-${index}` } className="bg-white rounded-lg px-6">
-                        <AccordionTrigger className="text-lg md:text-xl text-[#333333] hover:text-[#D4AF37] font-medium py-4">
-                            { faq.question }
-                        </AccordionTrigger>
-                        <AccordionContent className="text-base text-[#333333] pb-4 leading-relaxed">
-                            { faq.answer }
-                        </AccordionContent>
-                    </AccordionItem>
-                )) }
-            </Accordion>
-        </section>
-    );
-};
 
 const AdditionalTipsSection = () => {
     const additionalTips = [
@@ -134,6 +107,14 @@ const ContactSection = () => {
     );
 };
 
+const faqs = [
+    { question: 'Com que frequência devo limpar minhas semijoias?', answer: 'Recomenda-se limpar suas semijoias suavemente após cada uso com um pano macio e seco. Uma limpeza mais profunda pode ser feita mensalmente ou quando necessário.' },
+    { question: 'Posso usar minhas semijoias na praia ou piscina?', answer: 'Não é recomendado. O cloro, sal e areia podem danificar o folheado. Retire suas joias antes de entrar na água ou praticar atividades na praia.' },
+    { question: 'Como guardar minhas semijoias corretamente?', answer: 'Guarde cada peça separadamente em saquinhos de tecido ou em uma caixa de joias com compartimentos. Mantenha em local seco e longe da luz direta do sol.' },
+    { question: 'É normal que semijoias escureçam com o tempo?', answer: 'Sim, é normal que ocorra uma leve oxidação. Uma limpeza regular e armazenamento adequado podem retardar esse processo.' },
+    { question: 'Posso dormir com minhas semijoias?', answer: 'Não é recomendado. Dormir com joias pode causar desgaste prematuro, além de riscos de enroscar em roupas ou lençóis.' },
+];
+
 const TipsAndCarePage = () => {
     return (
         <div className="min-h-screen bg-[#FAF9F6]" style={ { fontFamily: 'Montserrat, sans-serif' } }>
@@ -145,7 +126,7 @@ const TipsAndCarePage = () => {
             </header>
 
             <CareSection />
-            <FAQSection />
+            <FAQSection faqs={ faqs } />
             <AdditionalTipsSection />
             <ContactSection />
 
