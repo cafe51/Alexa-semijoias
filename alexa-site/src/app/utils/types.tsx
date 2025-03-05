@@ -270,8 +270,6 @@ export type ProductCartType = {
 }
 
 export type CartInfoType = {
-    // exist: boolean,
-    // id: string,
     productId: string,
     quantidade: number,
     userId: string,

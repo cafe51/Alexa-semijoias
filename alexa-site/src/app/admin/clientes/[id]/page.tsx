@@ -14,11 +14,6 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
     const { getDocumentById } = useCollection<UserType>('usuarios');
     const { getAllDocuments } = useCollection<OrderType>('pedidos');
 
-    // const userQuery = useMemo<FilterOption[]>(() => 
-    //     [{ field: 'userId', operator: '==', value: userData ? userData.userId : 'invalidId' }],
-    // [userData], // Só recriar a query quando 'user' mudar
-    // );
-
     useEffect(() => {
         async function getUserData() {
             const res = await getDocumentById(params.id);
@@ -82,6 +77,8 @@ export default function ClientProfile({ params }: { params: { id: string } }) {
                             <h3>{ userData.nome }</h3>
                             <h3>{ userData.email }</h3>
                             <h3>{ userData.phone }</h3>
+                            <h3>{ userData.cpf }</h3>
+
                         </div>
                         <span className='textColored'>Editar</span>
                     </div>
