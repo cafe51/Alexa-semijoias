@@ -128,7 +128,6 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                                 </div>
                                 <div className="flex items-center space-x-4 pr-4">
                                     { user && isAdmin && <SettingsButton /> }
-                                    <UserIcon />
                                     <CartIcon isMobile={ isMobile } />
                                 </div>
                             </>
