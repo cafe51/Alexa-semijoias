@@ -75,10 +75,6 @@ export default function PaymentBrick({
                 items: {
                     itemsList: carrinho ? carrinho.map((i) => {
                         return {
-                            // id: i.skuId,
-                            // title: i.name,
-                            // unit_price: i.value.promotionalPrice || i.value.price,
-                            // quantity: i.quantidade,
                             name: i.name,
                             units: i.quantidade,
                             value: i.value.promotionalPrice || i.value.price,

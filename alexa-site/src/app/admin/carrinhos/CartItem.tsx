@@ -15,7 +15,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     const { product, loading, error } = useProduct(item.productId);
 
     if (loading) return <p>Carregando produto...</p>;
-    console.log('XXXXXXXXXXXXXXXx', product?.id);
+    // console.log('XXXXXXXXXXXXXXXx', product?.id);
     if (error || !product || !product.exist || product.productVariations?.length === 0 || !product.productVariations) return <p>Erro ao carregar produto.</p>;
 
     // Busca a variação que corresponde ao sku do item

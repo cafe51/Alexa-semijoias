@@ -38,6 +38,8 @@ export default function PaymentSectionWithMercadoPago({
     const couponDiscountIsFreeShipping = !!couponDiscount && (couponDiscount === 'freteGratis');
     const couponDiscountValue = (!couponDiscountIsFreeShipping && !!couponDiscount) ? couponDiscount : 0;
 
+    
+
     return (
         <>
             {
@@ -49,7 +51,7 @@ export default function PaymentSectionWithMercadoPago({
             {
                 !loadingPayment && !state.editingAddressMode && userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price !== null && state.deliveryOption.price !== undefined && preferenceId && !showPaymentFailSection &&
             <PaymentBrick
-                totalAmount={ cartPrice + state.deliveryOption.price - couponDiscountValue }
+                totalAmount={ parseFloat((cartPrice + state.deliveryOption.price - couponDiscountValue).toFixed(2)) }
                 user={ userInfo }
                 state={ state }
                 preferenceId={ preferenceId }
