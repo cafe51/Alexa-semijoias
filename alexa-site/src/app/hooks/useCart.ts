@@ -53,6 +53,8 @@ export const useCart = (
             if (typeof window !== 'undefined' && productVariations && productVariations.length > 0 && cartInfos) {
                 const productsCart = productVariations
                     .map((productVariation) => {
+                        // cartInfo é um array de objetos CartInfoType, que é a tipagem dos documentos da coleção carrinhos, cada documento possui a propriedade skuId referente a um sku existente em algum documento da coleção products
+                        // cada documento da coleção products possui a propriedade productVariations do tipo ProductVariation[], que é um array de objetos do tipo ProductVariation onde existe um campo sku.
                         const cartInfo = cartInfos.find((cart) => productVariation.sku === cart.skuId); 
 
                         if(!cartInfo) return undefined;

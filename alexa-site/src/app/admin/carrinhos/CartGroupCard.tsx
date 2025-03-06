@@ -1,4 +1,4 @@
-// components/CartGroupCard.tsx
+// src/app/admin/carrinhos/CartGroupCard.tsx
 import React from 'react';
 
 import { CartInfoType } from '@/app/utils/types';

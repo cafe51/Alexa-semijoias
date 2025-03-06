@@ -1,7 +1,7 @@
+// src/app/admin/carrinhos/page.tsx
 'use client';
-// components/AdminCartsList.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 import CartGroupCard from './CartGroupCard';
 import CartDetailModal from './CartDetailModal';
@@ -14,7 +14,13 @@ const AdminCartsList: React.FC = () => {
     const [selectedCart, setSelectedCart] = useState<{ userId: string; items: CartInfoType[] } | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
 
+    // Ref para garantir que a busca seja feita apenas uma vez
+    const hasFetched = useRef(false);
+
     useEffect(() => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
         const fetchCarts = async() => {
             try {
                 const cartItems = await getAllDocuments();

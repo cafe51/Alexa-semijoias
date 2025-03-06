@@ -1,3 +1,4 @@
+// src/app/components/ProductList/VariationSelection/DynamicObjectCards.tsx
 'use client';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
 import OptionButton from './OptionButton';

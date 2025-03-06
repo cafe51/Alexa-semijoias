@@ -1,4 +1,4 @@
-// hooks/useProduct.ts
+// src/app/admin/carrinhos/useProduct.ts
 import { useState, useEffect } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';

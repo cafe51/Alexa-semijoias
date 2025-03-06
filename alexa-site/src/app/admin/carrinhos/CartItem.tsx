@@ -1,4 +1,4 @@
-// components/CartItem.tsx
+// src/app/admin/carrinhos/CartItem.tsx
 import { useProduct } from './useProduct';
 import { CartInfoType, ProductCartType } from '@/app/utils/types';
 import DisplayCustomProperties from '@/app/components/DisplayCustomProperties';
