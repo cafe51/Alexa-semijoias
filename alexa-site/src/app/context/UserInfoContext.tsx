@@ -5,6 +5,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { CartInfoType, FilterOptionForUseSnapshot, FireBaseDocument, ProductBundleType, ProductCartType, ProductVariation, UserType } from '../utils/types';
 import { useSnapshot } from '../hooks/useSnapshot';
 import { useCart } from '../hooks/useCart';
+import { useMultiSnapshot } from '../hooks/useMultiSnapshot';
 
 interface IUserInfoContext {
     carrinho: ((ProductCartType & FireBaseDocument)[]) | ProductCartType[] | null;
@@ -28,6 +29,17 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     const [productVariationsState, setProductVariationsState] = useState<(ProductVariation)[] | never[]>([]);
 
     const { user } = useAuthContext();
+
+    const filterOptionsArrays = useMemo(() => {
+        if (!productIds || productIds.length === 0) {
+            return [[{ field: '__name__', operator: 'in', value: ['invalidId'] }]];
+        }
+        const chunks = [];
+        for (let i = 0; i < productIds.length; i += 30) {
+            chunks.push([{ field: '__name__', operator: 'in', value: productIds.slice(i, i + 30) }]);
+        }
+        return chunks;
+    }, [productIds]);
     
     const userQuery = useMemo<FilterOptionForUseSnapshot[]>(() => 
         [{ field: 'userId', operator: '==', value: user ? user.uid : 'invalidId' }],
@@ -44,15 +56,8 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         userQuery, 
     );
 
-    const produtosDoCarrinhoQuery = useMemo<FilterOptionForUseSnapshot[]>(() => 
-        [{ field: '__name__', operator: 'in', value: productIds && productIds.length > 0 ? productIds : ['invalidId'] }],
-    [productIds], // Só recriar a query quando 'productIds' mudar
-    );
+    const { documents: produtosDoCarrinho } = useMultiSnapshot<ProductBundleType>('products', filterOptionsArrays);
 
-    const { documents: produtosDoCarrinho } = useSnapshot<ProductBundleType>(
-        'products', 
-        produtosDoCarrinhoQuery, 
-    );
 
     useEffect(() => {
         if(produtosDoCarrinho) {
