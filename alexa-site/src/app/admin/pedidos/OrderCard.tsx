@@ -6,8 +6,6 @@ import { statusButtonTextColorMap } from '@/app/utils/statusButtonTextColorMap';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
 import { useEffect, useState } from 'react';
 
-// import { usePathname } from 'next/navigation';
-
 interface OrderCardProps {
     pedido: OrderType & FireBaseDocument;
     handleSelectOrder: (order: OrderType & FireBaseDocument, user: UserType & FireBaseDocument) => void;
@@ -16,7 +14,6 @@ interface OrderCardProps {
 export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps){
     const { getDocumentById } = useCollection<UserType>('usuarios');
     const [user, setUser] = useState<(UserType & FireBaseDocument) | null>(null);
-    // const pathname = usePathname();
 
     useEffect(() => {
         async function getUser() {
@@ -29,6 +26,35 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
     }, []);
 
     if(!user || !pedido) return <p>Loading...</p>;
+
+    const taxaDeParcelamento = 3.98;
+
+    const jurosGenerator = (installments: number) => {
+        switch (installments) {
+        case 2:
+            return 2.53 + taxaDeParcelamento;
+        case 3:
+            return 4.62 + taxaDeParcelamento;
+        case 4:
+            return 6.69 + taxaDeParcelamento;
+        case 5:
+            return 8.66 + taxaDeParcelamento;
+        case 6:
+            return 9.96 + taxaDeParcelamento;
+        default:
+            return 0;
+        }
+    };
+
+    const custo = pedido.cartSnapShot.map(({ value: { cost } }) => cost).reduce((a, b) => a + b, 0);
+    const valorDaCompra = pedido.valor.soma;
+    const juros = pedido.installments ? jurosGenerator(pedido.installments) : 0;
+    const valorDoJuro = juros === 0 ? undefined : parseFloat((valorDaCompra * (juros/100)).toFixed(2));
+    const valorRecebido = ((juros > 0) && (valorDoJuro)) ? (parseFloat((valorDaCompra - valorDoJuro).toFixed(2))) : undefined;
+
+    const lucro = valorRecebido ? parseFloat((valorRecebido - custo).toFixed(2)) : parseFloat((pedido.valor.soma - custo).toFixed(2));
+
+
 
     return (
         <div className="flex flex-col items-end border-b pb-4 gap-4 bg-white" onClick={ () => handleSelectOrder(pedido, user) }>
@@ -46,15 +72,25 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
 
                 <p className= { `${ statusButtonTextColorMap[pedido.status] }` }>{ pedido.status }</p>
 
-                <p>{ formatPrice(pedido?.valor.soma) } </p>
+                <p>
+                    {
+                        formatPrice(pedido?.valor.soma) + ((valorDaCompra && pedido.installments) &&
+                    (' - ' + jurosGenerator(pedido.installments))+ '%' + ' = ')
+                    }
+                    <span className='font-bold'>{ valorDaCompra && pedido.installments && formatPrice(valorRecebido) }</span>
+                </p>
             </div>
-            <div className="flex justify-between items-center px-2 gap-4 w-full">
+            <div className="flex justify-between  px-2 gap-4 w-full items-start">
                 <div className='flex flex-col'>
                     <p>{ user.nome } </p>
                     <p><span>quantidade:</span> <span className='font-bold'>{ pedido.totalQuantity }</span></p>
+                    <p>Custo: <span className='font-bold'>{ formatPrice(custo) }</span></p>
+                    <p>Lucro: <span className='font-bold'>{ formatPrice(lucro) }</span></p>
+
+
                 </div>
                 <div className='flex flex-col'>
-                    <p>{ pedido.paymentOption }</p>
+                    <p>{ (pedido.installments && pedido.paymentOption !== 'pix') ? `${pedido.installments + 'x ' + pedido.paymentOption}` : pedido.paymentOption }</p>
                     <p>{ pedido.deliveryOption.name }</p>
                 </div>
             </div>
