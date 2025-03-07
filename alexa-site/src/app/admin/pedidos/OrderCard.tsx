@@ -46,6 +46,7 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
         }
     };
 
+    const fixedFrete = 80;
     const custo = pedido.cartSnapShot.map(({ value: { cost } }) => cost).reduce((a, b) => a + b, 0);
     const valorDaCompra = pedido.valor.soma;
     const juros = pedido.installments ? jurosGenerator(pedido.installments) : 0;
@@ -85,7 +86,8 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
                     <p>{ user.nome } </p>
                     <p><span>quantidade:</span> <span className='font-bold'>{ pedido.totalQuantity }</span></p>
                     <p>Custo: <span className='font-bold'>{ formatPrice(custo) }</span></p>
-                    <p>Lucro: <span className='font-bold'>{ formatPrice(lucro) }</span></p>
+                    <p>Frete: <span className='font-bold'>{ formatPrice(fixedFrete) }</span></p>
+                    <p>Lucro: <span className='font-bold'>{ formatPrice(parseFloat((lucro - fixedFrete).toFixed(2))) }</span></p>
 
 
                 </div>
