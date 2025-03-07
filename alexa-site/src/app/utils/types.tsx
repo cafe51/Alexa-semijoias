@@ -58,6 +58,13 @@ export type DadosDaEmpresaType = {
     telefone: string;
 }
 
+export type DadosRemetenteType = {
+    nome: string;
+    endereco: AddressType;
+    cep: string;
+    telefone: string;
+}
+
 export type FireBaseDocument = {
     exist: boolean,
     id: string,

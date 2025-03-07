@@ -22,3 +22,26 @@ export const detalhesDaEmpresa = {
     cnpj: '30.772.232/0001-29',
     razaoSocial: 'ALEXA SEMIJOIAS',
 };
+
+export const detalhesRemetente = {
+    cep: '15608-040',
+    endereco: {
+        logradouro: 'Rua das Siriemas',
+        numero: '747',
+        bairro: 'Jardim Araguaia',
+        localidade: 'Fernandópolis',
+        uf: 'SP',
+        cep: '15608-040',
+        referencia: 'Próximo à APAE',
+        complemento: 'CASA',
+        ddd: '17',
+        estado: 'SP',
+        gia: 'SP',
+        ibge: 'SP',
+        regiao: 'SP',
+        siafi: 'SP',
+        unidade: 'SP',
+    },
+    nome: 'Alexasandra Silva Rocha',
+    telefone: '(17) 98165-0632',
+};

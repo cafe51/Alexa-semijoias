@@ -16,7 +16,8 @@ import { useWindowSize } from '@/app/hooks/useWindowSize';
 import LoadingIndicator from '@/app/components/LoadingIndicator';
 import PixPayment from './pixPaymentSection/PixPayment';
 import GenerateRomaneioButton from '@/app/components/GenerateRomaneioButton';
-import { detalhesDaEmpresa } from '@/app/utils/detalhesDaEmpresa';
+import { detalhesDaEmpresa, detalhesRemetente } from '@/app/utils/detalhesDaEmpresa';
+import GenerateShippingLabelButton from '@/app/components/GenerateShippingLabelButton';
 
 interface OrderDetailsProps {
     pedido: OrderType & FireBaseDocument;
@@ -113,6 +114,12 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                             dadosDaEmpresa={ detalhesDaEmpresa }
                         />
                     ) }
+                    { admin && (
+                        <GenerateShippingLabelButton
+                            user={ user }
+                            dadosDaEmpresa={ detalhesRemetente }
+                        />
+                    ) }
                     <OrderStatus order={ pedidoState } />
                     { admin && (
                         <ChangeStatus
@@ -171,6 +178,12 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                     dadosDaEmpresa={ detalhesDaEmpresa }
                                 />
                             ) }
+                            { admin && (
+                                <GenerateShippingLabelButton
+                                    user={ user }
+                                    dadosDaEmpresa={ detalhesRemetente }
+                                />
+                            ) }
                             <PaymentSummary
                                 frete={ pedido.valor.frete }
                                 subtotalPrice={ pedido.valor.soma }
@@ -212,6 +225,12 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                 order={ pedidoState }
                                 user={ user }
                                 dadosDaEmpresa={ detalhesDaEmpresa }
+                            />
+                        ) }
+                        { admin && (
+                            <GenerateShippingLabelButton
+                                user={ user }
+                                dadosDaEmpresa={ detalhesRemetente }
                             />
                         ) }
                         <OrderStatus order={ pedidoState } />
