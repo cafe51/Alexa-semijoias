@@ -1,12 +1,12 @@
 export const detalhesDaEmpresa = {
-    cep: '30.772.232/0001-29',
+    cep: '15608-040',
     endereco: {
         logradouro: 'Rua das Siriemas',
         numero: '747',
         bairro: 'Jardim Araguaia',
         localidade: 'Fernandópolis',
         uf: 'SP',
-        cep: '30.772.232/0001-29',
+        cep: '15608-040',
         referencia: 'Próximo à APAE',
         complemento: 'CASA',
         ddd: '17',
