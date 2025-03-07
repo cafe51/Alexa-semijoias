@@ -4,38 +4,32 @@ import Image from 'next/image';
 import blankImage from '../../../../public/blankImage.png';
 import toTitleCase from '@/app/utils/toTitleCase';
 import CartCardPrice from '@/app/carrinho/CartCardPrice';
+import DisplayCustomProperties from '@/app/components/DisplayCustomProperties';
 
 
 export default function SummaryCard({ produto }: { produto: CartHistoryType }) {
 
-    const { quantidade, name, image, value } = produto;
+    const { quantidade, name, image, value, customProperties } = produto;
 
     // const precoCheio = formatPrice(promotionalPrice > 0 ? (promotionalPrice * quantidade) : (price * quantidade));
 
     return (
-        <div className='flex flex-col gap-4 w-full h-full p-4 bg-white rounded-lg border-b' >
-            <div className='flex gap-4 w-full h-[90px] md:h-[120px] '>
-                {
-                    <div className='rounded-lg relative h-24 w-24 overflow-hidden flex-shrink-0 md:h-32 md:w-32'>
-                        <Image
-                            className='rounded-lg object-cover scale-100'
-                            src={ image ? image : blankImage }
-                            alt="Foto da peça"
-                            sizes="200px"
-                            fill
-                        />
-                    </div>
-                    // <img src={ image } alt={ name } className="w-20 h-20 object-cover rounded-md mr-4" />
-                }
-                <div className='rounded-lg relative w-3/4 overflow-hidden font-bold md:text-xl' >
-                    <p >{ toTitleCase(name) }</p>
-                </div>
+        <div className="flex items-start justify-start border-b py-2 gap-2">
+            { /* <img src={ productCart.image } alt={ productCart.name } className="w-16 h-16 object-cover mr-4 aspect-[4/5]" /> */ }
+            <div className="relative w-[clamp(60px,12vw,120px)] aspect-[4/5] flex-shrink-0">
+                <Image
+                    src={ image ? image : blankImage }
+                    alt="Foto da peça"
+                    priority
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 40vw, (max-width: 1024px) 220px, 220px"
+                />
             </div>
-            <div className="flex justify-between items-center w-full text-gray-500 md:text-lg">
-                <div className='flex gap-2'>
-                    <p className='font-bold'>{ quantidade }</p>
-                    <p>{ quantidade > 1 ? 'unidades' : 'unidade' }</p>
-                </div>
+            <div className="flex-1 ">
+                <p className="font-bold bg-gray-200">{ toTitleCase(name) }</p>
+                { customProperties &&  <DisplayCustomProperties customProperties={ customProperties } /> }
+                <p>Quantidade: <span className='font-bold'>{ quantidade }</span></p>
                 <CartCardPrice quantidade={ quantidade } value={ value } />
             </div>
         </div>
