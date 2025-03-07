@@ -42,6 +42,6 @@ export const detalhesRemetente = {
         siafi: 'SP',
         unidade: 'SP',
     },
-    nome: 'Alexasandra Silva Rocha',
+    nome: 'Alexsandra Silva Rocha',
     telefone: '(17) 98165-0632',
 };
