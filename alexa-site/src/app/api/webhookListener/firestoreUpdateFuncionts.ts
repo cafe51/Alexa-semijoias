@@ -80,25 +80,25 @@ export async function updateCuponsDocStock(
 /**
  * Deleta os documentos de `couponUsages` com base no campo orderId
  */
-export async function deleteCouponUsageDoc(orderId: string) {
-    try {
+// export async function deleteCouponUsageDoc(orderId: string) {
+//     try {
         
-        const couponUsageQuerySnapshot = await adminDb
-            .collection('couponUsages')
-            .where('orderId', '==', orderId)
-            .get();
+//         const couponUsageQuerySnapshot = await adminDb
+//             .collection('couponUsages')
+//             .where('orderId', '==', orderId)
+//             .get();
     
-        if (couponUsageQuerySnapshot.empty) {
-            throw new Error(`Cupom usage com orderId ${orderId} não encontrado`);
-        }
+//         if (couponUsageQuerySnapshot.empty) {
+//             throw new Error(`Cupom usage com orderId ${orderId} não encontrado`);
+//         }
     
-        await adminDb.runTransaction(async(transaction) => {
-            couponUsageQuerySnapshot.docs.forEach((docSnap) => {
-                transaction.delete(docSnap.ref);
-            });
-        });
-    } catch (error) {
-        console.error('Erro ao deletar documento de uso de cupom usando orderId = ' + orderId + ':', error);
-        throw error;
-    }
-}
+//         await adminDb.runTransaction(async(transaction) => {
+//             couponUsageQuerySnapshot.docs.forEach((docSnap) => {
+//                 transaction.delete(docSnap.ref);
+//             });
+//         });
+//     } catch (error) {
+//         console.error('Erro ao deletar documento de uso de cupom usando orderId = ' + orderId + ':', error);
+//         throw error;
+//     }
+// }

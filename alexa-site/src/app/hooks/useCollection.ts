@@ -1,7 +1,7 @@
 // app/hooks/useCollection.ts
 
 import { projectFirestoreDataBase } from '../firebase/config';
-import { CollectionReference, DocumentData, Query, Timestamp, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy, limit, QueryConstraint, getCountFromServer } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, Timestamp, writeBatch, addDoc, collection, doc, getDoc, query, where, deleteDoc, updateDoc, getDocs, setDoc, orderBy, limit, QueryConstraint, getCountFromServer } from 'firebase/firestore';
 import { FilterOption, FireBaseDocument, OrderByOption } from '../utils/types';
 import { useCallback, useMemo } from 'react';
 
@@ -28,6 +28,29 @@ export const useCollection = <T>(collectionName: string) => {
     const deleteDocument = useCallback(async(id: string) => {
         console.log('useCollection: deleteDocument chamado');
         await deleteDoc(doc(projectFirestoreDataBase, collectionName, id));
+    }, [collectionName]);
+
+    const deleteDocumentsByUserId = useCallback(async(userId: string) => {
+        try {
+            // Cria um batch
+            const batch = writeBatch(projectFirestoreDataBase);
+            // Cria a query para encontrar os documentos com o userId desejado
+            const q = query(
+                collection(projectFirestoreDataBase, collectionName),
+                where('userId', '==', userId),
+            );
+            // Executa a query
+            const snapshot = await getDocs(q);
+            // Adiciona cada deleção ao batch
+            snapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+            // Comita o batch para executar todas as deleções de uma vez
+            await batch.commit();
+            console.log('Documentos deletados com sucesso.');
+        } catch (error) {
+            console.error('Erro ao deletar documentos por userId:', error);
+        }
     }, [collectionName]);
 
     const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object | null) => {
@@ -179,6 +202,7 @@ export const useCollection = <T>(collectionName: string) => {
         getActiveProductsCount,
         getRecentDocumentsCount,
         getCompletedOrdersCount,
+        deleteDocumentsByUserId,
     }), [
         addDocument, 
         deleteDocument, 
@@ -191,5 +215,6 @@ export const useCollection = <T>(collectionName: string) => {
         getActiveProductsCount,
         getRecentDocumentsCount,
         getCompletedOrdersCount,
+        deleteDocumentsByUserId,
     ]);
 };

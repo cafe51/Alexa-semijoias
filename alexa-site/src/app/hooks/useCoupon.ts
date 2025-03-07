@@ -7,13 +7,15 @@ import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '../utils/const
 
 export function useCoupon() {
     const couponCollection = useCollection<CouponType>('cupons');
-    const usageCollection = useCollection<CouponUsageType>('couponUsages');
     const ordersCollection = useCollection<CouponUsageType>('pedidos');
 
     const { userInfo } = useUserInfo();
 
     async function applyCoupon(code: string, cartPrice: number, carrinho: (ProductCartType & FireBaseDocument)[] | ProductCartType[]): Promise<CouponValidationResponse> {
-    // Procura o cupom pelo código (garantindo tratamento de case se necessário)
+        if(code.includes('/')) {
+            return { valido: false, mensagemErro: 'Cupom inválido' };
+        }
+        // Procura o cupom pelo código (garantindo tratamento de case se necessário)
         const coupon = await couponCollection.getDocumentById(code);
         if (!coupon || !coupon.exist) {
             return { valido: false, mensagemErro: 'Cupom inválido' };
@@ -43,25 +45,28 @@ export function useCoupon() {
             }
         }
 
-        if(coupon.id === COUPONREVENDEDORAVIP) {
-            const usageCountOfCouponRevendedoraFirst = await usageCollection.getCount([ where('cupomId', '==', COUPONREVENDEDORAFIRSTCODE) ]);
+        if(coupon.id === COUPONREVENDEDORAVIP && userInfo && userInfo.userId) {
+            const usageCountOfCouponRevendedoraFirst = await ordersCollection.getCount([
+                where('userId', '==', userInfo.userId),
+                where('status', '!=', 'cancelado'),
+                where('couponId', '==', COUPONREVENDEDORAFIRSTCODE),
+            ]);
             if(usageCountOfCouponRevendedoraFirst <= 0) {
-                return { valido: false, mensagemErro: `Cupon válido para revenda. Torne-se um(a) revendedor(a) usando o cupom ${COUPONREVENDEDORAFIRSTCODE}.` };
+                return { valido: false, mensagemErro: `Cupom válido para revenda. Torne-se um(a) revendedor(a) usando o cupom ${COUPONREVENDEDORAFIRSTCODE}.` };
             }
             
         }
 
         // Validação dos limites de uso global
         if (coupon.limiteUsoGlobal !== null) {
-            const globalCount = await usageCollection.getCount([ where('cupomId', '==', code) ]);
-            if (globalCount >= coupon.limiteUsoGlobal) {
+            if (coupon.limiteUsoGlobal <= 0) {
                 return { valido: false, mensagemErro: 'Cupom esgotado' };
             }
         }
         // Validação do limite por usuário (se o usuário estiver logado)
         if (userInfo && userInfo.userId && coupon.limiteUsoPorUsuario !== null) {
-            const userCount = await usageCollection.getCount([
-                where('cupomId', '==', coupon.id),
+            const userCount = await ordersCollection.getCount([
+                where('couponId', '==', coupon.id),
                 where('userId', '==', userInfo.userId),
             ]);
             if (userCount >= coupon.limiteUsoPorUsuario) {

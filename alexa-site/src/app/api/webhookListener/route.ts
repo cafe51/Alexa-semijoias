@@ -5,7 +5,7 @@ import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/t
 import { consoleLogPaymentResponseData, consoleLogWebHookResponse } from '@/app/utils/consoleLogPaymentResponseData';
 import sendgrid from '@sendgrid/mail';
 import { generateEmailMessage } from '@/app/utils/emailHandler/sendEmailFunctions';
-import { deleteCouponUsageDoc, updateCuponsDocStock, updateProductStock } from './firestoreUpdateFuncionts';
+import { updateCuponsDocStock, updateProductStock } from './firestoreUpdateFuncionts';
 import { consoleLogEmailEnviado, consoleLogPreparandoEnvio } from './consolelogs';
 
 const client = new MercadoPagoConfig({ accessToken: process.env.NEXT_PUBLIC_MPAGOKEY! });
@@ -66,7 +66,6 @@ export async function POST(req: NextRequest) {
                     }
                     if (orderData.couponId && orderData.couponId.length > 0) {
                         await updateCuponsDocStock(orderData.couponId, '+');
-                        await deleteCouponUsageDoc(paymentId);
                     }
 
                     if (cancelMessageEmail) {

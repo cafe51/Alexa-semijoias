@@ -2,7 +2,7 @@
 'use client';
 import { useCheckoutState } from '../hooks/useCheckoutState';
 import { useUserInfo } from '../hooks/useUserInfo';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MetaConversionsService } from '@/app/utils/meta-conversions/service';
 import AccountSection from './AccountSection/AccountSection';
@@ -13,7 +13,7 @@ import PaymentSectionWithMercadoPago from './PaymentSection/PaymentSectionWithMe
 import { useWindowSize } from '../hooks/useWindowSize';
 import PriceSummarySection from './OrderSummarySection/PriceSummarySection';
 import Link from 'next/link';
-import { FireBaseDocument, ProductCartType } from '../utils/types';
+import { ProductCartType } from '../utils/types';
 import SummaryCard from './OrderSummarySection/SummaryCard';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { useCollection } from '../hooks/useCollection';
@@ -23,7 +23,7 @@ import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '../utils/const
 export default function Checkout() {
     const router = useRouter();
     const { userInfo, carrinho } = useUserInfo();
-    const { deleteDocument: deleteCartItemFromDb } = useCollection<ProductCartType>('carrinhos');
+    const { deleteDocumentsByUserId: deleteCartItemsFromDb } = useCollection<ProductCartType>('carrinhos');
     const [ loadingScreen, setLoadingScreen ] = useState(true);
     const [cartPrice, setCartPrice] = useState(0);
     const [isCartLoading, setIsCartLoading] = useState(true);
@@ -38,6 +38,9 @@ export default function Checkout() {
     const [ couponDiscount, setCouponDiscount ] = useState<number | 'freteGratis'>(0);
     const [ couponCode, setCouponCode ] = useState<string>('');
     const [ carrinhoState, setCarrinhoState ] = useState<ProductCartType[] | null>(null);
+
+    // Ref para guardar uma cópia do carrinho no momento do pagamento finalizado
+    const cartSnapshotRef = useRef<ProductCartType[] | null>(null);
 
     const {
         state,
@@ -94,19 +97,18 @@ export default function Checkout() {
         }
     }, [carrinho]);
 
+    // Ao finalizar o pagamento, salva um snapshot do carrinho
     useEffect(() => {
-        if(isPaymentFinished) {
-            setTimeout(() => {
-                if(carrinho && carrinho.length > 0) {
-                    for (const cartItem  of carrinho) {
-                        const { id } = cartItem as ProductCartType & FireBaseDocument;
-                        deleteCartItemFromDb(id);
-                    }
-                }
-                setIsPaymentFinished(false);
-            }, 500);
+        if (isPaymentFinished && carrinho) {
+            cartSnapshotRef.current = [...carrinho];
         }
-    }, [isPaymentFinished, deleteCartItemFromDb, carrinho]);
+    }, [isPaymentFinished, carrinho]);
+
+    useEffect(() => {
+        if (isPaymentFinished && userInfo) {
+            deleteCartItemsFromDb(userInfo.userId);
+        }
+    }, [isPaymentFinished, userInfo, deleteCartItemsFromDb]);
 
     useEffect(() => {
         if (!carrinho || carrinho.length < 1) {

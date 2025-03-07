@@ -3,7 +3,7 @@
 import { IPaymentFormData } from '@mercadopago/sdk-react/bricks/payment/type';
 import { IBrickError } from '@mercadopago/sdk-react/bricks/util/types/common';
 import { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes';
-import { CouponType, CouponUsageType, FireBaseDocument, OrderType, PixPaymentResponseType, ProductCartType, StatusType, UseCheckoutStateType, UserType } from '../utils/types';
+import { CouponType, FireBaseDocument, OrderType, PixPaymentResponseType, ProductCartType, StatusType, UseCheckoutStateType, UserType } from '../utils/types';
 import { useRouter } from 'next/navigation';
 import { useManageProductStock } from '../hooks/useManageProductStock';
 import { useCollection } from '../hooks/useCollection';
@@ -16,7 +16,6 @@ import { Timestamp } from 'firebase/firestore';
 export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: boolean) => void) => {
     const router = useRouter();
     const { addDocument: createNewOrder, getDocumentById: getOrderById } = useCollection<OrderType>('pedidos');
-    const { addDocument: createCouponUsageDoc } = useCollection<CouponUsageType>('couponUsages');
     const { updateDocumentField: updateCouponDoc, getDocumentById: getCouponById } = useCollection<CouponType>('cupons');
 
 
@@ -65,7 +64,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             }
             if(couponId && couponId.length > 0) {
                 const coupon = await getCouponById(couponId);
-                console.log('XXXXXXXXXXXXXXx');
+                console.log('XXXXXXXXXXXXXXxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx');
                 console.log('coupon', coupon);
                 if(coupon) {
                     if (coupon.limiteUsoGlobal !== null && coupon.limiteUsoGlobal > 0) {
@@ -73,12 +72,6 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
                         updateCouponDoc(couponId, 'atualizadoEm', Timestamp.now());
                         updateCouponDoc(couponId, 'limiteUsoGlobal', coupon.limiteUsoGlobal - 1);
                     }
-                    createCouponUsageDoc({
-                        cupomId: couponId,
-                        userId: user.id,
-                        orderId: paymentId,
-                        dataUso: Timestamp.now(),
-                    });
                 }
             }
 
