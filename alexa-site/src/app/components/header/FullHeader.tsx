@@ -85,8 +85,8 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     }, []);
 
     // Definindo valores máximos e mínimos para o header (mobile)
-    const MAX_HEADER_HEIGHT = 80; // altura original do header (e da logo)
-    const MIN_HEADER_HEIGHT = 60;
+    const MAX_HEADER_HEIGHT = 60; // altura original do header (e da logo)
+    const MIN_HEADER_HEIGHT = 40;
     const headerHeightMobile = Math.max(
         MIN_HEADER_HEIGHT,
         MAX_HEADER_HEIGHT - scrollPosition * 0.2,
@@ -110,7 +110,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     return (
         <>
             <header
-                className={ `fixed top-0 left-0 right-0 px-4 py-0 z-50 bg-white ${
+                className={ `fixed top-0 left-0 right-0 py-0 z-50 bg-white ${
                     isMobile ? headerMobileStyle : headerDesktopStyle
                 }` }
                 style={ {
@@ -120,7 +120,9 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                         : 'white',
                 } }
             >
-                <div className="flex items-center justify-between py-0 md:py-4 w-full">
+                { /* <div className='bg-gray-200 p-1 w-full h-6 text-center text-sm font-bold'><p>Cupom PRIMEIRALEXA de 10% na primeira compra</p></div> */ }
+                <div className="flex items-center justify-between px-4 py-0 md:py-4 w-full">
+                    
                     { isMobile ? (
                         <>
                             { menuSections && menuSections.length > 0 && (

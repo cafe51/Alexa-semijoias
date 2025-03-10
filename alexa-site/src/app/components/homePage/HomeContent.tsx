@@ -6,8 +6,9 @@ import HeroSection from './HeroSection';
 import InfoBanner from './InfoBanner';
 import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
-import { fetchRandomProductForSection } from '@/app/services/products';
+import { fetchRandomProductForSection, ProductsResponse } from '@/app/services/products';
 import { serializeData } from '@/app/utils/serializeData';
+import { SITE_URL } from '@/app/utils/constants';
 
 const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
     ssr: true,
@@ -84,11 +85,33 @@ async function getRandomProductsForSections(
     );
     return randomProducts;
 }
+
+async function getLastProductAdded() {
+    try {
+        const params = new URLSearchParams();
+        params.append('orderBy', 'creationDate');
+        params.append('direction', 'desc');
+        params.append('limit', '1');
+        const response = await fetch(`${SITE_URL}/api/products?${params.toString()}`);
+        if (!response.ok) {
+            throw new Error('Falha ao carregar produtos');
+        }
+        const data: ProductsResponse = await response.json();
+        return data.products[0];
+    } catch (error) {
+        console.error('Erro ao carregar último produto adicionado:', error);
+    }
+}
+
+
   
 // Cache (revalidate) – os dados serão revalidado a cada 60 segundos
 export const revalidate = 60;
   
 export default async function HomeContent() {
+    // Busca último produto adicionado
+    const lastAddProduct = await getLastProductAdded();
+
     // Busca as seções primeiro
     const sections = await getSections();
   
@@ -100,7 +123,7 @@ export default async function HomeContent() {
   
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
-            <HeroSection />
+            <HeroSection lastAddProduct={ lastAddProduct } />
             <InfoBanner />
             <Suspense fallback={ <LoadingFallback /> }>
                 <SectionsCarousel sections={ randomProductsForSections } />
