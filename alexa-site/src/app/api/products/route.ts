@@ -1,7 +1,7 @@
 // src/app/api/products/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchProducts } from '@/app/services/products';
-import { ITEMS_PER_PAGE } from '@/app/utils/constants';
+
 
 export async function GET(request: NextRequest) {
     try {
@@ -12,11 +12,12 @@ export async function GET(request: NextRequest) {
         const orderByField = searchParams.get('orderBy') || 'creationDate';
         const orderDirection = (searchParams.get('direction') || 'desc') as 'asc' | 'desc';
         const searchTerm = searchParams.get('searchTerm')?.trim() || undefined;
+        const limit = parseInt(searchParams.get('limit') || '12', 10);
 
         const productsResponse = await fetchProducts({
             sectionName,
             subsection,
-            limit: ITEMS_PER_PAGE,
+            limit,
             orderBy: orderByField,
             direction: orderDirection,
             lastVisible: lastVisibleId,

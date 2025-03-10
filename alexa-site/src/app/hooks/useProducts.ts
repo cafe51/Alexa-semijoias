@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ProductBundleType, FireBaseDocument } from '@/app/utils/types';
+import { ITEMS_PER_PAGE } from '../utils/constants';
 
 type ProductsResponse = {
   products: (ProductBundleType & FireBaseDocument)[];
@@ -17,6 +18,7 @@ type UseProductsProps = {
   orderBy?: string;
   direction?: 'asc' | 'desc';
   searchTerm?: string;
+  limit?: number;
 };
 
 export function useProducts({
@@ -26,6 +28,7 @@ export function useProducts({
     orderBy = 'creationDate',
     direction = 'desc',
     searchTerm,
+    limit = ITEMS_PER_PAGE,
 }: UseProductsProps) {
     const [products, setProducts] = useState<(ProductBundleType & FireBaseDocument)[]>(
         initialData ? initialData.products : [],
@@ -58,6 +61,7 @@ export function useProducts({
                 params.append('orderBy', orderBy);
                 params.append('direction', direction);
                 if (searchTerm) params.append('searchTerm', searchTerm);
+                params.append('limit', limit.toString());
                 const response = await fetch(`/api/products?${params.toString()}`);
                 if (!response.ok) {
                     throw new Error('Falha ao carregar produtos');
