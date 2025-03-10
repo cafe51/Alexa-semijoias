@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { createSlugName } from '@/app/utils/createSlugName';
+import DesktopSearchMenu from './SearchSection';
 
 interface MobileMenuProps {
   isMenuOpen: boolean;
@@ -64,9 +65,10 @@ export default function MobileMenu({
                   'linear-gradient(to bottom, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 1) 50%, rgba(248, 248, 248, 0.7) 100%)',
                             } }
                         >
-                            <div className="h-full overflow-auto p-6">
-                                <h2 className="text-3xl font-bold mb-8 text-[#C48B9F]">Menu</h2>
-                                <ul className="space-y-4">
+                            <div className="h-full overflow-auto p-2 md:p-4">
+                                <h2 className="px-4 pt-4 text-3xl font-bold mb-8 text-[#C48B9F]">Menu</h2>
+                                <DesktopSearchMenu />
+                                <ul className="space-y-4 px-4 pt-6 pb-4">
                                     { menuSections.map((section: SectionType, index: number) => (
                                         <li key={ index } className="border-b-2 border-[#C48B9F]">
                                             <Button

@@ -11,7 +11,7 @@ import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
 import { FiSearch, FiSettings, FiUser } from 'react-icons/fi';
 import SlideInModal from '../ModalMakers/SlideInModal';
-import DesktopSearchMenu from '../navBar/DesktopSearchMenu';
+import DesktopSearchMenu from '../navBar/SearchSection';
 
 interface FullHeaderProps {
   initialMenuSections: (SectionType & FireBaseDocument)[];
@@ -193,7 +193,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
             <div
                 style={ {
-                    height: isMobile ? `${headerHeightMobile + 32}px` : '160px',
+                    height: isMobile ? `${headerHeightMobile + 8}px` : '160px',
                 } }
             />
         </>
