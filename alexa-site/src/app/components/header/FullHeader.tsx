@@ -193,7 +193,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
             { /* Espaçador para empurrar o conteúdo para baixo do header fixo */ }
             <div
                 style={ {
-                    height: isMobile ? `${headerHeightMobile + 8}px` : '160px',
+                    height: isMobile ? `${headerHeightMobile}px` : '110px',
                 } }
             />
         </>
