@@ -10,6 +10,7 @@ import Logo from './Logo';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
 import { FiSearch, FiSettings, FiUser } from 'react-icons/fi';
+import SlideInModal from '../ModalMakers/SlideInModal';
 
 interface FullHeaderProps {
   initialMenuSections: (SectionType & FireBaseDocument)[];
@@ -23,6 +24,8 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     const [isMobile, setIsMobile] = useState(true);
     // Usa os dados já carregados pelo servidor
     const [menuSections] = useState<(SectionType & FireBaseDocument)[]>(initialMenuSections);
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
     const [scrollPosition, setScrollPosition] = useState(0);
     const router = useRouter();
 
@@ -148,14 +151,32 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
 
                         </>
                     ) : (
-                        <div className='flex justify-between items-center w-full p-8 py-0'>
+                        <div className='flex justify-between items-center w-full p-6 py-0 pt-2'>
+                            {
+                                isSearchModalOpen && (
+                                    <SlideInModal
+                                        isOpen={ isSearchModalOpen }
+                                        closeModelClick={ () => setIsSearchModalOpen(false) }
+                                        title="Pesquisa"
+                                    >
+                                        <div>
+                                            Pesquisa
+                                        </div>
+                                    </SlideInModal>
+                                )
+                            }
                             <div className='flex justify-start'>
-                                <div className="cursor-pointer" onClick={ () => router.push('/') }><Logo /></div>
+                                <div
+                                    className="cursor-pointer"
+                                    style={ { transform: `scale(${0.8})`, transition: 'transform 0.3s ease' } }
+                                    onClick={ () => router.push('/') }>
+                                    <Logo />
+                                </div>
                                 <DesktopMenu menuSections={ menuSections } router={ router } />
                             </div>
                             <div className="flex items-start space-x-10 mt-2">
                                 { user && isAdmin && <SettingsButton /> }
-                                <FiSearch size={ buttonSize } className="p-0  cursor-pointer" onClick={ () => {} } />
+                                <FiSearch size={ buttonSize } className="p-0  cursor-pointer" onClick={ () => setIsSearchModalOpen(true) } />
                                 <UserIcon />
                                 <CartIcon isMobile={ isMobile } buttonSize={ buttonSize } />
                             </div>

@@ -24,7 +24,7 @@ export default function DesktopMenu({ menuSections, router }: DesktopMenuProps) 
     };
 
     return (
-        <nav className="flex items-center justify-center space-x-8" aria-label="Root Menu">
+        <nav className="flex items-center justify-start gap-2" aria-label="Root Menu">
             { menuSections.map((section, index) => (
                 <Popover
                     key={ index }
@@ -40,7 +40,7 @@ export default function DesktopMenu({ menuSections, router }: DesktopMenuProps) 
                     <PopoverTrigger asChild>
                         <Button
                             variant="ghost"
-                            className="text-[#333333] hover:bg-[#F8C3D3]/20 text-lg group focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                            className="text-[#333333] hover:bg-[#F8C3D3]/20 text-lg group focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 mx-0 px-4"
                             size="lg"
                             onClick={ () => {
                                 startTransition(() => {
