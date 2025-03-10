@@ -11,6 +11,7 @@ import { useUserInfo } from '@/app/hooks/useUserInfo';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
 import { FiSearch, FiSettings, FiUser } from 'react-icons/fi';
 import SlideInModal from '../ModalMakers/SlideInModal';
+import DesktopSearchMenu from '../navBar/DesktopSearchMenu';
 
 interface FullHeaderProps {
   initialMenuSections: (SectionType & FireBaseDocument)[];
@@ -159,9 +160,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                                         closeModelClick={ () => setIsSearchModalOpen(false) }
                                         title="Pesquisa"
                                     >
-                                        <div>
-                                            Pesquisa
-                                        </div>
+                                        <DesktopSearchMenu />
                                     </SlideInModal>
                                 )
                             }

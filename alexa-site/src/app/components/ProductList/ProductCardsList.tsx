@@ -87,7 +87,7 @@ export default function ProductCardsList({
             }
         >
             { productsToShow.map((productData) => (
-                <ProductCard key={ productData.id } product={ productData } />
+                <ProductCard key={ productData.id } product={ productData } homePage/>
             )) }
             { hasMore && !isMobileLayout &&(
                 <div ref={ paginatorRef }>

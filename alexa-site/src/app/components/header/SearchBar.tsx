@@ -2,10 +2,8 @@
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
-export default function SearchBar() {
-    const [searchTerm, setSearchTerm] = useState('');
+export default function SearchBar({ searchTerm, setSearchTerm } : { searchTerm: string, setSearchTerm: (searchTerm: string) => void }) {
     const router = useRouter();
 
     const handleSearch = () => {
@@ -15,10 +13,10 @@ export default function SearchBar() {
     };
 
     return (
-        <div className="flex-grow max-w-4xl w-full pb-1 pt-0 md:mx-4">
+        <div className="px-8 pt-8 pb-1">
             <div className="relative">
                 <Input
-                    className="pl-4 pr-14 py-0 md:py-6 w-full bg-[#F8C3D3]/50 border-none text-s md:text-lg md:rounded-xl focus:bg-white"
+                    className="py-8 border-t-0 border-x-0 border-b-2 border-[#F8C3D3] text-4xl rounded-xl focus:bg-white focus:none focus-visible:ring-transparent "
                     type="text"
                     onChange={ (e) => setSearchTerm(e.target.value) }
                     value={ searchTerm }
