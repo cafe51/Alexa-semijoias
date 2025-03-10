@@ -1,8 +1,6 @@
 // src/app/components/header/FullHeader.tsx
 'use client';
 import React, { useState, useEffect } from 'react';
-import { User, Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { FireBaseDocument, SectionType } from '@/app/utils/types';
 import MobileMenu from '../navBar/MobileMenu';
 import DesktopMenu from '../navBar/DesktopMenu';
@@ -10,8 +8,8 @@ import CartIcon from './CartIcon';
 import { useRouter } from 'next/navigation';
 import Logo from './Logo';
 import { useUserInfo } from '@/app/hooks/useUserInfo';
-import SearchBar from './SearchBar';
 import { useAuthContext } from '@/app/hooks/useAuthContext';
+import { FiSearch, FiSettings, FiUser } from 'react-icons/fi';
 
 interface FullHeaderProps {
   initialMenuSections: (SectionType & FireBaseDocument)[];
@@ -28,30 +26,37 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const router = useRouter();
 
+    const buttonSize = isMobile ? 24 : 36;
+
     const UserIcon = () => (
-        <Button
-            variant="ghost"
-            size={ isMobile ? 'icon' : 'lg' }
-            className="text-[#C48B9F] h-fit w-fit p-1"
+        <button
+            className="flex flex-col items-center  p-0 cursor-pointer"
             aria-label={ userInfo ? 'Acessar minha conta' : 'Entrar' }
             title={ userInfo ? 'Acessar minha conta' : 'Entrar' }
             onClick={ () => (userInfo ? router.push('/minha-conta') : router.push('/login')) }
         >
-            <User className={ isMobile ? 'h-6 w-6' : 'h-14 w-14' } />
-        </Button>
+            <FiUser size={ buttonSize } />
+            { userInfo ? (
+                <span className="text-sm sm:text-base md:text-lg text-center ">
+                    { userInfo?.nome.split(' ')[0] }
+                </span>
+            ) : (
+                <span className="text-sm sm:text-base md:text-lg text-center ">
+                                                Entrar
+                </span>
+            ) }
+        </button>
     );
     
     const SettingsButton = () => (
-        <Button
-            variant="ghost"
-            size={ isMobile ? 'icon' : 'lg' }
-            className="text-[#C48B9F] h-fit w-fit p-1"
+        <button
+            className="p-0"
             aria-label="Acessar área administrativa"
             title="Acessar área administrativa"
             onClick={ () => router.push('/admin') }
         >
-            <Settings className={ isMobile ? 'h-6 w-6' : 'h-14 w-14' } />
-        </Button>
+            <FiSettings size={ buttonSize } />
+        </button>
     );
 
     useEffect(() => {
@@ -111,66 +116,56 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                         : 'white',
                 } }
             >
-                <div className="container mx-auto py-0 ">
-                    <div className="flex items-center justify-between py-0 md:py-4">
-                        { isMobile ? (
-                            <>
-                                { menuSections && menuSections.length > 0 && (
-                                    <MobileMenu
-                                        userInfo={ userInfo }
-                                        activeSection={ activeSection }
-                                        menuSections={ menuSections }
-                                        isMenuOpen={ isMenuOpen }
-                                        setIsMenuOpen={ setIsMenuOpen }
-                                        handleSectionClick={ handleSectionClick }
-                                        handleBackToMain={ handleBackToMain }
-                                        router={ router }
-                                    />
-                                ) }
-                                { /* Logo com escala controlada para manter o tamanho original no topo */ }
-                                <div
-                                    className="cursor-pointer"
-                                    onClick={ () => router.push('/') }
-                                    style={ { transform: `scale(${logoScale})`, transition: 'transform 0.3s ease' } }
-                                >
-                                    <Logo isMobile={ isMobile } />
-                                </div>
-                                <div className="flex items-center space-x-4 pr-4">
-                                    { user && isAdmin && <SettingsButton /> }
-                                    <CartIcon isMobile={ isMobile } />
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div
-                                    className="cursor-pointer"
-                                    onClick={ () => router.push('/') }
-                                >
-                                    <Logo />
-                                </div>
-                                <SearchBar />
-                                <div className="flex items-center space-x-10">
-                                    { user && isAdmin && <SettingsButton /> }
-                                    <div className="flex items-center space-x-2">
-                                        <UserIcon />
-                                        { userInfo ? (
-                                            <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">
-                                                { userInfo?.nome.split(' ')[0] }
-                                            </span>
-                                        ) : (
-                                            <span className="text-sm sm:text-base md:text-lg lg:text-xl text-[#C48B9F]">
-                                                Entrar
-                                            </span>
-                                        ) }
-                                    </div>
-                                    <CartIcon isMobile={ isMobile } />
-                                </div>
-                            </>
-                        ) }
-                    </div>
+                <div className="flex items-center justify-between py-0 md:py-4 w-full">
+                    { isMobile ? (
+                        <>
+                            { menuSections && menuSections.length > 0 && (
+                                <MobileMenu
+                                    userInfo={ userInfo }
+                                    activeSection={ activeSection }
+                                    menuSections={ menuSections }
+                                    isMenuOpen={ isMenuOpen }
+                                    setIsMenuOpen={ setIsMenuOpen }
+                                    handleSectionClick={ handleSectionClick }
+                                    handleBackToMain={ handleBackToMain }
+                                    router={ router }
+                                />
+                            ) }
+                            { /* Logo com escala controlada para manter o tamanho original no topo */ }
+
+                            <div
+                                className="cursor-pointer"
+                                onClick={ () => router.push('/') }
+                                style={ { transform: `scale(${logoScale})`, transition: 'transform 0.3s ease' } }
+                            >
+                                <Logo isMobile={ isMobile } />
+                            </div>
+
+                            <div className="flex items-center space-x-4 pr-4">
+                                { user && isAdmin && <SettingsButton /> }
+                                <CartIcon isMobile={ isMobile } buttonSize={ buttonSize } />
+                            </div>
+
+                        </>
+                    ) : (
+                        <div className='flex justify-between items-center w-full p-8 py-0'>
+                            <div className='flex justify-start'>
+                                <div className="cursor-pointer" onClick={ () => router.push('/') }><Logo /></div>
+                                <DesktopMenu menuSections={ menuSections } router={ router } />
+                            </div>
+                            <div className="flex items-start space-x-10 mt-2">
+                                { user && isAdmin && <SettingsButton /> }
+                                <FiSearch size={ buttonSize } className="p-0  cursor-pointer" onClick={ () => {} } />
+                                <UserIcon />
+                                <CartIcon isMobile={ isMobile } buttonSize={ buttonSize } />
+                            </div>
+
+
+                        </div>
+                    ) }
+
                     { !isMobile && (
                         <div className="py-2 border-t border-[#C48B9F]">
-                            <DesktopMenu menuSections={ menuSections } router={ router } />
                         </div>
                     ) }
                 </div>
@@ -181,18 +176,6 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                     height: isMobile ? `${headerHeightMobile + 32}px` : '160px',
                 } }
             />
-            { /* Container da SearchBar mobile */ }
-            { isMobile && (
-                <div
-                    className="fixed left-0 right-0 z-50 px-4 shadow-lg"
-                    style={ {
-                        top: `${headerHeightMobile * 0.8 }px`,
-                        backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
-                    } }
-                >
-                    <SearchBar />
-                </div>
-            ) }
         </>
     );
 };
