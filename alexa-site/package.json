@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NEXT_PUBLIC_USE_FIREBASE_EMULATOR=false next dev",
+    "dev": "node checkEmulators.js",
     "dev:emulators": "NEXT_PUBLIC_USE_FIREBASE_EMULATOR=true next dev",
+    "dev:firebase": "NEXT_PUBLIC_USE_FIREBASE_EMULATOR=false next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -51,6 +52,7 @@
     "firebase-admin": "^12.4.0",
     "firebase-functions": "^6.0.0",
     "firebase-mock": "^2.3.2",
+    "is-port-reachable": "^4.0.0",
     "lucide-react": "^0.451.0",
     "mercadopago": "^2.0.15",
     "next": "^14.2.4",
