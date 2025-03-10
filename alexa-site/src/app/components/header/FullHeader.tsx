@@ -175,7 +175,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                                 </div>
                                 <DesktopMenu menuSections={ menuSections } router={ router } />
                             </div>
-                            <div className="flex items-start space-x-10 mt-2">
+                            <div className="flex items-start space-x-10 mt-2 text-[#C48B9F]">
                                 { user && isAdmin && <SettingsButton /> }
                                 <FiSearch size={ buttonSize } className="p-0  cursor-pointer" onClick={ () => setIsSearchModalOpen(true) } />
                                 <UserIcon />
