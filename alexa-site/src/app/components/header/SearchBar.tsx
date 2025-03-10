@@ -2,14 +2,24 @@
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-export default function SearchBar({ searchTerm, setSearchTerm } : { searchTerm: string, setSearchTerm: (searchTerm: string) => void }) {
+export default function SearchBar({ searchTerm, setSearchTerm } : { searchTerm?: string, setSearchTerm?: (searchTerm: string) => void }) {
+    const [searchTermInnerState, setSearchTermInnerState] = useState('');
+
     const router = useRouter();
 
     const handleSearch = () => {
-        if (searchTerm.trim()) {
-            router.push(`/search/${searchTerm}`);
+        if(searchTerm) {
+            if (searchTerm.trim()) {
+                router.push(`/search/${searchTerm}`);
+            }
+        } else {
+            if(searchTermInnerState.trim()) {
+                router.push(`/search/${searchTermInnerState}`);
+            }
         }
+
     };
 
     return (
@@ -18,8 +28,8 @@ export default function SearchBar({ searchTerm, setSearchTerm } : { searchTerm: 
                 <Input
                     className="py-4 md:py-8 border-t-0 border-x-0 border-b-2 border-[#F8C3D3] text-lg md:text-4xl rounded-none focus:none focus-visible:ring-transparent "
                     type="text"
-                    onChange={ (e) => setSearchTerm(e.target.value) }
-                    value={ searchTerm }
+                    onChange={ setSearchTerm ?  (e) => setSearchTerm(e.target.value) : (e) => setSearchTermInnerState(e.target.value) }
+                    value={ searchTerm ? searchTerm : searchTermInnerState }
                     placeholder="Buscar..."
                     onKeyDown={ (e) => {
                         if (e.key === 'Enter') {
