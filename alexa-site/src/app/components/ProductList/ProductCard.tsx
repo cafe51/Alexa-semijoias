@@ -82,7 +82,10 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                         </div>
 
                         <p className="text-base lg:text-lg text-gray-600 mt-1 text-center">
-                            6x de{ ' ' }
+                            <span className="font-semibold text-base lg:text-xl text-[#C48B9F]">
+                                6x
+                            </span>{ ' ' }
+                            de{ ' ' }
                             <span className="font-semibold text-lg lg:text-2xl text-[#C48B9F]">
                                 { formatPrice(installmentValue) }
                             </span>{ ' ' }
