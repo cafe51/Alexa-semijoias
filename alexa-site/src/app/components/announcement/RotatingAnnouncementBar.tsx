@@ -56,11 +56,6 @@ const RotatingAnnouncementBar: React.FC<RotatingAnnouncementBarProps> = ({
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    useEffect(() => {
-        console.log('scroll', window.pageYOffset);
-        console.log('window.pageYOffset <= 10', window.pageYOffset <= 40);
-    }, [window.pageYOffset]);
-
     // Controla a exibição da barra de promoção com base na posição do scroll
     useEffect(() => {
         const handleScroll = () => {
