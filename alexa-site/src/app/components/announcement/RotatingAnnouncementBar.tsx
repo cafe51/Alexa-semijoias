@@ -3,37 +3,26 @@ import React, { useState, useEffect } from 'react';
 
 export interface Announcement {
   id: string | number;
-  text: string;
+  text: React.ReactNode;
   backgroundColor?: string;
   textColor?: string;
-  fontSize?: string;
   transitionTime?: number; // tempo de exibição em milissegundos para este anúncio
 }
 
 const announcements: Announcement[] = [
     {
         id: 1,
-        text: 'Frete grátis para todo o Brasil!',
+        text: <p><strong>Frete grátis</strong> a partir de <strong>R$ 200,00</strong> para sudeste e <strong>350,00</strong> para norte</p>,
         backgroundColor: '#F8C3D3',
         textColor: '#923B58',
-        fontSize: '1rem',
-        transitionTime: 4000,
+        transitionTime: 3000,
     },
     {
         id: 2,
-        text: 'Novidades semanais em nosso catálogo!',
+        text: <p><strong>10% de desconto</strong> na primeira compra com o cupom <strong>SEJALEXA10</strong></p>,
         backgroundColor: '#F8C3D3',
         textColor: '#923B58',
-        fontSize: '1rem',
-        transitionTime: 5000,
-    },
-    {
-        id: 3,
-        text: 'Aproveite descontos exclusivos!',
-        backgroundColor: '#F8C3D3',
-        textColor: '#923B58',
-        fontSize: '1rem',
-        transitionTime: 6000,
+        transitionTime: 3000,
     },
 ];
 
@@ -42,7 +31,7 @@ interface RotatingAnnouncementBarProps {
 }
 
 const RotatingAnnouncementBar: React.FC<RotatingAnnouncementBarProps> = ({
-    defaultTransitionTime = 1000,
+    defaultTransitionTime = 3000,
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showBar, setShowBar] = useState(true);
