@@ -76,7 +76,7 @@ export default function HeroSection({ lastAddProduct }: HeroSectionProps) {
 
                         >
                             <button
-                                className='bg-white font-bold text-[#C48B9F] p-4 px-14 rounded-full md:text-xl xl:p-8 xl:px-20 xl:text-2xl hover:bg-[#D4AF37] hover:text-white transition-colors duration-300'
+                                className='bg-white font-bold text-[#C48B9F] p-4 px-14 rounded-full md:text-xl  hover:bg-[#D4AF37] hover:text-white transition-colors duration-300'
                             > 
                             Descubra
                             </button>
