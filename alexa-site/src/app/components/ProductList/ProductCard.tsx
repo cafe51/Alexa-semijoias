@@ -30,8 +30,8 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
     const productSlug = useMemo(() => createSlugName(product.name), [product.name]);
 
     return (
-        <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg border-[#F8C3D3] shadow-md shadow-[#F8C3D3] border-none rounded-lg">
-            <CardContent className="p-0 flex flex-col h-full">
+        <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-t-none rounded-b-sm">
+            <CardContent className="p-0 flex flex-col h-full ">
                 <Link
                     href={ `/product/${productSlug}` }
                     className="relative aspect-[4/5]"
@@ -41,7 +41,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                     <div className="relative w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"
-                            className={ `rounded-lg rounded-b-none object-cover scale-100 ${product.estoqueTotal <= 0 ? 'opacity-50' : ''}` }
+                            className={ `rounded-none object-cover scale-100 ${product.estoqueTotal <= 0 ? 'opacity-50' : ''}` }
                             src={
                                 product.images && product.images[0]
                                     ? product.images[0].localUrl
@@ -63,34 +63,36 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                     <OutOfStockLayer outOfStock={ product.estoqueTotal <= 0 }/>
                 </Link>
 
-                <div className="p-4 flex flex-col flex-grow">
-                    <h3 className="text-lg md:text-xl lg:text-2xl font-semibold mb-2 text-[#333333] line-clamp-2">
+                <div className="p-2 pb-0 flex flex-col flex-grow text-center">
+                    <h3 className="text-base md:text-lg lg:text-xl font-semibold mb-2 text-[#333333] line-clamp-2"> 
                         { toTitleCase(product.name) }
                     </h3>
 
-                    <div className="flex flex-col mb-3 flex-grow">
-                        <div className="flex flex-wrap items-baseline gap-2">
-                            <span className="text-2xl lg:text-3xl font-bold text-[#D4AF37]">
-                                { formatPrice(displayPrice) }
-                            </span>
+                    <div className="flex flex-col mb-3 flex-grow justify-end items-center"> 
+                        <div className="flex flex-wrap items-baseline gap-2 justify-center ">
                             { product.value.promotionalPrice > 0 && (
-                                <span className="text-lg lg:text-xl text-gray-500 line-through">
+                                <span className="text-base lg:text-lg text-gray-500 line-through">
                                     { formatPrice(product.value.price) }
                                 </span>
                             ) }
+                            <span className="text-xl lg:text-2xl font-bold text-[#D4AF37]">
+                                { formatPrice(displayPrice) }
+                            </span>
+
                         </div>
 
-                        <p className="text-lg lg:text-xl text-gray-600 mt-1">
-              ou até 6x de{ ' ' }
-                            <span className="font-semibold text-2xl lg:text-4xl text-[#C48B9F]">
+                        <p className="text-base lg:text-lg text-gray-600 mt-1 text-center">
+                            6x de{ ' ' }
+                            <span className="font-semibold text-lg lg:text-2xl text-[#C48B9F]">
                                 { formatPrice(installmentValue) }
                             </span>{ ' ' }
-              sem juros
+                            sem juros
                         </p>
                     </div>
 
-                    { !homePage && <BuyButtonOnCard product={ product } /> }
                 </div>
+                { !homePage && <BuyButtonOnCard product={ product } /> }
+
             </CardContent>
         </Card>
     );
