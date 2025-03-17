@@ -7,7 +7,7 @@ export default function FeaturedProducts({ featuredProducts }: { featuredProduct
     const hasProducts = Array.isArray(featuredProducts) && featuredProducts.length > 0;
 
     return (
-        <section className="py-8 sm:py-12 md:py-16 px-4 bg-[#F8C3D3] bg-opacity-20 flex flex-col items-center">
+        <section className="py-8 sm:py-12 md:py-16 px-4 flex flex-col items-center">
             <div className="mx-auto">
                 <h2 className="font-normal text-3xl text-center mb-6 sm:mb-8 md:mb-12">DESTAQUES</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 min-h-[300px]">
