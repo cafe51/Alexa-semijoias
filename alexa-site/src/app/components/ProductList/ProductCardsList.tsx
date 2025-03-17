@@ -19,6 +19,7 @@ interface ProductCardsListProps {
       };
     itemsPerPage?: number;
     isMobileLayout?: boolean;
+    isHomePage?: boolean;
 }
 
 export default function ProductCardsList({
@@ -30,6 +31,7 @@ export default function ProductCardsList({
     initialData,
     itemsPerPage= ITEMS_PER_PAGE,
     isMobileLayout = false,
+    isHomePage = false,
 }: ProductCardsListProps) {
     const paginatorRef = useRef<HTMLDivElement>(null);
     
@@ -87,7 +89,7 @@ export default function ProductCardsList({
             }
         >
             { productsToShow.map((productData) => (
-                <ProductCard key={ productData.id } product={ productData } />
+                <ProductCard key={ productData.id } product={ productData } homePage={ isHomePage } />
             )) }
             { hasMore && !isMobileLayout &&(
                 <div ref={ paginatorRef }>
