@@ -71,7 +71,12 @@ export default function MobileMenu({
                             <div className="h-full overflow-auto p-2 md:p-4">
                                 <h2 className="px-4 pt-4 text-3xl font-bold mb-8 text-[#C48B9F]">Menu</h2>
                                 <SearchSection />
-                                <ul className="space-y-4 px-4 pt-6 pb-4">
+                                <ul
+                                    className="space-y-4 px-4 pt-6 pb-4"
+                                    style={ {
+                                        background: 'linear-gradient(to bottom, rgba(248, 248, 248, 0.3) 0%, rgba(248, 248, 248, 1) 50%, rgba(248, 248, 248, 0.3) 100%)',
+                                    } }
+                                >
                                     { menuSections.map((section: SectionType, index: number) => (
                                         <li key={ index } className="border-b-2 border-[#C48B9F]">
                                             <Button
@@ -104,7 +109,7 @@ export default function MobileMenu({
                             }` }
                             style={ {
                                 background:
-                  'linear-gradient(to bottom, #f8f8f8 0%, rgba(248, 248, 248, 1) 50%, rgba(248, 248, 248, 0.7) 100%)',
+                                    'linear-gradient(to bottom, #f8f8f8 0%, rgba(248, 248, 248, 1) 50%, rgba(248, 248, 248, 0.7) 100%)',
                             } }
                         >
                             { activeSection && (
