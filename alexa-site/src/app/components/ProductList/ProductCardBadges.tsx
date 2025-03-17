@@ -19,12 +19,12 @@ export default function ProductCardBadges({ product }: { product: ProductBundleT
     return (
         <div className="absolute top-2 left-2 right-2 flex justify-between">
             { product.lancamento && (
-                <Badge className="bg-[#C48B9F] text-white text-xs sm:text-sm md:text-base lg:text-lg">
+                <Badge className="bg-[#F8C3D3] text-[#1E1E1E] text-xs sm:text-sm md:text-base lg:text-lg hover:bg-[#D4AF37] hover:text-white tracking-wide">
                 Lançamento
                 </Badge>
             ) }
             { product.value.promotionalPrice > 0 && discount !== null && (
-                <Badge className="bg-[#F8C3D3] text-[#333333] text-xs sm:text-sm md:text-base lg:text-lg ml-auto">
+                <Badge className="bg-[#F8C3D3] text-[#1E1E1E] hover:bg-[#D4AF37] hover:text-white text-xs sm:text-sm md:text-base lg:text-lg ml-auto tracking-widest">
                 -{ discount }%
                 </Badge>
             ) }
