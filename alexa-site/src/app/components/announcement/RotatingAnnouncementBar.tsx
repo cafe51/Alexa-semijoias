@@ -12,14 +12,14 @@ export interface Announcement {
 const announcements: Announcement[] = [
     {
         id: 1,
-        text: <p><strong>Frete grátis</strong> a partir de <strong>R$ 200,00</strong> para sudeste e <strong>350,00</strong> para norte</p>,
+        text: <p><strong>Frete grátis</strong> acima de <strong>R$ 250,00</strong> para o sudeste</p>,
         backgroundColor: '#F8C3D3',
         textColor: '#923B58',
         transitionTime: 3000,
     },
     {
         id: 2,
-        text: <p><strong>10% de desconto</strong> na primeira compra com o cupom <strong>SEJALEXA10</strong></p>,
+        text: <p><strong> 10% de desconto </strong> com o cupom <strong>SEJALEXA10</strong></p>,
         backgroundColor: '#F8C3D3',
         textColor: '#923B58',
         transitionTime: 3000,
@@ -31,7 +31,7 @@ interface RotatingAnnouncementBarProps {
 }
 
 const RotatingAnnouncementBar: React.FC<RotatingAnnouncementBarProps> = ({
-    defaultTransitionTime = 3000,
+    defaultTransitionTime = 5000,
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showBar, setShowBar] = useState(true);
