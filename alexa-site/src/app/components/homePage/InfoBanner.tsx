@@ -88,16 +88,7 @@ const MobileCarousel = memo(function MobileCarousel() {
             onTouchEnd={ handleTouchEnd }
         >
             <InfoItem { ...BANNER_INFO[currentIndex] } />
-            <div className="flex justify-center mt-3 gap-2">
-                { BANNER_INFO.map((_, index) => (
-                    <div
-                        key={ index }
-                        className={ `h-2 w-2 rounded-full transition-colors duration-300 ${
-                            currentIndex === index ? 'bg-gray-600' : 'bg-gray-300'
-                        }` }
-                    />
-                )) }
-            </div>
+
         </div>
     );
 });
