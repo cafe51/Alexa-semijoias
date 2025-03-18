@@ -295,8 +295,8 @@ export default function Product({ id, initialProduct, initialSelectedOptions = {
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row gap-8 flex-shrink-0 min-h-[600px]">
-                    <section className="md:w-1/2 mx-0 px-0 flex items-center justify-center md:self-start">
-                        <ImageCarousel productData={ product } />
+                    <section className="md:w-1/2 mx-0 px-0 ">
+                        <ImageCarousel productData={ product } options={ { loop: true } }/>
                     </section>
                     <section className="md:w-1/2 px-4">
                         <div>
