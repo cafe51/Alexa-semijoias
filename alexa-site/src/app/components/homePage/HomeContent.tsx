@@ -9,7 +9,7 @@ import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { fetchRandomProductForSection, ProductsResponse } from '@/app/services/products';
 import { serializeData } from '@/app/utils/serializeData';
 import { SITE_URL } from '@/app/utils/constants';
-import CarouselTest from '../CarouselTest';
+import DiscoverOurProducts from './DiscoverOurProducts/DiscoverOurProducts';
 
 const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
     ssr: true,
@@ -121,12 +121,27 @@ export default async function HomeContent() {
   
     // Busca os produtos em destaque (para outra parte da página)
     const featuredProducts = await getFeaturedProducts(sections);
+
+    // const OPTIONS: EmblaOptionsType = { align: 'start', dragFree: false, loop: true };
+    // const SLIDE_COUNT = 5;
+    // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+
+    function filtrarResultadosValidos<T>(array: (T | null | false | undefined)[]): T[] {
+        return array.filter((item): item is T => {
+            return item !== null && item !== false && item !== undefined;
+        });
+    }
+
+    const sectionsToDiscover = ['aneis', 'pulseiras', 'colares', 'conjuntos', 'brincos', 'pingentes', 'tornozeleiras' ];
+    const productsToDiscover = filtrarResultadosValidos<ProductBundleType & FireBaseDocument>([...featuredProducts, ...randomProductsForSections.map(({ product }) => product)]);
+
   
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
             <HeroSection lastAddProduct={ lastAddProduct } />
+            <DiscoverOurProducts products={ productsToDiscover } sections={ sectionsToDiscover } />
             <InfoBanner />
-            <CarouselTest products={ featuredProducts }/>
+
             <Suspense fallback={ <LoadingFallback /> }>
                 <SectionsCarousel sections={ randomProductsForSections } />
             </Suspense>

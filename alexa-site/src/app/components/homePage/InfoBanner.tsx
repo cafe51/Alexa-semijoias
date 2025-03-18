@@ -14,7 +14,7 @@ const BANNER_INFO = [
     {
         icon: <CreditCard className="w-6 h-6" />,
         title: '6x sem juros',
-        description: 'Em todos os produtos',
+        description: 'Em todas peças',
     },
     {
         icon: <Shield className="w-6 h-6" />,
@@ -47,7 +47,7 @@ const MobileCarousel = memo(function MobileCarousel() {
     const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
 
     return (
-        <div className="embla" ref={ emblaRef }>
+        <div className="emblaInfoBanner" ref={ emblaRef }>
             <div className="embla__container  ">
                 {
                     BANNER_INFO.map((info, index) => {
