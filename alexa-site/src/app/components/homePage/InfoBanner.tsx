@@ -1,6 +1,6 @@
 'use client';
-import { memo, useEffect, useState } from 'react';
-import Autoplay from 'embla-carousel-autoplay';
+import { memo } from 'react';
+import AutoScroll from 'embla-carousel-auto-scroll';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Truck, CreditCard, Shield } from 'lucide-react';
 
@@ -43,12 +43,16 @@ const InfoItem = memo(({ icon, title, description }: InfoItemProps) => (
 
 InfoItem.displayName = 'InfoItem';
 
-const MobileCarousel = memo(function MobileCarousel() {
-    const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
+const InfoCarousel = memo(function MobileCarousel() {
+    const [emblaRef] = useEmblaCarousel({ loop: true, align: 'center' }, [AutoScroll({
+        playOnInit: true, stopOnInteraction: false,
+        stopOnMouseEnter: false,
+        stopOnFocusIn: false,
+    })]);
 
     return (
-        <div className="emblaInfoBanner" ref={ emblaRef }>
-            <div className="embla__container  ">
+        <div className="emblaInfoBanner md:flex md:items-center md:justify-center" ref={ emblaRef }>
+            <div className="embla__container md:w-1/2">
                 {
                     BANNER_INFO.map((info, index) => {
 
@@ -65,45 +69,13 @@ const MobileCarousel = memo(function MobileCarousel() {
     );
 });
 
-MobileCarousel.displayName = 'MobileCarousel';
+InfoCarousel.displayName = 'InfoCarousel';
 
 
 export default function InfoBanner2() {
-
-    const [isMobile, setIsMobile] = useState<boolean | null>(null);
-    
-    useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-            
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-    
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    
-    if (isMobile === null) {
-        return (
-            <div className="bg-gray-100 py-4 px-6 w-full">
-                <div className="max-w-6xl mx-auto">
-                    <div className="h-16 bg-skeleton animate-pulse rounded" />
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="bg-gray-100 py-4 px-6 w-full">
-            { isMobile ? (
-                <MobileCarousel />
-            ) : (
-                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300">
-                    { BANNER_INFO.map((info, index) => (
-                        <InfoItem key={ index } { ...info } />
-                    )) }
-                </div>
-            ) }
+            <InfoCarousel />
         </div>
     );
 }
