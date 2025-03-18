@@ -1,7 +1,9 @@
 'use client';
-
-import React, { useState, useEffect, memo, useRef } from 'react';
+import { memo, useEffect, useState } from 'react';
+import Autoplay from 'embla-carousel-autoplay';
+import useEmblaCarousel from 'embla-carousel-react';
 import { Truck, CreditCard, Shield } from 'lucide-react';
+
 
 const BANNER_INFO = [
     {
@@ -42,73 +44,45 @@ const InfoItem = memo(({ icon, title, description }: InfoItemProps) => (
 InfoItem.displayName = 'InfoItem';
 
 const MobileCarousel = memo(function MobileCarousel() {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const touchStartX = useRef(0);
-    const touchEndX = useRef(0);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-    const resetInterval = () => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-        }
-        intervalRef.current = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % BANNER_INFO.length);
-        }, 3000);
-    };
-
-    useEffect(() => {
-        resetInterval();
-        return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-        };
-    }, []);
-
-    const handleTouchStart = (e: React.TouchEvent) => {
-        touchStartX.current = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
-        touchEndX.current = e.touches[0].clientX;
-    };
-
-    const handleTouchEnd = () => {
-        if (touchStartX.current - touchEndX.current > 50) {
-            setCurrentIndex((prev) => (prev + 1) % BANNER_INFO.length);
-        } else if (touchEndX.current - touchStartX.current > 50) {
-            setCurrentIndex((prev) => (prev - 1 + BANNER_INFO.length) % BANNER_INFO.length);
-        }
-        resetInterval();
-    };
+    const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
 
     return (
-        <div
-            className="flex flex-col items-center"
-            onTouchStart={ handleTouchStart }
-            onTouchMove={ handleTouchMove }
-            onTouchEnd={ handleTouchEnd }
-        >
-            <InfoItem { ...BANNER_INFO[currentIndex] } />
+        <div className="embla" ref={ emblaRef }>
+            <div className="embla__container  ">
+                {
+                    BANNER_INFO.map((info, index) => {
 
+                        return (
+                            <div className="flex-none basis-full max-w-full py-4 px-6 bg-gray-100" key={ index }>
+                                <InfoItem key={ index } { ...info } />
+                            </div>
+                        );
+                    })
+                }
+
+            </div>
         </div>
     );
 });
 
 MobileCarousel.displayName = 'MobileCarousel';
 
-function InfoBanner() {
-    const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
+export default function InfoBanner2() {
+
+    const [isMobile, setIsMobile] = useState<boolean | null>(null);
+    
     useEffect(() => {
         setIsMobile(window.innerWidth < 768);
-        
+            
         const handleResize = () => {
             setIsMobile(window.innerWidth < 768);
         };
-
+    
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-
+    
     if (isMobile === null) {
         return (
             <div className="bg-gray-100 py-4 px-6 w-full">
@@ -134,8 +108,3 @@ function InfoBanner() {
     );
 }
 
-const MemoizedInfoBanner = memo(InfoBanner);
-
-MemoizedInfoBanner.displayName = 'InfoBanner';
-
-export default MemoizedInfoBanner;
