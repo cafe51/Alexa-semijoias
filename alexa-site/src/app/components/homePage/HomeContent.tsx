@@ -1,6 +1,5 @@
 // src/app/components/homePage/HomeContent.tsx
-import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
+
 import { FireBaseDocument, ProductBundleType, SectionType } from '@/app/utils/types';
 import HeroSection from './HeroSection';
 import InfoBanner from './InfoBanner';
@@ -12,25 +11,9 @@ import { SITE_URL } from '@/app/utils/constants';
 import DiscoverOurProducts from './DiscoverOurProducts/DiscoverOurProducts';
 import DualTitlesSection from './DualTitlesSection';
 import PromoBanner from './PromoBanner';
+import Sections from './Sections';
+import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
 
-const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
-    ssr: true,
-});
-const FeaturedProducts = dynamic(() => import('./FeaturedProducts'), {
-    ssr: true,
-});
-
-function LoadingFallback() {
-    return (
-        <div className="max-w-6xl mx-auto p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                { Array.from({ length: 3 }).map((_, index) => (
-                    <div key={ `skeleton-${index}` } className="aspect-square bg-skeleton animate-pulse rounded" />
-                )) }
-            </div>
-        </div>
-    );
-}
 
 // Função para buscar as seções (única chamada)
 async function getSections() {
@@ -137,6 +120,20 @@ export default async function HomeContent() {
     const sectionsToDiscover = ['aneis', 'pulseiras', 'colares', 'conjuntos', 'brincos', 'pingentes', 'tornozeleiras' ];
     const productsToDiscover = filtrarResultadosValidos<ProductBundleType & FireBaseDocument>([...featuredProducts, ...randomProductsForSections.map(({ product }) => product)]);
 
+    const sectionCardDataGenerator = (urlImage: string, sectionName: string) => {
+        return {
+            urlImage,
+            sectionName,
+        };
+    };
+
+    const arrayOfFourProducts = [
+        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[0].product), randomProductsForSections[0].section),
+        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[1].product), randomProductsForSections[1].section),
+        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[2].product), randomProductsForSections[2].section),
+        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(featuredProducts[0]), featuredProducts[0].sections[0]),
+    ];
+
   
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
@@ -144,13 +141,9 @@ export default async function HomeContent() {
             <DiscoverOurProducts products={ productsToDiscover } sections={ sectionsToDiscover } />
             <DualTitlesSection products={ [ featuredProducts[0], featuredProducts[featuredProducts.length - 1] ] } />
             <InfoBanner />
+            <Sections products={ arrayOfFourProducts } />
             <PromoBanner />
-            <Suspense fallback={ <LoadingFallback /> }>
-                <SectionsCarousel sections={ randomProductsForSections } />
-            </Suspense>
-            <Suspense fallback={ <LoadingFallback /> }>
-                <FeaturedProducts featuredProducts={ featuredProducts } />
-            </Suspense>
+
         </div>
     );
 }
