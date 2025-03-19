@@ -4,6 +4,8 @@ import { ITEMS_PER_PAGE } from '@/app/utils/constants';
 import { ProductBundleType, FireBaseDocument } from '@/app/utils/types';
 import { serializeData } from '@/app/utils/serializeData';
 import removeAccents from '@/app/utils/removeAccents';
+import { FieldPath } from 'firebase-admin/firestore'; // importe o FieldPath
+
 
 export type ProductsQueryParams = {
   sectionName?: string;
@@ -82,31 +84,51 @@ export async function fetchProducts({
 
 export async function fetchRandomProductForSection(
     section: string,
+    excludeIds?: string[],
 ): Promise<(ProductBundleType & FireBaseDocument) | null> {
     try {
-        // Gera um valor aleatório de 00 a 98 (como string com 2 dígitos)
         const randomSelectorValue = Math.floor(Math.random() * 99)
             .toString()
             .padStart(2, '0');
   
-        // Primeira tentativa: produtos com randomIndex >= randomSelectorValue
-        let queryRef = adminDb
-            .collection('products')
-            .where('sections', 'array-contains', section)
-            .where('randomIndex', '>=', randomSelectorValue)
-            .orderBy('randomIndex')
-            .limit(4);
-        let snapshot = await queryRef.get();
-  
-        // Se não houver resultados, tenta com randomIndex < randomSelectorValue
-        if (snapshot.empty) {
-            queryRef = adminDb
+        // Função auxiliar como arrow function
+        const getSnapshot = async(withExclude: boolean) => {
+            let queryRef = adminDb
                 .collection('products')
                 .where('sections', 'array-contains', section)
-                .where('randomIndex', '<', randomSelectorValue)
+                .where('randomIndex', '>=', randomSelectorValue)
+                .where('showProduct', '==', true)
                 .orderBy('randomIndex')
                 .limit(4);
-            snapshot = await queryRef.get();
+  
+            if (withExclude && excludeIds && excludeIds.length > 0) {
+                queryRef = queryRef.where(FieldPath.documentId(), 'not-in', excludeIds);
+            }
+            let snapshot = await queryRef.get();
+  
+            // Se não houver resultados com ">= randomSelectorValue", tenta "<"
+            if (snapshot.empty) {
+                queryRef = adminDb
+                    .collection('products')
+                    .where('sections', 'array-contains', section)
+                    .where('randomIndex', '<', randomSelectorValue)
+                    .where('showProduct', '==', true)
+                    .orderBy('randomIndex')
+                    .limit(4);
+                if (withExclude && excludeIds && excludeIds.length > 0) {
+                    queryRef = queryRef.where(FieldPath.documentId(), 'not-in', excludeIds);
+                }
+                snapshot = await queryRef.get();
+            }
+            return snapshot;
+        };
+  
+        // Primeiro, tenta com o filtro de exclusão
+        let snapshot = await getSnapshot(true);
+  
+        // Se não encontrar nenhum resultado com o filtro, refaz sem o filtro
+        if (snapshot.empty) {
+            snapshot = await getSnapshot(false);
         }
   
         if (snapshot.empty) {
