@@ -10,7 +10,7 @@ interface DiscoverOurProductsProps {
 
 export default function DiscoverOurProducts({ products, sections }: DiscoverOurProductsProps) {
     return (
-        <section className="pt-14 md:flex md:flex-col md:items-center md:justify-center"> 
+        <section className="py-14 md:flex md:flex-col md:items-center md:justify-center"> 
             <h1 className="text-2xl sm:text-3xl text-center mb-6 sm:mb-8 md:mb-12">Descubra Nossas Peças</h1>
 
             <DiscoverOurProductsButtonsCarousel sections={ sections }/>
