@@ -3,6 +3,7 @@ import Image from 'next/image';
 import heroBannerLarge from '@/../public/heroBannerLarge.webp';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import toTitleCase from '@/app/utils/toTitleCase';
+import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
 
 interface DualTitlesSectionProps {
     products: (ProductBundleType & FireBaseDocument)[]
@@ -31,7 +32,7 @@ export default function DualTitlesSection({ products }: DualTitlesSectionProps) 
                     <div key={ product.id } className="relative aspect-square md:aspect-[3/5] lg:aspect-[4/5] xl:aspect-[5/4] bg-skeleton">
                         <Image
                             className="object-cover"
-                            src={ product?.images[0]?.localUrl || heroBannerLarge }
+                            src={ getImageUrlFromFirebaseProductDocument(product) }
                             title="Banner Principal Alexa Semijoias"
                             alt="Banner Principal Alexa Semijoias"
                             priority
