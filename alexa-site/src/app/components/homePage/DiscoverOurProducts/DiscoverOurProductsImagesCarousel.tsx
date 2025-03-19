@@ -4,6 +4,7 @@
 //     usePrevNextButtons,
 // } from './EmblaCarouselArrowButtons';
 import useEmblaCarousel from 'embla-carousel-react';
+import AutoPlay from 'embla-carousel-autoplay';
 
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import ProductCard from '../../ProductList/ProductCard';
@@ -12,7 +13,12 @@ export default function DiscoverOurProductsImagesCarousel({ products }: {product
     const [
         emblaRef,
     // emblaApi
-    ] = useEmblaCarousel({ align: 'start', dragFree: false, loop: true });
+    ] = useEmblaCarousel({ align: 'start', dragFree: false, loop: true }, [AutoPlay({
+        stopOnFocusIn: false,
+        stopOnInteraction: false,
+        stopOnMouseEnter: false,
+        stopOnLastSnap: false,
+    })]);
 
     // const {
     //     prevBtnDisabled,
