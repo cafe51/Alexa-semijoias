@@ -5,6 +5,6 @@ export function getImageUrlFromFirebaseProductDocument(product: ProductBundleTyp
     if(product && product.images && product.images[0]) {
         return product.images[0].localUrl;
     } else {
-        return blankImage;
+        return blankImage.src;
     }
 }
