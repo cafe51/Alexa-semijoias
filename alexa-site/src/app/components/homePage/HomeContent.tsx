@@ -11,6 +11,7 @@ import { serializeData } from '@/app/utils/serializeData';
 import { SITE_URL } from '@/app/utils/constants';
 import DiscoverOurProducts from './DiscoverOurProducts/DiscoverOurProducts';
 import DualTitlesSection from './DualTitlesSection';
+import PromoBanner from './PromoBanner';
 
 const SectionsCarousel = dynamic(() => import('./SectionsCarousel'), {
     ssr: true,
@@ -143,7 +144,7 @@ export default async function HomeContent() {
             <DiscoverOurProducts products={ productsToDiscover } sections={ sectionsToDiscover } />
             <DualTitlesSection products={ [ featuredProducts[0], featuredProducts[featuredProducts.length - 1] ] } />
             <InfoBanner />
-
+            <PromoBanner />
             <Suspense fallback={ <LoadingFallback /> }>
                 <SectionsCarousel sections={ randomProductsForSections } />
             </Suspense>
