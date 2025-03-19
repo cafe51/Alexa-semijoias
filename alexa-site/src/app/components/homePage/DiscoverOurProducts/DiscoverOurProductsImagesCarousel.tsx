@@ -1,3 +1,4 @@
+'use client';
 // import {
 //     PrevButton,
 //     NextButton,
@@ -27,16 +28,35 @@ export default function DiscoverOurProductsImagesCarousel({ products }: {product
     //     onNextButtonClick,
     // } = usePrevNextButtons(emblaApi);
     return (
-        <div className="embla">
-            <div className="embla__viewport" ref={ emblaRef }>
+        <div
+            className="max-w-[90rem] mx-auto"
+            style={ {
+                '--slide-height': '19rem',
+                '--slide-spacing': '1rem',
+                '--slide-size': '70%',
+                '--slide-spacing-sm': '1.6rem',
+                '--slide-size-sm': '50%',
+                '--slide-spacing-lg': '2rem',
+                '--slide-size-lg': '30%',
+            } as React.CSSProperties }
+        >
+            <div className="overflow-hidden" ref={ emblaRef }>
                 <div
-                    className="embla__container "
-                    // style={ { touchAction: 'pan-y pinch-zoom' } }
+                    className="flex ml-[calc(var(--slide-spacing)*-1)] min-[750px]:ml-[calc(var(--slide-spacing-sm)*-1)] min-[1200px]:ml-[calc(var(--slide-spacing-lg)*-1)]"
+                    style={ { touchAction: 'pan-y pinch-zoom', backfaceVisibility: 'hidden' } }
                 >
                     { products.map((product) => (
                         <div
                             key={ product.id }
-                            className="embla__slide"
+                            className={
+                                'min-w-0 ' +
+                                'pl-[var(--slide-spacing)] ' +
+                                'flex-[0_0_var(--slide-size)] ' +
+                                'min-[750px]:pl-[var(--slide-spacing-sm)] ' +
+                                'min-[750px]:flex-[0_0_var(--slide-size-sm)] ' +
+                                'min-[1200px]:pl-[var(--slide-spacing-lg)] ' +
+                                'min-[1200px]:flex-[0_0_var(--slide-size-lg)]'
+                            }
                         >
                             <ProductCard product={ product } homePage />
                         </div>

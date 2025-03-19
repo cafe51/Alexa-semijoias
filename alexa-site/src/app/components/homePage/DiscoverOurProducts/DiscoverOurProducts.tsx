@@ -1,4 +1,3 @@
-'use client';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import DiscoverOurProductsButtonsCarousel from './DiscoverOurProductsButtonsCarousel';
 import DiscoverOurProductsImagesCarousel from './DiscoverOurProductsImagesCarousel';
