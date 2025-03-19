@@ -4,6 +4,8 @@ import heroBannerLarge from '@/../public/heroBannerLarge.webp';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import toTitleCase from '@/app/utils/toTitleCase';
 import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
+import Link from 'next/link';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 interface DualTitlesSectionProps {
     products: (ProductBundleType & FireBaseDocument)[]
@@ -16,7 +18,9 @@ function BannerTitle({ title, section }: { title: string, section: string }) {
         <div className="absolute inset-0 flex items-end text-center justify-center">
             <div className="relative pb-6 md:pb-10 md:px-10  ">
                 <p className='font-semibold text-white text-2xl md:text-3xl lg:text-4xl xl:text-5xl pb-4 md:pb-6 tracking-wider'>{ toTitleCase(title) }</p> 
-                <button className='text-base md:text-xl text-white underline'>Comprar { toTitleCase(section) }</button>
+                <Link href={ `/section/${createSlugName(section)}` } className='text-base md:text-xl text-white underline'>
+                    <button className='text-base md:text-xl text-white underline'>Comprar { toTitleCase(section) }</button>
+                </Link>
             </div>
         </div>
     );

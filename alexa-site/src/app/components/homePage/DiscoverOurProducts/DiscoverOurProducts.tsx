@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import DiscoverOurProductsButtonsCarousel from './DiscoverOurProductsButtonsCarousel';
 import DiscoverOurProductsImagesCarousel from './DiscoverOurProductsImagesCarousel';
+import Link from 'next/link';
 
 interface DiscoverOurProductsProps {
   products: (ProductBundleType & FireBaseDocument)[];
@@ -37,9 +38,10 @@ export default function DiscoverOurProducts({ products, sections }: DiscoverOurP
             { activeSection && (
                 <DiscoverOurProductsImagesCarousel products={ productsBySection[activeSection] || [] } />
             ) }
-            <div className="flex justify-center items-center my-6">
+            <Link href={ '/section' } className="flex justify-center items-center my-6">
                 <button className="px-6 p-4 bg-black text-white rounded-full">Ver todos</button>
-            </div>
+            </Link>
+
         </section>
     );
 }
