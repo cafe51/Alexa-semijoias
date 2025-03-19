@@ -41,7 +41,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                     <div className="relative w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"
-                            className={ `rounded-none object-cover scale-100 ${product.estoqueTotal <= 0 ? 'opacity-50' : ''}` }
+                            className={ `rounded-none object-cover scale-100 ${(product.estoqueTotal <= 0 && !homePage) ? 'opacity-50' : ''}` }
                             src={
                                 product.images && product.images[0]
                                     ? product.images[0].localUrl
@@ -60,7 +60,8 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                     </div>
                     <span className="sr-only">{ toTitleCase(product.name) }</span>
                     <ProductCardBadges product={ product }/>
-                    <OutOfStockLayer outOfStock={ product.estoqueTotal <= 0 }/>
+                    { !homePage && <OutOfStockLayer outOfStock={ product.estoqueTotal <= 0 }/> }
+                    
                 </Link>
 
                 <div className="p-2 pb-0 flex flex-col flex-grow text-center">
