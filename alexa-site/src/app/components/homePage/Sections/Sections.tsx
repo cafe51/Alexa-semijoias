@@ -6,12 +6,14 @@ export default function Sections({
 }: {
   products: (ProductBundleType & FireBaseDocument)[];
 }) {
+
+    const aspect = 'aspect-[10/11]';
+
     return (
         <section className="py-14 hidden md:flex md:flex-col md:items-center md:justify-center  "> 
-            <h1 className="text-2xl sm:text-3xl text-center mb-6 sm:mb-8 md:mb-12">Nossas Coleções</h1>
             <div className="w-full grid grid-cols-2 gap-4 ">
                 { /* Coluna Esquerda: container com aspect ratio de 16/17 */ }
-                <div className="relative aspect-[8/6]">
+                <div className={ `relative ${ aspect }` }>
                     <SectionCard
                         product={ products[0] }
                         containerClassName="w-full h-full"
@@ -19,7 +21,7 @@ export default function Sections({
                 </div>
 
                 { /* Coluna Direita: container com o mesmo aspect ratio, subdividido em 2 linhas */ }
-                <div className="relative aspect-[8/6] grid grid-rows-[9fr,8fr] gap-4">
+                <div className={ `relative ${ aspect } grid grid-rows-[9fr,8fr] gap-4` }>
                     { /* Linha superior: banner horizontal */ }
                     <div className="relative">
                         <SectionCard
