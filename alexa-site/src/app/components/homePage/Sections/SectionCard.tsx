@@ -13,8 +13,8 @@ interface SectionCardProps {
   
 
 export default function SectionCard({ product, containerClassName = 'bg-skeleton' }: SectionCardProps) {
-    const titleOfBanner = product.sections[0] || 'Alexa Semijoias';
-    const linkToSection = product.sections[0] ? `/section/${product.sections[0]}` : '/section';
+    const titleOfBanner = product?.sections[0] ? product.sections[0] : 'Alexa Semijoias';
+    const linkToSection = product?.sections[0] ? `/section/${product.sections[0]}` : '/section';
 
     return (
         <Card className={ `${ containerClassName }  flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-t-none rounded-b-sm` }>
