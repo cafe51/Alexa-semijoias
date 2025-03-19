@@ -35,7 +35,7 @@ export default function SectionCard({ product, containerClassName = 'bg-skeleton
                 <div className="absolute inset-0 flex items-end justify-center text-center">
                     <div className="relative pb-6 md:pb-10 md:px-10">
                         <p className="font-semibold text-white text-2xl md:text-3xl lg:text-4xl xl:text-5xl pb-4 md:pb-6 tracking-wider">
-                            { titleOfBanner }
+                            { titleOfBanner.toUpperCase() }
                         </p>
                         <Link href={ linkToSection }>
                             <button className="text-base md:text-xl text-white underline">
