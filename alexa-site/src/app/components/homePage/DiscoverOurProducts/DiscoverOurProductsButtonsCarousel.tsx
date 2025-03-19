@@ -22,8 +22,8 @@ export default function DiscoverOurProductsButtonsCarousel({ sections, activeSec
                         <button
                             key={ section }
                             onClick={ () => setActiveSection(section) }
-                            className={ `p-1 px-2 ml-2 rounded-lg tracking-widest text-sm ${
-                                activeSection === section ? 'bg-yellow-500' : 'bg-[#F1F1F1]'
+                            className={ `p-1 px-4 ml-2 rounded-full hover:bg-[#D4Af37] hover:text-white transition-colors duration-300 ${
+                                activeSection === section ? 'bg-[#D4Af37] text-white' : 'bg-[#F1F1F1]'
                             }` }
                         >
                             { section.toUpperCase() }
