@@ -11,8 +11,8 @@ import { SITE_URL } from '@/app/utils/constants';
 import DiscoverOurProducts from './DiscoverOurProducts/DiscoverOurProducts';
 import DualTitlesSection from './DualTitlesSection';
 import PromoBanner from './PromoBanner';
-import Sections from './Sections';
-import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
+import Sections from './Sections/Sections';
+import SectionsMobileCarousel from './Sections/SectionsMobileCarousel';
 
 
 // Função para buscar as seções (única chamada)
@@ -120,19 +120,29 @@ export default async function HomeContent() {
     const sectionsToDiscover = ['aneis', 'pulseiras', 'colares', 'conjuntos', 'brincos', 'pingentes', 'tornozeleiras' ];
     const productsToDiscover = filtrarResultadosValidos<ProductBundleType & FireBaseDocument>([...featuredProducts, ...randomProductsForSections.map(({ product }) => product)]);
 
-    const sectionCardDataGenerator = (urlImage: string, sectionName: string) => {
-        return {
-            urlImage,
-            sectionName,
-        };
-    };
+    // const sectionCardDataGenerator = (urlImage: string, sectionName: string) => {
+    //     return {
+    //         urlImage,
+    //         sectionName,
+    //     };
+    // };
 
-    const arrayOfFourProducts = [
-        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[0].product), randomProductsForSections[0].section),
-        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[1].product), randomProductsForSections[1].section),
-        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[2].product), randomProductsForSections[2].section),
-        sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(featuredProducts[0]), featuredProducts[0].sections[0]),
-    ];
+    // const arrayOfFourProducts = [
+    //     sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[0].product), randomProductsForSections[0].section),
+    //     sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[1].product), randomProductsForSections[1].section),
+    //     sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(randomProductsForSections[2].product), randomProductsForSections[2].section),
+    //     sectionCardDataGenerator(getImageUrlFromFirebaseProductDocument(featuredProducts[0]), featuredProducts[0].sections[0]),
+    // ];
+
+    const arrayOfFourProducts = filtrarResultadosValidos([
+        randomProductsForSections[0].product,
+        randomProductsForSections[1].product,
+        randomProductsForSections[2].product,
+
+        featuredProducts[0],
+        featuredProducts[1],
+
+    ]);
 
   
     return (
@@ -141,6 +151,7 @@ export default async function HomeContent() {
             <DiscoverOurProducts products={ productsToDiscover } sections={ sectionsToDiscover } />
             <DualTitlesSection products={ [ featuredProducts[0], featuredProducts[featuredProducts.length - 1] ] } />
             <InfoBanner />
+            <SectionsMobileCarousel products={ arrayOfFourProducts } />
             <Sections products={ arrayOfFourProducts } />
             <PromoBanner />
 
