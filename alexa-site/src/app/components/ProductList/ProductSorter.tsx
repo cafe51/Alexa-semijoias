@@ -23,7 +23,7 @@ type ProductSorterProps = {
 
 export default function ProductSorter({ onSortChange, currentSort, disableSortChange }: ProductSorterProps) {
     return (
-        <div className="relative inline-block mb-4">
+        <div className="relative inline-block ">
             <select
                 value={ currentSort }
                 disabled={ disableSortChange }
@@ -36,7 +36,7 @@ export default function ProductSorter({ onSortChange, currentSort, disableSortCh
                 } }
                 className="
             block 
-            w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] 
+            w-full  
             h-11 sm:h-12 md:h-14 lg:h-16
             pl-3 pr-10 py-2 
             text-base md:text-lg lg:text-xl 
@@ -44,7 +44,7 @@ export default function ProductSorter({ onSortChange, currentSort, disableSortCh
             bg-[#FAF9F6] 
             text-[#333333] 
             border border-[#C48B9F] 
-            rounded-md 
+            rounded-none 
             shadow-sm 
             appearance-none 
             transition-colors 

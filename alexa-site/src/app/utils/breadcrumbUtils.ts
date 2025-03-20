@@ -7,7 +7,7 @@ export type BreadcrumbItem = {
   url: string;
 };
 
-const BASE_URL = 'https://www.alexasemijoias.com.br';
+const BASE_URL = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR ? 'http://localhost:3000' : 'https://www.alexasemijoias.com.br';
 
 export function getBreadcrumbItems(section?: string | undefined, subsection?: string): BreadcrumbItem[] {
     const items: BreadcrumbItem[] = [

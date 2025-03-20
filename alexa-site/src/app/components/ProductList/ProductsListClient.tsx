@@ -4,10 +4,8 @@
 import { useState, useEffect } from 'react';
 import { ProductBundleType, FireBaseDocument, SortOption } from '@/app/utils/types';
 import ProductSorter from './ProductSorter';
-import Breadcrumbs from '@/app/components/Breadcrumbs';
-import { getBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
-import toTitleCase from '@/app/utils/toTitleCase';
 import ProductCardsList from './ProductCardsList';
+import SectionBanner from './SectionBanner';
 
 interface ProductsListClientProps {
   sectionName?: string;
@@ -41,31 +39,34 @@ export default function ProductsListClient({
     }, []);
     
     return (
-        <main>
+        <main className='w-full'>
+            {
+                initialData
+                &&
+                <SectionBanner
+                    lastAddProduct={ initialData.products[initialData.products.length - 1] }
+                    sectionName={ sectionName }
+                    subsection={ subsection }
+                />
+            }
 
-            <div className="mb-6">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center uppercase text-[#333333]">
-                    { subsection ? toTitleCase(subsection) : toTitleCase(sectionName || 'produtos') }
-                </h1>
-                <Breadcrumbs items={ getBreadcrumbItems(sectionName, subsection) } />
-            </div>
-
-            <div className='w-full flex justify-end'>
+            <div className='w-full flex justify-end px-4 md:px-8 lg:px-12 xl:px-16 pt-4 pb-4'>
                 <ProductSorter 
                     currentSort={ currentSort.value }
                     onSortChange={ (option) => setCurrentSort(option) }
                 />
             </div>
-                    
-            <ProductCardsList
-                orderBy={ currentSort.orderBy }
-                direction={ currentSort.direction }
-                sectionName={ sectionName }
-                subsection={ subsection }
-                searchTerm={ searchTerm }
-                initialData={ initialData }
-                isMobileLayout={ isMobileLayout }
-            />
+            <div className='w-full px-4 md:px-8 lg:px-12 xl:px-16'>
+                <ProductCardsList
+                    orderBy={ currentSort.orderBy }
+                    direction={ currentSort.direction }
+                    sectionName={ sectionName }
+                    subsection={ subsection }
+                    searchTerm={ searchTerm }
+                    initialData={ initialData }
+                    isMobileLayout={ isMobileLayout }
+                />
+            </div>
             
         </main>
     );
