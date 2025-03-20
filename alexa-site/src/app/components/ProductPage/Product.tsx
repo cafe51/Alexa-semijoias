@@ -11,7 +11,6 @@ import { useUserInfo } from '@/app/hooks/useUserInfo';
 import PropertiesSelectionSection from './PropertiesSelectionSection';
 import useDynamicObjectCardsLogic from '@/app/hooks/useDynamicObjectCardsLogic';
 import FinishBuyConfirmationModal from '@/app/components/FinishBuyConfirmationModal';
-import { Badge } from '@/components/ui/badge';
 import ImageCarousel from '@/app/components/ImageCarousel';
 import { CardContent } from '@/components/ui/card';
 import ShippingCalculator from '@/app/carrinho/ShippingCalculator';
@@ -22,16 +21,14 @@ import { createSlugName } from '@/app/utils/createSlugName';
 import SelectionTooltip from '../SelectionTooltip';
 import dynamic from 'next/dynamic';
 import StockWarning from './StockWarning';
-import toTitleCase from '@/app/utils/toTitleCase';
+import ProductDescription from './ProductDescription';
+import ProductCategories from './ProductCategories';
 
 const RecommendedProducts = dynamic(
     () => import('@/app/components/ProductPage/RecommendedProducts'),
     { ssr: true },
 );
 
-const TEXTO_DA_QUALIDADE_DA_SEMIJOIA = '\nNossas peças são de alto padrão, pois são cuidadosamente expostas ao banho de ouro 18k que garante um brilho intenso e resistência superior.';
-const TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO = '\nO aço inox de alta qualidade garante uma durabilidade superior, evitando manchas, oxidação e desbotamento, mesmo com o uso diário. São peças feitas para brilhar tanto quanto você, sem perder seu charme ao longo do tempo. Para toda a vida. ';
-const TEXTO_DA_GARANTIA = '\n\n Quem conhece nossas semijoias desfruta de confiança e tranquilidade, pois nossos acessórios possuem 1 ano de garantia para defeito de fabricação no banho de ouro 18k.\n';
 
 interface ProductProps {
     id: string;
@@ -290,78 +287,70 @@ export default function Product({ id, initialProduct, initialSelectedOptions = {
     if (!product) return <LoadingIndicator />;
 
     return (
-        <main className="min-h-screen bg-white text-[#333333] px-0  mb-8  animate-fadeIn">
+        <main className="min-h-screen bg-white text-[#333333] px-0 mb-8 animate-fadeIn">
             { product && <ProductJsonLd product={ product } /> }
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="w-full mx-auto ">
-                <div className="flex flex-col md:flex-row gap-8 flex-shrink-0 min-h-[600px]">
+                <div className="flex flex-col md:flex-row md:justify-between gap-8 flex-shrink-0 min-h-[600px]">
                     <section className="md:w-1/2 mx-0 px-0 ">
                         <ImageCarousel productData={ product } options={ { loop: true } }/>
                     </section>
-                    <section className="md:w-1/2 px-4">
-                        <div>
-                            <h1 className="text-2xl md:text-3xl font-bold mb-2">{ product.name.toUpperCase() }</h1>
-                            <div className="flex flex-wrap items-center gap-2 mb-4">
-                                { product.categories.map((category, index) => (
-                                    <Badge key={ index } variant="secondary" className="bg-[#F8C3D3] text-[#333333]">
-                                        { category }
-                                    </Badge>
-                                )) }
-                                { product.lancamento && <Badge variant="destructive" className="bg-[#C48B9F] text-white">Lançamento</Badge> }
-                            </div>
-                            <p className="text-gray-600 md:text-base mb-6 whitespace-pre-line ">
-                                { product.description +
-                                '\n\n' + toTitleCase(product.name) + ' ' + 'é uma verdadeira semijoia, uma peça com a garantia de qualidade Alexa Semijoias.' +
-                                (product.sections.includes('joias em aço inox')
-                                    ? TEXTO_DA_QUALIDADE_DA_JOIA_EM_ACO
-                                    : TEXTO_DA_QUALIDADE_DA_SEMIJOIA) +
-                                  (!product.sections.includes('joias em aço inox') ? TEXTO_DA_GARANTIA : '')
-                                }
-                            </p>
-                        </div>
-                        { !product.productVariations.some((pv) => pv.customProperties === undefined) && (
-                            <CardContent className="p-0">
-                                <SelectionTooltip
-                                    isVisible={ showTooltip }
-                                    onClose={ () => setShowTooltip(false) }
-                                />
-                                <PropertiesSelectionSection 
+
+                    <section className="md:w-1/2 lg:w-2/5 px-4 ">
+
+                        <h1 className="text-2xl md:text-3xl font-bold mb-2">{ product.name.toUpperCase() }</h1>
+                        <div className='lg:w-11/12 xl:8/12  '>
+
+                            { !product.productVariations.some((pv) => pv.customProperties === undefined) && (
+                                <CardContent className="p-0 ">
+                                    <SelectionTooltip
+                                        isVisible={ showTooltip }
+                                        onClose={ () => setShowTooltip(false) }
+                                    />
+                                    <PropertiesSelectionSection 
+                                        isLoadingButton={ isLoadingButton }
+                                        carrinho={ carrinho }
+                                        selectedOptions={ selectedOptions }
+                                        currentPhase={ currentPhase }
+                                        setCurrentPhase={ setCurrentPhase }
+                                        setSelectedOptions={ setSelectedOptions }
+                                        errorMessage={ errorMessage }
+                                        setErrorMessage={ setErrorMessage }
+                                        quantity={ quantity }
+                                        setQuantity={ setQuantity }
+                                        availableOptions={ availableOptions }
+                                        allOptions={ allOptions }
+                                        productVariationsSelected={ productVariationsSelected }
+                                        keys={ keys }
+                                    />
+                                </CardContent>
+                            ) }
+                            { product.productVariations.length === 1 && product.estoqueTotal <= 5 && <StockWarning stock={ product.estoqueTotal } /> }
+                            <div className=''>
+                                <PriceSection
+                                    product={ product }
                                     isLoadingButton={ isLoadingButton }
-                                    carrinho={ carrinho }
-                                    selectedOptions={ selectedOptions }
-                                    currentPhase={ currentPhase }
-                                    setCurrentPhase={ setCurrentPhase }
-                                    setSelectedOptions={ setSelectedOptions }
-                                    errorMessage={ errorMessage }
-                                    setErrorMessage={ setErrorMessage }
+                                    isDisabled={ isDisabled }
                                     quantity={ quantity }
-                                    setQuantity={ setQuantity }
-                                    availableOptions={ availableOptions }
-                                    allOptions={ allOptions }
-                                    productVariationsSelected={ productVariationsSelected }
-                                    keys={ keys }
+                                    handleClick={ handleFinishBuyClick }
+                                    setShowTooltip={ setShowTooltip }
                                 />
-                            </CardContent>
-                        ) }
-                        { product.productVariations.length === 1 && product.estoqueTotal <= 5 && <StockWarning stock={ product.estoqueTotal } /> }
-                        <PriceSection
-                            product={ product }
-                            isLoadingButton={ isLoadingButton }
-                            isDisabled={ isDisabled }
-                            quantity={ quantity }
-                            handleClick={ handleFinishBuyClick }
-                            setShowTooltip={ setShowTooltip }
-                        />
-                        <div className="py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg text-center w-full flex justify-center mt-2">
-                            <ShippingCalculator
-                                onSelectShipping={ selectShipping }
-                                selectedShipping={ shipping ? Number(shipping) : null }
-                                couponDiscount={ 0 }
-                                cartPrice={ (product.value.promotionalPrice || product.value.price) * quantity }
-                                showFreeShippingSection={ false }
-                            />
+
+                                <ShippingCalculator
+                                    onSelectShipping={ selectShipping }
+                                    selectedShipping={ shipping ? Number(shipping) : null }
+                                    couponDiscount={ 0 }
+                                    cartPrice={ (product.value.promotionalPrice || product.value.price) * quantity }
+                                    showFreeShippingSection={ false }
+                                />
+
+                                <ShareSection url={ `www.alexasemijoias.com.br/product/${createSlugName(product.name)}` } />
+                            </div>
                         </div>
-                        <ShareSection url={ `www.alexasemijoias.com.br/product/${createSlugName(product.name)}` } />
+                        <ProductCategories product={ product } />
+
+                        <ProductDescription product={ product } />
+
                     </section>
                 </div>
             </div>

@@ -143,145 +143,147 @@ export default function ShippingCalculator({
     const isFreeShipping = selectedShipping === 0 && freeShippingData.cheapestOption;
 
     return (
-        <Dialog open={ isOpen } onOpenChange={ setIsOpen }>
-            <DialogTrigger asChild>
-                { selectedShipping !== null ? (
-                    <Button variant="link" className="p-0 h-auto">
-                        { isFreeShipping ? (
-                            <div className="flex flex-col items-end">
-                                <div className="flex items-center">
-                                    <span className="line-through text-sm text-gray-400">
-                                        { formatPrice(freeShippingData.cheapestOption!.price) }
-                                    </span>
-                                    { !showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> FRETE GRÁTIS</span> }
-                                    { !!showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> GRÁTIS</span> }
-                                </div>
+        <section className='py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg text-center w-full flex justify-center mt-2'>
+            <Dialog open={ isOpen } onOpenChange={ setIsOpen }>
+                <DialogTrigger asChild>
+                    { selectedShipping !== null ? (
+                        <Button variant="link" className="p-0 h-auto">
+                            { isFreeShipping ? (
+                                <div className="flex flex-col items-end">
+                                    <div className="flex items-center">
+                                        <span className="line-through text-sm text-gray-400">
+                                            { formatPrice(freeShippingData.cheapestOption!.price) }
+                                        </span>
+                                        { !showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> FRETE GRÁTIS</span> }
+                                        { !!showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> GRÁTIS</span> }
+                                    </div>
 
-                            </div>
-                        ) : 
-                            showFreeShippingSection
-                                ? (
-                                    <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
-                                        { formatPrice(selectedShipping) }
-                                    </span>
-                                )
-                                : (
-                                    <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
-                                        { 'FRETE: ' + formatPrice(selectedShipping) }
-                                    </span>
-                                )
-                        }
-                    </Button>
-                ) : (
-                    <Button
-                        variant="link"
-                        className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] text-sm md:text-base lg:text-lg"
-                    >
-                        Calcular frete
-                    </Button>
-                ) }
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] md:max-w-[500px] lg:max-w-[600px]">
-                <DialogHeader>
-                    <DialogTitle className="text-lg md:text-xl lg:text-2xl">Calcular Frete</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={ handleCalculate } className="space-y-4 md:space-y-6">
-                    <div className="flex items-center space-x-2 md:space-x-4">
-                        <Label htmlFor="cep" className="text-sm md:text-base lg:text-lg">
-              CEP:
-                        </Label>
-                        <InputField
-                            id="cep"
-                            value={ cep }
-                            onChange={ handleCepChange }
-                            maxLength={ 9 }
-                            label="CEP"
-                            readOnly={ false }
-                        />
-                        <Button type="submit" className="text-sm md:text-base lg:text-lg" disabled={ isLoading }>
-                            { isLoading ? 'Calculando...' : 'Calcular' }
+                                </div>
+                            ) : 
+                                showFreeShippingSection
+                                    ? (
+                                        <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
+                                            { formatPrice(selectedShipping) }
+                                        </span>
+                                    )
+                                    : (
+                                        <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
+                                            { 'FRETE: ' + formatPrice(selectedShipping) }
+                                        </span>
+                                    )
+                            }
                         </Button>
-                    </div>
-                </form>
-                { error && (
-                    <div className="mt-4 text-red-500 text-sm md:text-base">{ error }</div>
-                ) }
-                { (!error && showOptions) && (
-                    <>
-                        {
-                            !showFreeShippingSection && <FreeShippingWarning precoDoProduto={ cartPrice } precoParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis + cartPrice } />
-                        }
-                        { shippingOptions.length > 0 && showFreeShippingSection && (
-                            <FreeShippingSection
-                                precoFaltanteEmPorcentagem={ freeShippingData.precoFaltanteEmPorcentagem }
-                                precoFaltanteParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis }
-                            />
-                        ) }
-                        <RadioGroup
-                            value={ tempSelectedShipping ?? undefined }
-                            onValueChange={ setTempSelectedShipping }
-                            className="mt-4 md:mt-6 space-y-2 md:space-y-3"
+                    ) : (
+                        <Button
+                            variant="link"
+                            className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] text-sm md:text-base lg:text-lg"
                         >
-                            { shippingOptions.map((option) => {
-                                const uniqueValue = `${option.id}||${option.price}`;
-                                const isCheapestAndFree =
+                        Calcular frete
+                        </Button>
+                    ) }
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] md:max-w-[500px] lg:max-w-[600px]">
+                    <DialogHeader>
+                        <DialogTitle className="text-lg md:text-xl lg:text-2xl">Calcular Frete</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={ handleCalculate } className="space-y-4 md:space-y-6">
+                        <div className="flex items-center space-x-2 md:space-x-4">
+                            <Label htmlFor="cep" className="text-sm md:text-base lg:text-lg">
+              CEP:
+                            </Label>
+                            <InputField
+                                id="cep"
+                                value={ cep }
+                                onChange={ handleCepChange }
+                                maxLength={ 9 }
+                                label="CEP"
+                                readOnly={ false }
+                            />
+                            <Button type="submit" className="text-sm md:text-base lg:text-lg" disabled={ isLoading }>
+                                { isLoading ? 'Calculando...' : 'Calcular' }
+                            </Button>
+                        </div>
+                    </form>
+                    { error && (
+                        <div className="mt-4 text-red-500 text-sm md:text-base">{ error }</div>
+                    ) }
+                    { (!error && showOptions) && (
+                        <>
+                            {
+                                !showFreeShippingSection && <FreeShippingWarning precoDoProduto={ cartPrice } precoParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis + cartPrice } />
+                            }
+                            { shippingOptions.length > 0 && showFreeShippingSection && (
+                                <FreeShippingSection
+                                    precoFaltanteEmPorcentagem={ freeShippingData.precoFaltanteEmPorcentagem }
+                                    precoFaltanteParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis }
+                                />
+                            ) }
+                            <RadioGroup
+                                value={ tempSelectedShipping ?? undefined }
+                                onValueChange={ setTempSelectedShipping }
+                                className="mt-4 md:mt-6 space-y-2 md:space-y-3"
+                            >
+                                { shippingOptions.map((option) => {
+                                    const uniqueValue = `${option.id}||${option.price}`;
+                                    const isCheapestAndFree =
                   freeShippingData.cheapestOption &&
                   option.id === freeShippingData.cheapestOption.id &&
                   freeShippingData.precoFaltanteParaFreteGratis <= 0;
-                                return (
-                                    <div
-                                        key={ option.id }
-                                        className="flex items-center justify-between space-x-2 md:space-x-4 border p-2 md:p-3 lg:p-4 rounded cursor-pointer hover:bg-gray-100"
-                                        onClick={ () => setTempSelectedShipping(uniqueValue) }
-                                    >
-                                        <div className="flex items-center flex-1">
-                                            <RadioGroupItem value={ uniqueValue } id={ option.id } />
-                                            <Label
-                                                htmlFor={ option.id }
-                                                className="ml-2 md:ml-3 flex-1 cursor-pointer text-sm md:text-base lg:text-lg"
-                                            >
-                                                { option.name }
-                                            </Label>
-                                        </div>
-                                        <div className="text-right">
-                                            { isCheapestAndFree ? (
-                                                <div className="flex flex-col items-end">
-                                                    <div className="flex items-center">
-                                                        <span className="line-through text-sm text-gray-400">
-                                                            { formatPrice(option.price) }
-                                                        </span>
-                                                        <span className="text-[#D4AF37] text-base font-bold ml-2">GRÁTIS</span>
+                                    return (
+                                        <div
+                                            key={ option.id }
+                                            className="flex items-center justify-between space-x-2 md:space-x-4 border p-2 md:p-3 lg:p-4 rounded cursor-pointer hover:bg-gray-100"
+                                            onClick={ () => setTempSelectedShipping(uniqueValue) }
+                                        >
+                                            <div className="flex items-center flex-1">
+                                                <RadioGroupItem value={ uniqueValue } id={ option.id } />
+                                                <Label
+                                                    htmlFor={ option.id }
+                                                    className="ml-2 md:ml-3 flex-1 cursor-pointer text-sm md:text-base lg:text-lg"
+                                                >
+                                                    { option.name }
+                                                </Label>
+                                            </div>
+                                            <div className="text-right">
+                                                { isCheapestAndFree ? (
+                                                    <div className="flex flex-col items-end">
+                                                        <div className="flex items-center">
+                                                            <span className="line-through text-sm text-gray-400">
+                                                                { formatPrice(option.price) }
+                                                            </span>
+                                                            <span className="text-[#D4AF37] text-base font-bold ml-2">GRÁTIS</span>
+                                                        </div>
+                                                        <p className="text-xs md:text-sm lg:text-base text-gray-500">
+                            Entrega em até { option.days } dias úteis
+                                                        </p>
                                                     </div>
-                                                    <p className="text-xs md:text-sm lg:text-base text-gray-500">
+                                                ) : (
+                                                    <div className="flex flex-col items-end">
+                                                        <p className="text-sm md:text-base lg:text-lg">{ formatPrice(option.price) }</p>
+                                                        <p className="text-xs md:text-sm lg:text-base text-gray-500">
                             Entrega em até { option.days } dias úteis
-                                                    </p>
-                                                </div>
-                                            ) : (
-                                                <div className="flex flex-col items-end">
-                                                    <p className="text-sm md:text-base lg:text-lg">{ formatPrice(option.price) }</p>
-                                                    <p className="text-xs md:text-sm lg:text-base text-gray-500">
-                            Entrega em até { option.days } dias úteis
-                                                    </p>
-                                                </div>
-                                            ) }
+                                                        </p>
+                                                    </div>
+                                                ) }
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            }) }
-                        </RadioGroup>
-                    </>
-                ) }
-                <DialogFooter>
-                    <Button
-                        onClick={ handleConfirm }
-                        disabled={ !tempSelectedShipping }
-                        aria-disabled={ !tempSelectedShipping }
-                        className="text-sm md:text-base lg:text-lg"
-                    >
+                                    );
+                                }) }
+                            </RadioGroup>
+                        </>
+                    ) }
+                    <DialogFooter>
+                        <Button
+                            onClick={ handleConfirm }
+                            disabled={ !tempSelectedShipping }
+                            aria-disabled={ !tempSelectedShipping }
+                            className="text-sm md:text-base lg:text-lg"
+                        >
             Confirmar
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </section>
     );
 }

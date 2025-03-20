@@ -33,7 +33,7 @@ export default function PriceSection({
     };
 
     return (
-        <section className='w-full p-2 border-solid border-2 border-x-0 borderColor relative'>
+        <section className='w-full  p-2  relative'>
             <Price
                 price={ product.value.price }
                 promotionalPrice={ product.value.promotionalPrice }
