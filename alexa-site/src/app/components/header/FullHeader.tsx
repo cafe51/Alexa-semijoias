@@ -129,6 +129,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                             <CartIcon isMobile={ isMobile } buttonSize={ buttonSize } />
                         </div>
                     </div>
+                    <div className="border-b border-[#F8C3D3] w-2/3 mx-auto"></div>
                 </header>
                 { /* Espaçador para evitar sobreposição do conteúdo */ }
                 <div style={ { height: `${PROMO_BAR_HEIGHT + headerHeightMobile - 20 }px` } } />
@@ -139,7 +140,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     // Renderização para desktop
     return (
         <>
-            <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg flex flex-col">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white flex flex-col">
                 { /* Promo Bar */ }
                 <RotatingAnnouncementBar />
                 { isSearchModalOpen && (
@@ -173,6 +174,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                         <CartIcon isMobile={ isMobile } buttonSize={ buttonSize } />
                     </div>
                 </div>
+                <div className="border-b border-[#F8C3D3] w-9/12 mx-auto"></div>
             </header>
             { /* Espaçador: altura do header desktop (90px) + promo bar */ }
             <div style={ { height: `calc(70px + ${PROMO_BAR_HEIGHT}px)` } } />
