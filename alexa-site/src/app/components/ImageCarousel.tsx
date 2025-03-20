@@ -21,7 +21,7 @@ function ImageCarouselProduct({
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none bg-transparent border-none rounded-t-none rounded-b-sm">
             <CardContent className="p-0 flex flex-col h-full">
-                <div className="relative aspect-[4/5] ">
+                <div className="relative aspect-[4/5] xl:aspect-square ">
                     <div className="relative w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"

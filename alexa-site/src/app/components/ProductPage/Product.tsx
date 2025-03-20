@@ -291,15 +291,15 @@ export default function Product({ id, initialProduct, initialSelectedOptions = {
             { product && <ProductJsonLd product={ product } /> }
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="w-full mx-auto ">
-                <div className="flex flex-col md:flex-row md:justify-between gap-8 flex-shrink-0 min-h-[600px]">
-                    <section className="md:w-1/2 mx-0 px-0 ">
+                <div className="flex flex-col md:grid md:grid-cols-[60%_auto] min-h-[600px]">
+                    <section className="mx-0 px-0 aspect-auto">
                         <ImageCarousel productData={ product } options={ { loop: true } }/>
                     </section>
 
-                    <section className="md:w-1/2 lg:w-2/5 px-4 ">
+                    <section className="px-4 ">
 
                         <h1 className="text-2xl md:text-3xl font-bold mb-2">{ product.name.toUpperCase() }</h1>
-                        <div className='lg:w-11/12 xl:8/12  '>
+                        <div className='lg:w-11/12 xl:w-8/12  '>
 
                             { !product.productVariations.some((pv) => pv.customProperties === undefined) && (
                                 <CardContent className="p-0 ">
