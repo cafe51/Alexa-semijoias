@@ -161,7 +161,7 @@ export default function ImageCarousel({ productData, options }: ImageCarouselPro
                     <div className="overflow-hidden" ref={ emblaThumbsRef }>
                         { /* Container interno: direção row em mobile e column em telas grandes */ }
                         <div className="flex flex-row lg:flex-col ml-[calc(var(--thumbs-slide-spacing)*-1)] lg:ml-0 lg:mt-[calc(var(--thumbs-slide-spacing)*-1)]">
-                            { productData.images.map((image, index) => (
+                            { productData.images && productData.images.length > 1 && productData.images.map((image, index) => (
                                 <Thumb
                                     key={ index }
                                     onClick={ () => onThumbClick(index) }
