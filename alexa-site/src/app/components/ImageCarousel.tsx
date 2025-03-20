@@ -6,24 +6,28 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { Card, CardContent } from '@/components/ui/card';
 import blankImage from '../../../public/blankImage.png';
 
-
 interface ImageCarouselProps {
-    productData: (ProductBundleType & FireBaseDocument);
-    options?: EmblaOptionsType;
-    
+  productData: ProductBundleType & FireBaseDocument;
+  options?: EmblaOptionsType;
 }
 
-function ImageCarouselProduct({ productData, image }: { productData: ProductBundleType & FireBaseDocument; image: ProductBundleType['images'][0] }) {
+function ImageCarouselProduct({
+    productData,
+    image,
+}: {
+  productData: ProductBundleType & FireBaseDocument;
+  image: ProductBundleType['images'][0];
+}) {
     return (
-        <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-t-none rounded-b-sm">
-            <CardContent className="p-0 flex flex-col h-full ">
-                <div
-                    className="relative aspect-[4/5]"
-                >
+        <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none bg-transparent border-none rounded-t-none rounded-b-sm">
+            <CardContent className="p-0 flex flex-col h-full">
+                <div className="relative aspect-[4/5] ">
                     <div className="relative w-full h-full bg-skeleton">
                         <Image
                             data-testid="product-link"
-                            className={ `rounded-none object-cover scale-100 ${productData.estoqueTotal <= 0 ? 'opacity-50' : ''}` }
+                            className={ `rounded-none object-cover scale-100 ${
+                                productData.estoqueTotal <= 0 ? 'opacity-50' : ''
+                            }` }
                             src={
                                 productData.images && productData.images[0]
                                     ? image.localUrl
@@ -31,12 +35,11 @@ function ImageCarouselProduct({ productData, image }: { productData: ProductBund
                             }
                             alt={ `Foto de ${productData.name}` }
                             title={ `Foto de ${productData.name}` }
-                            sizes={ '3000px' }
+                            sizes="3000px"
                             fill
-                            placeholder="blur" // melhora a percepção de carregamento
+                            placeholder="blur"
                             blurDataURL={ blankImage.src }
-                            // loading={ homePage ? 'eager' : 'lazy' }
-                            quality={ 75 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
+                            quality={ 75 }
                         />
                     </div>
                 </div>
@@ -45,27 +48,25 @@ function ImageCarouselProduct({ productData, image }: { productData: ProductBund
     );
 }
 
-type PropType = {
-    selected: boolean
-    productData: (ProductBundleType & FireBaseDocument);
-    image: ProductBundleType['images'][0];
-    onClick: () => void
-  }
-  
-export const Thumb: React.FC<PropType> = (props) => {
-    const { selected, productData, image, onClick } = props;
-  
-    const emblaThumbsSlideClassName = 'min-w-0 flex-[0_0_22%] pl-[var(--thumbs-slide-spacing)] ' + 'min-[576px]:flex-[0_0_15%]';
+type ThumbProps = {
+  selected: boolean;
+  productData: ProductBundleType & FireBaseDocument;
+  image: ProductBundleType['images'][0];
+  onClick: () => void;
+};
+
+export const Thumb: React.FC<ThumbProps> = ({ selected, productData, image, onClick }) => {
+    // Classes para layout horizontal (padrão) e vertical (lg)
+    const emblaThumbsSlideClassName =
+    'min-w-0 flex-[0_0_22%] pl-[var(--thumbs-slide-spacing)] min-[576px]:flex-[0_0_25%] ' +
+    'lg:flex-[0_0_auto] lg:w-full lg:pt-[var(--thumbs-slide-spacing)] lg:pl-0 ' +
+    (selected ? 'text-[var(--text-body)]' : '');
 
     return (
-        <div
-            className={ emblaThumbsSlideClassName.concat(
-                selected ? ' text-[var(--text-body)]' : '',
-            ) }
-        >
+        <div className={ emblaThumbsSlideClassName }>
             <button
                 onClick={ onClick }
-                type='button'
+                type="button"
                 className="rounded-[1.8rem] bg-transparent touch-manipulation inline-flex items-center justify-center w-full h-[var(--thumbs-slide-height)] text-[1.8rem] font-semibold border-0 p-0 m-0 cursor-pointer select-none"
                 style={ {
                     WebkitTapHighlightColor: 'rgba(var(--text-high-contrast-rgb-value), 0.5)',
@@ -79,7 +80,9 @@ export const Thumb: React.FC<PropType> = (props) => {
                 <div className="relative w-full h-full bg-skeleton">
                     <Image
                         data-testid="product-link"
-                        className={ `rounded-none object-cover scale-100 ${productData.estoqueTotal <= 0 ? 'opacity-50' : ''}` }
+                        className={ `rounded-none object-cover scale-100 ${
+                            productData.estoqueTotal <= 0 ? 'opacity-50' : ''
+                        }` }
                         src={
                             productData.images && productData.images[0]
                                 ? image.localUrl
@@ -87,20 +90,17 @@ export const Thumb: React.FC<PropType> = (props) => {
                         }
                         alt={ `Foto de ${productData.name}` }
                         title={ `Foto de ${productData.name}` }
-                        sizes={ '3000px' }
+                        sizes="3000px"
                         fill
-                        placeholder="blur" // melhora a percepção de carregamento
+                        placeholder="blur"
                         blurDataURL={ blankImage.src }
-                        // loading={ homePage ? 'eager' : 'lazy' }
-                        quality={ 75 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
+                        quality={ 75 }
                     />
                 </div>
             </button>
         </div>
     );
 };
-  
-
 
 export default function ImageCarousel({ productData, options }: ImageCarouselProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -117,79 +117,86 @@ export default function ImageCarousel({ productData, options }: ImageCarouselPro
         },
         [emblaMainApi, emblaThumbsApi],
     );
-    
+
     const onSelect = useCallback(() => {
         if (!emblaMainApi || !emblaThumbsApi) return;
-        setSelectedIndex(emblaMainApi.selectedScrollSnap());
-        emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
-    }, [emblaMainApi, emblaThumbsApi, setSelectedIndex]);
-    
+        const index = emblaMainApi.selectedScrollSnap();
+        setSelectedIndex(index);
+        emblaThumbsApi.scrollTo(index);
+    }, [emblaMainApi, emblaThumbsApi]);
+
     useEffect(() => {
         if (!emblaMainApi) return;
         onSelect();
-    
         emblaMainApi.on('select', onSelect).on('reInit', onSelect);
     }, [emblaMainApi, onSelect]);
 
     return (
         <section
             className="max-w-[70rem] mx-auto"
-            style={ {
-                '--slide-height': '19rem',
-                '--slide-spacing': '1rem',
-                '--slide-size': '100%',
-                '--slide-spacing-sm': '1.6rem',
-                '--slide-size-sm': '100%', // calc(100% / 1) equivale a 100%
-                '--slide-spacing-lg': '2rem',
-                '--slide-size-lg': '100%',
-            } as React.CSSProperties }
+            style={
+        {
+            '--slide-height': '19rem',
+            '--slide-spacing': '1rem',
+            '--slide-size': '100%',
+            '--slide-spacing-sm': '1.6rem',
+            '--slide-size-sm': '100%',
+            '--slide-spacing-lg': '2rem',
+            '--slide-size-lg': '100%',
+        } as React.CSSProperties
+            }
         >
-            <div className="overflow-hidden" ref={ emblaMainRef }>
+            { /* Container geral: coluna em telas pequenas e linha (thumbs à esquerda e carousel à direita) em telas grandes */ }
+            <div className="flex flex-col lg:flex-row">
+                { /* Container das thumbs */ }
                 <div
-                    className="flex ml-[calc(var(--slide-spacing)*-1)] min-[750px]:ml-[calc(var(--slide-spacing-sm)*-1)] min-[1200px]:ml-[calc(var(--slide-spacing-lg)*-1)]"
-                    style={ { touchAction: 'pan-y pinch-zoom', backfaceVisibility: 'hidden' } }
+                    className="order-2 lg:order-1 lg:w-[15%] lg:mr-[var(--thumbs-slide-spacing)] mt-[var(--thumbs-slide-spacing)] lg:mt-0"
+                    style={
+            {
+                '--thumbs-slide-spacing': '0.8rem',
+                '--thumbs-slide-height': '6rem',
+            } as React.CSSProperties
+                    }
                 >
-                    { productData.images.map((image, index) => (
-                        <div
-                            key={ index }
-                            className={
-                                'min-w-0 ' +
-                                'pl-[var(--slide-spacing)] ' +
-                                'flex-[0_0_var(--slide-size)] ' +
-                                'min-[750px]:pl-[var(--slide-spacing-sm)] ' +
-                                'min-[750px]:flex-[0_0_var(--slide-size-sm)] ' +
-                                'min-[1200px]:pl-[var(--slide-spacing-lg)] ' +
-                                'min-[1200px]:flex-[0_0_var(--slide-size-lg)]'
-                            }
-                        >
-                            <ImageCarouselProduct productData={ productData } image={ image } />
+                    <div className="overflow-hidden" ref={ emblaThumbsRef }>
+                        { /* Container interno: direção row em mobile e column em telas grandes */ }
+                        <div className="flex flex-row lg:flex-col ml-[calc(var(--thumbs-slide-spacing)*-1)] lg:ml-0 lg:mt-[calc(var(--thumbs-slide-spacing)*-1)]">
+                            { productData.images.map((image, index) => (
+                                <Thumb
+                                    key={ index }
+                                    onClick={ () => onThumbClick(index) }
+                                    selected={ index === selectedIndex }
+                                    image={ image }
+                                    productData={ productData }
+                                />
+                            )) }
                         </div>
-                    )) }
+                    </div>
                 </div>
-            </div>
 
-            <div
-                className="mt-[var(--thumbs-slide-spacing)]"
-                style={ {
-                    '--thumbs-slide-spacing': '0.8rem',
-                    '--thumbs-slide-height': '6rem',
-                } as React.CSSProperties }
-            >
-                <div className="overflow-hidden" ref={ emblaThumbsRef }>
-                    <div className="flex flex-row ml-[calc(var(--thumbs-slide-spacing)*-1)]">
-                        { productData.images.map((image, index) => (
-                            <Thumb
-                                key={ index }
-                                onClick={ () => onThumbClick(index) }
-                                selected={ index === selectedIndex }
-                                image={ image }
-                                productData={ productData }
-                            />
-                        )) }
+                { /* Carousel principal */ }
+                <div className="order-1 lg:order-2 lg:w-[80%]">
+                    <div className="overflow-hidden" ref={ emblaMainRef }>
+                        <div
+                            className="flex ml-[calc(var(--slide-spacing)*-1)] min-[750px]:ml-[calc(var(--slide-spacing-sm)*-1)] min-[1200px]:ml-[calc(var(--slide-spacing-lg)*-1)]"
+                            style={ { touchAction: 'pan-y pinch-zoom', backfaceVisibility: 'hidden' } }
+                        >
+                            { productData.images.map((image, index) => (
+                                <div
+                                    key={ index }
+                                    className={
+                                        'min-w-0 pl-[var(--slide-spacing)] flex-[0_0_var(--slide-size)] ' +
+                    'min-[750px]:pl-[var(--slide-spacing-sm)] min-[750px]:flex-[0_0_var(--slide-size-sm)] ' +
+                    'min-[1200px]:pl-[var(--slide-spacing-lg)] min-[1200px]:flex-[0_0_var(--slide-size-lg)]'
+                                    }
+                                >
+                                    <ImageCarouselProduct productData={ productData } image={ image } />
+                                </div>
+                            )) }
+                        </div>
                     </div>
                 </div>
             </div>
-            
         </section>
     );
 }
