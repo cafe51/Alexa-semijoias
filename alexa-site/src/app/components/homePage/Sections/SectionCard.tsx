@@ -19,11 +19,11 @@ export default function SectionCard({ product, containerClassName = 'bg-skeleton
     const linkToSection = product?.sections[0] ? `/section/${createSlugName(product.sections[0])}` : '/section';
 
     return (
-        <Card className={ `${ containerClassName }  flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-t-none rounded-b-sm` }>
-            <CardContent className="relative md:w-full md:h-full aspect-[4/5] md:aspect-auto bg-skeleton">
+        <Card className={ `${ containerClassName }  flex flex-col h-full overflow-hidden transition-shadow  duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-t-none rounded-b-sm` }>
+            <CardContent className="relative md:w-full md:h-full aspect-[4/5] md:aspect-auto bg-skeleton hover:scale-110 transition-transform duration-300 hover:shadow-lg shadow-none">
                 <Image
                     data-testid="product-link"
-                    className='rounded-none object-cover scale-100'
+                    className='rounded-none object-cover scale-100 '
                     src={ getImageUrlFromFirebaseProductDocument(product) }
                     alt={ `Imagem da seção de ${titleOfBanner}` } 
                     title={ `Imagem da seção de ${titleOfBanner}` }
