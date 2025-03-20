@@ -147,7 +147,7 @@ export default async function ProductScreenPage({
     const breadcrumbItems = getProductBreadcrumbItems(category, subcategory, product.name);
 
     return (
-        <main className="min-h-screen">
+        <main className="min-h-screen md:px-8 lg:px-10 md:pt-6 lg:pt-8 bg-white">
             <Breadcrumbs items={ breadcrumbItems } />
             <Product
                 id={ product.id }
