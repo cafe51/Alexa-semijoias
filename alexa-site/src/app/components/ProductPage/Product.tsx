@@ -290,7 +290,7 @@ export default function Product({ id, initialProduct, initialSelectedOptions = {
     if (!product) return <LoadingIndicator />;
 
     return (
-        <main className="min-h-screen bg-[#FAF9F6] text-[#333333] px-0 md:px-8 mb-8  animate-fadeIn">
+        <main className="min-h-screen bg-white text-[#333333] px-0 md:px-8 mb-8  animate-fadeIn">
             { product && <ProductJsonLd product={ product } /> }
             { showModalFinishBuy && <FinishBuyConfirmationModal closeModelClick={ () => setShowModalFinishBuy(false) } /> }
             <div className="max-w-6xl mx-auto">
