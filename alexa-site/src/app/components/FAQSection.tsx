@@ -1,10 +1,29 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { HelpCircle } from 'lucide-react';
 
-export default function FAQSection({ faqs }: {faqs: {question: string, answer: string}[]}) {
+export default function FAQSection({ faqs }: { faqs: { question: string; answer: string }[] }) {
+    const faqStructuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': faqs.map(faq => ({
+            '@type': 'Question',
+            'name': faq.question,
+            'acceptedAnswer': {
+                '@type': 'Answer',
+                'text': faq.answer,
+            },
+        })),
+    };
+
     return (
         <section className="py-16 md:py-24 px-6 md:px-8 bg-white">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] mb-4 md:my-12">Perguntas Frequentes</h1>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={ { __html: JSON.stringify(faqStructuredData) } }
+            />
+            <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] mb-4 md:my-12">
+          Perguntas Frequentes
+            </h1>
             <Accordion type="single" collapsible className="max-w-3xl mx-auto">
                 { faqs.map((faq, index) => (
                     <AccordionItem key={ index } value={ `faq-${index}` }>
