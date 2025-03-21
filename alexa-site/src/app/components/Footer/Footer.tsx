@@ -1,46 +1,14 @@
 'use client';
-import { Facebook, Instagram, Mail, Phone, LucideProps } from 'lucide-react';
-import Logo from './header/Logo';
+import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
+import Logo from '../header/Logo';
 // import { Input } from '@/components/ui/input';
 // import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import toTitleCase from '../utils/toTitleCase';
-import { createSlugName } from '../utils/createSlugName';
-import { FireBaseDocument, SectionType } from '../utils/types';
-import Link from 'next/link';
-
-type FooterSectionType = { name: string, link: string };
-
-
-const FooterSection = ({ title, items }: { title: string, items: FooterSectionType[] }) => (
-    <div className="mb-8 lg:mb-0">
-        <h3 className="text-[#D4AF37] text-lg lg:text-xl font-semibold mb-4 lg:mb-6">{ title }</h3>
-        <ul className="space-y-3 lg:space-y-4">
-            { items.map((item, index) => (
-                <li key={ index }>
-                    <a href={ item.link } className="text-[#333333] hover:text-[#C48B9F] transition-colors duration-300 text-base lg:text-lg">
-                        { item.name }
-                    </a>
-                </li>
-            )) }
-        </ul>
-    </div>
-);
-
-const SocialIcon = ({ Icon, link, linkName }: { Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>, link: string, linkName: string }) => (
-    <Link
-        href={ link }
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-[#333333] hover:text-[#D4AF37] transition-colors duration-300 p-2"
-        aria-label={ linkName }
-        title={ linkName }
-    >
-
-        <Icon size={ 24 } className="hover:scale-110 transition-transform duration-300" />
-        <span className="sr-only">{ linkName }</span>
-    </Link>
-);
+import toTitleCase from '../../utils/toTitleCase';
+import { createSlugName } from '../../utils/createSlugName';
+import { FireBaseDocument, FooterSectionType, SectionType } from '../../utils/types';
+import { FooterSection } from './FooterSection';
+import SocialIcon from './SocialIcon';
 
 interface FooterProps {
     sections: (SectionType & FireBaseDocument)[];

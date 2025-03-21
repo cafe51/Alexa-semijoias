@@ -1,7 +1,7 @@
 // src/app/layout.tsx
 import { Montserrat } from 'next/font/google';
 import './globals.css';
-import Footer from './components/Footer';
+import Footer from './components/Footer/Footer';
 import Header from './components/header/Header';
 import { AuthContextProvider } from './context/AuthContext';
 import { UserInfoProvider } from './context/UserInfoContext';

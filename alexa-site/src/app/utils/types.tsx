@@ -476,3 +476,5 @@ export type UseNewProductState = {
     handleSetCreationDate: (creationDate: Timestamp) => void;
     handleSetUpdatingDate: (updatingDate: Timestamp) => void;
 }
+
+export type FooterSectionType = { name: string, link: string };
