@@ -34,7 +34,7 @@ export default function SectionBanner({ lastAddProduct, sectionName, subsection 
     }
 
     return (
-        <section className="w-full grid md:grid-cols-[40%_auto] overflow-hidden pt-2 ">
+        <section className="w-full grid md:grid-cols-[50%_auto] overflow-hidden pt-2 ">
             {       
                 <div className='hidden md:flex flex-col justify-between relative aspect-[10/8] md:aspect-auto  bg-[#C48B9F] w-full '>
                     <div className="w-full flex justify-between items-center pr-2 md:pr-4 lg:pr-6 xl:pr-8 pt-4 text-white">  
@@ -54,7 +54,7 @@ export default function SectionBanner({ lastAddProduct, sectionName, subsection 
             }
 
             { /* Container principal com altura fixa para desktop */ }
-            <div className="relative aspect-[4/5] md:aspect-[3/5] lg:aspect-[4/5] xl:aspect-[5/3] bg-skeleton">
+            <div className="relative aspect-[4/5] md:aspect-[3/5] lg:aspect-[4/5] xl:aspect-[5/4] bg-skeleton">
                 <Image
                     className="object-cover"
                     src={ getImageUrlFromFirebaseProductDocument(lastAddProduct) }
