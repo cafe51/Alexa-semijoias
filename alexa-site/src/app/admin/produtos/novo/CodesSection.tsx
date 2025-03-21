@@ -42,9 +42,9 @@ export default function CodesSection({
     }, [customProperties, sections]);
 
     const setRandomSku = () => {
-        // verificar se há sessão vazia
+        // verificar se há seção vazia
         if(sections.length < 1) {
-            setSkuGenerateErrorMessage('Escolha a sessão antes de gerar o sku');
+            setSkuGenerateErrorMessage('Escolha a seção antes de gerar o sku');
             return;
         }
 

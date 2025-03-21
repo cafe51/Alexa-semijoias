@@ -1,8 +1,6 @@
 'use client';
 import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
 import Logo from '../header/Logo';
-// import { Input } from '@/components/ui/input';
-// import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import toTitleCase from '../../utils/toTitleCase';
 import { createSlugName } from '../../utils/createSlugName';
@@ -55,7 +53,7 @@ export default function Footer({ sections }: FooterProps) {
                             sections && sections.length > 0 &&
                             <div className="w-1/2 px-4 lg:pr-8">
                                 <FooterSection
-                                    title="Sessões"
+                                    title="Seção"
                                     items={ sections.map(({ sectionName }) => ({ name: toTitleCase(sectionName), link: `/section/${createSlugName(sectionName)}` })) }
                                 />
                             </div>
