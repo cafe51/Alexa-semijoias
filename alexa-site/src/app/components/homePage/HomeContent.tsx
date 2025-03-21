@@ -119,7 +119,7 @@ export default async function HomeContent() {
             { dualTitlesProducts && dualTitlesProducts.length > 0 && <DualTitlesSection products={ dualTitlesProducts } /> }
             <InfoBanner />
             { sectionProducts && sectionProducts.length > 0 && <SectionsMobileCarousel products={ sectionProducts } homePage /> }{ /* só aparece em mobile */ }
-            { sectionProducts && sectionProducts.length > 0 && <Sections products={ sectionProducts } /> }{ /* só aparece em desktop */ }
+            { sectionProducts && sectionProducts.length > 0 && <Sections products={ sectionProducts } homePage /> }{ /* só aparece em desktop */ }
             <PromoBanner />
         </div>
     );
