@@ -30,7 +30,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
     const productSlug = useMemo(() => createSlugName(product.name), [product.name]);
 
     return (
-        <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-t-none rounded-b-sm">
+        <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-none">
             <CardContent className="p-0 flex flex-col h-full ">
                 <Link
                     href={ `/product/${productSlug}` }

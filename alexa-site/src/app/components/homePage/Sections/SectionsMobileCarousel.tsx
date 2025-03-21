@@ -11,9 +11,10 @@ import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 
 interface SectionsMobileCarouselProps {
     products: (ProductBundleType & FireBaseDocument)[]
+    homePage?: boolean;
   }
 
-export default function SectionsMobileCarousel({ products }: SectionsMobileCarouselProps) {
+export default function SectionsMobileCarousel({ products, homePage=false }: SectionsMobileCarouselProps) {
     const [
         emblaRef,
     // emblaApi
@@ -32,7 +33,7 @@ export default function SectionsMobileCarousel({ products }: SectionsMobileCarou
     // } = usePrevNextButtons(emblaApi);
     return (
         <section
-            className="max-w-[90rem] mx-auto md:hidden py-14"
+            className={ `max-w-[90rem] mx-auto ${homePage ? 'md:hidden' : ''}  py-14` } 
             style={ {
                 '--slide-height': '19rem',
                 '--slide-spacing': '1rem',
@@ -43,14 +44,14 @@ export default function SectionsMobileCarousel({ products }: SectionsMobileCarou
                 '--slide-size-lg': '30%',
             } as React.CSSProperties }
         >
-            <h1 className="text-2xl sm:text-3xl text-center mb-6 sm:mb-8 md:mb-12">Nossas Coleções</h1>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] my-8 md:my-12">Nossas Coleções</h1>
 
             <div className="overflow-hidden " ref={ emblaRef }>
                 <div
                     className="flex ml-[calc(var(--slide-spacing)*-1)] min-[750px]:ml-[calc(var(--slide-spacing-sm)*-1)] min-[1200px]:ml-[calc(var(--slide-spacing-lg)*-1)]"
                     style={ { touchAction: 'pan-y pinch-zoom', backfaceVisibility: 'hidden' } }
                 >
-                    { products.map((product, index) => (
+                    { products && products.length > 0 && products.map((product, index) => (
                         <div
                             key={ index }
                             className={

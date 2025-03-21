@@ -19,8 +19,8 @@ export default function SectionCard({ product, containerClassName = 'bg-skeleton
     const linkToSection = product?.sections[0] ? `/section/${createSlugName(product.sections[0])}` : '/section';
 
     return (
-        <Card className={ `${ containerClassName }  flex flex-col h-full overflow-hidden transition-shadow  duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-t-none rounded-b-sm` }>
-            <CardContent className="relative md:w-full md:h-full aspect-[4/5] md:aspect-auto bg-skeleton hover:scale-110 transition-transform duration-300 hover:shadow-lg shadow-none">
+        <Card className={ `${ containerClassName } flex flex-col h-full overflow-hidden transition-shadow  duration-300 hover:shadow-lg shadow-none  bg-transparent border-none rounded-none` }>
+            <CardContent className=" relative md:w-full md:h-full aspect-[4/5]  bg-skeleton hover:scale-110 transition-transform duration-300 hover:shadow-lg shadow-none">
                 <Image
                     data-testid="product-link"
                     className='rounded-none object-cover scale-100 '
@@ -34,7 +34,7 @@ export default function SectionCard({ product, containerClassName = 'bg-skeleton
                     // loading={ homePage ? 'eager' : 'lazy' }
                     quality={ 75 } // reduz um pouco a qualidade para diminuir o tamanho do arquivo
                 />
-                <div className="absolute inset-0 flex items-end justify-center text-center">
+                <div className="absolute inset-0 flex items-end justify-center text-center bg-black/20">
                     <div className="relative pb-6 md:pb-10 md:px-10">
                         <p className="font-semibold text-white text-2xl md:text-3xl lg:text-4xl xl:text-5xl pb-4 md:pb-6 tracking-wider">
                             { titleOfBanner.toUpperCase() }

@@ -19,24 +19,24 @@ import ProductJsonLd from './ProductJsonLd';
 import ShareSection from './ShareSection';
 import { createSlugName } from '@/app/utils/createSlugName';
 import SelectionTooltip from '../SelectionTooltip';
-import dynamic from 'next/dynamic';
 import StockWarning from './StockWarning';
 import ProductDescription from './ProductDescription';
 import ProductCategories from './ProductCategories';
-
-const RecommendedProducts = dynamic(
-    () => import('@/app/components/ProductPage/RecommendedProducts'),
-    { ssr: true },
-);
+import DiscoverOurProductsImagesCarousel from '../homePage/DiscoverOurProducts/DiscoverOurProductsImagesCarousel';
+import FAQSection from '../FAQSection';
+import SectionsMobileCarousel from '../homePage/Sections/SectionsMobileCarousel';
+import { faqProductPage } from './faqProductPage';
 
 
 interface ProductProps {
     id: string;
     initialProduct: ProductBundleType & FireBaseDocument;
+    recommendedProducts: ((ProductBundleType & FireBaseDocument)[] | []);
+    sectionProducts: ((ProductBundleType & FireBaseDocument)[] | []);
     initialSelectedOptions?: { [key: string]: string };
 }
 
-export default function Product({ id, initialProduct, initialSelectedOptions = {} }: ProductProps) {
+export default function Product({ id, initialProduct, recommendedProducts, sectionProducts, initialSelectedOptions = {} }: ProductProps) {
     const { carrinho, userInfo } = useUserInfo();
     const [shipping, setShipping] = useState<string | null>(null);
     // Estado local do produto – inicializado com os dados do SSR e atualizado via API
@@ -354,7 +354,12 @@ export default function Product({ id, initialProduct, initialSelectedOptions = {
                     </section>
                 </div>
             </div>
-            <RecommendedProducts mainProductId={ id } />
+            <div className='w-full text-center'>
+                <h1 className='text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] my-8 md:my-12'>Você Também Vai Amar</h1>
+                <DiscoverOurProductsImagesCarousel products={ recommendedProducts } />
+            </div>
+            <FAQSection faqs={ faqProductPage }/>
+            <SectionsMobileCarousel products={ sectionProducts } />
         </main>
     );
 }

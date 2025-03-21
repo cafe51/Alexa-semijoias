@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 import { getGoogleProductCategory } from '@/app/utils/getGoogleProductCategory';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { getProductBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
+import { filtrarResultadosValidos, getRandomProductsForSections, getSections } from '@/app/components/homePage/homePageUtilFunctions';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     try {
@@ -123,9 +124,26 @@ export default async function ProductScreenPage({
 }) {
     const product = await getProductBySlug(slug);
 
+    const sections = await getSections();
+
+    const exclusionMapForCarousel: { [sectionName: string]: string[] } = {};
+    if (product && product.sections) {
+        product.sections.forEach((sec) => {
+            exclusionMapForCarousel[sec] = exclusionMapForCarousel[sec]
+                ? [...exclusionMapForCarousel[sec], product.id]
+                : [product.id];
+        });
+    }
+
+    const randomProductsForSections = sections && sections.length > 0 
+        ? await getRandomProductsForSections(sections, exclusionMapForCarousel)
+        : [];
+
     if (!product || !product.exist) {
         notFound();
     }
+
+    const sectionProducts = filtrarResultadosValidos<ProductBundleType & FireBaseDocument>(randomProductsForSections.map(({ product }) => product));
 
     // Converte searchParams para um objeto simples
     const initialSelectedOptions: { [key: string]: string } = {};
@@ -146,13 +164,29 @@ export default async function ProductScreenPage({
         : null;
     const breadcrumbItems = getProductBreadcrumbItems(category, subcategory, product.name);
 
+    let recommendedProducts: ((ProductBundleType & FireBaseDocument)[] | []) = [];
+    const BASE_URL = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR ? 'http://localhost:3000' : 'https://www.alexasemijoias.com.br';
+    try {
+        const productsFetch = await fetch(`${BASE_URL}/api/recommended-products?mainProductId=${product.id}`);
+        const fetchDataOfProducts = await productsFetch.json();
+        if (!productsFetch.ok) {
+            recommendedProducts = [];
+        } else {
+            recommendedProducts = fetchDataOfProducts.recommendedProducts;
+        }
+    } catch(err) {
+        console.error(err);
+    }
+
     return (
         <main className="min-h-screen md:px-8 lg:px-10 md:pt-6 lg:pt-8 bg-white">
             <Breadcrumbs items={ breadcrumbItems } />
             <Product
                 id={ product.id }
                 initialProduct={ product }
+                recommendedProducts={ recommendedProducts }
                 initialSelectedOptions={ initialSelectedOptions }
+                sectionProducts={ sectionProducts }
             />
         </main>
     );

@@ -116,6 +116,12 @@ function getTwoRandomSections(sections: (SectionType & FireBaseDocument)[]): (Se
     return shuffled.slice(0, 2);
 }
 
+function filtrarResultadosValidos<T>(array: (T | null | false | undefined)[]): T[] {
+    return array.filter((item): item is T => {
+        return item !== null && item !== false && item !== undefined;
+    });
+}
+
 export {
     getSections,
     getFeaturedProducts,
@@ -123,4 +129,5 @@ export {
     getLastProductAdded,    
     getTwoRandomSections,
     getRandomProductsForDualTitlesSection,
+    filtrarResultadosValidos,
 };

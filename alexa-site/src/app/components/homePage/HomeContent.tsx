@@ -13,6 +13,7 @@ import {
     getLastProductAdded,
     getTwoRandomSections,
     getRandomProductsForDualTitlesSection,
+    filtrarResultadosValidos,
 } from './homePageUtilFunctions';
   
 import { fetchDiscoverProductsForSection } from '@/app/services/discoverProducts';
@@ -66,11 +67,7 @@ export default async function HomeContent() {
         ? await getRandomProductsForDualTitlesSection(dualSections, exclusionMapForDual)
         : [];
   
-    function filtrarResultadosValidos<T>(array: (T | null | false | undefined)[]): T[] {
-        return array.filter((item): item is T => {
-            return item !== null && item !== false && item !== undefined;
-        });
-    }
+
 
     // Monta o mapa de exclusão para cada seção (para Discover), considerando os produtos já requisitados
     const exclusionMapForDiscover: { [sectionName: string]: string[] } = {};
@@ -121,7 +118,7 @@ export default async function HomeContent() {
             ) }
             { dualTitlesProducts && dualTitlesProducts.length > 0 && <DualTitlesSection products={ dualTitlesProducts } /> }
             <InfoBanner />
-            { sectionProducts && sectionProducts.length > 0 && <SectionsMobileCarousel products={ sectionProducts } /> }{ /* só aparece em mobile */ }
+            { sectionProducts && sectionProducts.length > 0 && <SectionsMobileCarousel products={ sectionProducts } homePage /> }{ /* só aparece em mobile */ }
             { sectionProducts && sectionProducts.length > 0 && <Sections products={ sectionProducts } /> }{ /* só aparece em desktop */ }
             <PromoBanner />
         </div>
