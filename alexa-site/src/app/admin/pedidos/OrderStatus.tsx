@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { OrderType } from '@/app/utils/types';
 import { statusColors } from '@/app/utils/statusColors';
 import DeliveryTimeSection from './DeliveryTimeSection';
+import Link from 'next/link';
 
 interface OrderStatusProps {
   order: OrderType;
@@ -31,7 +32,40 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
             </CardHeader>
 
             <CardContent className="pt-4">
-                <DeliveryTimeSection deliveryDays={ order.deliveryOption.deliveryTime } orderCreationDate={ order.createdAt.toDate() } />
+                {
+                    order.status === 'pedido enviado' && 
+                    <DeliveryTimeSection deliveryDays={ order.deliveryOption.deliveryTime } orderCreationDate={ order.createdAt.toDate() } />
+                }
+                {
+                    (order.status === 'aguardando pagamento' || order.status === 'preparando para o envio') &&
+                    <div>
+                        <p className='text-center text-lg'>Informações referentes ao envio serão exibidas aqui quando o pedido for enviado</p>
+                    </div>
+                }
+                {
+                    order.status === 'entregue' &&
+                    <div>
+                        <p className='text-center text-lg'>
+                            Não recebeu o pedido? Entre em contato por 
+                            { ' ' }
+                            <Link href='https://wa.me/17981650632' target="_blank"  className='text-[#C48B9F] hover:text-white'>
+                            aqui
+                            </Link>
+                        </p>
+                    </div>
+                }
+                {
+                    order.status === 'cancelado' &&
+                    <div>
+                        <p className='text-center text-lg'>
+                            Algum problema com  seu pedido? Entre em contato por 
+                            { ' ' }
+                            <Link href='https://wa.me/17981650632' target="_blank"  className='text-[#C48B9F] hover:text-white'>
+                            aqui
+                            </Link>
+                        </p>
+                    </div>
+                }
             </CardContent>
         </Card>
     );
