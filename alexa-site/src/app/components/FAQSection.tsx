@@ -27,14 +27,14 @@ export default function FAQSection({ faqs }: { faqs: { question: string; answer:
             <Accordion type="single" collapsible className="max-w-3xl mx-auto">
                 { faqs.map((faq, index) => (
                     <AccordionItem key={ index } value={ `faq-${index}` }>
-                        <AccordionTrigger className="text-lg md:text-xl text-[#333333] hover:text-[#D4AF37] p-6">
-                            <div className="flex items-center">
+                        <AccordionTrigger className="text-sm md:text-base lg:text-lg xl:text-xl text-[#333333] text-center  hover:text-[#D4AF37] p-6">
+                            <div className="flex items-center text-center">
                                 <HelpCircle className="w-6 h-6 md:w-7 md:h-7 mr-3 text-[#D4AF37] flex-shrink-0" />
                                 { faq.question }
                             </div>
                         </AccordionTrigger>
                         <AccordionContent className="px-6 py-4">
-                            <p className="text-base md:text-lg text-[#333333]">{ faq.answer }</p>
+                            <p className="text-xs md:text-sm lg:text-base xl:text-lg text-[#333333]">{ faq.answer }</p>
                         </AccordionContent>
                     </AccordionItem>
                 )) }
