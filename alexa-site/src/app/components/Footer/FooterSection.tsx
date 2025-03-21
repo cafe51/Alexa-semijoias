@@ -1,10 +1,14 @@
-import { FooterSectionType } from '@/app/utils/types';
-
-interface FooterSectionProps {
+interface FooterItem {
+    name: string;
+    link: string;
+    children?: FooterItem[];
+  }
+  
+  interface FooterSectionProps {
     title: string;
-    items: FooterSectionType[];
-}
-
+    items: FooterItem[];
+  }
+  
 export function FooterSection({ title, items }: FooterSectionProps) {
     return (
         <div className="mb-8 lg:mb-0">
@@ -12,12 +16,30 @@ export function FooterSection({ title, items }: FooterSectionProps) {
             <ul className="space-y-3 lg:space-y-4">
                 { items.map((item, index) => (
                     <li key={ index }>
-                        <a href={ item.link } className="text-[#333333] hover:text-[#C48B9F] transition-colors duration-300 text-base lg:text-lg">
+                        <a
+                            href={ item.link }
+                            className="text-[#333333] hover:text-[#C48B9F] transition-colors duration-300 text-base lg:text-lg"
+                        >
                             { item.name }
                         </a>
+                        { item.children && item.children.length > 0 && (
+                            <ul className="ml-4 mt-2 space-y-2">
+                                { item.children.map((child, childIndex) => (
+                                    <li key={ childIndex }>
+                                        <a
+                                            href={ child.link }
+                                            className="text-[#555555] hover:text-[#C48B9F] transition-colors duration-300 text-sm lg:text-base"
+                                        >
+                                            { child.name }
+                                        </a>
+                                    </li>
+                                )) }
+                            </ul>
+                        ) }
                     </li>
                 )) }
             </ul>
         </div>
     );
 }
+  
