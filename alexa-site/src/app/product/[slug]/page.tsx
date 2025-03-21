@@ -10,6 +10,7 @@ import { getGoogleProductCategory } from '@/app/utils/getGoogleProductCategory';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { getProductBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
 import { filtrarResultadosValidos, getRandomProductsForSections, getSections } from '@/app/components/homePage/homePageUtilFunctions';
+import { shortenText } from '@/app/utils/shortenText';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     try {
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         return {
             title: `${toTitleCase(product.name)}`,
             description:
-        product.description.split('.')[0] ||
+        shortenText(product.description, 155) ||
         `${toTitleCase(product.name)} - Semijoias de Verdade.`,
             keywords: [...new Set([product.sections[0], subsectionName, ...(product.categories || []), 'semijoias', 'joias', 'acessórios', 'folheados', 'presentes'])]
                 .filter((keyword) => keyword)
@@ -46,13 +47,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
             },
             openGraph: {
                 title: toTitleCase(product.name),
-                description: product.description,
+                description: shortenText(product.description, 155) ||
+                `${toTitleCase(product.name)} - Semijoias de Verdade.`,
                 url: `/product/${params.slug}`,
                 images: {
-                    url: product.images[0]?.localUrl || '',
+                    url: mainImage,
                     width: 800,
                     height: 600,
-                    alt: `${product.name} - ${product.images[0]?.localUrl || ''}`,
+                    alt: `${product.name} - ${mainImage}`,
                 },
                 type: 'website',
                 siteName: 'Alexa Semijoias',

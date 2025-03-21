@@ -52,11 +52,11 @@ export default function SectionBanner({ lastAddProduct, sectionName, subsection 
                 
                 { /* Container do logo centralizado */ }
                 <div className="absolute md:hidden inset-0 flex flex-col items-between justify-between h-full "> 
-                    <div className="w-full pr-4 md:pr-8 lg:pr-12 xl:pr-16 pt-4 bg-black/40">
+                    <div className="w-full pr-4 md:pr-8 lg:pr-12 xl:pr-16 pt-4 bg-black/30">
                         <Breadcrumbs items={ getBreadcrumbItems(sectionName, subsection) } textColorAllWhite/>
                     </div>
                         
-                    <div className='flex flex-col justify-center h-full bg-black/30'>
+                    <div className='flex flex-col justify-center h-full bg-black/20'>
                         <div className='flex flex-col justify-center md:justify-start items-center md:items-start text-center md:text-start text-lg px-4 md:p-8 lg:p-12 xl:p-16 gap-4'>
                             <p className='text-white text-4xl lg:text-7xl'>{ toTitleCase(title) }</p> 
                             { lastAddProduct && <p className='text-white text-base md:text-base'>{ shortenText(lastAddProduct.description, 400) }</p> }

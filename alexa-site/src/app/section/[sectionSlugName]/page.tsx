@@ -22,31 +22,69 @@ async function fetchAndValidateSection(sectionSlugName: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const sectionData = await fetchAndValidateSection(params.sectionSlugName);
+    try {
 
-    if (!sectionData) {
-        return { title: 'Página não encontrada', robots: { index: false } };
-    }
+        const sectionData = await fetchAndValidateSection(params.sectionSlugName);
 
-    const sectionName = sectionData.sectionName;
-    const canonicalUrl = `${BASE_URL}/section/${params.sectionSlugName}`;
-    const breadcrumbItems = getBreadcrumbItems(sectionName);
-    const breadcrumbJsonLD = generateBreadcrumbJsonLD(breadcrumbItems);
+        if (!sectionData) {
+            return { title: 'Página não encontrada', robots: { index: false } };
+        }
 
-    return {
-        title: `${toTitleCase(sectionName)} | Alexa Semijoias`,
-        description: `${toTitleCase(sectionName)}. Semijoias de verdade.`,
-        keywords: [...new Set([sectionName, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
-        alternates: { canonical: canonicalUrl },
-        openGraph: {
+        const sectionName = sectionData.sectionName;
+        const canonicalUrl = `${BASE_URL}/section/${params.sectionSlugName}`;
+        const breadcrumbItems = getBreadcrumbItems(sectionName);
+        const breadcrumbJsonLD = generateBreadcrumbJsonLD(breadcrumbItems);
+
+        const { products } = await getProductsForSection(
+            sectionData.sectionName,
+            1,
+            { field: 'creationDate', direction: 'desc' },
+        );
+
+        const mainImage = products[0]?.images[0]?.localUrl || '';
+
+        return {
             title: `${toTitleCase(sectionName)} | Alexa Semijoias`,
             description: `${toTitleCase(sectionName)}. Semijoias de verdade.`,
-            url: canonicalUrl,
-        },
-        other: {
-            breadcrumb: breadcrumbJsonLD,
-        },
-    };
+            keywords: [...new Set([sectionName, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
+            alternates: { canonical: canonicalUrl },
+            robots: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+            openGraph: {
+                title: `${toTitleCase(sectionName)} | Alexa Semijoias`,
+                description: `${toTitleCase(sectionName)}. Semijoias de verdade.`,
+                url: canonicalUrl,
+                images: {
+                    url: mainImage || '',
+                    width: 800,
+                    height: 600,
+                    alt: `${sectionName} - ${mainImage || ''}`,
+                },
+                type: 'website',
+                siteName: 'Alexa Semijoias',
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: toTitleCase(sectionName),
+                description: sectionName,
+                images: [mainImage],
+            },
+            other: {
+                breadcrumb: breadcrumbJsonLD,
+            },
+        };
+    } catch (error) {
+        console.error('Erro ao gerar metadata:', error);
+        return {
+            title: 'Produtos - Alexa Semijoias',
+            description: 'Descubra nossa coleção exclusiva de semijoias.',
+            metadataBase: new URL('https://www.alexasemijoias.com.br'),
+        };
+    }
 }
 
 export default async function Section({ params }: Props) {

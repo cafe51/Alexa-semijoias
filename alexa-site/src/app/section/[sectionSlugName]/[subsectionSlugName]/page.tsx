@@ -28,35 +28,74 @@ function getSubsectionName(section: any, subsectionSlugName: string) {
 }
 
 export async function generateMetadata({ params: { sectionSlugName, subsectionSlugName } }: Props): Promise<Metadata> {
-    const sectionData = await getSectionBySlug(sectionSlugName);
+    try {
+
+        const sectionData = await getSectionBySlug(sectionSlugName);
   
-    if (!sectionData || !verifySubsectionSlugExistence(sectionData, subsectionSlugName)) {
-        return { title: 'Página não encontrada', robots: { index: false } };
-    }
+        if (!sectionData || !verifySubsectionSlugExistence(sectionData, subsectionSlugName)) {
+            return { title: 'Página não encontrada', robots: { index: false } };
+        }
   
-    const deslugedSection = sectionData.sectionName;
-    const deslugedSubsection = getSubsectionName(sectionData, subsectionSlugName) || 'Subseção não encontrada';
-    const canonicalUrl = `${BASE_URL}/section/${sectionSlugName}/${subsectionSlugName}`;
+        const deslugedSection = sectionData.sectionName;
+        const deslugedSubsection = getSubsectionName(sectionData, subsectionSlugName) || 'Subseção não encontrada';
+        const canonicalUrl = `${BASE_URL}/section/${sectionSlugName}/${subsectionSlugName}`;
   
-    const breadcrumbItems = getBreadcrumbItems(deslugedSection, deslugedSubsection);
-    const breadcrumbJsonLD = generateBreadcrumbJsonLD(breadcrumbItems);
+        const breadcrumbItems = getBreadcrumbItems(deslugedSection, deslugedSubsection);
+        const breadcrumbJsonLD = generateBreadcrumbJsonLD(breadcrumbItems);
+
+        const { products } = await getProductsForSection(
+            sectionData.sectionName,
+            1,
+            { field: 'creationDate', direction: 'desc' },
+            deslugedSubsection,
+        );
+
+        const mainImage = products[0]?.images[0]?.localUrl || '';
   
-    return {
-        title: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)} | Alexa Semijoias`,
-        description: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
-        keywords: [...new Set([deslugedSection, deslugedSubsection, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
-        alternates: {
-            canonical: canonicalUrl,
-        },
-        openGraph: {
+        return {
             title: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)} | Alexa Semijoias`,
             description: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
-            url: canonicalUrl,
-        },
-        other: {
-            breadcrumb: breadcrumbJsonLD,
-        },
-    };
+            keywords: [...new Set([deslugedSection, deslugedSubsection, 'semijoias', 'ouro', 'joias', 'acessórios', 'folheados', 'presentes'])].join(', '),
+            alternates: {
+                canonical: canonicalUrl,
+            },
+            robots: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+            openGraph: {
+                title: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)} | Alexa Semijoias`,
+                description: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
+                url: canonicalUrl,
+                images: {
+                    url: mainImage || '',
+                    width: 800,
+                    height: 600,
+                    alt: `${deslugedSubsection} - ${mainImage || ''}`,
+                },
+                type: 'website',
+                siteName: 'Alexa Semijoias',
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)} | Alexa Semijoias`,
+                description: `${toTitleCase(deslugedSubsection)} em ${toTitleCase(deslugedSection)}. Semijoias de verdade.`,
+                images: [mainImage],
+            },
+            other: {
+                breadcrumb: breadcrumbJsonLD,
+            },
+        };
+    } catch (error) {
+        console.error('Erro ao gerar metadata:', error);
+        return {
+            title: 'Produtos - Alexa Semijoias',
+            description: 'Descubra nossa coleção exclusiva de semijoias.',
+            metadataBase: new URL('https://www.alexasemijoias.com.br'),
+        };
+    }
 }
   
 export default async function SubSection({ params: { sectionSlugName, subsectionSlugName } }: Props) {
