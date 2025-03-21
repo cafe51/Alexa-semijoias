@@ -13,6 +13,7 @@ import toTitleCase from '@/app/utils/toTitleCase';
 import { createSlugName } from '@/app/utils/createSlugName';
 import ProductCardBadges from './ProductCardBadges';
 import OutOfStockLayer from './OutOfStockLayer';
+import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
 
 interface ProductCardProps {
   product: ProductBundleType & FireBaseDocument;
@@ -31,13 +32,6 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
 
     // Estado para controlar o índice da imagem atual
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-    // Determina a imagem a ser exibida
-    const imageUrl =
-    product.images && product.images.length > 0
-        ? product.images[currentImageIndex].localUrl
-        : blankImage.src;
-
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none bg-transparent border-none rounded-none">
             <CardContent className="p-0 flex flex-col h-full">
@@ -59,7 +53,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                             className={ `rounded-none object-cover scale-100 ${
                                 product.estoqueTotal <= 0 && !homePage ? 'opacity-50' : ''
                             }` }
-                            src={ imageUrl }
+                            src={ getImageUrlFromFirebaseProductDocument(product, currentImageIndex) }
                             alt={ `Foto de ${product.name}` }
                             title={ `Foto de ${product.name}` }
                             sizes="3000px"
