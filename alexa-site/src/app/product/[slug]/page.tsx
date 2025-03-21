@@ -11,6 +11,7 @@ import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { getProductBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
 import { filtrarResultadosValidos, getRandomProductsForSections, getSections } from '@/app/components/homePage/homePageUtilFunctions';
 import { shortenText } from '@/app/utils/shortenText';
+import { SITE_URL } from '@/app/utils/constants';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     try {
@@ -167,9 +168,9 @@ export default async function ProductScreenPage({
     const breadcrumbItems = getProductBreadcrumbItems(category, subcategory, product.name);
 
     let recommendedProducts: ((ProductBundleType & FireBaseDocument)[] | []) = [];
-    const BASE_URL = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' ? 'http://localhost:3000' : 'https://www.alexasemijoias.com.br';
+
     try {
-        const productsFetch = await fetch(`${BASE_URL}/api/recommended-products?mainProductId=${product.id}`);
+        const productsFetch = await fetch(`${SITE_URL}/api/recommended-products?mainProductId=${product.id}`);
         const fetchDataOfProducts = await productsFetch.json();
         if (!productsFetch.ok) {
             recommendedProducts = [];
