@@ -9,6 +9,8 @@ import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlF
 import { shortenText } from '@/app/utils/shortenText';
 import Breadcrumbs from '../Breadcrumbs';
 import { getBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
+import ShareSection from '../ProductPage/ShareSection';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 
 interface SectionBannerProps {
@@ -19,16 +21,33 @@ interface SectionBannerProps {
 
 export default function SectionBanner({ lastAddProduct, sectionName, subsection }: SectionBannerProps) {
     const title = subsection ? subsection : sectionName ? sectionName : 'Alexa Semijoias';
+    
+    let linkToShareSection = '';
+    if (!sectionName) {
+        linkToShareSection = 'www.alexasemijoias.com.br/section';
+    }
+    if (sectionName && subsection) {
+        linkToShareSection = `www.alexasemijoias.com.br/section/${createSlugName(sectionName)}/${createSlugName(subsection)}`;
+    }
+    if (sectionName && !subsection) {
+        linkToShareSection = `www.alexasemijoias.com.br/section/${createSlugName(sectionName)}`;
+    }
 
     return (
         <section className="w-full grid md:grid-cols-[40%_auto] overflow-hidden pt-2 ">
             {       
                 <div className='hidden md:flex flex-col justify-between relative aspect-[10/8] md:aspect-auto  bg-[#C48B9F] w-full '>
-                    <div className="w-full pr-4 md:pr-8 lg:pr-12 xl:pr-16 pt-4 text-white">
+                    <div className="w-full flex justify-between items-center pr-2 md:pr-4 lg:pr-6 xl:pr-8 pt-4 text-white">  
                         <Breadcrumbs items={ getBreadcrumbItems(sectionName, subsection) } textColorAllWhite/>
+                        <div className='text-white'>
+                            <ShareSection
+                                url={ linkToShareSection }
+                                callToAction='Compartilhe'
+                            />
+                        </div>
                     </div>
                     <div className='flex flex-col justify-start items-start text-start text-lg px-4 md:p-8 lg:p-12 xl:p-16 gap-4'>
-                        <p className='text-white lg:text-7xl'>{ toTitleCase(title) }</p> 
+                        <p className='text-white md:text-5xl lg:text-7xl'>{ toTitleCase(title) }</p> 
                         { lastAddProduct && <p className='text-white text-sm md:text-base lg:text-lg xl:text-xl'>{ shortenText(lastAddProduct.description, 400) }</p> }
                     </div>
                 </div>
@@ -52,8 +71,14 @@ export default function SectionBanner({ lastAddProduct, sectionName, subsection 
                 
                 { /* Container do logo centralizado */ }
                 <div className="absolute md:hidden inset-0 flex flex-col items-between justify-between h-full "> 
-                    <div className="w-full pr-4 md:pr-8 lg:pr-12 xl:pr-16 pt-4 bg-black/30">
+                    <div className="w-full flex justify-between items-center pr-4 md:pr-8 lg:pr-12 xl:pr-16 pt-4 bg-black/30">
                         <Breadcrumbs items={ getBreadcrumbItems(sectionName, subsection) } textColorAllWhite/>
+                        <div className='text-white'>
+                            <ShareSection
+                                url={ linkToShareSection }
+                                callToAction='Compartilhe'
+                            />
+                        </div>
                     </div>
                         
                     <div className='flex flex-col justify-center h-full bg-black/20'>

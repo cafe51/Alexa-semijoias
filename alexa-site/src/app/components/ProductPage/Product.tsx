@@ -343,8 +343,12 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
                                     cartPrice={ (product.value.promotionalPrice || product.value.price) * quantity }
                                     showFreeShippingSection={ false }
                                 />
-
-                                <ShareSection url={ `www.alexasemijoias.com.br/product/${createSlugName(product.name)}` } />
+                                <div className='p-8'>
+                                    <ShareSection
+                                        url={ `www.alexasemijoias.com.br/product/${createSlugName(product.name)}` }
+                                        callToAction='Compartilhe esta peça'
+                                    />
+                                </div>
                             </div>
                         </div>
                         <ProductCategories product={ product } />
