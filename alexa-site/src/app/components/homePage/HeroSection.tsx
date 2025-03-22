@@ -64,9 +64,9 @@ export default function HeroSection({ lastAddProduct }: HeroSectionProps) {
             { /* 3F4A2D */ }
             { /* C48B9F */ }
             {       
-                <div className="relative aspect-[10/8] md:aspect-[3/5] lg:aspect-[4/5] xl:aspect-[5/4] bg-[#C48B9F] flex flex-col items-center justify-center gap-4">
+                <div className="relative aspect-[10/9] md:aspect-[3/5] lg:aspect-[4/5] xl:aspect-[5/4] bg-[#C48B9F] flex flex-col items-center justify-center gap-4 pt-4 md:pt-8">
                     <h3 className='text-white text-lg uppercase tracking-widest'>Semijoias de Verdade</h3>
-                    <div className='justify-between flex flex-col items-center gap-4'>
+                    <div className='justify-around flex flex-col items-center gap-4'>
                         <div className='text-center text-4xl md:text-5xl lg:text-6xl xl:text-7xl'>
                             <p className='text-white'>{ toTitleCase(titleOfBanner) }</p>
                             <p className='text-white'>Para Transformar</p>
