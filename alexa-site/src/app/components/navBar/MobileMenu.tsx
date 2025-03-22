@@ -70,7 +70,7 @@ export default function MobileMenu({
                         >
                             <div className="h-full overflow-auto p-2 md:p-4">
                                 <h2 className="px-4 pt-4 text-3xl font-bold mb-8 text-[#C48B9F]">Menu</h2>
-                                <SearchSection />
+                                <SearchSection closeMobileMenu={ () => setIsMenuOpen(false) } />
                                 <ul
                                     className="space-y-4 px-4 pt-6 pb-4"
                                     style={ {

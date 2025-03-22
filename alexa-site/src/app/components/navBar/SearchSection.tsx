@@ -5,7 +5,11 @@ import SearchBar from '../header/SearchBar';
 import ProductCardsList from '../ProductList/ProductCardsList';
 import Link from 'next/link';
 
-export default function SearchSection() {
+interface SearchSectionProps {
+    closeMobileMenu?: () => void;
+}
+
+export default function SearchSection({ closeMobileMenu }: SearchSectionProps) {
     const [searchTerm, setSearchTerm] = useState('');
 
     return (
@@ -23,6 +27,7 @@ export default function SearchSection() {
                     orderBy={ 'creationDate' }
                     direction={ 'asc' }
                     searchTerm={ searchTerm }
+                    closeMobileMenu={ closeMobileMenu }
                     itemsPerPage={ 4 }
                     isMobileLayout
                     isHomePage

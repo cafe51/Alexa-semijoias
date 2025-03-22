@@ -17,6 +17,7 @@ interface ProductCardsListProps {
         hasMore: boolean;
         lastVisible: string | null;
       };
+    closeMobileMenu?: () => void;
     itemsPerPage?: number;
     isMobileLayout?: boolean;
     isHomePage?: boolean;
@@ -29,6 +30,7 @@ export default function ProductCardsList({
     subsection,
     searchTerm,
     initialData,
+    closeMobileMenu,
     itemsPerPage= ITEMS_PER_PAGE,
     isMobileLayout = false,
     isHomePage = false,
@@ -89,7 +91,7 @@ export default function ProductCardsList({
             }
         >
             { productsToShow.map((productData) => (
-                <ProductCard key={ productData.id } product={ productData } homePage={ isHomePage } />
+                <ProductCard key={ productData.id } product={ productData } homePage={ isHomePage } closeMobileMenu={ closeMobileMenu } />
             )) }
             { hasMore && !isMobileLayout &&(
                 <div ref={ paginatorRef }>

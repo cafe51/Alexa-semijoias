@@ -17,10 +17,11 @@ import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlF
 
 interface ProductCardProps {
   product: ProductBundleType & FireBaseDocument;
+  closeMobileMenu?: (() => void)
   homePage?: boolean;
 }
 
-function ProductCard({ product, homePage = false }: ProductCardProps) {
+function ProductCard({ product, closeMobileMenu, homePage = false }: ProductCardProps) {
     // Define o preço a ser exibido (promocional ou o normal)
     const displayPrice = product.value.promotionalPrice || product.value.price;
 
@@ -46,6 +47,7 @@ function ProductCard({ product, homePage = false }: ProductCardProps) {
                         }
                     } }
                     onMouseLeave={ () => setCurrentImageIndex(0) }
+                    onClick={ closeMobileMenu }
                 >
                     <div className="relative w-full h-full bg-skeleton">
                         <Image
