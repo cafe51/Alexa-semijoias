@@ -28,13 +28,13 @@ export default function FAQSection({ faqs }: { faqs: { question: string; answer:
                 { faqs.map((faq, index) => (
                     <AccordionItem key={ index } value={ `faq-${index}` }>
                         <AccordionTrigger className="text-sm md:text-base lg:text-lg xl:text-xl text-[#333333] text-center  hover:text-[#D4AF37] p-6">
-                            <div className="flex items-center text-center">
-                                <HelpCircle className="w-6 h-6 md:w-7 md:h-7 mr-3 text-[#D4AF37] flex-shrink-0" />
+                            <div className="flex items-start text-start justify-start">
+                                <HelpCircle className="w-6 h-6 md:w-7 md:h-7 mr-3 text-[#D4AF37] text-start flex-shrink-0" />
                                 { faq.question }
                             </div>
                         </AccordionTrigger>
-                        <AccordionContent className="px-6 py-4">
-                            <p className="text-xs md:text-sm lg:text-base xl:text-lg text-[#333333]">{ faq.answer }</p>
+                        <AccordionContent className="px-6 py-4 text-start ">
+                            <p className="text-xs md:text-sm lg:text-base xl:text-lg text-[#333333] text-start ">{ faq.answer }</p>
                         </AccordionContent>
                     </AccordionItem>
                 )) }
