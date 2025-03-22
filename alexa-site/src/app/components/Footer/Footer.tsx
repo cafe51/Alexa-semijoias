@@ -56,7 +56,7 @@ export default function Footer({ sections }: FooterProps) {
     }));
 
     return (
-        <footer className="bg-white border-t border-[#F8C3D3] shadow-[0_-4px_8px_rgba(0,0,0,0.2)]">
+        <footer className="bg-white border-t border-[#F8C3D3] shadow-[0_-4px_8px_rgba(0,0,0,0.2)] overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16 text-start">
                 <div className="flex flex-wrap -mx-4">
                     <div className="w-full lg:w-1/2 flex flex-wrap mb-8 lg:mb-0">
