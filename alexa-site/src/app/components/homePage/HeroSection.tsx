@@ -26,7 +26,7 @@ export default function HeroSection({ lastAddProduct }: HeroSectionProps) {
     const linkToSection = (subsectionName && sectionName) ? `/section/${sectionName}/${subsectionName}` : sectionName ? `/section/${sectionName}` : '/section';
 
     return (
-        <section className="w-full grid md:grid-cols-2">
+        <section className="w-full grid md:grid-cols-2 overflow-hidden">
             { /* Container principal com altura fixa para desktop */ }
             <div className="relative aspect-[10/9] md:aspect-[3/5] lg:aspect-[4/5] xl:aspect-[5/4] bg-skeleton">
                 <Image
