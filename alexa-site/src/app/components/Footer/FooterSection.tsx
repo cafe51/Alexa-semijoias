@@ -18,17 +18,17 @@ export function FooterSection({ title, items }: FooterSectionProps) {
                     <li key={ index }>
                         <a
                             href={ item.link }
-                            className="text-[#333333] hover:text-[#C48B9F] transition-colors duration-300 text-base lg:text-lg"
+                            className="text-[#333333] hover:text-[#C48B9F] transition-colors duration-300 text-sm"
                         >
                             { item.name }
                         </a>
                         { item.children && item.children.length > 0 && (
-                            <ul className="ml-4 mt-2 space-y-2">
+                            <ul className="ml-2 md:ml-4 mt-0">
                                 { item.children.map((child, childIndex) => (
                                     <li key={ childIndex }>
                                         <a
                                             href={ child.link }
-                                            className="text-[#555555] hover:text-[#C48B9F] transition-colors duration-300 text-sm lg:text-base"
+                                            className="text-[#555555] hover:text-[#C48B9F] transition-colors duration-300 text-xs"
                                         >
                                             { child.name }
                                         </a>
