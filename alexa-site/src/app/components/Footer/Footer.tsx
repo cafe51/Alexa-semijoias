@@ -93,7 +93,7 @@ export default function Footer({ sections }: FooterProps) {
                             linkName="Link para o Instagram da ALEXA SEMIJOIAS"
                         />
                     </div>
-                    <div className="text-[#333333] text-base lg:text-lg">
+                    <div className="text-[#333333] text-xs sm:text-sm lg:text-base">
                         <p className="mb-2 flex items-center justify-center sm:justify-start">
                             <Mail className="mr-2" size={ 18 } />
               alexasemijoias@alexasemijoias.com.br
@@ -105,7 +105,7 @@ export default function Footer({ sections }: FooterProps) {
                     </div>
                 </div>
 
-                <div className="mt-8 text-center text-[#333333] text-sm lg:text-base">
+                <div className="mt-8 text-center text-[#333333] text-xs sm:text-sm lg:text-base">
                     <p>&copy; 2024 ALEXA SEMIJOIAS. Todos os direitos reservados.</p>
                 </div>
             </div>
