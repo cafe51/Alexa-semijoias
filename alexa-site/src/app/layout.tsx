@@ -156,7 +156,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                             potentialAction: {
                                 '@type': 'SearchAction',
                                 target:
-                  'https://www.alexasemijoias.com.br/search?query={search_term_string}',
+                  'https://www.alexasemijoias.com.br/search/search_term_string',
                                 'query-input': 'required name=search_term_string',
                             },
                         }),
