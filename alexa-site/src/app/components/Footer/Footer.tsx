@@ -1,12 +1,12 @@
 'use client';
 import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
-import Logo from '../header/Logo';
 import { useEffect, useState } from 'react';
 import toTitleCase from '../../utils/toTitleCase';
 import { createSlugName } from '../../utils/createSlugName';
 import { FireBaseDocument, FooterSectionType, SectionType } from '../../utils/types';
 import { FooterSection } from './FooterSection';
 import SocialIcon from './SocialIcon';
+import FooterLogo from './FooterLogo';
 
 interface FooterProps {
   sections: (SectionType & FireBaseDocument)[];
@@ -79,7 +79,7 @@ export default function Footer({ sections }: FooterProps) {
 
                 <div className="border-t border-[#F8C3D3] mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center space-y-6 sm:space-y-0">
                     <div className="mb-4 sm:mb-0">
-                        <Logo isMobile={ isMobile } />
+                        <FooterLogo isMobile={ isMobile } />
                     </div>
                     <div className="flex space-x-6 mb-4 sm:mb-0">
                         <SocialIcon
