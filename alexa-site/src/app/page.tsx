@@ -60,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
         console.log('Erro ao gerar metadata:', error);
         return {
             title: 'Alexa Semijoias',
-            description: 'Descubra nossa coleção exclusiva de semijoias.',
+            description: 'Descubra nossas semijoias exclusivas.',
             metadataBase: new URL('https://www.alexasemijoias.com.br'),
         };
     }

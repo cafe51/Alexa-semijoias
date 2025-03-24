@@ -102,13 +102,13 @@ const EmailConfirmationPage = ({ oobCode }: { oobCode: string }) => {
                         <div className="space-y-6 md:space-y-8">
                             <NextStepCard 
                                 title="Faça Login"
-                                description="Entre na sua conta para começar a explorar nossa coleção exclusiva de semijoias."
+                                description="Entre na sua conta para começar a explorar nossas semijoias exclusivas."
                                 buttonText="Ir para Login"
                                 icon={ LogIn }
                                 href="/login"
                             />
                             <NextStepCard 
-                                title="Explore Nossa Coleção"
+                                title="Explore Nossas semijoias exclusivas"
                                 description="Descubra nossas últimas peças e encontre a joia perfeita para você."
                                 buttonText="Ver Produtos"
                                 icon={ Gift }

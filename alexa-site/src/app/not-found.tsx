@@ -23,7 +23,7 @@ export default function NotFound() {
                 </h2>
                 { /* Descrição */ }
                 <p className="text-base sm:text-lg md:text-xl text-[#333333] mb-8">
-                    Ops! Parece que o que você está procurando não está aqui. Que tal explorar nossa <Link href={ '/section' } className='bold text-[#C48B9F]'>coleção</Link>? 
+                    Ops! Parece que o que você está procurando não está aqui. Que tal explorar nossas <Link href={ '/section' } className='bold text-[#C48B9F]'>peças</Link>? 
                 </p>
 
                 { /* Formulário de busca */ }
