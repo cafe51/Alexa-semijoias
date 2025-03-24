@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
         const searchParams = request.nextUrl.searchParams;
         const sectionName = searchParams.get('section') || undefined;
         const subsection = searchParams.get('subsection') || undefined;
+        const collectionName = searchParams.get('collection') || undefined;
         const lastVisibleId = searchParams.get('lastVisible') || undefined;
         const orderByField = searchParams.get('orderBy') || 'creationDate';
         const orderDirection = (searchParams.get('direction') || 'desc') as 'asc' | 'desc';
@@ -17,6 +18,7 @@ export async function GET(request: NextRequest) {
         const productsResponse = await fetchProducts({
             sectionName,
             subsection,
+            collectionName,
             limit,
             orderBy: orderByField,
             direction: orderDirection,

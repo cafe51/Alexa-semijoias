@@ -11,6 +11,7 @@ interface ProductCardsListProps {
     direction?: 'asc' | 'desc' | undefined;
     sectionName?: string;
     subsection?: string;
+    collectionName?: string;
     searchTerm?: string;
     initialData?: {
         products: (ProductBundleType & FireBaseDocument)[];
@@ -28,6 +29,7 @@ export default function ProductCardsList({
     direction,
     sectionName,
     subsection,
+    collectionName,
     searchTerm,
     initialData,
     closeMobileMenu,
@@ -45,6 +47,7 @@ export default function ProductCardsList({
     } = useProducts({
         sectionName,
         subsection,
+        collectionName,
         initialData,
         orderBy,
         direction,

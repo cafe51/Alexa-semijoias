@@ -33,6 +33,15 @@ export function getProductBreadcrumbItems(section: string, subsection: string | 
     return items;
 }
 
+export function getCollectionBreadcrumbItems(collectionName: string): BreadcrumbItem[] {
+    const items: BreadcrumbItem[] = [
+        { name: 'Início', url: SITE_URL },
+        { name: 'Coleções', url: `${SITE_URL}/collections` },
+        { name: toTitleCase(collectionName), url: `${SITE_URL}/collection/${createSlugName(collectionName)}` },
+    ];
+    return items;
+}
+
 export function generateBreadcrumbJsonLD(items: BreadcrumbItem[]): string {
     return JSON.stringify({
         '@context': 'https://schema.org',

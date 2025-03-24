@@ -15,6 +15,7 @@ export type ProductsQueryParams = {
   direction?: 'asc' | 'desc';
   lastVisible?: string | null;
   searchTerm?: string;
+  collectionName?: string;
 };
 
 export type ProductsResponse = {
@@ -27,33 +28,47 @@ function buildProductsQuery({
     sectionName,
     subsection,
     searchTerm,
-}: ProductsQueryParams) {
-    let query = adminDb.collection('products')
-        .where('showProduct', '==', true);
-        // .where('estoqueTotal', '>', 0);
+    collectionName,
 
-    if (searchTerm) {
-        const processedTerm = removeAccents(searchTerm.toLowerCase());
-        query = query.where('keyWords', 'array-contains', processedTerm);
-    } else if (subsection && sectionName) {
-        query = query.where('subsections', 'array-contains', `${sectionName}:${subsection}`);
-    } else if (sectionName) {
-        query = query.where('sections', 'array-contains', sectionName);
+}: ProductsQueryParams) {
+    try {
+        let query = adminDb.collection('products')
+            .where('showProduct', '==', true);
+            // .where('estoqueTotal', '>', 0);
+        if (searchTerm) {
+            console.log;
+            const processedTerm = removeAccents(searchTerm.toLowerCase());
+            query = query.where('keyWords', 'array-contains', processedTerm);
+        } else if (subsection && sectionName) {
+            query = query.where('subsections', 'array-contains', `${sectionName}:${subsection}`);
+        } else if (sectionName) {
+            query = query.where('sections', 'array-contains', sectionName);
+        } else if (collectionName) {
+            query = query.where('collections', 'array-contains', collectionName);
+        }
+        return query;
+    } catch(error) {
+        console.log('Falha ao construir query', error); 
+        throw new Error('Falha ao construir query' + error);
     }
-    return query;
 }
 
 export async function fetchProducts({
     sectionName,
     subsection,
+    collectionName,
+
     limit = ITEMS_PER_PAGE,
     orderBy = 'creationDate',
     direction = 'desc',
     lastVisible,
     searchTerm,
 }: ProductsQueryParams): Promise<ProductsResponse> {
+
+
+    
     try {
-        let query = buildProductsQuery({ sectionName, subsection, searchTerm });
+        let query = buildProductsQuery({ sectionName, subsection, searchTerm, collectionName });
         query = query.orderBy(orderBy, direction);
 
         if (lastVisible) {
@@ -78,7 +93,7 @@ export async function fetchProducts({
         return { products, hasMore, lastVisible: lastVisibleNew };
     } catch (error) {
         console.error('Erro ao buscar produtos:', error);
-        throw new Error('Falha ao carregar produtos');
+        throw new Error('Falha ao carregar produtos ' + error); 
     }
 }
 

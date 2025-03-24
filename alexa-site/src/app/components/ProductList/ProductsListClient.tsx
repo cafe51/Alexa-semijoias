@@ -8,20 +8,26 @@ import ProductCardsList from './ProductCardsList';
 import SectionBanner from './SectionBanner';
 
 interface ProductsListClientProps {
-  sectionName?: string;
-  subsection?: string;
-  searchTerm?: string;
-  initialData?: {
-    products: (ProductBundleType & FireBaseDocument)[];
-    hasMore: boolean;
-    lastVisible: string | null;
-  };
-  isMobileLayout?: boolean;
+    bannerImage?: string;
+    bannerDescription?: string;
+    sectionName?: string;
+    subsection?: string;
+    collectionName?: string;
+    searchTerm?: string;
+    initialData?: {
+        products: (ProductBundleType & FireBaseDocument)[];
+        hasMore: boolean;
+        lastVisible: string | null;
+    };
+    isMobileLayout?: boolean;
 }
 
-export default function ProductsListClient({ 
+export default function ProductsListClient({
+    bannerImage,
+    bannerDescription,
     sectionName, 
-    subsection, 
+    subsection,
+    collectionName,
     searchTerm,
     initialData,
     isMobileLayout = false,
@@ -44,9 +50,12 @@ export default function ProductsListClient({
                 initialData
                 &&
                 <SectionBanner
+                    bannerImage={ bannerImage }
+                    bannerDescription={ bannerDescription }
                     lastAddProduct={ initialData.products[initialData.products.length - 1] }
                     sectionName={ sectionName }
                     subsection={ subsection }
+                    collectionName={ collectionName }
                 />
             }
 
@@ -62,6 +71,7 @@ export default function ProductsListClient({
                     direction={ currentSort.direction }
                     sectionName={ sectionName }
                     subsection={ subsection }
+                    collectionName={ collectionName }
                     searchTerm={ searchTerm }
                     initialData={ initialData }
                     isMobileLayout={ isMobileLayout }

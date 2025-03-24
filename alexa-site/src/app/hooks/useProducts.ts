@@ -14,6 +14,7 @@ type ProductsResponse = {
 type UseProductsProps = {
   sectionName?: string;
   subsection?: string;
+  collectionName?: string;
   initialData?: ProductsResponse;
   orderBy?: string;
   direction?: 'asc' | 'desc';
@@ -24,6 +25,7 @@ type UseProductsProps = {
 export function useProducts({
     sectionName,
     subsection,
+    collectionName,
     initialData,
     orderBy = 'creationDate',
     direction = 'desc',
@@ -58,6 +60,7 @@ export function useProducts({
                 const params = new URLSearchParams();
                 if (sectionName) params.append('section', sectionName);
                 if (subsection) params.append('subsection', subsection);
+                if (collectionName) params.append('collection', collectionName);
                 params.append('orderBy', orderBy);
                 params.append('direction', direction);
                 if (searchTerm) params.append('searchTerm', searchTerm);
