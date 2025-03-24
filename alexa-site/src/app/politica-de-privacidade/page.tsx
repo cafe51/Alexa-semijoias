@@ -24,7 +24,7 @@ const PrivacyPolicyPage = () => {
             <main className="max-w-4xl mx-auto py-12 px-4">
                 <PolicySection title="Introdução">
                     <p className="mb-4">
-            A sua privacidade é importante para nós. É política da ALEXA SEMIJOIAS respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar no site <a href="https://alexasemijoias.com.br" className="text-[#C48B9F] hover:text-[#D4AF37] transition-colors duration-300">ALEXA SEMIJOIAS</a>, e outros sites que possuímos e operamos.
+            A sua privacidade é importante para nós. É política da ALEXA SEMIJOIAS respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar no site <a href="https://www.alexasemijoias.com.br" className="text-[#C48B9F] hover:text-[#D4AF37] transition-colors duration-300">ALEXA SEMIJOIAS</a>, e outros sites que possuímos e operamos.
                     </p>
                     <p>
             Solicitamos informações pessoais apenas quando realmente precisamos delas para lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento. Também informamos por que estamos coletando e como será usado.
