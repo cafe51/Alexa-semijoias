@@ -12,6 +12,7 @@ import { Metadata } from 'next';
 import FacebookPixel from './components/FacebookPixel';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { getSiteSections } from './services/siteSections';
+import { getSiteCollections } from './services/siteCollections';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -100,6 +101,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const menuSections = await getSiteSections();
+    const collections = await getSiteCollections();
 
     return (
         <html lang="pt-BR" className={ `${montserrat.className} scroll-smooth` } style={ { scrollBehavior: 'auto' } }>
@@ -166,7 +168,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <body className="min-h-screen bg-[#FAF9F6] text-[#333333]">
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Header initialMenuSections={ menuSections } />
+                        <Header initialMenuSections={ menuSections } initialCollections={ collections } />
                         { children }
                         <Footer sections={ menuSections } />
                     </UserInfoProvider>

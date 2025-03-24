@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { FireBaseDocument, SectionType } from '@/app/utils/types';
+import { CollectionType, FireBaseDocument, SectionType } from '@/app/utils/types';
 import MobileMenu from '../navBar/MobileMenu';
 import DesktopMenu from '../navBar/DesktopMenu';
 import CartIcon from './CartIcon';
@@ -14,13 +14,15 @@ import DesktopSearchMenu from '../navBar/SearchSection';
 import RotatingAnnouncementBar from '../announcement/RotatingAnnouncementBar';
 
 interface FullHeaderProps {
-  initialMenuSections: (SectionType & FireBaseDocument)[];
+    initialMenuSections: (SectionType & FireBaseDocument)[];
+    initialCollections: (CollectionType & FireBaseDocument)[];
 }
 
-const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
+const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections, initialCollections }) => {
     const { user, isAdmin } = useAuthContext();
     const { userInfo } = useUserInfo();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // Usado tanto para seções quanto para "COLEÇÕES"
     const [activeSection, setActiveSection] = useState<SectionType | null>(null);
     const [isMobile, setIsMobile] = useState(true);
     // Dados carregados pelo servidor
@@ -32,16 +34,13 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     const buttonSize = isMobile ? 24 : 36;
     const PROMO_BAR_HEIGHT = 40; // altura fixa da promo bar (em px)
 
-    // Atualiza a posição do scroll
     useEffect(() => {
         const handleScroll = () => setScrollPosition(window.pageYOffset);
         window.addEventListener('scroll', handleScroll, { passive: true });
-        // Chamada inicial
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Detecta se é mobile ou desktop
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 1024);
         window.addEventListener('resize', handleResize);
@@ -52,10 +51,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     // Configurações para o header mobile (transparência e altura dinâmica)
     const MAX_HEADER_HEIGHT = 50;
     const MIN_HEADER_HEIGHT = 40;
-    const headerHeightMobile = Math.max(
-        MIN_HEADER_HEIGHT,
-        MAX_HEADER_HEIGHT - scrollPosition * 0.3,
-    );
+    const headerHeightMobile = Math.max(MIN_HEADER_HEIGHT, MAX_HEADER_HEIGHT - scrollPosition * 0.3);
     const headerOpacity = isMobile ? Math.max(0.8, 1 - scrollPosition * 0.002) : 1;
 
     const UserIcon = () => (
@@ -92,21 +88,17 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
         return (
             <>
                 <header className="fixed top-0 left-0 right-0 z-50 flex flex-col">
-                    { /* Promo Bar */ }
                     <RotatingAnnouncementBar />
-                    { /* Área de navegação com transparência dinâmica */ }
                     <div
                         className="flex items-center justify-between px-4 py-0 md:py-2 w-full"
-                        style={ {
-                            height: `${headerHeightMobile}px`,
-                            backgroundColor: `rgba(255,255,255, ${headerOpacity})`,
-                        } }
+                        style={ { height: `${headerHeightMobile}px`, backgroundColor: `rgba(255,255,255, ${headerOpacity})` } }
                     >
                         { menuSections && menuSections.length > 0 && (
                             <MobileMenu
                                 userInfo={ userInfo }
                                 activeSection={ activeSection }
                                 menuSections={ menuSections }
+                                collections={ initialCollections }
                                 isMenuOpen={ isMenuOpen }
                                 setIsMenuOpen={ setIsMenuOpen }
                                 handleSectionClick={ (section) => setActiveSection(section) }
@@ -131,8 +123,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                     </div>
                     <div className="border-b border-[#F8C3D3] w-2/3 mx-auto"></div>
                 </header>
-                { /* Espaçador para evitar sobreposição do conteúdo */ }
-                <div style={ { height: `${PROMO_BAR_HEIGHT + headerHeightMobile - 20 }px` } } />
+                <div style={ { height: `${PROMO_BAR_HEIGHT + headerHeightMobile - 20}px` } } />
             </>
         );
     }
@@ -141,7 +132,6 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
     return (
         <>
             <header className="fixed top-0 left-0 right-0 z-50 bg-white flex flex-col">
-                { /* Promo Bar */ }
                 <RotatingAnnouncementBar />
                 { isSearchModalOpen && (
                     <SlideInModal
@@ -161,7 +151,11 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                         >
                             <Logo />
                         </div>
-                        <DesktopMenu menuSections={ menuSections } router={ router } />
+                        <DesktopMenu 
+                            menuSections={ menuSections } 
+                            collections={ initialCollections }
+                            router={ router } 
+                        />
                     </div>
                     <div className="flex items-start space-x-10 mt-2 text-[#C48B9F]">
                         { user && isAdmin && <SettingsButton /> }
@@ -176,7 +170,6 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections }) => {
                 </div>
                 <div className="border-b border-[#F8C3D3] w-9/12 mx-auto"></div>
             </header>
-            { /* Espaçador: altura do header desktop (90px) + promo bar */ }
             <div style={ { height: `calc(70px + ${PROMO_BAR_HEIGHT}px)` } } />
         </>
     );

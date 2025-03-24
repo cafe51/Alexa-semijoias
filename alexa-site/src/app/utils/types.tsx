@@ -5,8 +5,8 @@ import { SavedSubSectionType } from '../hooks/useSectionManagement';
 export type CollectionType = {
     name: string;
     slugName: string;
-    description: string | null;
-    image: string | null;
+    description?: string | null;
+    image?: string | null;
 }
 
 export type CouponUsageType = {
