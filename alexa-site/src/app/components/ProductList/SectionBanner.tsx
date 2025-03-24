@@ -107,7 +107,7 @@ export default function SectionBanner({
                     </div>
                         
                     <div className='flex flex-col justify-center h-full bg-black/20'>
-                        <div className='flex flex-col justify-center md:justify-start items-center md:items-start text-center md:text-start text-lg p-4 md:p-8 lg:p-12 xl:p-16 gap-4 bg-black/30'>
+                        <div className='flex flex-col justify-center md:justify-start items-center md:items-start text-center md:text-start text-lg p-4 md:p-8 lg:p-12 xl:p-16 gap-4 bg-black/10'>
                             <p className='text-white text-4xl lg:text-7xl'>{ toTitleCase(title) }</p> 
                             <p className='text-white text-base md:text-base'>{ description }</p>
                         </div>
