@@ -2,6 +2,13 @@
 import { Timestamp, WhereFilterOp } from 'firebase/firestore';
 import { SavedSubSectionType } from '../hooks/useSectionManagement';
 
+export type CollectionType = {
+    name: string;
+    slugName: string;
+    description: string | null;
+    image: string | null;
+}
+
 export type CouponUsageType = {
     cupomId: string; // Referência ao ID do cupom
     userId: string; // ID do usuário que utilizou o cupom
@@ -130,6 +137,7 @@ export type ProductVariation = {
     subsections?: string[], // do tipo 'sectionName:subsectionName'[] e sempre igual para todas as variações
 
     categories: string[], // valor sempre igual para todas as variações
+    collections: string[], // valor sempre igual para todas as variações
     barcode: string, 
     customProperties?: { [key: string]: string }, // valor como: { 'cor': 'azul', 'tamanho': 'M' } as propriedades são customizadas no momento de criação do produto.
     dimensions: { largura: number, altura: number, comprimento: number }
@@ -146,6 +154,7 @@ export type ProductBundleType = {
     name: string;
     slug: string;
     categories: string[],
+    collections: string[],
     showProduct: boolean,
     freeShipping: boolean,
     lancamento: boolean,
@@ -179,6 +188,8 @@ export type StateNewProductType = {
     description: string;
     categories: string[],
     categoriesFromFirebase: string[],
+    collections: string[],
+    collectionsFromFirebase: string[],
     value: {
         price: number,
         promotionalPrice: number,
@@ -475,6 +486,11 @@ export type UseNewProductState = {
     handleSetMoreOptions: (moreOptions: MoreOptionsType[]) => void;
     handleSetCreationDate: (creationDate: Timestamp) => void;
     handleSetUpdatingDate: (updatingDate: Timestamp) => void;
+
+    handleAddCollections: (category: string) => void;
+    handleSetCollectionsFromFb: (categories: string[]) => void;
+    handleRemoveCollection: (category: string) => void;
+    handleRemoveAllCollections: () => void;
 }
 
 export type FooterSectionType = { name: string, link: string };

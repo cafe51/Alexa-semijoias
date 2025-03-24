@@ -5,6 +5,7 @@ export const emptyProductBundleInitialState: ProductBundleType & FireBaseDocumen
     exist: false,
     id: '',
     categories: [''],
+    collections: [],
     description: '',
     estoqueTotal: 0,
     images: [{ localUrl: '', index: 0 }],
@@ -15,6 +16,7 @@ export const emptyProductBundleInitialState: ProductBundleType & FireBaseDocumen
         {
             barcode: '',
             categories: [''],
+            collections: [],
             dimensions: { altura: 0, comprimento: 0, largura: 0 },
             estoque: 0,
             image: '',

@@ -21,10 +21,17 @@ type ActionType =
     | { type: 'SET_SECTIONS_SITE', payload: SectionType[] | never[] }
     | { type: 'SET_SECTIONS', payload: string[] }
     | { type: 'SET_SUB_SECTIONS', payload: string[] | undefined }
+
     | { type: 'SET_ADD_CATEGORIES', payload: string }
     | { type: 'SET_FB_CATEGORIES', payload: string[]}
-    | { type: 'SET_REMOVE_ALL_CATEGORIES' }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
+    | { type: 'SET_REMOVE_ALL_CATEGORIES' }
+
+    | { type: 'SET_ADD_COLLECTIONS', payload: string }
+    | { type: 'SET_FB_COLLECTIONS', payload: string[]}
+    | { type: 'SET_REMOVE_COLLECTION', payload: string }
+    | { type: 'SET_REMOVE_ALL_COLLECTIONS' }
+
     | { type: 'SET_IMAGES', payload: ImageProductDataType[]}
     | { type: 'SET_MORE_OPTIONS', payload: MoreOptionsType[]}
     | { type: 'SET_CREATION_DATE', payload: Timestamp}
@@ -36,6 +43,8 @@ export const initialEmptyState: StateNewProductType= {
     name: '',
     categories: [],
     categoriesFromFirebase: [],
+    collections: [],
+    collectionsFromFirebase: [],
     description: '',
     value: {
         price: 0,
@@ -118,6 +127,7 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
         return { ...state, sections: action.payload };
     case 'SET_SUB_SECTIONS':
         return { ...state, subsections: action.payload };
+
     case 'SET_ADD_CATEGORIES':
         return { ...state, categories: [action.payload, ...state.categories ] };
     case 'SET_FB_CATEGORIES':
@@ -126,6 +136,16 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
         return { ...state, categories: state.categories.filter((c) => c !== action.payload) };
     case 'SET_REMOVE_ALL_CATEGORIES':
         return { ...state, categories: [] };
+
+    case 'SET_ADD_COLLECTIONS':
+        return { ...state, collections: [action.payload, ...state.collections ] };
+    case 'SET_FB_COLLECTIONS':
+        return { ...state, collectionsFromFirebase: action.payload };
+    case 'SET_REMOVE_COLLECTION':
+        return { ...state, collections: state.collections.filter((c) => c !== action.payload) };
+    case 'SET_REMOVE_ALL_COLLECTIONS':
+        return { ...state, collections: [] };
+
     case 'SET_IMAGES':
         return { ...state, images: action.payload };
     case 'SET_MORE_OPTIONS':
@@ -226,6 +246,27 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         dispatch({ type: 'SET_REMOVE_ALL_CATEGORIES' });
     }, []);
 
+
+
+    const handleAddCollections = useCallback((collection: string) => {
+        dispatch({ type: 'SET_ADD_COLLECTIONS', payload: collection });
+    }, []);
+
+    const handleSetCollectionsFromFb = useCallback((collection: string[]) => {
+        dispatch({ type: 'SET_FB_COLLECTIONS', payload: collection });
+    }, []);
+
+    const handleRemoveCollection = useCallback((collection: string) => {
+        dispatch({ type: 'SET_REMOVE_COLLECTION', payload: collection });
+    }, []);
+
+    const handleRemoveAllCollections = useCallback(() => {
+        dispatch({ type: 'SET_REMOVE_ALL_COLLECTIONS' });
+    }, []);
+
+
+
+
     const handleSetImages = useCallback((images: ImageProductDataType[]) => {
         dispatch({ type: 'SET_IMAGES', payload: images });
     }, []);
@@ -268,6 +309,12 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         handleSetMoreOptions,
         handleSetCreationDate,
         handleSetUpdatingDate,
+
+        handleAddCollections,
+        handleSetCollectionsFromFb,
+        handleRemoveCollection,
+        handleRemoveAllCollections,
+        
     };
 
     return {

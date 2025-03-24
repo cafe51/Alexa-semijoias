@@ -62,7 +62,7 @@ export function useProductConverter() {
             totalStock += pv.defaultProperties.estoque;
         }
 
-        const { description, name, sections, value, variations, creationDate, subsections, categories, categoriesFromFirebase } = editableProduct;
+        const { description, name, sections, value, variations, creationDate, subsections, categories, categoriesFromFirebase, collections, collectionsFromFirebase } = editableProduct;
 
         const categoriesKeyWords = (categoriesFromFirebase && categoriesFromFirebase.length > 0) ? categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat() : [];
         const sectionsKeyWords = (sections && sections.length > 0) ? sections.map((sec) => keyWordsCreator(sec)).flat() : [];
@@ -90,6 +90,8 @@ export function useProductConverter() {
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imagesData,
             categories: [...categories, ...editableProduct.categoriesFromFirebase],
+            collections: [...collections, ...collectionsFromFirebase],
+
             estoqueTotal: totalStock,
             // images= images.map((image) => image.file),
     
@@ -114,6 +116,8 @@ export function useProductConverter() {
                     sections: editableProduct.sections,
                     subsections: editableProduct.subsections,
                     categories: [...editableProduct.categories, ...editableProduct.categoriesFromFirebase],
+                    collections: [...collections, ...collectionsFromFirebase],
+
                     sku: skuGenerated,
                     barcode: finalBarCode,
 
@@ -148,12 +152,14 @@ export function useProductConverter() {
             updatingDate: userInfo?.email === 'cafecafe51@hotmail.com' ? editableProduct.updatingDate : Timestamp.now(),
             finalPrice: value.promotionalPrice && value.promotionalPrice > 0 ? value.promotionalPrice : value.price,
             promotional: !!value.promotionalPrice && value.promotionalPrice > 0,
-            sections, value,
+            sections,
+            value,
             lancamento: editableProduct.moreOptions.find((mop) => mop.property === 'lancamento')!.isChecked,
             freeShipping: editableProduct.moreOptions.find((mop) => mop.property === 'freeShipping')!.isChecked,
             showProduct: editableProduct.moreOptions.find((mop) => mop.property === 'showProduct')!.isChecked,
             images: imagesData,
             categories: Array.from(new Set([...categories, ...categoriesFromFirebase])),
+            collections: Array.from(new Set([...editableProduct.collections, ...editableProduct.collectionsFromFirebase])),
             estoqueTotal: editableProduct.estoque ? editableProduct.estoque : 0,
             productVariations: [
                 {   productId,
@@ -174,7 +180,8 @@ export function useProductConverter() {
                         },
                     sku: skuGenerated,
                     barcode: codigoDeBarra,
-                    categories: [...categories, ...editableProduct.categoriesFromFirebase],
+                    categories: Array.from(new Set([...categories, ...categoriesFromFirebase])),
+                    collections: Array.from(new Set([...editableProduct.collections, ...editableProduct.collectionsFromFirebase])),
                     sections: editableProduct.sections,
                     subsections: editableProduct.subsections,
                 },
@@ -200,8 +207,10 @@ export function useProductConverter() {
 
             ],
             categoriesFromFirebase: finalProduct.categories,
-            barcode: hasCustomProperties ? undefined : theOnlyVariation.barcode,
             categories: [],
+            collections: [],
+            collectionsFromFirebase: finalProduct.collections || [],
+            barcode: hasCustomProperties ? undefined : theOnlyVariation.barcode,
             dimensions: hasCustomProperties ? undefined: { ...theOnlyVariation.dimensions, peso: theOnlyVariation.peso },
             estoque: finalProduct.estoqueTotal,
             images: finalProduct.images, //////////////////
