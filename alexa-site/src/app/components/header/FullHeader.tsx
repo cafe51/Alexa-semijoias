@@ -25,6 +25,9 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections, initialCol
     // Usado tanto para seções quanto para "COLEÇÕES"
     const [activeSection, setActiveSection] = useState<SectionType | null>(null);
     const [isMobile, setIsMobile] = useState(true);
+    const [isMiddleScreen, setIsMiddleScreen] = useState(false);
+
+    const [maxDesktopMenuItems, setMaxDesktopMenuItems] = useState<number>(5);
     // Dados carregados pelo servidor
     const [menuSections] = useState<(SectionType & FireBaseDocument)[]>(initialMenuSections);
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -42,11 +45,28 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections, initialCol
     }, []);
 
     useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 1024);
+        const handleResize = () => setIsMobile(window.innerWidth < 1150);
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    useEffect(() => {
+        const handleResize = () => setIsMiddleScreen(window.innerWidth < 1550 && window.innerWidth > 1150);
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        if(!isMiddleScreen) {
+            setMaxDesktopMenuItems(8);
+        } else {
+            setMaxDesktopMenuItems(4);
+        }
+
+    }, [isMiddleScreen]);
+
 
     // Configurações para o header mobile (transparência e altura dinâmica)
     const MAX_HEADER_HEIGHT = 50;
@@ -153,6 +173,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections, initialCol
                         </div>
                         <DesktopMenu 
                             menuSections={ menuSections } 
+                            maxDesktopMenuItems={ maxDesktopMenuItems }
                             collections={ initialCollections }
                             router={ router } 
                         />

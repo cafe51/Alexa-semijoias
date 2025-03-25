@@ -50,7 +50,7 @@ export default function MobileMenu({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="lg:hidden text-[#C48B9F]"
+                    className=" text-[#C48B9F]"
                     aria-label={ isMenuOpen ? 'Fechar menu' : 'Abrir menu' }
                 >
                     { isMenuOpen ? <X className="h-8 w-8" /> : <Menu className="h-6 w-6" /> }
