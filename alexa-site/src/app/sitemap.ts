@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { projectFirestoreDataBase } from './firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { createSlugName } from './utils/createSlugName';
-import { CollectionType, ProductBundleType } from './utils/types';
+import { CategoryType, CollectionType, ProductBundleType } from './utils/types';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -118,6 +118,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 changeFrequency: 'daily',
                 priority: 0.8,
             });
+
+        });
+
+        // Buscar categorias
+        const categoriesRef = collection(projectFirestoreDataBase, 'categories');
+        const categoriesSnapshot = await getDocs(categoriesRef);
+    
+        const allCategoriesForSiteMap = Array.from(new Set(categoriesSnapshot.docs.map((doc) => {
+            const data = doc.data() as CategoryType;
+            return data.categoryName;
+        }).map((categoryName) => {
+            const splitedName = categoryName.split(' ');
+            return splitedName.map((singleWord) => {
+                return createSlugName(singleWord);
+            });
+        }).flat()));
+
+        allCategoriesForSiteMap.forEach((cat) => {
+            // URL
+            result.push({
+                url: `${BASE_URL}/search/${cat}`,
+                lastModified: formatDate(new Date()),
+                changeFrequency: 'daily',
+                priority: 0.8,
+            });
+
 
         });
 
