@@ -12,6 +12,7 @@ import { shortenText } from '@/app/utils/shortenText';
 import { SITE_URL } from '@/app/utils/constants';
 import { fetchProductsData } from '@/app/section/utils';
 import { getSectionBySlug } from '@/app/firebase/admin-config';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 type Props = {
     params: {
@@ -51,6 +52,8 @@ export async function generateMetadata({ params: { sectionSlugName, subsectionSl
         const mainImage = product.images[0]?.localUrl || '';
         const variation = product.productVariations[0];
 
+        const productUrl = `/section/${createSlugName(sectionData.sectionName)}/${createSlugName(subsectionName)}/${product.slug}`;
+
         return {
             title: `${toTitleCase(product.name)}`,
             description:
@@ -67,13 +70,13 @@ export async function generateMetadata({ params: { sectionSlugName, subsectionSl
                 'max-snippet': -1,
             },
             alternates: {
-                canonical: `/product/${slug}`,
+                canonical: productUrl,
             },
             openGraph: {
                 title: toTitleCase(product.name),
                 description: shortenText(product.description, 155) ||
                 `${toTitleCase(product.name)} - Semijoias de Verdade.`,
-                url: `/product/${slug}`,
+                url: productUrl,
                 images: {
                     url: mainImage,
                     width: 800,
