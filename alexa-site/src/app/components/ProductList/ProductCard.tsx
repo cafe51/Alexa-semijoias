@@ -19,9 +19,10 @@ interface ProductCardProps {
   product: ProductBundleType & FireBaseDocument;
   closeMobileMenu?: (() => void)
   homePage?: boolean;
+  productUrl?: string;
 }
 
-function ProductCard({ product, closeMobileMenu, homePage = false }: ProductCardProps) {
+function ProductCard({ product, closeMobileMenu, homePage = false, productUrl }: ProductCardProps) {
     // Define o preço a ser exibido (promocional ou o normal)
     const displayPrice = product.value.promotionalPrice || product.value.price;
 
@@ -33,11 +34,16 @@ function ProductCard({ product, closeMobileMenu, homePage = false }: ProductCard
 
     // Estado para controlar o índice da imagem atual
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const productSubsection = product.subsections && product.subsections.length > 0 ? product.subsections[0] : undefined;
+
+    const url = productUrl ? productUrl : productSubsection ?  `/section/${createSlugName(productSubsection.split(':')[0])}/${createSlugName(productSubsection.split(':')[1])}/${productSlug}` : `/product/${productSlug}`;
+
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg shadow-none bg-transparent border-none rounded-none">
             <CardContent className="p-0 flex flex-col h-full">
                 <Link
-                    href={ `/product/${productSlug}` }
+                    href={ url }
                     className="relative aspect-[4/5]"
                     aria-label={ `Ver detalhes da semijoia ${toTitleCase(product.name)}` }
                     title={ `Ver detalhes da semijoia ${toTitleCase(product.name)}` }

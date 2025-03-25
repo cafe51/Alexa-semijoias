@@ -10,6 +10,7 @@ import { FieldPath } from 'firebase-admin/firestore'; // importe o FieldPath
 export type ProductsQueryParams = {
   sectionName?: string;
   subsection?: string; // novo parâmetro
+  slug?: string;
   limit?: number;
   orderBy?: string;
   direction?: 'asc' | 'desc';
@@ -27,6 +28,7 @@ export type ProductsResponse = {
 function buildProductsQuery({
     sectionName,
     subsection,
+    slug,
     searchTerm,
     collectionName,
 
@@ -35,6 +37,10 @@ function buildProductsQuery({
         let query = adminDb.collection('products')
             .where('showProduct', '==', true);
             // .where('estoqueTotal', '>', 0);
+        if(slug) {
+            console.log('SLUUUUG', slug);
+            query = query.where('slug', '==', slug);
+        }
         if (searchTerm) {
             console.log;
             const processedTerm = removeAccents(searchTerm.toLowerCase());
@@ -56,6 +62,7 @@ function buildProductsQuery({
 export async function fetchProducts({
     sectionName,
     subsection,
+    slug,
     collectionName,
 
     limit = ITEMS_PER_PAGE,
@@ -65,10 +72,14 @@ export async function fetchProducts({
     searchTerm,
 }: ProductsQueryParams): Promise<ProductsResponse> {
 
-
+    console.log('DADOS DE PARAMETRO', {
+        sectionName,
+        subsection,
+        slug,
+    });
     
     try {
-        let query = buildProductsQuery({ sectionName, subsection, searchTerm, collectionName });
+        let query = buildProductsQuery({ sectionName, subsection, slug, searchTerm, collectionName });
         query = query.orderBy(orderBy, direction);
 
         if (lastVisible) {

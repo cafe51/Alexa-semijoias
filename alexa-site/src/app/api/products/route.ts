@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
         const searchParams = request.nextUrl.searchParams;
         const sectionName = searchParams.get('section') || undefined;
         const subsection = searchParams.get('subsection') || undefined;
+        const slug = searchParams.get('slug') || undefined;
         const collectionName = searchParams.get('collection') || undefined;
         const lastVisibleId = searchParams.get('lastVisible') || undefined;
         const orderByField = searchParams.get('orderBy') || 'creationDate';
@@ -18,6 +19,7 @@ export async function GET(request: NextRequest) {
         const productsResponse = await fetchProducts({
             sectionName,
             subsection,
+            slug,
             collectionName,
             limit,
             orderBy: orderByField,

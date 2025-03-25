@@ -5,6 +5,7 @@ import ButtonPaginator from '../ButtonPaginator';
 import { useEffect, useRef } from 'react';
 import { useProducts } from '@/app/hooks/useProducts';
 import { ITEMS_PER_PAGE } from '@/app/utils/constants';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 interface ProductCardsListProps {
     orderBy?: string | undefined;
@@ -85,6 +86,8 @@ export default function ProductCardsList({
         return <h1 className="text-center mt-8">Ainda não há produtos nessa seção</h1>;
     }
 
+
+
     return (
         <div
             className={
@@ -93,9 +96,12 @@ export default function ProductCardsList({
                     : 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6'
             }
         >
-            { productsToShow.map((productData) => (
-                <ProductCard key={ productData.id } product={ productData } homePage={ isHomePage } closeMobileMenu={ closeMobileMenu } />
-            )) }
+            { productsToShow.map((productData) => {
+                const productUrl =  (subsection && sectionName) ? `/section/${createSlugName(sectionName)}/${createSlugName(subsection)}/${productData.slug}` : undefined;
+
+                return (
+                    <ProductCard key={ productData.id } product={ productData } homePage={ isHomePage } closeMobileMenu={ closeMobileMenu } productUrl={ productUrl } />
+                );}) }
             { hasMore && !isMobileLayout &&(
                 <div ref={ paginatorRef }>
                     <ButtonPaginator loadMore={ loadMore } isLoading={ isLoading }>

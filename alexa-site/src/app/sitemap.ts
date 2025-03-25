@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { projectFirestoreDataBase } from './firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { createSlugName } from './utils/createSlugName';
+import { CollectionType, ProductBundleType } from './utils/types';
 
 const BASE_URL = 'https://www.alexasemijoias.com.br';
 
@@ -52,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         // Adicionar URLs dos produtos
         productsSnapshot.forEach((doc) => {
-            const data = doc.data();
+            const data = doc.data() as ProductBundleType;
             result.push({
                 url: `${BASE_URL}/product/${data.slug}`,
                 lastModified: formatDate(data.updatingDate?.toDate() || new Date()),
@@ -60,6 +61,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 priority: data.lancamento ? 0.9 : 0.8,
 
             });
+
+            if(data.subsections && Array.isArray(data.subsections)) {
+                data.subsections.forEach(subsection => {
+                    result.push({
+                        url: `${BASE_URL}/section/${createSlugName(subsection.split(':')[0])}/${createSlugName(subsection.split(':')[1])}/${data.slug}`,
+                        lastModified: formatDate(data.updatingDate?.toDate() || new Date()),
+                        changeFrequency: 'daily',
+                        priority: 0.8,
+                    });
+                });
+            }
         });
 
         // Buscar seções
@@ -89,6 +101,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     });
                 });
             }
+        });
+
+        // Buscar coleções
+        const collectionsRef = collection(projectFirestoreDataBase, 'colecoes');
+        const collectionsSnapshot = await getDocs(collectionsRef);
+ 
+        // Adicionar URLs das coleções
+        collectionsSnapshot.forEach((doc) => {
+            const data = doc.data() as CollectionType;
+             
+            // URL da seção principal
+            result.push({
+                url: `${BASE_URL}/colecoes/${createSlugName(data.slugName)}`,
+                lastModified: formatDate(new Date()),
+                changeFrequency: 'daily',
+                priority: 0.8,
+            });
+
         });
 
     } catch (error) {
