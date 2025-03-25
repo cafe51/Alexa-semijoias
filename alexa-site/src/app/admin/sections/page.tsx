@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useCollection } from '@/app/hooks/useCollection';
 import { SectionType, SectionSlugType, ProductBundleType, FireBaseDocument } from '@/app/utils/types';
 import { createSlugName, createSubsectionsWithSlug } from '@/app/utils/createSlugName';
@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button';
 import { useSectionUpdates } from '@/app/hooks/useSectionUpdates';
 import { where } from 'firebase/firestore';
 import DeleteSectionConfirmationDialog from './DeleteSectionConfirmationDialog';
-import SectionForm from './SectionForm';
+import SectionForm, { SectionFormData, SubsectionFormData } from './SectionForm';
 import SectionCard from './SectionCard';
-import { toast } from '@/hooks/use-toast'; // Supondo que você possua um hook de toast
+import { toast } from '@/hooks/use-toast';
+import { uploadImage, deleteImage, getImageFileName } from '@/app/firebase/storageUtils';
 
 const SectionsManagement: React.FC = () => {
-    // Instâncias dos hooks para as coleções
     const {
         getAllDocuments,
         addDocument,
@@ -29,15 +29,10 @@ const SectionsManagement: React.FC = () => {
         removeSubsectionFromProducts,
     } = useSectionUpdates();
 
-    // Estado dos documentos – cada documento já inclui os dados de FireBaseDocument
     const [sections, setSections] = useState<(SectionType & FireBaseDocument)[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [showForm, setShowForm] = useState<boolean>(false);
     const [editingSection, setEditingSection] = useState<(SectionType & FireBaseDocument) | null>(null);
-    const [formData, setFormData] = useState<{ sectionName: string; subsections: string[] }>({
-        sectionName: '',
-        subsections: [],
-    });
     const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
     const [sectionToDelete, setSectionToDelete] = useState<(SectionType & FireBaseDocument) | null>(null);
     const [deleteType, setDeleteType] = useState<'section' | 'subsection' | null>(null);
@@ -45,6 +40,14 @@ const SectionsManagement: React.FC = () => {
     const [affectedCount, setAffectedCount] = useState<number>(0);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    const [formData, setFormData] = useState<SectionFormData>({
+        sectionName: '',
+        sectionDescription: '',
+        sectionImage: null,
+        sectionImageUrl: '',
+        subsections: [],
+    });
 
     useEffect(() => {
         fetchSections();
@@ -66,87 +69,117 @@ const SectionsManagement: React.FC = () => {
         setLoading(false);
     };
 
-    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value, files } = e.target as HTMLInputElement;
+        if (name === 'sectionImage' && files) {
+            setFormData((prev) => ({ ...prev, sectionImage: files[0] }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
+    };
+
+    const handleSubsectionChange = (index: number, field: keyof SubsectionFormData, value: string | File | null) => {
+        setFormData((prev) => {
+            const updatedSubs = [...prev.subsections];
+            updatedSubs[index] = { ...updatedSubs[index], [field]: value };
+            return { ...prev, subsections: updatedSubs };
+        });
     };
 
     const handleAddSubsectionInput = () => {
-        setFormData((prev) => ({ ...prev, subsections: [...prev.subsections, ''] }));
-    };
-
-    const handleSubsectionChange = (index: number, value: string) => {
-        const newSubs = [...formData.subsections];
-        newSubs[index] = value;
-        setFormData((prev) => ({ ...prev, subsections: newSubs }));
+        setFormData((prev) => ({
+            ...prev,
+            subsections: [...prev.subsections, { name: '', description: '', image: null }],
+        }));
     };
 
     const handleRemoveSubsectionInput = (index: number) => {
-        const newSubs = [...formData.subsections];
-        newSubs.splice(index, 1);
-        setFormData((prev) => ({ ...prev, subsections: newSubs }));
+        setFormData((prev) => {
+            const updatedSubs = [...prev.subsections];
+            updatedSubs.splice(index, 1);
+            return { ...prev, subsections: updatedSubs };
+        });
     };
 
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.sectionName.trim()) return;
         setIsSubmitting(true);
-        // Sempre envia um array válido (mesmo que vazio)
-        const validSubs = formData.subsections;
 
-        if (editingSection) {
-            try {
-                // Atualiza a coleção siteSections
+        try {
+            let sectionImageUrl = formData.sectionImageUrl || '';
+            // Se houver um novo arquivo de imagem para a seção, faz o upload usando o nome customizado
+            if (formData.sectionImage) {
+                const id = editingSection ? editingSection.id : crypto.randomUUID();
+                const fileName = getImageFileName(formData.sectionName);
+                const path = `sections/${id}/${fileName}`;
+                sectionImageUrl = await uploadImage(formData.sectionImage, path);
+            } else if (!formData.sectionImage && !formData.sectionImageUrl && editingSection && editingSection.imagesAndDescriptions?.sectionImage) {
+                // Se o admin removeu a imagem, deleta a imagem antiga
+                await deleteImage(editingSection.imagesAndDescriptions.sectionImage);
+            }
+
+            // Para cada subseção, faz upload da imagem (se houver) com o nome customizado
+            const subsectionsData = await Promise.all(
+                formData.subsections.map(async(sub) => {
+                    let subImageUrl = sub.imageUrl || '';
+                    if (sub.image) {
+                        const id = editingSection ? editingSection.id : crypto.randomUUID();
+                        const fileName = getImageFileName(formData.sectionName, sub.name);
+                        const path = `sections/${id}/subsections/${fileName}`;
+                        subImageUrl = await uploadImage(sub.image, path);
+                    } else if (!sub.image && !sub.imageUrl && editingSection) {
+                        // Se a imagem foi removida durante a edição, deleta a imagem antiga
+                        const subMedia = editingSection.imagesAndDescriptions?.subsectionImagesAndDescriptions?.find(s => s.subsectionName === sub.name);
+                        if (subMedia?.subsectionImage) {
+                            await deleteImage(subMedia.subsectionImage);
+                        }
+                    }
+                    return {
+                        subsectionName: sub.name,
+                        subsectionDescription: sub.description,
+                        subsectionImage: subImageUrl,
+                    };
+                }),
+            );
+
+            if (editingSection) {
                 await updateDocumentField(editingSection.id, 'sectionName', formData.sectionName);
-                await updateDocumentField(editingSection.id, 'subsections', formData.subsections);
+                await updateDocumentField(editingSection.id, 'subsections', formData.subsections.map(sub => sub.name));
 
-                // Atualiza o documento correspondente em siteSectionsWithSlugName
+                await updateDocumentField(editingSection.id, 'imagesAndDescriptions', {
+                    sectionImage: sectionImageUrl || null,
+                    sectionDescription: formData.sectionDescription || null,
+                    subsectionImagesAndDescriptions: subsectionsData,
+                });
+
                 const slugName = createSlugName(formData.sectionName);
                 await sectionSlugCollection.addDocument(
                     {
                         sectionName: formData.sectionName,
                         sectionSlugName: slugName,
-                        subsections:
-                        formData.subsections.length > 0
-                            ? createSubsectionsWithSlug(formData.subsections)
-                            : [],
+                        subsections: formData.subsections.length > 0 ? createSubsectionsWithSlug(formData.subsections.map(s => s.name)) : [],
                     },
                     editingSection.id,
                 );
-              
 
-                // Atualiza os produtos associados à seção (incluindo as variações)
-                await updateProductsOnSectionNameChange(
-                    editingSection.sectionName,
-                    formData.sectionName,
-                );
-                await updateProductsOnSubsectionsChange(
-                    editingSection.sectionName,
-                    editingSection.subsections || [],
-                    formData.subsections,
-                );
+                await updateProductsOnSectionNameChange(editingSection.sectionName, formData.sectionName);
+                await updateProductsOnSubsectionsChange(editingSection.sectionName, editingSection.subsections || [], formData.subsections.map(s => s.name));
 
                 toast({
                     title: 'Seção atualizada',
                     description: 'A seção foi atualizada com sucesso.',
                 });
-                await fetchSections();
-                setShowForm(false);
-                setEditingSection(null);
-                setFormData({ sectionName: '', subsections: [] });
-            } catch (error) {
-                console.error('Erro ao atualizar seção:', error);
-                toast({
-                    title: 'Erro ao atualizar seção',
-                    description: 'Ocorreu um erro ao atualizar a seção.',
-                    variant: 'destructive',
-                });
-            }
-        } else {
-            try {
+            } else {
                 const newId = crypto.randomUUID();
                 const newSection: SectionType = {
                     sectionName: formData.sectionName,
-                    subsections: validSubs,
+                    subsections: formData.subsections.map(sub => sub.name),
+                    imagesAndDescriptions: {
+                        sectionImage: sectionImageUrl || null,
+                        sectionDescription: formData.sectionDescription || null,
+                        subsectionImagesAndDescriptions: subsectionsData,
+                    },
                 };
                 await addDocument(newSection, newId);
 
@@ -154,7 +187,7 @@ const SectionsManagement: React.FC = () => {
                 const newSectionSlug: SectionSlugType = {
                     sectionName: formData.sectionName,
                     sectionSlugName: slugName,
-                    subsections: validSubs.length > 0 ? createSubsectionsWithSlug(validSubs) : [],
+                    subsections: formData.subsections.length > 0 ? createSubsectionsWithSlug(formData.subsections.map(s => s.name)) : [],
                 };
                 await sectionSlugCollection.addDocument(newSectionSlug, newId);
 
@@ -162,17 +195,24 @@ const SectionsManagement: React.FC = () => {
                     title: 'Seção criada',
                     description: 'A nova seção foi criada com sucesso.',
                 });
-                await fetchSections();
-                setShowForm(false);
-                setFormData({ sectionName: '', subsections: [] });
-            } catch (error) {
-                console.error('Erro ao criar nova seção:', error);
-                toast({
-                    title: 'Erro ao criar seção',
-                    description: 'Ocorreu um erro ao criar a nova seção.',
-                    variant: 'destructive',
-                });
             }
+            await fetchSections();
+            setShowForm(false);
+            setEditingSection(null);
+            setFormData({
+                sectionName: '',
+                sectionDescription: '',
+                sectionImage: null,
+                sectionImageUrl: '',
+                subsections: [],
+            });
+        } catch (error) {
+            console.error('Erro ao criar/atualizar seção:', error);
+            toast({
+                title: editingSection ? 'Erro ao atualizar seção' : 'Erro ao criar seção',
+                description: 'Ocorreu um erro durante a operação.',
+                variant: 'destructive',
+            });
         }
         setIsSubmitting(false);
     };
@@ -181,7 +221,22 @@ const SectionsManagement: React.FC = () => {
         setEditingSection(section);
         setFormData({
             sectionName: section.sectionName,
-            subsections: section.subsections || [],
+            sectionDescription: section.imagesAndDescriptions?.sectionDescription || '',
+            sectionImage: null,
+            sectionImageUrl: section.imagesAndDescriptions?.sectionImage || '',
+            subsections: section.subsections
+                ? section.subsections.map((subName) => {
+                    const subMedia = section.imagesAndDescriptions?.subsectionImagesAndDescriptions?.find(
+                        (s) => s.subsectionName === subName,
+                    );
+                    return {
+                        name: subName,
+                        description: subMedia?.subsectionDescription || '',
+                        image: null,
+                        imageUrl: subMedia?.subsectionImage || '',
+                    };
+                })
+                : [],
         });
         setShowForm(true);
     };
@@ -208,11 +263,36 @@ const SectionsManagement: React.FC = () => {
         setDeleteModalOpen(true);
     };
 
+    const deleteSectionImages = async(section: SectionType & FireBaseDocument) => {
+        if (section.imagesAndDescriptions?.sectionImage) {
+            await deleteImage(section.imagesAndDescriptions.sectionImage);
+        }
+        if (section.imagesAndDescriptions?.subsectionImagesAndDescriptions) {
+            await Promise.all(
+                section.imagesAndDescriptions.subsectionImagesAndDescriptions.map(async(sub) => {
+                    if (sub.subsectionImage) {
+                        await deleteImage(sub.subsectionImage);
+                    }
+                }),
+            );
+        }
+    };
+
+    const deleteSubsectionImage = async(section: SectionType & FireBaseDocument, subsectionName: string) => {
+        const subMedia = section.imagesAndDescriptions?.subsectionImagesAndDescriptions?.find(
+            (s) => s.subsectionName === subsectionName,
+        );
+        if (subMedia && subMedia.subsectionImage) {
+            await deleteImage(subMedia.subsectionImage);
+        }
+    };
+
     const confirmDelete = async() => {
         if (!sectionToDelete || !deleteType) return;
         setIsDeleting(true);
         try {
             if (deleteType === 'section') {
+                await deleteSectionImages(sectionToDelete);
                 await removeSectionFromProducts(sectionToDelete.sectionName);
                 await deleteDocument(sectionToDelete.id);
                 await sectionSlugCollection.deleteDocument(sectionToDelete.id);
@@ -221,11 +301,11 @@ const SectionsManagement: React.FC = () => {
                     description: 'A seção e suas subseções foram removidas com sucesso.',
                 });
             } else if (deleteType === 'subsection' && subsectionToDelete) {
+                await deleteSubsectionImage(sectionToDelete, subsectionToDelete);
                 const updatedSubs = (sectionToDelete.subsections || []).filter((s) => s !== subsectionToDelete);
                 if (updatedSubs.length !== (sectionToDelete.subsections || []).length) {
                     await updateDocumentField(sectionToDelete.id, 'subsections', updatedSubs);
                 }
-                // Usa o getDocumentById do sectionSlugCollection para obter os dados corretos
                 const slugDoc = await sectionSlugCollection.getDocumentById(sectionToDelete.id);
                 if (slugDoc.exist && slugDoc.subsections) {
                     const updatedSlugSubs = slugDoc.subsections.filter((s) => {
@@ -272,7 +352,13 @@ const SectionsManagement: React.FC = () => {
                 onClick={ () => {
                     setShowForm(true);
                     setEditingSection(null);
-                    setFormData({ sectionName: '', subsections: [] });
+                    setFormData({
+                        sectionName: '',
+                        sectionDescription: '',
+                        sectionImage: null,
+                        sectionImageUrl: '',
+                        subsections: [],
+                    });
                 } }
             >
         Adicionar Nova Seção
@@ -284,15 +370,14 @@ const SectionsManagement: React.FC = () => {
                 <SectionCard handleDelete={ handleDelete } handleEditSection={ handleEditSection } sections={ sections } />
             ) }
 
-            { /** Modal do formulário */ }
             { showForm && (
                 <SectionForm
                     showForm={ showForm }
                     setShowForm={ setShowForm }
                     editingSection={ editingSection }
                     setEditingSection={ setEditingSection }
-                    setFormData={ setFormData }
                     formData={ formData }
+                    setFormData={ setFormData }
                     handleSubmit={ handleSubmit }
                     handleFormChange={ handleFormChange }
                     handleSubsectionChange={ handleSubsectionChange }
@@ -302,7 +387,6 @@ const SectionsManagement: React.FC = () => {
                 />
             ) }
 
-            { /** Modal de confirmação */ }
             { deleteModalOpen && (
                 <DeleteSectionConfirmationDialog
                     deleteModalOpen={ deleteModalOpen }

@@ -221,9 +221,20 @@ export type SectionSlugType = { // tipagem dos documentos da coleção siteSecti
     }[],
 }
 
+export type SubsectionImageAndDescriptionType = {
+    subsectionName: string,
+    subsectionImage: string,
+    subsectionDescription: string,
+}
+
 export type SectionType = { //tipagem dos documentos da coleção siteSections
     sectionName: string,
     subsections?: string[] | null | undefined, // do tipo 'subsectionName'[]
+    imagesAndDescriptions?: {
+        sectionImage?: string | null | undefined,
+        sectionDescription?: string | null | undefined,
+        subsectionImagesAndDescriptions?: SubsectionImageAndDescriptionType[], // dessa forma pode-se achar a info da subseção de index i com doc.imagesAndDescriptions.subsectionImagesAndDescriptions.find(si => si.subsectionName === doc.subsections[i])
+    }
 }
 
 export type UseCheckoutStateType = {
