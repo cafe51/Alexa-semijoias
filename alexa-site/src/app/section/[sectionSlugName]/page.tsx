@@ -3,7 +3,7 @@ export const revalidate = 60; // Revalidação a cada 60 segundos
 
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getSectionBySlug, getProductsForSection } from '@/app/firebase/admin-config';
+import { getSectionBySlug, getProductsForSection, getSectionMedia } from '@/app/firebase/admin-config';
 import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
 import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
@@ -19,6 +19,11 @@ type Props = {
 async function fetchAndValidateSection(sectionSlugName: string) {
     const sectionData = await getSectionBySlug(sectionSlugName);
     return sectionData || null;
+}
+
+async function fetchSectionMedia(sectionSlugName: string) {
+    const sectionMedia = await getSectionMedia(sectionSlugName);
+    return sectionMedia || null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -94,6 +99,9 @@ export default async function Section({ params }: Props) {
         notFound();
     }
 
+    const sectionMedia = await fetchSectionMedia(sectionData.sectionName);
+
+
     // Busca inicial dos produtos no servidor
     const { products, hasMore, lastVisible } = await getProductsForSection(
         sectionData.sectionName,
@@ -101,10 +109,13 @@ export default async function Section({ params }: Props) {
         { field: 'creationDate', direction: 'desc' },
     );
 
+
     return (
         <PageContainer>
             <ProductsListClient
                 sectionName={ sectionData.sectionName }
+                bannerDescription={ sectionMedia?.imagesAndDescriptions?.sectionDescription }
+                bannerImage={ sectionMedia?.imagesAndDescriptions?.sectionImage }
                 initialData={ { products, hasMore, lastVisible } }
             />
         </PageContainer>

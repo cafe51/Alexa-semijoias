@@ -14,8 +14,8 @@ import { createSlugName } from '@/app/utils/createSlugName';
 
 
 interface SectionBannerProps {
-    bannerImage?: string;
-    bannerDescription?: string;
+    bannerImage?: string | null;
+    bannerDescription?: string | null;
     lastAddProduct: ProductBundleType & FireBaseDocument | undefined;
     sectionName?: string;
     subsection?: string;

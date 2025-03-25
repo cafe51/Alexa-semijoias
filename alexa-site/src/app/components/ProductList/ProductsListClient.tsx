@@ -8,8 +8,8 @@ import ProductCardsList from './ProductCardsList';
 import SectionBanner from './SectionBanner';
 
 interface ProductsListClientProps {
-    bannerImage?: string;
-    bannerDescription?: string;
+    bannerImage?: string | null;
+    bannerDescription?: string | null;
     sectionName?: string;
     subsection?: string;
     collectionName?: string;

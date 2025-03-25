@@ -3,7 +3,7 @@ export const revalidate = 60; // Revalidação a cada 60 segundos
 
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getProductsForSection, getSectionBySlug } from '@/app/firebase/admin-config';
+import { getProductsForSection, getSectionBySlug, getSectionMedia } from '@/app/firebase/admin-config';
 import toTitleCase from '@/app/utils/toTitleCase';
 import PageContainer from '@/app/components/PageContainer';
 import ProductsListClient from '@/app/components/ProductList/ProductsListClient';
@@ -25,6 +25,11 @@ function verifySubsectionSlugExistence(section: any, subsectionSlugName: string)
 
 function getSubsectionName(section: any, subsectionSlugName: string) {
     return section.subsections?.find((sub: any) => sub.subsectionSlugName === subsectionSlugName)?.subsectionName;
+}
+
+async function fetchSectionMedia(sectionSlugName: string) {
+    const sectionMedia = await getSectionMedia(sectionSlugName);
+    return sectionMedia || null;
 }
 
 export async function generateMetadata({ params: { sectionSlugName, subsectionSlugName } }: Props): Promise<Metadata> {
@@ -109,7 +114,17 @@ export default async function SubSection({ params: { sectionSlugName, subsection
     if (!subsectionName) {
         notFound();
     }
-  
+
+    const sectionMedia = await fetchSectionMedia(sectionData.sectionName);
+
+    const subsectionDescription = sectionMedia?.imagesAndDescriptions?.subsectionImagesAndDescriptions?.find(
+        (s) => s.subsectionName === subsectionName,
+    )?.subsectionDescription;
+
+    const subsectionImage = sectionMedia?.imagesAndDescriptions?.subsectionImagesAndDescriptions?.find(
+        (s) => s.subsectionName === subsectionName,
+    )?.subsectionImage;
+
     // Busca inicial dos produtos filtrando também por subseção
     const { products, hasMore, lastVisible } = await getProductsForSection(
         sectionData.sectionName,
@@ -123,6 +138,8 @@ export default async function SubSection({ params: { sectionSlugName, subsection
             <ProductsListClient
                 sectionName={ sectionData.sectionName }
                 subsection={ subsectionName }
+                bannerDescription={ subsectionDescription }
+                bannerImage={ subsectionImage }
                 initialData={ { products, hasMore, lastVisible } }
             />
         </PageContainer>
