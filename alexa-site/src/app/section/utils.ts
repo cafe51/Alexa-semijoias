@@ -23,7 +23,6 @@ export const fetchProductsData = async(
         // if (searchTerm) params.append('searchTerm', searchTerm);
         params.append('limit', '1');
         const response = await fetch(`${SITE_URL}/api/products?${params.toString()}`);
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', response);
 
         if (!response.ok) {
             throw new Error('Falha ao carregar produtos');
