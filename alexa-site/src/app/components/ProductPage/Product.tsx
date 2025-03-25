@@ -359,7 +359,7 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
                 </div>
             </div>
             <div className='w-full text-center'>
-                <h1 className='text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] my-8 md:my-12'>Você Também Vai Amar</h1>
+                <h2 className='text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] my-8 md:my-12'>Você Também Vai Amar</h2>
                 <DiscoverOurProductsImagesCarousel products={ recommendedProducts } />
             </div>
             <FAQSection faqs={ faqProductPage }/>

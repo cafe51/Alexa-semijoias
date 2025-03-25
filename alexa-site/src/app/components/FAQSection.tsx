@@ -21,9 +21,9 @@ export default function FAQSection({ faqs }: { faqs: { question: string; answer:
                 type="application/ld+json"
                 dangerouslySetInnerHTML={ { __html: JSON.stringify(faqStructuredData) } }
             />
-            <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] mb-4 md:my-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] mb-4 md:my-12">
           Perguntas Frequentes
-            </h1>
+            </h2>
             <Accordion type="single" collapsible className="max-w-3xl mx-auto">
                 { faqs.map((faq, index) => (
                     <AccordionItem key={ index } value={ `faq-${index}` }>
