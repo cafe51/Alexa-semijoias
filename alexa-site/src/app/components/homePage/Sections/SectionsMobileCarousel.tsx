@@ -44,7 +44,7 @@ export default function SectionsMobileCarousel({ products, homePage=false }: Sec
                 '--slide-size-lg': '30%',
             } as React.CSSProperties }
         >
-            <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] my-8 md:my-12">Navegue por Seção</h1>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#333333] my-8 md:my-12">Navegue por Seção</h2>
 
             <div className="overflow-hidden " ref={ emblaRef }>
                 <div
