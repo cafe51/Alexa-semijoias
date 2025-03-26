@@ -12,6 +12,7 @@ import { createPayment, sendEmailConfirmation } from '../utils/apiCall';
 import { handlePaymentFailure } from '../utils/paymentStatusHandler';
 import { createAdditionalInfo, createNewOrderObject, createPayer, createPayerAddInfo } from '../utils/orderHelpers';
 import { Timestamp } from 'firebase/firestore';
+import { sendGTMEvent } from '../utils/analytics';
 
 export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: boolean) => void) => {
     const router = useRouter();
@@ -90,6 +91,24 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             throw error;
         } finally {
             setIsPaymentFinished(true);
+            sendGTMEvent('purchase', {
+                ecommerce: {
+                    transaction_id: newOrder.paymentId, // ID ÚNICO da transação/pedido (MUITO IMPORTANTE)
+                    value: newOrder.valor.total, // Valor TOTAL da transação (incluindo frete e impostos)
+                    shipping: newOrder.valor.frete || 0, // Valor do frete
+                    currency: 'BRL',
+                    // coupon: newOrder.couponCode, // Se usou cupom
+                    items: newOrder.cartSnapShot.map((item) => ({ // Mapeia cada item do pedido
+                        item_id: item.skuId, // MESMO ID/SKU consistente
+                        item_name: item.name,
+                        item_brand: 'Alexa Semijoias',
+                        // item_category: item.,
+                        // item_variant: item.variant,
+                        price: item.value.promotionalPrice ? item.value.promotionalPrice : item.value.price, // Preço do item
+                        quantity: item.quantidade, // Quantidade COMPRADA deste item
+                    })),
+                },
+            });
             setLoadingPayment(false);
             router.push(`/pedido/${paymentId}`);
         }

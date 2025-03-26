@@ -13,6 +13,7 @@ import ContinueShoppingButton from './ContinueShoppingButton';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { COUPONREVENDEDORAFIRSTCODE, COUPONREVENDEDORAVIP } from '../utils/constants';
 import CouponSection from '../checkout/CouponSection/CouponSection';
+import { sendGTMEvent } from '../utils/analytics';
 
 interface CartItem {
   skuId: string;
@@ -79,6 +80,34 @@ export default function Carrinho() {
             );
         }
     }, [carrinhoState]);
+
+    useEffect(() => {
+        // Dispara apenas se o carrinho não estiver vazio
+        try {
+            if (carrinhoState && carrinhoState.length > 0) {
+                sendGTMEvent('view_cart', {
+                    ecommerce: {
+                        currency: 'BRL',
+                        value: cartPrice, // Valor total dos itens no carrinho
+                        items: carrinhoState.map((item) => ({ // Mapeia cada item no carrinho
+                            item_id: item.skuId,
+                            item_name: item.name,
+                            item_brand: 'Alexa Semijoias',
+                            item_category: item.sections[0],
+                            item_category2: item.subsections ? item.subsections[0] : null,
+
+                            // item_variant: item.variant,
+                            price: item.value.promotionalPrice ? item.value.promotionalPrice : item.value.price, // Preço unitário
+                            quantity: item.quantidade, // Quantidade DESTE item no carrinho
+                        })),
+                    },
+                });
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }, [carrinhoState, cartPrice]); // Dependências
+
 
     const selectShipping = (price: string) => {
         setShipping(Number(price)); // Parse para número

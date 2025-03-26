@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { trackPixelEvent } from '../utils/metaPixel';
 import { FireBaseDocument, ProductCartType } from '../utils/types';
 import { useMemo } from 'react';
+import { sendGTMEvent } from '../utils/analytics';
 
 export default function OrderSummary({ 
     subtotal, 
@@ -107,6 +108,37 @@ export default function OrderSummary({
                                     quantity: item.quantidade,
                                 })),
                             });
+
+                            // 1. Garante que há itens antes de prosseguir e enviar o evento
+                            if (carrinho && carrinho.length > 0) {
+
+                                // 2. Envia o evento begin_checkout (mesmos dados do view_cart)
+                                sendGTMEvent('begin_checkout', {
+                                    ecommerce: {
+                                        currency: 'BRL',
+                                        value: totalValue, // Reutiliza o valor total calculado
+                                        items: carrinho.map((item) => {
+                                            const productPrice = item.value.promotionalPrice || item.value.price;
+                                            const itemSection = item.subsections && item.subsections.length > 0 ? item.subsections[0].split(':')[0] : item.sections[0];
+                                            const itemSubSection = item.subsections && item.subsections.length > 0 ? item.subsections[0].split(':')[1] : null;
+                                            return ({
+                                                item_id: item.skuId,
+                                                item_name: item.name,
+                                                item_brand: 'Alexa Semijoias',
+                                                item_category: itemSection,
+                                                item_category2: itemSubSection,
+    
+                                                // item_variant: item.variant,
+                                                price: productPrice,
+                                                quantity: item.quantidade,
+                                            });
+                                        }),
+                                    },
+                                });
+                            } else {
+                                console.log('Carrinho vazio, não pode iniciar checkout.');
+                            }
+
                             onCheckout();
                         } }
                     >

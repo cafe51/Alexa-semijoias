@@ -6,6 +6,9 @@ import { ProductBundleType, FireBaseDocument, SortOption } from '@/app/utils/typ
 import ProductSorter from './ProductSorter';
 import ProductCardsList from './ProductCardsList';
 import SectionBanner from './SectionBanner';
+import { sendGTMEvent } from '@/app/utils/analytics';
+import toTitleCase from '@/app/utils/toTitleCase';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 interface ProductsListClientProps {
     bannerImage?: string | null;
@@ -43,6 +46,34 @@ export default function ProductsListClient({
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+    useEffect(() => {
+        try {
+            const listName = collectionName ? collectionName : (subsection ? subsection : sectionName || 'todos os produtos'); 
+            // Garante que temos produtos para enviar
+            if (initialData && initialData.products && initialData.products.length > 0) { 
+                sendGTMEvent('view_item_list', {
+                    ecommerce: {
+                        item_list_id: createSlugName(listName), // ID da lista (ex: 'brincos')
+                        item_list_name: toTitleCase(listName), // Nome da lista (ex: 'Brincos')
+                        items: initialData.products.map((product, index) => ({ // Mapeia os produtos da lista
+                            item_id: product.id,
+                            item_name: product.name,
+                            item_brand: 'Alexa Semijoias',
+                            item_category: listName, // A categoria principal desta lista
+                            // item_variant: ..., // Se aplicável
+                            price: product.value.promotionalPrice ? product.value.promotionalPrice : product.value.price, // Preço do item
+                            quantity: 1, // Quantidade é sempre 1 para listas
+                            index: index + 1, // Posição do item na lista (começa em 1)
+                        })),
+                    },
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao enviar GTM view_item_list:', error); 
+        }
+
+    }, [initialData, sectionName, subsection, collectionName]); // Dependências
     
     return (
         <main className='w-full'>

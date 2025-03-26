@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import { trackPixelEvent } from '@/app/utils/metaPixel';
-import { sendGAEvent, sendGTMEvent } from '@/app/utils/analytics';
+import { sendGTMEvent } from '@/app/utils/analytics';
 import { MetaConversionsService } from '@/app/utils/meta-conversions/service';
 import PriceSection from '@/app/components/PriceSection';
 import { useAddNewItemCart } from '@/app/hooks/useAddNewItemCart';
@@ -47,6 +47,10 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
     const [localCartQuantity, setLocalCartQuantity] = useState<{ [key: string]: number }>({});
     const [showTooltip, setShowTooltip] = useState(false);
 
+    const productPrice = initialProduct.productVariations[0].value.promotionalPrice || initialProduct.productVariations[0].value.price;
+    const itemSection = initialProduct.subsections && initialProduct.subsections.length > 0 ? initialProduct.subsections[0].split(':')[0] : initialProduct.sections[0];
+    const itemSubSection = initialProduct.subsections && initialProduct.subsections.length > 0 ? initialProduct.subsections[0].split(':')[1] : null;
+
     // Agora, passa a configuração inicial de seleção para o hook
     const {
         currentPhase, setCurrentPhase,
@@ -68,7 +72,7 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
 
     useEffect(() => {
         // Dispara eventos de visualização do produto
-        const productPrice = initialProduct.productVariations[0].value.price;
+
 
         // Meta Pixel
         trackPixelEvent('ViewContent', {
@@ -89,17 +93,6 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
             console.error('Failed to send ViewContent event to Meta Conversions API:', error);
         });
 
-        // Google Analytics
-        sendGAEvent('view_item', {
-            currency: 'BRL',
-            value: productPrice,
-            items: [{
-                item_id: initialProduct.id,
-                item_name: initialProduct.name,
-                item_category: initialProduct.sections[0],
-                price: productPrice,
-            }],
-        });
 
         // Google Tag Manager
         sendGTMEvent('view_item', {
@@ -109,8 +102,10 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
                 items: [{
                     item_id: initialProduct.id,
                     item_name: initialProduct.name,
-                    item_category: initialProduct.sections[0],
+                    item_category: itemSection,
+                    item_category2: itemSubSection,
                     price: productPrice,
+                    quantity: 1,
                 }],
             },
         });
@@ -220,26 +215,16 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
                 console.error('Failed to send AddToCart event to Meta Conversions API:', error);
             });
 
-            sendGAEvent('add_to_cart', {
-                currency: 'BRL',
-                value: totalValue,
-                items: [{
-                    item_id: updatedVariation.sku,
-                    item_name: updatedProduct.name,
-                    item_category: updatedProduct.sections[0],
-                    price: price,
-                    quantity: quantity,
-                }],
-            });
-
             sendGTMEvent('add_to_cart', {
                 ecommerce: {
                     currency: 'BRL',
                     value: totalValue,
                     items: [{
-                        item_id: updatedVariation.sku,
+                        item_id: updatedVariation.productId,
                         item_name: updatedProduct.name,
-                        item_category: updatedProduct.sections[0],
+                        item_category: itemSection,
+                        item_category2: itemSubSection,
+
                         price: price,
                         quantity: quantity,
                     }],
