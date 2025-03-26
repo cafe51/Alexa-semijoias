@@ -73,9 +73,6 @@ export const metadata: Metadata = {
         creator: '@alexasemijoias',
         site: '@alexasemijoias',
     },
-    verification: {
-        google: 'adicione-sua-verificacao-google',
-    },
     robots: {
         index: true,
         follow: true,
