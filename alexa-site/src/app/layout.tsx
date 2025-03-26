@@ -10,7 +10,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { WebVitals } from './components/WebVitals';
 import { Metadata } from 'next';
 import FacebookPixel from './components/FacebookPixel';
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { getSiteSections } from './services/siteSections';
 import { getSiteCollections } from './services/siteCollections';
 
@@ -175,7 +175,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 </AuthContextProvider>
 
                 <GoogleTagManager gtmId="GTM-K3CB5QZM" />
-                <GoogleAnalytics gaId="G-KLLD2T3EQ1" />
                 <Analytics />
                 <SpeedInsights />
                 <WebVitals />
