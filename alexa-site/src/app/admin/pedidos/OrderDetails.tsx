@@ -134,6 +134,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                             <PixPayment
                                 pixKey={ pedidoState.pixResponse.qrCode }
                                 qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
+                                orderStatus={ pedidoState.status }
                                 startDate={ pedidoState.createdAt.toDate() }
                                 cancelStatus={ () => {
                                     setStatus('cancelado');
@@ -197,6 +198,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                         pixKey={ pedidoState.pixResponse.qrCode }
                                         qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
                                         startDate={ pedidoState.updatedAt.toDate() }
+                                        orderStatus={ status }
                                         cancelStatus={ () => {
                                             setStatus('cancelado');
                                         } }
@@ -263,6 +265,8 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                     pixKey={ pedidoState.pixResponse.qrCode }
                                     qrCodeBase64={ pedidoState.pixResponse.qrCodeBase64 }
                                     startDate={ pedidoState.updatedAt.toDate() }
+                                    orderStatus={ pedidoState.status }
+
                                     cancelStatus={ () => {
                                         setStatus('cancelado');
                                     } }

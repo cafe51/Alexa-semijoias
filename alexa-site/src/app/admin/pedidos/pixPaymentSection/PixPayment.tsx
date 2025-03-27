@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react';
 import ExpiredMessageComponent from './ExpiredMessageComponent';
 import QrCodePaymentComponent from './QrCodePaymentComponent';
+import { OrderType } from '@/app/utils/types';
 
-const TIME_TO_EXPIRE = 28;
+const TIME_TO_EXPIRE = 33;
 
 interface PixPaymentProps {
     qrCodeBase64: string;
     pixKey: string;
     startDate: Date;
+    orderStatus: OrderType['status'];
     cancelStatus: () => void;
 }
 
@@ -17,6 +19,7 @@ export default function PixPayment({
     qrCodeBase64,
     pixKey,
     startDate,
+    orderStatus,
     cancelStatus,
 }: PixPaymentProps) {
     // Estado simplificado
@@ -48,6 +51,12 @@ export default function PixPayment({
             return;
         }
 
+        if(orderStatus === 'cancelado') {
+            setIsActive(false);
+            setTimeLeft(0);
+            return;
+        }
+
         const intervalId = setInterval(() => {
             const now = new Date();
             const diff = TIME_TO_EXPIRE * 60 - Math.floor((now.getTime() - startDate.getTime()) / 1000);
@@ -64,7 +73,7 @@ export default function PixPayment({
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, [isActive, startDate, cancelStatus]);
+    }, [isActive, startDate, cancelStatus, orderStatus]);
 
     const copyToClipboard = async() => {
         try {
