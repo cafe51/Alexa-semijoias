@@ -90,7 +90,6 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             console.error('Erro ao criar o pedido:', error);
             throw error;
         } finally {
-            setIsPaymentFinished(true);
             sendGTMEvent('purchase', {
                 ecommerce: {
                     transaction_id: newOrder.paymentId, // ID ÚNICO da transação/pedido (MUITO IMPORTANTE)
@@ -109,6 +108,8 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
                     })),
                 },
             });
+            setIsPaymentFinished(true);
+
             setLoadingPayment(false);
             router.push(`/pedido/${paymentId}`);
         }
