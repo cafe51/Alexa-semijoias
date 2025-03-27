@@ -14,7 +14,11 @@ export default function DashBoardUsers() {
 
     useEffect(() => {
         async function getClients() {
-            const clientes = await getAllDocuments();
+            const clientes = await getAllDocuments(
+                undefined,
+                undefined,
+                { field: 'createdAt', direction: 'desc' },
+            );
             setUsers(clientes);
         }
         getClients();
