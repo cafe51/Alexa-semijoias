@@ -29,6 +29,8 @@ export const sendGTMEvent = (
     eventName: string,
     params?: EventParams,
 ) => {
+    console.log('chegou até aqui a COMPRA');
+    console.log('window.dataLayer', window.dataLayer);
     if (window.dataLayer) {
         window.dataLayer.push({
             event: eventName,
