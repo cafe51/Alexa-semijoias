@@ -129,6 +129,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             suggestedMinAge: '13',
         },
         category: mainCategory,
+        gender: 'female',
         material,
         manufacturer: {
             '@type': 'Organization',
@@ -147,11 +148,11 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
         },
         additionalProperty: [
-            {
-                '@type': 'PropertyValue',
-                name: 'gender',
-                value: 'female',
-            },
+            // {
+            //     '@type': 'PropertyValue',
+            //     name: 'gender',
+            //     value: 'female',
+            // },
             {
                 '@type': 'PropertyValue',
                 name: 'Age Group',
@@ -219,6 +220,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
                 return {
                     '@type': 'Product',
                     ...commonProperties,
+                    gender: 'female',
                     ...variation.customProperties,
                     size: variantSize ? variantSize.toString() : null, 
                     name: toTitleCase(product.name),
