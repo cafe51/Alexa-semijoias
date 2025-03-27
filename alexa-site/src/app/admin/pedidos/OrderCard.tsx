@@ -45,13 +45,14 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
             return 0;
         }
     };
-
+    const juroPix = 4;
     const fixedFrete = 80;
     const custo = pedido.cartSnapShot.map(({ value: { cost } }) => cost).reduce((a, b) => a + b, 0);
     const valorDaCompra = pedido.valor.soma;
     const juros = pedido.installments ? jurosGenerator(pedido.installments) : 0;
     const valorDoJuro = juros === 0 ? undefined : parseFloat((valorDaCompra * (juros/100)).toFixed(2));
-    const valorRecebido = ((juros > 0) && (valorDoJuro)) ? (parseFloat((valorDaCompra - valorDoJuro).toFixed(2))) : undefined;
+    const valorDoJuroDoPix = valorDaCompra * (juroPix/100);
+    const valorRecebido = ((juros > 0) && (valorDoJuro)) ? (parseFloat((valorDaCompra - valorDoJuro).toFixed(2))) : pedido.paymentOption === 'pix' ? (parseFloat((valorDaCompra - valorDoJuroDoPix).toFixed(2))) : undefined;
 
     const lucro = valorRecebido ? parseFloat((valorRecebido - custo).toFixed(2)) : parseFloat((pedido.valor.soma - custo).toFixed(2));
 
@@ -76,9 +77,9 @@ export default function OrderCard({ pedido, handleSelectOrder }: OrderCardProps)
                 <p>
                     {
                         formatPrice(pedido?.valor.soma) + ((valorDaCompra && pedido.installments) &&
-                    (' - ' + jurosGenerator(pedido.installments))+ '%' + ' = ')
+                    (' - ' + (pedido.paymentOption === 'pix' ? 4 : jurosGenerator(pedido.installments)))+ '%' + ' = ')
                     }
-                    <span className='font-bold'>{ valorDaCompra && pedido.installments && formatPrice(valorRecebido) }</span>
+                    <span className='font-bold'>{ valorDaCompra && formatPrice(valorRecebido) }</span>
                 </p>
             </div>
             <div className="flex justify-between  px-2 gap-4 w-full items-start">
