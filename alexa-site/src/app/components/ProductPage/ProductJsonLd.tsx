@@ -205,7 +205,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             productGroupID: product.id,
             ...commonProperties,
             hasVariant: product.productVariations.map((variation) => {
-                // Se existir a chave "cor" em customProperties, combina a cor base com o valor customizadoz
+                // Se existir a chave "cor" em customProperties, combina a cor base com o valor customizado
                 const variantColor = variation.customProperties && variation.customProperties.cor
                     ? `${baseColor}/${variation.customProperties.cor}`
                     : baseColor;
@@ -231,7 +231,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
                     weight: {
                         '@type': 'QuantitativeValue',
                         value: variation.peso.toString(),
-                        unitCode: 'GRM',
+                        unitCode: 'g',
                     },
                     offers: createOffer(variation.estoque),
                 };
@@ -262,7 +262,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
             weight: {
                 '@type': 'QuantitativeValue',
                 value: variation.peso.toString(),
-                unitCode: 'GRM',
+                unitCode: 'g',
             },
             offers: createOffer(variation.estoque),
         };
