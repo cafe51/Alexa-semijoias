@@ -57,6 +57,7 @@ export function useProducts({
         const fetchProductsData = async() => {
             setIsLoading(true);
             try {
+                console.log('COLLECTION NAME', collectionName);
                 const params = new URLSearchParams();
                 if (sectionName) params.append('section', sectionName);
                 if (subsection) params.append('subsection', subsection);
@@ -90,6 +91,8 @@ export function useProducts({
             const params = new URLSearchParams();
             if (sectionName) params.append('section', sectionName);
             if (subsection) params.append('subsection', subsection);
+            if (collectionName) params.append('collection', collectionName);
+
             if (lastVisible) params.append('lastVisible', lastVisible);
             params.append('orderBy', orderBy);
             params.append('direction', direction);
