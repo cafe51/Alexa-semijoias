@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
-import { sendGAEvent, sendGTMEvent } from '@/app/utils/analytics';
+import { sendGTMEvent } from '@/app/utils/analytics';
 import { ProductVariation, ProductCartType, FireBaseDocument } from '@/app/utils/types';
 import OptionButton from '../ProductList/VariationSelection/OptionButton';
 import ProductSummary from '../ProductList/VariationSelection/ProductSummary';
@@ -50,35 +50,11 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
                 </p>
                 ;
             
-            const errorMessageGA = currentPhase === 0
-                ? `No momento estamos sem estoque para essa opção de ${keys[currentPhase]}`
-                : `${toTitleCase(keys[currentPhase])} ${option} para ${keys[currentPhase - 1]} ${selectedOptions[keys[currentPhase - 1]].toLowerCase()} escestá indisponível no momentoolhida`;
-            
-
             setErrorMessage(errorMessage);
 
-            // Rastrear erro de seleção
-            sendGAEvent('select_item_error', {
-                item_category: keys[currentPhase],
-                item_variant: option,
-                error_message: errorMessageGA,
-            });
 
             return;
         }
-
-        // Rastrear seleção bem-sucedida
-        sendGAEvent('select_item', {
-            item_category: keys[currentPhase],
-            item_variant: option,
-        });
-
-        sendGTMEvent('select_item', {
-            ecommerce: {
-                item_category: keys[currentPhase],
-                item_variant: option,
-            },
-        });
 
         setSelectedOptions(prev => ({ ...prev, [keys[currentPhase]]: option }));
         setErrorMessage(null);
@@ -91,9 +67,7 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
             
             // Rastrear conclusão da seleção de todas as opções
             const allSelections = { ...selectedOptions, [keys[currentPhase]]: option };
-            sendGAEvent('select_complete', {
-                selections: allSelections,
-            });
+
 
             sendGTMEvent('select_complete', {
                 ecommerce: {
@@ -132,13 +106,6 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
         setQuantity(prev => {
             const newQuantity = Math.max(1, prev - 1);
             if (productVariationsSelected.length === 1) {
-                sendGAEvent('adjust_quantity', {
-                    action: 'decrease',
-                    item_id: productVariationsSelected[0].sku,
-                    from_quantity: prev,
-                    to_quantity: newQuantity,
-                });
-
                 sendGTMEvent('adjust_quantity', {
                     ecommerce: {
                         action: 'decrease',
@@ -156,21 +123,6 @@ const PropertiesSelectionSection: React.FC<PropertiesSelectionSectionProps> = ({
         setQuantity(prev => {
             const newQuantity = Math.min(maxAvailableQuantity, prev + 1);
             if (productVariationsSelected.length === 1) {
-                if (newQuantity === maxAvailableQuantity) {
-                    // Rastrear quando atinge o limite de estoque
-                    sendGAEvent('max_quantity_reached', {
-                        item_id: productVariationsSelected[0].sku,
-                        max_quantity: maxAvailableQuantity,
-                    });
-                }
-
-                sendGAEvent('adjust_quantity', {
-                    action: 'increase',
-                    item_id: productVariationsSelected[0].sku,
-                    from_quantity: prev,
-                    to_quantity: newQuantity,
-                });
-
                 sendGTMEvent('adjust_quantity', {
                     ecommerce: {
                         action: 'increase',
