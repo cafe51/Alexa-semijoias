@@ -73,6 +73,25 @@ export default function LoginForm({
 
     return (
         <form onSubmit={ handleSubmit } className="space-y-4">
+
+
+            <ButtonGoogleLogin
+                isGoogleLoading={ isGoogleLoading }
+                signInWithGoogle={ signInWithGoogle }
+                setIncompleteSignIn={ setIncompleteSignIn }
+                setUid={ setUid }
+                setIsCartLoading={ setIsCartLoading }
+            />
+
+            <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-300"></span>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">ou</span>
+                </div>
+            </div>
+            
             <div className="space-y-5">
                 <div className="space-y-2">
                     <Label 
@@ -148,22 +167,7 @@ export default function LoginForm({
                 { error && <p className="text-red-500 text-sm sm:text-base md:text-lg">{ error }</p> }
             </div>
 
-            <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-gray-300"></span>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">ou</span>
-                </div>
-            </div>
 
-            <ButtonGoogleLogin
-                isGoogleLoading={ isGoogleLoading }
-                signInWithGoogle={ signInWithGoogle }
-                setIncompleteSignIn={ setIncompleteSignIn }
-                setUid={ setUid }
-                setIsCartLoading={ setIsCartLoading }
-            />
 
             { googleError && (
                 <p className="text-red-500 text-sm text-center mt-2">{ 'Ocorreu um erro ao tentar fazer login com a sua conta Google, tente novamente.' }</p>

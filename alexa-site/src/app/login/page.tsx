@@ -59,14 +59,18 @@ export default function Login() {
                     }
                 </CardContent>
 
-                <CardFooter className="text-center py-4">
-                    <p className="text-base sm:text-lg md:text-xl font-medium text-[#333333]">
+                {
+                    (
+                        <CardFooter className="text-end items-center justify-center py-4 w-full">
+                            <p className="text-base sm:text-lg md:text-xl font-medium text-[#333333]">
                                 Não tem uma conta?{ ' ' }
-                        <a href="/cadastro" className="font-medium text-base sm:text-lg md:text-xl text-[#C48B9F] hover:text-[#D4AF37]">
+                                <a href="/cadastro" className="font-medium text-base sm:text-lg md:text-xl text-[#C48B9F] hover:text-[#D4AF37]">
                                     Registre-se
-                        </a>
-                    </p>
-                </CardFooter>
+                                </a>
+                            </p>
+                        </CardFooter>
+                    )
+                }
             </Card>
         </div>
     );

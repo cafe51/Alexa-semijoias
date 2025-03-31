@@ -216,6 +216,25 @@ export default function RegisterForm2({ setSignedEmail, setIncompleteSignIn, set
 
     return (
         <form onSubmit={ handleSubmit } className="w-full max-w-lg mx-auto space-y-6 sm:space-y-8 p-4 sm:p-6 rounded-xl bg-white shadow-sm">
+            <ButtonGoogleLogin
+                isGoogleLoading={ isGoogleLoading }
+                signInWithGoogle={ signInWithGoogle }
+                setIncompleteSignIn={ setIncompleteSignIn }
+                setUid={ setUid }
+                setIsCartLoading={ setIsCartLoading }
+
+            />
+
+            <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-300"></span>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">ou</span>
+                </div>
+            </div>
+
+            
             { /* Nome Field */ }
             <InputField
                 label="Nome"
@@ -370,24 +389,6 @@ export default function RegisterForm2({ setSignedEmail, setIncompleteSignIn, set
                     </p>
                 </div>
             ) }
-
-            <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-gray-300"></span>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">ou</span>
-                </div>
-            </div>
-
-            <ButtonGoogleLogin
-                isGoogleLoading={ isGoogleLoading }
-                signInWithGoogle={ signInWithGoogle }
-                setIncompleteSignIn={ setIncompleteSignIn }
-                setUid={ setUid }
-                setIsCartLoading={ setIsCartLoading }
-
-            />
 
             { googleError && (
                 <p className="text-red-500 text-sm text-center mt-2">{ googleError }</p>

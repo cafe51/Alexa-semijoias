@@ -46,9 +46,9 @@ export default function RegisterSection({ setShowLogin, setIsCartLoading }: Regi
                     <CardFooter className="text-center">
                         <p className="text-sm text-[#333333]">
                 Já tem uma conta?{ ' ' }
-                            <a href="/login" className="font-medium text-[#C48B9F] hover:text-[#D4AF37]">
+                            <span onClick={ () => setShowLogin(true) } className="font-medium text-[#C48B9F] hover:text-[#D4AF37]">
                   Faça login
-                            </a>
+                            </span>
                         </p>
                     </CardFooter>
                 ) }
