@@ -64,15 +64,18 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         };
     }
 
+    const canonicalProductUrl =  `https://www.alexasemijoias.com.br/product/${product.slug}`; // <-- URL CANÔNICA
+
     // Função auxiliar para gerar a oferta para cada variação
-    function createOffer(estoque: number) {
+    function createOffer(estoque: number, variationSku: string) {
         const basePrice =
       product.promotional && product.value.promotionalPrice
           ? product.value.promotionalPrice
           : product.value.price;
         const offer: any = {
             '@type': 'Offer',
-            url: `https://www.alexasemijoias.com.br/product/${product.slug}`,
+            url: canonicalProductUrl,
+            sku: variationSku,
             price: basePrice,
             priceCurrency: 'BRL',
             itemCondition: 'https://schema.org/NewCondition',
@@ -115,6 +118,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
 
     // Propriedades comuns a todos os modelos
     const commonProperties = {
+        '@id': canonicalProductUrl, 
         name: toTitleCase(product.name),
         description,
         image: images,
@@ -191,17 +195,15 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         ]
             .filter((keyword) => keyword)
             .join(', '),
+        ...(product.productVariations[0]?.barcode && { gtin13: product.productVariations[0].barcode }),
     };
-
-    const productPageUrl = `https://www.alexasemijoias.com.br/product/${product.slug}`;
 
     // Se houver mais de uma variação, utiliza o modelo ProductGroup
     if (product.productVariations.length > 1) {
         const productGroup = {
             '@context': 'https://schema.org',
             '@type': 'ProductGroup',
-            '@id': product.id,
-            url: productPageUrl,
+            url: canonicalProductUrl,
             productGroupID: product.id,
             ...commonProperties,
             hasVariant: product.productVariations.map((variation) => {
@@ -226,6 +228,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
                     name: toTitleCase(product.name),
 
                     sku: variation.sku,
+                    ...(variation.barcode && { gtin13: variation.barcode }), // GTIN específico da variante, se diferente
                     image: variation.image || images[0],
                     color: variantColor,
                     weight: {
@@ -233,7 +236,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
                         value: variation.peso.toString(),
                         unitCode: 'g',
                     },
-                    offers: createOffer(variation.estoque),
+                    offers: createOffer(variation.estoque, variation.sku),
                 };
             }),
         };
@@ -254,8 +257,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
         const productData = {
             '@context': 'https://schema.org',
             '@type': 'Product',
-            '@id': product.id,
-            url: productPageUrl,
+            url: canonicalProductUrl,
             ...commonProperties,
             sku: variation.sku,
             color: variantColor,
@@ -264,7 +266,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
                 value: variation.peso.toString(),
                 unitCode: 'g',
             },
-            offers: createOffer(variation.estoque),
+            offers: createOffer(variation.estoque, variation.sku),
         };
 
         return (

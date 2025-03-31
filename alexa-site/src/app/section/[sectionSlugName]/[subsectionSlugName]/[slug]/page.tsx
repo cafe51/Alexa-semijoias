@@ -1,4 +1,4 @@
-// src/app/product/[slug]/page.tsx
+// src/app/[sectionSlugName]/[subsectionSlugName]/[slug]/page.tsx
 import { Metadata } from 'next';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import Product from '@/app/components/ProductPage/Product';
@@ -12,7 +12,6 @@ import { shortenText } from '@/app/utils/shortenText';
 import { SITE_URL } from '@/app/utils/constants';
 import { fetchProductsData } from '@/app/section/utils';
 import { getSectionBySlug } from '@/app/firebase/admin-config';
-import { createSlugName } from '@/app/utils/createSlugName';
 
 type Props = {
     params: {
@@ -52,7 +51,8 @@ export async function generateMetadata({ params: { sectionSlugName, subsectionSl
         const mainImage = product.images[0]?.localUrl || '';
         const variation = product.productVariations[0];
 
-        const productUrl = `/section/${createSlugName(sectionData.sectionName)}/${createSlugName(subsectionName)}/${product.slug}`;
+        // const productUrl = `/section/${createSlugName(sectionData.sectionName)}/${createSlugName(subsectionName)}/${product.slug}`;
+        const canonicalProductUrl = `/product/${product.slug}`; 
 
         return {
             title: `${toTitleCase(product.name)}`,
@@ -70,13 +70,13 @@ export async function generateMetadata({ params: { sectionSlugName, subsectionSl
                 'max-snippet': -1,
             },
             alternates: {
-                canonical: productUrl,
+                canonical: canonicalProductUrl,
             },
             openGraph: {
                 title: toTitleCase(product.name),
                 description: shortenText(product.description, 155) ||
                 `${toTitleCase(product.name)} - Semijoias de Verdade.`,
-                url: productUrl,
+                url: canonicalProductUrl,
                 images: {
                     url: mainImage,
                     width: 800,

@@ -62,16 +62,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
             });
 
-            if(data.subsections && Array.isArray(data.subsections)) {
-                data.subsections.forEach(subsection => {
-                    result.push({
-                        url: `${BASE_URL}/section/${createSlugName(subsection.split(':')[0])}/${createSlugName(subsection.split(':')[1])}/${data.slug}`,
-                        lastModified: formatDate(data.updatingDate?.toDate() || new Date()),
-                        changeFrequency: 'daily',
-                        priority: 0.8,
-                    });
-                });
-            }
+            // if(data.subsections && Array.isArray(data.subsections)) {
+            //     data.subsections.forEach(subsection => {
+            //         result.push({
+            //             url: `${BASE_URL}/section/${createSlugName(subsection.split(':')[0])}/${createSlugName(subsection.split(':')[1])}/${data.slug}`,
+            //             lastModified: formatDate(data.updatingDate?.toDate() || new Date()),
+            //             changeFrequency: 'daily',
+            //             priority: 0.8,
+            //         });
+            //     });
+            // }
         });
 
         // Buscar seções

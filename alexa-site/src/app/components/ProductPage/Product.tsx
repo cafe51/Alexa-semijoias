@@ -131,7 +131,7 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
         };
 
         updateProductState();
-    }, [id, initialProduct, userInfo]);
+    }, [id, initialProduct, userInfo, itemSection, itemSubSection, productPrice]);
 
     useEffect(() => {
         // Inicializa o localCartQuantity com as quantidades do carrinho
@@ -267,6 +267,7 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
         setQuantity,
         handleAddToCart,
         setShowModalFinishBuy,
+        itemSection, itemSubSection,
     ]);
 
     if (!product) return <LoadingIndicator />;
