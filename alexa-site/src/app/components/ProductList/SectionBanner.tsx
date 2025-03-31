@@ -11,6 +11,7 @@ import Breadcrumbs from '../Breadcrumbs';
 import { BreadcrumbItem, getBreadcrumbItems, getCollectionBreadcrumbItems } from '@/app/utils/breadcrumbUtils';
 import ShareSection from '../ProductPage/ShareSection';
 import { createSlugName } from '@/app/utils/createSlugName';
+import { SITE_URL } from '@/app/utils/constants';
 
 
 interface SectionBannerProps {
@@ -39,21 +40,21 @@ export default function SectionBanner({
 
     const imageUrl = bannerImage ? bannerImage : getImageUrlFromFirebaseProductDocument(lastAddProduct);
     
-    let linkToShareSection = 'www.alexasemijoias.com.br/section';
+    let linkToShareSection = `${SITE_URL}/section`;
     let breadCrumbItems: BreadcrumbItem[] = getBreadcrumbItems();
     let title: string = 'Alexa Semijoias';
     if (!sectionName && !subsection && collectionName) {
-        linkToShareSection = `www.alexasemijoias.com.br/colecoes/${createSlugName(collectionName)}`;
+        linkToShareSection = `${SITE_URL}/colecoes/${createSlugName(collectionName)}`;
         breadCrumbItems = getCollectionBreadcrumbItems(collectionName);
         title = collectionName;
     }
     if (sectionName && !subsection && !collectionName) {
-        linkToShareSection = `www.alexasemijoias.com.br/section/${createSlugName(sectionName)}`;
+        linkToShareSection = `${SITE_URL}/section/${createSlugName(sectionName)}`;
         breadCrumbItems = getBreadcrumbItems(sectionName);
         title = sectionName;
     }
     if (sectionName && subsection && !collectionName) {
-        linkToShareSection = `www.alexasemijoias.com.br/section/${createSlugName(sectionName)}/${createSlugName(subsection)}`;
+        linkToShareSection = `${SITE_URL}/section/${createSlugName(sectionName)}/${createSlugName(subsection)}`;
         breadCrumbItems = getBreadcrumbItems(sectionName, subsection);
         title = subsection;
     }
@@ -98,12 +99,7 @@ export default function SectionBanner({
                 <div className="absolute md:hidden inset-0 flex flex-col items-between justify-between h-full "> 
                     <div className="w-full flex justify-between items-center pr-4 md:pr-8 lg:pr-12 xl:pr-16 pt-4 bg-black/30">
                         <Breadcrumbs items={ breadCrumbItems } textColorAllWhite/>
-                        <div className='text-white'>
-                            <ShareSection
-                                url={ linkToShareSection }
-                                callToAction='Compartilhe'
-                            />
-                        </div>
+
                     </div>
                         
                     <div className='flex flex-col justify-center h-full bg-black/20'>
@@ -112,6 +108,16 @@ export default function SectionBanner({
                             <p className='text-white text-base md:text-base'>{ description }</p>
                         </div>
                     </div>
+
+                    <div className='flex flex-col justify-end items-end p-4 w-full bg-black/30'>
+                        <div className='text-white'>
+                            <ShareSection
+                                url={ linkToShareSection }
+                                callToAction='Compartilhe'
+                            />
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
