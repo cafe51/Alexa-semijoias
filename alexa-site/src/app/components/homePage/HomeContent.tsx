@@ -17,6 +17,7 @@ import {
 } from './homePageUtilFunctions';
   
 import { fetchDiscoverProductsForSection } from '@/app/services/discoverProducts';
+// import FirstPurchaseBanner from './banners/FirstPurchaseBanner';
 
 // Cache (revalidate) – os dados serão revalidado a cada 60 segundos
 export const revalidate = 60;
@@ -112,7 +113,13 @@ export default async function HomeContent() {
   
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
-            <HeroSection lastAddProduct={ lastAddProduct } />
+            { 
+                <HeroSection lastAddProduct={ lastAddProduct } /> 
+            }
+            {
+                // <FirstPurchaseBanner />
+
+            }
             { discoverProducts && discoverProducts.length > 0 && (
                 <DiscoverOurProducts products={ discoverProducts } sections={ discoverSections } />
             ) }

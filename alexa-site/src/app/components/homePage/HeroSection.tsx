@@ -1,5 +1,4 @@
 // src/app/components/homePage/HeroSection.tsx
-// Removemos o 'use client' porque esse componente é estático e não interage com o estado
 import Image from 'next/image';
 import heroBannerLarge from '@/../public/heroBannerLarge.webp';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
