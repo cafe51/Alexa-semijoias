@@ -49,7 +49,7 @@ export default function HeroSection({ lastAddProduct }: HeroSectionProps) {
                     </h3>
                     <div className="flex flex-col items-center justify-around gap-4">
                         <div className="text-center ">
-                            <p className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-7xl">{ toTitleCase(titleOfBanner) }</p> 
+                            <p className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-7xl mb-2 xl:mb-4">{ toTitleCase(titleOfBanner) }</p> 
                             <p className="text-white text-2xl md:text-3xl lg:text-4xl xl:text-6xl">Para Transformar</p>
                             <p className="text-white text-2xl md:text-3xl lg:text-4xl xl:text-6xl">Seu Estilo</p>
                         </div>
