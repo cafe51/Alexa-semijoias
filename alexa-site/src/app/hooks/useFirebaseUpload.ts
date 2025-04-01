@@ -10,7 +10,7 @@ import {
 import { ImageProductDataType } from '../utils/types';
 import { compressImage } from '../utils/compressImage';
 
-const MAX_FILE_SIZE = 300 * 1024; // 300KB em bytes
+const MAX_FILE_SIZE = 900 * 1024; // 300KB em bytes
 
 const useFirebaseUpload = () => {
     const [progress, setProgress] = useState<number[]>([]);

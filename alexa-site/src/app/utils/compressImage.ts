@@ -12,7 +12,7 @@ export const compressImage = async(file: File, maxFileSize: number): Promise<Fil
 
     // Opções para o imageCompression
     const options = {
-        maxSizeMB: 0.3, // 300KB = 0.3MB
+        maxSizeMB: 0.9, // 300KB = 0.3MB
         maxWidthOrHeight: 1920, // Opcional: defina um tamanho máximo para largura ou altura se desejar
         useWebWorker: true,
     // Você pode definir onProgress se quiser acompanhar o progresso da compressão
