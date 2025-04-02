@@ -1,4 +1,4 @@
-// src/app/components/homePage/FirstPurchaseBanner.tsx
+// src/app/components/homePage/banners/FirstPurchaseBanner.tsx
 import Image from 'next/image';
 import React from 'react';
 
