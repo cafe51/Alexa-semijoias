@@ -14,7 +14,7 @@ export default function FirstPurchaseBanner() {
             alt: 'Placeholder - Imagem de brinco',
             // Ajuste fino das porcentagens pode ser necessário
             containerClasses:
-                'absolute top-[-4%] left-[-6%] w-[28%] sm:w-[26%] md:w-[30%] lg:w-[40%] xl:w-[28%] aspect-square z-0',
+                'absolute top-[-4%] min-[440px]:top-[1%] md:top-[25%] lg:top-[-4%] left-[-6%] xl:left-[-2%] 2xl:left-[-3%] w-[50%] min-[440px]:w-[50%] sm:w-[50%] md:w-[40%] lg:w-[40%] xl:w-[26%] 2xl:w-[26%] aspect-square z-0',
             rotation: '-rotate-6',
         },
         {
@@ -22,7 +22,7 @@ export default function FirstPurchaseBanner() {
             src: 'https://firebasestorage.googleapis.com/v0/b/alexa-semijoias.appspot.com/o/images%2FPolish_20250323_164744883.jpg?alt=media&token=56e1534b-375a-4a50-b661-6124c18c8544',
             alt: 'Placeholder - Imagem de pulseira',
             containerClasses:
-                'absolute bottom-[-6%] left-[1%] xl:left-[14%] w-[24%] sm:w-[22%] md:w-[25%] lg:w-[28%] xl:w-[23%] aspect-square z-0',
+                'absolute bottom-[-6%] left-[1%] md:left-[10%] lg:left-[5%] xl:left-[10%] 2xl:left-[12%] w-[55%] min-[440px]:w-[62%] sm:w-[50%] md:w-[25%] lg:w-[28%] xl:w-[22%] 2xl:w-[23%]  aspect-square z-0',
             rotation: 'rotate-3',
         },
         {
@@ -30,42 +30,86 @@ export default function FirstPurchaseBanner() {
             src: 'https://firebasestorage.googleapis.com/v0/b/alexa-semijoias.appspot.com/o/images%2FImage_2024_12_12_18_18_29.jpg?alt=media&token=3c00470e-9e66-4cc9-93fc-9eb504abaf5b',
             alt: 'Placeholder - Imagem de anel',
             containerClasses:
-                'absolute top-1/2 right-[-8%] sm:right-[-10%] xl:right-[-2%] w-[36%] sm:w-[34%] md:w-[38%] lg:w-[36%] xl:w-[38%] aspect-square transform -translate-y-1/2 z-0', 
+                'absolute right-[-8%] xl:right-[-2%] top-[12%] min-[440px]:top-[10%] sm:top-[18%] md:top-[26%] lg:top-[40%] xl:top-1/3 w-[55%] min-[440px]:w-[55%] sm:w-[50%] md:w-[44%] lg:w-[45%] xl:w-[36%] 2xl:w-[38%] aspect-square transform -translate-y-1/2 z-0', 
             rotation: 'rotate-6',
         },
     ];
 
     return (
         // Ajustamos a div principal para que a área total seja equivalente à soma das duas partes do HeroSection.
-        // Em telas pequenas, usamos "aspect-[10/19]" pois no HeroSection a primeira parte tem aspect-[10/9] (altura = 9/10 da largura)
-        // e a segunda é quadrada (altura = 1×largura), totalizando 9/10 + 1 = 1.9×largura.
-        // Em telas md, lg e xl, as proporções passam a ser definidas pela altura dos itens do grid:
-        // - md: Cada célula tem "aspect-[3/5]", resultando em uma altura total de (5/3)×(w/2) = 5/6×w, ou seja, aspect ratio geral de 6/5.
-        // - lg: Com "aspect-[4/5]" nas células, a proporção geral é 8/5.
-        // - xl: Com "aspect-[5/4]" nas células, a proporção geral é 5/2.
-        <div className="relative w-full overflow-hidden bg-[#F8C3D3] border border-[#C48B9F]
-            aspect-[10/19] md:aspect-[6/5] lg:aspect-[8/5] xl:aspect-[5/2]">
-            <div className="w-full h-full p-1 md:p-2 lg:p-4 xl:p-6">
+        // A classe do container principal foi adaptada para simular a área total do HeroSection:
+        // - Em telas menores (vertical): soma das alturas dos dois blocos do HeroSection.
+        //    • Default: aspect-[8/13] (16/15 + 16/11 → 15/16 + 11/16 = 26/16 = 1.625, ou 8/13)
+        //    • min-[440px]: aspect-[10/9] em cada bloco → soma resulta em 5/9
+        //    • sm: Cada bloco passa a ter aspect-[10/7] → soma resulta em 5/7
+        // - Em telas md e maiores (grid com duas colunas): o container ocupa a altura de uma célula
+        //    • md: aspect-[3/5] na célula → overall = 6/5
+        //    • lg: overall = 8/5
+        //    • xl: overall = 5/2
+        // cores pra diferenciar breakpoints em desenvolvimento:
+        // bg-red-600
+        // min-[440px]:bg-gray-200
+        // sm:bg-white
+        // md:bg-green-200
+        // lg:bg-blue-300
+        // xl:bg-[#F8C3D3]
+        // 2xl:bg-yellow-200
+        <div className="relative w-full overflow-hidden  border border-[#C48B9F]
+            aspect-[8/13] min-[440px]:aspect-[5/9] sm:aspect-[5/7] md:aspect-[6/5] lg:aspect-[8/5] xl:aspect-[5/2]">
+            <div className="
+            w-full h-full
+            py-4 px-2
+            min-[440px]:py-6 min-[440px]:px-4 
+            sm:py-6 sm:px-4 
+            md:py-6 md:px-4 
+            lg:py-8 lg:px-4
+            xl:p-6">
                 <div className="relative flex flex-col items-center justify-center h-full w-full box-border
-                    border-2 md:border-4 lg:border-8 border-[#C48B9F] border-double">
+                    border-4 lg:border-8 border-[#C48B9F] border-double">
                     { /* Conteúdo de Texto Central – z-10 para ficar sobre as imagens */ }
-                    <div className="relative z-10 flex flex-col items-center justify-center text-center
-                    border-2 md:border-4 lg:border-8  border-[#C48B9F] border-double md:p-2 lg:p-4 xl:py-20 xl:px-96">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-serif text-black font-medium">
+                    <div className="
+                    relative z-10 flex flex-col items-center justify-center text-center
+                    border-4 lg:border-8 border-[#C48B9F] border-double
+                    py-12 px-8
+                    min-[440px]:py-12 min-[440px]:px-8 
+                    sm:py-28 sm:px-32
+                    md:py-28 md:px-40
+                    lg:py-28 lg:px-60
+                    xl:py-7 xl:px-80
+                    2xl:py-20 2xl:px-96">
+                        <h2 className="text-4xl min-[440px]:text-6xl sm:text-6xl md:text-6xl lg:text-6xl xl:text-7xl font-serif text-black font-medium">
                             GANHE
                         </h2>
-                        <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-bold font-serif text-black my-1 md:my-1.5">
+                        <p className="text-6xl min-[440px]:text-8xl sm:text-8xl md:text-8xl lg:text-8xl xl:text-9xl font-bold font-serif text-black my-1 md:my-1.5">
                             10%
                         </p>
-                        <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-3xl text-black mt-1 md:mt-1.5 font-medium">
+                        <p className="text-lg min-[440px]:text-2xl sm:text-2xl md:text-2xl lg:text-2xl xl:text-3xl text-black mt-1 md:mt-1.5 font-medium">
                             Na primeira compra
                         </p>
-                        <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-3xl text-black font-medium mb-1.5 md:mb-2">
+                        <p className="text-lg min-[440px]:text-2xl sm:text-2xl md:text-2xl lg:text-2xl xl:text-3xl text-black font-medium mb-1.5 md:mb-2">
                             com o cupom
                         </p>
                         { /* Caixa do Código do Cupom */ }
-                        <div className="inline-block bg-[#C48B9F] py-1 px-3 md:py-1.5 md:px-5 lg:px-6 xl:px-10 xl:py-4 rounded-md shadow-sm">
-                            <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-5xl text-white font-bold tracking-wider uppercase">
+                        <div className="
+                        inline-block bg-[#C48B9F]
+                        px-4 py-2 
+                        min-[440px]:px-6 min-[440px]:py-3
+                        sm:px-6 sm:py-3
+                        md:px-6 md:py-3
+                        lg:px-6 lg:py-3
+                        xl:px-10 xl:py-4
+                        rounded-md shadow-sm">
+                            <span className="
+                            text-2xl
+                            min-[440px]:text-4xl
+                            sm:text-4xl
+                            md:text-4xl
+                            lg:text-4xl
+                            xl:text-5xl
+                            text-white
+                            font-bold
+                            tracking-wider
+                            uppercase">
                                 SEJALEXA10
                             </span>
                         </div>
