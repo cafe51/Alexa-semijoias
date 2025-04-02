@@ -5,6 +5,7 @@ import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import toTitleCase from '@/app/utils/toTitleCase';
 import Link from 'next/link';
 import { getImageUrlFromFirebaseProductDocument } from '@/app/utils/getImageUrlFromFirebaseProductDocument';
+import { createSlugName } from '@/app/utils/createSlugName';
 
 interface HeroSectionProps {
     lastAddProduct: ProductBundleType & FireBaseDocument | undefined;
@@ -21,8 +22,8 @@ export default function HeroSection({ lastAddProduct }: HeroSectionProps) {
     const titleOfBanner = subsectionName ? subsectionName : sectionName ? sectionName : 'Alexa Semijoias';
 
     const linkToSection = (subsectionName && sectionName)
-        ? `/section/${sectionName}/${subsectionName}`
-        : sectionName ? `/section/${sectionName}` : '/section';
+        ? `/section/${createSlugName(sectionName)}/${createSlugName(subsectionName)}`
+        : sectionName ? `/section/${createSlugName(sectionName)}` : '/section';
 
     return (
         <section className="w-full grid md:grid-cols-2 overflow-hidden">
