@@ -54,7 +54,8 @@ export default function FirstPurchaseBanner() {
         // lg:bg-blue-300
         // xl:bg-[#F8C3D3]
         // 2xl:bg-yellow-200
-        <div className="relative w-full overflow-hidden  border border-[#C48B9F]
+        <div className="relative w-full overflow-hidden   bg-[#F8C3D3]/30
+
             aspect-[8/13] min-[440px]:aspect-[5/9] sm:aspect-[5/7] md:aspect-[6/5] lg:aspect-[8/5] xl:aspect-[5/2]">
             <div className="
             w-full h-full

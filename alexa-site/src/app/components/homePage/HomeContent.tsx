@@ -1,6 +1,6 @@
 // src/app/components/homePage/HomeContent.tsx
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
-import HeroSection from './HeroSection';
+// import HeroSection from './HeroSection';
 import InfoBanner from './InfoBanner';
 import DiscoverOurProducts from './DiscoverOurProducts/DiscoverOurProducts';
 import DualTitlesSection from './DualTitlesSection';
@@ -17,7 +17,8 @@ import {
 } from './homePageUtilFunctions';
   
 import { fetchDiscoverProductsForSection } from '@/app/services/discoverProducts';
-import FirstPurchaseBanner from './banners/FirstPurchaseBanner';
+// import FirstPurchaseBanner from './banners/FirstPurchaseBanner';
+import HeroCarousel from './banners/HeroCarousel';
 
 // Cache (revalidate) – os dados serão revalidado a cada 60 segundos
 export const revalidate = 60;
@@ -117,8 +118,11 @@ export default async function HomeContent() {
                 // <HeroSection lastAddProduct={ lastAddProduct } />
             }
             {
-                <FirstPurchaseBanner />
+                // <FirstPurchaseBanner />
 
+            }
+            {
+                <HeroCarousel lastAddProduct={ lastAddProduct } />
             }
             { discoverProducts && discoverProducts.length > 0 && (
                 <DiscoverOurProducts products={ discoverProducts } sections={ discoverSections } />
