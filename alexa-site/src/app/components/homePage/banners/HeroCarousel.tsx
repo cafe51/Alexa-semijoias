@@ -6,13 +6,14 @@ import HeroSection from '../HeroSection';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import Autoplay from 'embla-carousel-autoplay';
 import { NextButton, PrevButton } from '../../EmblaCarousel/EmblaCarouselArrowButtons';
+// import MothersDayBanner from './MothersDayBanner';
 
 interface HeroSectionProps {
   lastAddProduct: ProductBundleType & FireBaseDocument | undefined;
 }
 
 export default function HeroCarousel({ lastAddProduct }: HeroSectionProps) {
-    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 8000, stopOnInteraction: true })]);
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 8000000, stopOnInteraction: true })]);
 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
@@ -61,22 +62,15 @@ export default function HeroCarousel({ lastAddProduct }: HeroSectionProps) {
                     <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
                         <FirstPurchaseBanner />
                     </div>
+                    { /* <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
+                        <MothersDayBanner />
+                    </div> */ }
                 </div>
             </div>
 
             { /* Botões de navegação */ }
-            <button
-                onClick={ scrollPrev }
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75"
-            >
-                <PrevButton />
-            </button>
-            <button
-                onClick={ scrollNext }
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75"
-            >
-                <NextButton />
-            </button>
+            <PrevButton onClick={ scrollPrev } />
+            <NextButton onClick={ scrollNext }/>
 
             { /* Dot Navigation */ }
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50">

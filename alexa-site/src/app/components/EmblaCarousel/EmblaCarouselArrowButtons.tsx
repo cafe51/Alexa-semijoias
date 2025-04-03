@@ -51,7 +51,9 @@ export const PrevButton: React.FC<PropType> = ({ children, ...restProps }) => {
         <button
             type="button"
             className="
-            bg-transparent appearance-none cursor-pointer p-0 m-0 flex items-center justify-center
+            absolute left-2 top-1/2 -translate-y-1/2
+            bg-white bg-opacity-50 hover:bg-opacity-75
+            cursor-pointer p-0 m-0 flex items-center justify-center
             w-[2rem] h-[2rem]
             sm:w-[2.5rem] sm:h-[2.5rem]
             md:w-[3rem] md:h-[3rem]
@@ -75,7 +77,9 @@ export const NextButton: React.FC<PropType> = ({ children, ...restProps }) => {
         <button
             type="button"
             className="
-            bg-transparent appearance-none cursor-pointer p-0 m-0 flex items-center justify-center
+            absolute right-2 top-1/2 -translate-y-1/2 
+            bg-white bg-opacity-50  hover:bg-opacity-75
+            cursor-pointer p-0 m-0 flex items-center justify-center
             w-[2rem] h-[2rem]
             sm:w-[2.5rem] sm:h-[2.5rem]
             md:w-[3rem] md:h-[3rem]
