@@ -63,16 +63,18 @@ export default function SectionBanner({
                     <div className="relative flex flex-col justify-between h-full w-full box-border border-4 border-[#F8C3D3] border-double">
                         <div className="w-full flex justify-between items-center pr-2 md:pr-4 lg:pr-6 xl:pr-8 pt-4 text-white">  
                             <Breadcrumbs items={ breadCrumbItems } textColorAllWhite/>
+                        </div>
+                        <div className="flex flex-col justify-start items-start text-start text-lg px-4 md:p-8 lg:p-12 xl:p-16 gap-4">
+                            <p className="text-white md:text-5xl lg:text-7xl">{ toTitleCase(title) }</p> 
+                            <p className="text-white text-sm md:text-base lg:text-lg xl:text-xl">{ description }</p>
+                        </div>
+                        <div className="flex flex-col justify-end items-end p-4 w-full">
                             <div className="text-white">
                                 <ShareSection
                                     url={ linkToShareSection }
                                     callToAction="Compartilhe"
                                 />
                             </div>
-                        </div>
-                        <div className="flex flex-col justify-start items-start text-start text-lg px-4 md:p-8 lg:p-12 xl:p-16 gap-4">
-                            <p className="text-white md:text-5xl lg:text-7xl">{ toTitleCase(title) }</p> 
-                            <p className="text-white text-sm md:text-base lg:text-lg xl:text-xl">{ description }</p>
                         </div>
                     </div>
                 </div>
