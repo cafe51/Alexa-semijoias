@@ -13,7 +13,7 @@ interface HeroSectionProps {
 }
 
 export default function HeroCarousel({ lastAddProduct }: HeroSectionProps) {
-    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 8000, stopOnInteraction: true })]);
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 8000, stopOnInteraction: false })]);
 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
