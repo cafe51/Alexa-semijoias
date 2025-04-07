@@ -331,7 +331,7 @@ export default function Product({ id, initialProduct, recommendedProducts, secti
                                 />
                                 <div className='p-8'>
                                     <ShareSection
-                                        url={ `www.alexasemijoias.com.br/product/${createSlugName(product.name)}` }
+                                        url={ `https://www.alexasemijoias.com.br/product/${createSlugName(product.name)}` }
                                         callToAction='Compartilhe esta peça'
                                     />
                                 </div>
