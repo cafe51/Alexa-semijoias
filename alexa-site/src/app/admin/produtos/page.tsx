@@ -23,6 +23,7 @@ import MassModifyModal from './components/MassModifyModal';
 import MassModifyConfirmationModal from './components/MassModifyConfirmationModal';
 import MassModifyErrorModal from './components/MassModifyErrorModal';
 import adjustPriceTo99 from '@/app/utils/adjustPriceTo99';
+import ExportProductsTsvButton from './components/ExportProductsTsvButton';
 
 interface NotificationState {
     message: string;
@@ -430,6 +431,8 @@ export default function ProductsDashboard() {
                             totalPages={ totalPages }
                             onPageChange={ goToPage }
                         />
+                        <ExportProductsTsvButton />
+
                     </>
                 ) : (
                     <div className="text-center py-4 text-[#333333]">Nenhum produto encontrado.</div>
