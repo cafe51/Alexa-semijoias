@@ -41,6 +41,9 @@ export default function ChooseDeliveryPriceSection({
     let valorMinimoParaFreteGratis: number;
 
     switch (true) {
+    case cheapestOption.price === 0:
+        valorMinimoParaFreteGratis = 0;
+        break;
     case cheapestOption.price <= 40:
         valorMinimoParaFreteGratis = 200;
         break;

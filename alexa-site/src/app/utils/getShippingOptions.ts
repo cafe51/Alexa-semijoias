@@ -14,7 +14,7 @@ export default function getShippingOptions(cidade: string, uf: string): { id: st
     if(cidade === 'Fernandópolis' && uf === 'SP') {
         frete = {
             sedex: {
-                price: 0,
+                price: 30,
                 days: 2,
             },
             pac: {
