@@ -14,12 +14,12 @@ export default function getShippingOptions(cidade: string, uf: string): { id: st
     if(cidade === 'Fernandópolis' && uf === 'SP') {
         frete = {
             sedex: {
-                price: 10,
-                days: 3,
+                price: 0,
+                days: 2,
             },
             pac: {
-                price: 10,
-                days: 3,
+                price: 0,
+                days: 2,
             },
         };
     }
