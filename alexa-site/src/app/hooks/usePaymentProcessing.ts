@@ -101,13 +101,25 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
                         item_id: item.skuId, // MESMO ID/SKU consistente
                         item_name: item.name,
                         item_brand: 'Alexa Semijoias',
-                        // item_category: item.,
-                        // item_variant: item.variant,
                         price: item.value.promotionalPrice ? item.value.promotionalPrice : item.value.price, // Preço do item
                         quantity: item.quantidade, // Quantidade COMPRADA deste item
                     })),
                 },
             });
+
+            // ADICIONE o envio DIRETO para Google Ads
+            if (typeof window.gtag === 'function') { // Verifica se gtag está disponível
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-16844313988/TljPCLHE_LgaEISr_98-', // SEU 'send_to' específico
+                    'value': newOrder.valor.total, // Valor DINÂMICO da transação
+                    'currency': 'BRL', // Moeda
+                    'transaction_id': newOrder.paymentId, // ID DINÂMICO da transação
+                });
+                console.log('Disparado evento de conversão direto para Google Ads');
+            } else {
+                console.warn('gtag function not found for Ads conversion snippet.');
+            }
+            
             setIsPaymentFinished(true);
 
             setLoadingPayment(false);
