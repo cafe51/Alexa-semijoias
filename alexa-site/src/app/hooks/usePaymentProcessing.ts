@@ -107,18 +107,18 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
                 },
             });
 
-            // ADICIONE o envio DIRETO para Google Ads
-            if (window.gtag) { // Verifica se gtag está disponível
-                window.gtag('event', 'conversion', {
-                    'send_to': 'AW-16844313988/TljPCLHE_LgaEISr_98-', // SEU 'send_to' específico
-                    'value': newOrder.valor.total, // Valor DINÂMICO da transação
-                    'currency': 'BRL', // Moeda
-                    'transaction_id': newOrder.paymentId, // ID DINÂMICO da transação
-                });
-                console.log('Disparado evento de conversão direto para Google Ads');
-            } else {
-                console.warn('gtag function not found for Ads conversion snippet.');
-            }
+            // // ADICIONE o envio DIRETO para Google Ads
+            // if (window.gtag) { // Verifica se gtag está disponível
+            //     window.gtag('event', 'conversion', {
+            //         'send_to': 'AW-16844313988/TljPCLHE_LgaEISr_98-', // SEU 'send_to' específico
+            //         'value': newOrder.valor.total, // Valor DINÂMICO da transação
+            //         'currency': 'BRL', // Moeda
+            //         'transaction_id': newOrder.paymentId, // ID DINÂMICO da transação
+            //     });
+            //     console.log('Disparado evento de conversão direto para Google Ads');
+            // } else {
+            //     console.warn('gtag function not found for Ads conversion snippet.');
+            // }
 
             setIsPaymentFinished(true);
 
