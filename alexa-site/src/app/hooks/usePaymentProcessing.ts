@@ -108,7 +108,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             });
 
             // ADICIONE o envio DIRETO para Google Ads
-            if (typeof window.gtag === 'function') { // Verifica se gtag está disponível
+            if (window.gtag) { // Verifica se gtag está disponível
                 window.gtag('event', 'conversion', {
                     'send_to': 'AW-16844313988/TljPCLHE_LgaEISr_98-', // SEU 'send_to' específico
                     'value': newOrder.valor.total, // Valor DINÂMICO da transação
@@ -119,7 +119,7 @@ export const usePaymentProcessing = (setIsPaymentFinished: (isPaymentFinished: b
             } else {
                 console.warn('gtag function not found for Ads conversion snippet.');
             }
-            
+
             setIsPaymentFinished(true);
 
             setLoadingPayment(false);
