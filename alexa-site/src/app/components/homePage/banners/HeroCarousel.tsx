@@ -6,6 +6,7 @@ import HeroSection from '../HeroSection';
 import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import Autoplay from 'embla-carousel-autoplay';
 import { NextButton, PrevButton } from '../../EmblaCarousel/EmblaCarouselArrowButtons';
+import MothersDayBanner from './MothersDayBanner';
 // import MothersDayBanner from './MothersDayBanner';
 
 interface HeroSectionProps {
@@ -62,11 +63,9 @@ export default function HeroCarousel({ lastAddProduct }: HeroSectionProps) {
                     <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
                         <FirstPurchaseBanner />
                     </div>
-                    {
-                        // <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
-                        //     <MothersDayBanner />
-                        // </div>
-                    }
+                    <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
+                        <MothersDayBanner />
+                    </div>
                 </div>
             </div>
 
