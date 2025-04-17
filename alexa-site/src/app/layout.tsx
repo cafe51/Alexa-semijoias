@@ -13,7 +13,6 @@ import FacebookPixel from './components/FacebookPixel';
 import { GoogleTagManager } from '@next/third-parties/google';
 import { getSiteSections } from './services/siteSections';
 import { getSiteCollections } from './services/siteCollections';
-import Script from 'next/script';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -162,23 +161,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         }),
                     } }
                 />
-                { /* Snippet Global Google Ads - ADICIONADO */ }
-                <Script
-                    strategy="afterInteractive" // Ou "lazyOnload", mas afterInteractive é mais seguro para gtag
-                    src={ 'https://www.googletagmanager.com/gtag/js?id=AW-16844313988' }
-                />
-                <Script
-                    id="google-ads-config"
-                    strategy="afterInteractive" // Garante que gtag.js carregou antes
-                    dangerouslySetInnerHTML={ {
-                        __html: `
-                            window.dataLayer = window.dataLayer || [];
-                            function gtag(){dataLayer.push(arguments);}
-                            gtag('js', new Date());
-                            gtag('config', 'AW-16844313988');
-                        `,
-                    } }
-                />
+
             </head>
             <body className="min-h-screen bg-[#FAF9F6] text-[#333333]">
                 <AuthContextProvider>
