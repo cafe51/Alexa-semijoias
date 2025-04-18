@@ -159,7 +159,7 @@ const FullHeader: React.FC<FullHeaderProps> = ({ initialMenuSections, initialCol
                         closeModelClick={ () => setIsSearchModalOpen(false) }
                         title="Pesquisa"
                     >
-                        <DesktopSearchMenu />
+                        <DesktopSearchMenu closeMobileMenu={ () => setIsSearchModalOpen(false) }/>
                     </SlideInModal>
                 ) }
                 <div className="flex justify-between items-center w-full p-6 py-1">

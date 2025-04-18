@@ -34,6 +34,7 @@ export default function SearchSection({ closeMobileMenu }: SearchSectionProps) {
                 />
                 <Link
                     className='border-t-0 border-x-0 border-b-2 border-[#F8C3D3] text-center md:text-3xl self-center mt-4'
+                    onClick={ () => closeMobileMenu && closeMobileMenu() }
                     href={ `/search/${searchTerm}` }>
                     Mostrar todos os resultados
                 </Link>
