@@ -58,13 +58,13 @@ export default function HeroCarousel({ lastAddProduct }: HeroSectionProps) {
                     style={ { touchAction: 'pan-y pinch-zoom', backfaceVisibility: 'hidden' } }
                 >
                     <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
-                        <HeroSection lastAddProduct={ lastAddProduct } />
+                        <MothersDayBanner />
                     </div>
                     <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
                         <FirstPurchaseBanner />
                     </div>
                     <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
-                        <MothersDayBanner />
+                        <HeroSection lastAddProduct={ lastAddProduct } />
                     </div>
                 </div>
             </div>
