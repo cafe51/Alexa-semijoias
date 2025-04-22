@@ -5,6 +5,7 @@ import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Card, CardContent } from '@/components/ui/card';
 import blankImage from '../../../public/blankImage.png';
+import { NextButton, PrevButton } from './EmblaCarousel/EmblaCarouselArrowButtons';
 
 interface ImageCarouselProps {
   productData: ProductBundleType & FireBaseDocument;
@@ -56,7 +57,6 @@ type ThumbProps = {
 };
 
 export const Thumb: React.FC<ThumbProps> = ({ selected, productData, image, onClick }) => {
-    // Classes para layout horizontal (padrão) e vertical (lg)
     const emblaThumbsSlideClassName =
     'min-w-0 flex-[0_0_22%] pl-[var(--thumbs-slide-spacing)] min-[576px]:flex-[0_0_25%] ' +
     'lg:flex-[0_0_auto] lg:w-full lg:pt-[var(--thumbs-slide-spacing)] lg:pl-0 ' +
@@ -104,11 +104,20 @@ export const Thumb: React.FC<ThumbProps> = ({ selected, productData, image, onCl
 
 export default function ImageCarousel({ productData, options }: ImageCarouselProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
     const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
     const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
         containScroll: 'keepSnaps',
         dragFree: true,
     });
+
+    const scrollPrev = useCallback(() => {
+        emblaMainApi?.scrollPrev();
+    }, [emblaMainApi]);
+
+    const scrollNext = useCallback(() => {
+        emblaMainApi?.scrollNext();
+    }, [emblaMainApi]);
 
     const onThumbClick = useCallback(
         (index: number) => {
@@ -126,6 +135,14 @@ export default function ImageCarousel({ productData, options }: ImageCarouselPro
     }, [emblaMainApi, emblaThumbsApi]);
 
     useEffect(() => {
+        if (emblaMainApi) {
+            setScrollSnaps(emblaMainApi.scrollSnapList());
+            emblaMainApi.on('select', onSelect);
+            onSelect();
+        }
+    }, [emblaMainApi, onSelect]);
+
+    useEffect(() => {
         if (!emblaMainApi) return;
         onSelect();
         emblaMainApi.on('select', onSelect).on('reInit', onSelect);
@@ -134,49 +151,43 @@ export default function ImageCarousel({ productData, options }: ImageCarouselPro
     return (
         <section
             className="max-w-[70rem] mx-auto"
-            style={
-        {
-            '--slide-height': '19rem',
-            '--slide-spacing': '1rem',
-            '--slide-size': '100%',
-            '--slide-spacing-sm': '1.6rem',
-            '--slide-size-sm': '100%',
-            '--slide-spacing-lg': '2rem',
-            '--slide-size-lg': '100%',
-        } as React.CSSProperties
-            }
+            style={ {
+                '--slide-height': '19rem',
+                '--slide-spacing': '1rem',
+                '--slide-size': '100%',
+                '--slide-spacing-sm': '1.6rem',
+                '--slide-size-sm': '100%',
+                '--slide-spacing-lg': '2rem',
+                '--slide-size-lg': '100%',
+            } as React.CSSProperties }
         >
-            { /* Container geral: coluna em telas pequenas e linha (thumbs à esquerda e carousel à direita) em telas grandes */ }
             <div className="flex flex-col lg:flex-row">
-                { /* Container das thumbs */ }
                 <div
                     className="order-2 lg:order-1 lg:w-[15%] lg:mr-[var(--thumbs-slide-spacing)] mt-[var(--thumbs-slide-spacing)] lg:mt-0"
-                    style={
-            {
-                '--thumbs-slide-spacing': '0.8rem',
-                '--thumbs-slide-height': '6rem',
-            } as React.CSSProperties
-                    }
+                    style={ {
+                        '--thumbs-slide-spacing': '0.8rem',
+                        '--thumbs-slide-height': '6rem',
+                    } as React.CSSProperties }
                 >
                     <div className="overflow-hidden" ref={ emblaThumbsRef }>
-                        { /* Container interno: direção row em mobile e column em telas grandes */ }
                         <div className="flex flex-row lg:flex-col ml-[calc(var(--thumbs-slide-spacing)*-1)] lg:ml-0 lg:mt-[calc(var(--thumbs-slide-spacing)*-1)]">
-                            { productData.images && productData.images.length > 1 && productData.images.map((image, index) => (
-                                <Thumb
-                                    key={ index }
-                                    onClick={ () => onThumbClick(index) }
-                                    selected={ index === selectedIndex }
-                                    image={ image }
-                                    productData={ productData }
-                                />
-                            )) }
+                            { productData.images &&
+                productData.images.length > 1 &&
+                productData.images.map((image, index) => (
+                    <Thumb
+                        key={ index }
+                        onClick={ () => onThumbClick(index) }
+                        selected={ index === selectedIndex }
+                        image={ image }
+                        productData={ productData }
+                    />
+                )) }
                         </div>
                     </div>
                 </div>
 
-                { /* Carousel principal */ }
                 <div className="order-1 lg:order-2 lg:w-[80%]">
-                    <div className="overflow-hidden" ref={ emblaMainRef }>
+                    <div className="overflow-hidden relative" ref={ emblaMainRef }>
                         <div
                             className="flex ml-[calc(var(--slide-spacing)*-1)] min-[750px]:ml-[calc(var(--slide-spacing-sm)*-1)] min-[1200px]:ml-[calc(var(--slide-spacing-lg)*-1)]"
                             style={ { touchAction: 'pan-y pinch-zoom', backfaceVisibility: 'hidden' } }
@@ -193,6 +204,25 @@ export default function ImageCarousel({ productData, options }: ImageCarouselPro
                                     <ImageCarouselProduct productData={ productData } image={ image } />
                                 </div>
                             )) }
+                        </div>
+                        { /* Dot Navigation sobreposta à imagem */ }
+                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50">
+                            { scrollSnaps.map((_, index) => (
+                                <button
+                                    key={ index }
+                                    className={ `w-3 h-3 rounded-full transition-colors duration-300 ${
+                                        index === selectedIndex ? 'bg-white' : 'bg-gray-400'
+                                    }` }
+                                    onClick={ () => emblaMainApi?.scrollTo(index) }
+                                />
+                            )) }
+                        </div>
+                        { /* Botões de navegação sobrepostos */ }
+                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50">
+                            <PrevButton onClick={ scrollPrev } />
+                        </div>
+                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-50">
+                            <NextButton onClick={ scrollNext } />
                         </div>
                     </div>
                 </div>
