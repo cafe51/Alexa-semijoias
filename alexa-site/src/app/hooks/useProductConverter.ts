@@ -134,7 +134,8 @@ export function useProductConverter() {
         const codigoDeBarra = (editableProduct.barcode && editableProduct.barcode.length > 0) ? editableProduct.barcode : getRandomBarCode(0);
         const skuGenerated = editableProduct.sku ? editableProduct.sku : getRandomSku(editableProduct.sections, codigoDeBarra, undefined);
 
-        const categoriesKeyWords = (categoriesFromFirebase && categoriesFromFirebase.length > 0) ? categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat() : [];
+        const categoriesFromFirebaseKeyWords = (categoriesFromFirebase && categoriesFromFirebase.length > 0) ? categoriesFromFirebase.map((cat) => keyWordsCreator(cat)).flat() : [];
+        const categoriesKeyWords = (categories && categories.length > 0) ? categories.map((cat) => keyWordsCreator(cat)).flat() : [];
         const sectionsKeyWords = (sections && sections.length > 0) ? sections.map((sec) => keyWordsCreator(sec)).flat() : [];
         const subsectionsKeyWords = (subsections && subsections.length > 0) ? subsections.map((sub) => keyWordsCreator(sub.split(':')[1])).flat() : [];
 
@@ -143,6 +144,7 @@ export function useProductConverter() {
             name: name.trim().toLowerCase(),
             keyWords: Array.from(new Set([
                 ...keyWordsCreator(name.trim().toLowerCase()),
+                ...categoriesFromFirebaseKeyWords,
                 ...categoriesKeyWords,
                 ...sectionsKeyWords,
                 ...subsectionsKeyWords,
