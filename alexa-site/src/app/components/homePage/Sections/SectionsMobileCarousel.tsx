@@ -33,7 +33,7 @@ export default function SectionsMobileCarousel({ products, homePage=false }: Sec
     // } = usePrevNextButtons(emblaApi);
     return (
         <section
-            className={ `max-w-[90rem] mx-auto ${homePage ? 'md:hidden' : ''}  py-14` } 
+            className={ `max-w-[90rem] mx-auto ${homePage ? 'md:hidden' : ''}  py-0` } 
             style={ {
                 '--slide-height': '19rem',
                 '--slide-spacing': '1rem',

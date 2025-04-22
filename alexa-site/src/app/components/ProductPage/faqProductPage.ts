@@ -1,39 +1,39 @@
 export const faqProductPage: { question: string; answer: string }[] = [
-    {
-        question: 'As semijoias da Alexa Semijoias são de alta qualidade?',
-        answer:
-      'Na Alexa Semijoias, qualidade é uma exigência, não um diferencial. Cada semijoia – seja um anel, brinco, colar, pulseira, tornozeleira, choker, argola ou até mesmo um conjunto de semijoia – é produzida em alta fusão e recebe até dez milésimos de ouro 18k (banho de ouro), garantindo durabilidade, brilho intenso e um acabamento sofisticado. Esses acessórios femininos são ideais tanto para compor looks do dia a dia quanto para serem oferecidos como presente, seja para um presente de aniversário ou para celebrar ocasiões especiais.',
-    },
-    {
-        question: 'O que são semijoias?',
-        answer:
-      'Semijoias são peças de luxo confeccionadas sobre uma base metálica não nobre, que passam por um processo de revestimento com diversas camadas de metais nobres. Finalizadas com um banho de ouro 18k, prata ou ródio, elas se assemelham muito às joias, tanto em design quanto em qualidade. Seja um brinco, colar, pulseira, anel, tornozeleira, choker, argola ou um conjunto de semijoia, essas peças sofisticadas oferecem elegância e requinte com um custo mais acessível, transformando cada acessório feminino em um verdadeiro presente.',
-    },
+    // {
+    //     question: 'As semijoias da Alexa Semijoias são de alta qualidade?',
+    //     answer:
+    //   'Na Alexa Semijoias, qualidade é uma exigência, não um diferencial. Cada semijoia – seja um anel, brinco, colar, pulseira, tornozeleira, choker, argola ou até mesmo um conjunto de semijoia – é produzida em alta fusão e recebe até dez milésimos de ouro 18k (banho de ouro), garantindo durabilidade, brilho intenso e um acabamento sofisticado. Esses acessórios femininos são ideais tanto para compor looks do dia a dia quanto para serem oferecidos como presente, seja para um presente de aniversário ou para celebrar ocasiões especiais.',
+    // },
+    // {
+    //     question: 'O que são semijoias?',
+    //     answer:
+    //   'Semijoias são peças de luxo confeccionadas sobre uma base metálica não nobre, que passam por um processo de revestimento com diversas camadas de metais nobres. Finalizadas com um banho de ouro 18k, prata ou ródio, elas se assemelham muito às joias, tanto em design quanto em qualidade. Seja um brinco, colar, pulseira, anel, tornozeleira, choker, argola ou um conjunto de semijoia, essas peças sofisticadas oferecem elegância e requinte com um custo mais acessível, transformando cada acessório feminino em um verdadeiro presente.',
+    // },
     {
         question: 'O que significa semijoia hipoalergênica?',
         answer:
       'Uma semijoia é considerada hipoalergênica quando sua composição dispensa o uso de níquel – o principal causador de alergias. Na Alexa Semijoia, todos os nossos brincos, colares, pulseiras, anéis, tornozeleiras, choker e argolas são produzidos sem níquel, cádmio ou chumbo. Além disso, recebem um banho de proteção extra, que não só minimiza possíveis irritações e alergias, mas também reforça a resistência do acessório, garantindo segurança e conforto para quem busca um presente ou acessório feminino de alta qualidade.',
     },
-    {
-        question: 'Por que dizem que a semijoia é banhada ou folheada?',
-        answer:
-      'Embora os termos “banhado” e “folheado” sejam usados popularmente de forma intercambiável, eles descrevem processos distintos. As semijoias folheadas são envolvidas por uma fina camada de ouro através de compressão, enquanto as semijoias banhadas passam por um processo químico chamado galvanoplastia, onde o ouro 18k adere firmemente à peça. Esse procedimento, aplicado em brincos, anéis, colares, pulseiras, tornozeleiras, chokers, argolas e conjuntos de semijoia, resulta em acessórios femininos com acabamento refinado, resistência superior e brilho que lembra as joias verdadeiras – ideal para um presente ou para complementar seu look.',
-    },
-    {
-        question: 'Quando uma peça banhada a ouro é considerada semijoia?',
-        answer:
-      'No universo dos acessórios femininos, uma peça é classificada como semijoia quando recebe duas ou mais camadas de ouro (aplicadas em milésimos). Na Alexa Semijoias, nossos anéis, brincos, colares, pulseiras, tornozeleiras, chokers e argolas são fabricados em alta fusão e banhados com até dez milésimos de ouro 18k. Essa técnica de banho de ouro garante não só um acabamento luxuoso e um brilho marcante, mas também uma durabilidade excepcional – características que transformam cada peça em um excelente presente ou acessório para realçar qualquer visual.',
-    },
-    {
-        question: 'Como são as semijoias da Alexa Semijoias?',
-        answer:
-      'Na Alexa Semijoias, cada peça é produzida com extrema atenção aos detalhes. Nossos acessórios – que incluem brincos, colares, pulseiras, anéis, tornozeleiras, chokers e conjuntos de semijoia – são fabricados em alta fusão e recebem um banho de até dez milésimos de ouro 18k. Em alguns casos, como nos brincos, o banho pode variar entre três e quatro milésimos, de acordo com o design da peça. Esse processo de banho de ouro não apenas confere um brilho e acabamento refinado, mas também aumenta a resistência, tornando cada acessório feminino perfeito para uso diário ou como um presente inesquecível.',
-    },
-    {
-        question: 'Posso colocar minhas semijoias e não tirar mais?',
-        answer:
-      'Embora as semijoias sejam acessórios femininos incríveis para compor e diversificar o look, é fundamental ter cuidados especiais. Não é aconselhável deixar seus brincos, colares, pulseiras, anéis, tornozeleiras, chokers, argolas, braceletes ou qualquer conjunto de semijoia no corpo sem retirá-los. Durante a prática de exercícios, tarefas domésticas, banho ou mesmo ao aplicar perfumes e cremes, recomenda-se retirar as semijoias para preservar o banho de ouro ou ouro 18k. O contato constante com produtos químicos, cloro, água do mar ou de piscina pode desgastar o banho de ouro, causar riscos e arranhões, comprometendo a durabilidade e o brilho do acessório feminino – seja para uso diário ou para presentear alguém com um presente de aniversário.',
-    },
+    // {
+    //     question: 'Por que dizem que a semijoia é banhada ou folheada?',
+    //     answer:
+    //   'Embora os termos “banhado” e “folheado” sejam usados popularmente de forma intercambiável, eles descrevem processos distintos. As semijoias folheadas são envolvidas por uma fina camada de ouro através de compressão, enquanto as semijoias banhadas passam por um processo químico chamado galvanoplastia, onde o ouro 18k adere firmemente à peça. Esse procedimento, aplicado em brincos, anéis, colares, pulseiras, tornozeleiras, chokers, argolas e conjuntos de semijoia, resulta em acessórios femininos com acabamento refinado, resistência superior e brilho que lembra as joias verdadeiras – ideal para um presente ou para complementar seu look.',
+    // },
+    // {
+    //     question: 'Quando uma peça banhada a ouro é considerada semijoia?',
+    //     answer:
+    //   'No universo dos acessórios femininos, uma peça é classificada como semijoia quando recebe duas ou mais camadas de ouro (aplicadas em milésimos). Na Alexa Semijoias, nossos anéis, brincos, colares, pulseiras, tornozeleiras, chokers e argolas são fabricados em alta fusão e banhados com até dez milésimos de ouro 18k. Essa técnica de banho de ouro garante não só um acabamento luxuoso e um brilho marcante, mas também uma durabilidade excepcional – características que transformam cada peça em um excelente presente ou acessório para realçar qualquer visual.',
+    // },
+    // {
+    //     question: 'Como são as semijoias da Alexa Semijoias?',
+    //     answer:
+    //   'Na Alexa Semijoias, cada peça é produzida com extrema atenção aos detalhes. Nossos acessórios – que incluem brincos, colares, pulseiras, anéis, tornozeleiras, chokers e conjuntos de semijoia – são fabricados em alta fusão e recebem um banho de até dez milésimos de ouro 18k. Em alguns casos, como nos brincos, o banho pode variar entre três e quatro milésimos, de acordo com o design da peça. Esse processo de banho de ouro não apenas confere um brilho e acabamento refinado, mas também aumenta a resistência, tornando cada acessório feminino perfeito para uso diário ou como um presente inesquecível.',
+    // },
+    // {
+    //     question: 'Posso colocar minhas semijoias e não tirar mais?',
+    //     answer:
+    //   'Embora as semijoias sejam acessórios femininos incríveis para compor e diversificar o look, é fundamental ter cuidados especiais. Não é aconselhável deixar seus brincos, colares, pulseiras, anéis, tornozeleiras, chokers, argolas, braceletes ou qualquer conjunto de semijoia no corpo sem retirá-los. Durante a prática de exercícios, tarefas domésticas, banho ou mesmo ao aplicar perfumes e cremes, recomenda-se retirar as semijoias para preservar o banho de ouro ou ouro 18k. O contato constante com produtos químicos, cloro, água do mar ou de piscina pode desgastar o banho de ouro, causar riscos e arranhões, comprometendo a durabilidade e o brilho do acessório feminino – seja para uso diário ou para presentear alguém com um presente de aniversário.',
+    // },
     {
         question: 'Qual garantia a Alexa Semijoias dá em suas semijoias?',
         answer:
@@ -69,11 +69,11 @@ export const faqProductPage: { question: string; answer: string }[] = [
     //     answer:
     //   'Infelizmente, não é possível alterar seu pedido de semijoias após a finalização do pagamento. Para garantir a segurança e o rigor no processo, os nossos brincos, colares, pulseiras, anéis, tornozeleiras, chokers, argolas, braceletes e conjuntos de semijoia seguem um protocolo de envio rigoroso. Assim, depois de concluída a compra de um presente ou acessório feminino de alta qualidade, com banho de ouro 18k e acabamento premium, não podemos modificar as informações do pedido.',
     // },
-    {
-        question: 'Como acompanho o status do meu pedido?',
-        answer:
-      'Para acompanhar o status do seu pedido de semijoias, nós enviamos notificações diretamente para o e-mail cadastrado. Fique atento à caixa de spam, pois essas mensagens contêm informações sobre cada brinco, colar, pulseira, anel, tornozeleira, choker, argola, bracelete ou conjunto de semijoia adquirido. Além disso, você pode fazer login em nosso site pelo link www.alexasemijoias.com.br/minha-conta, acessar a área “Minha Conta” e verificar o andamento do pedido. Dessa forma, você tem acesso a todas as informações, desde os acessórios femininos banhados com ouro 18k até os detalhes do endereço de envio e forma de pagamento, garantindo transparência e agilidade na sua experiência de compra.',
-    },
+    // {
+    //     question: 'Como acompanho o status do meu pedido?',
+    //     answer:
+    //   'Para acompanhar o status do seu pedido de semijoias, nós enviamos notificações diretamente para o e-mail cadastrado. Fique atento à caixa de spam, pois essas mensagens contêm informações sobre cada brinco, colar, pulseira, anel, tornozeleira, choker, argola, bracelete ou conjunto de semijoia adquirido. Além disso, você pode fazer login em nosso site pelo link www.alexasemijoias.com.br/minha-conta, acessar a área “Minha Conta” e verificar o andamento do pedido. Dessa forma, você tem acesso a todas as informações, desde os acessórios femininos banhados com ouro 18k até os detalhes do endereço de envio e forma de pagamento, garantindo transparência e agilidade na sua experiência de compra.',
+    // },
     // {
     //     question: 'Consigo alterar o endereço de envio do meu pedido após ter finalizado?',
     //     answer:
