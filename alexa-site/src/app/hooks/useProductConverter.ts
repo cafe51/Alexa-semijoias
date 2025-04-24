@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CategoryType, FireBaseDocument, ImageProductDataType, ProductBundleType, ProductVariation, ProductVariationsType, SectionSlugType, SectionType, StateNewProductType } from '../utils/types';
+import { CategoryType, FireBaseDocument, ImageProductDataType, ProductBundleType, ProductVariation, ProductVariationsType, SectionSlugType, SectionType, StateNewProductType, VideoProductDataType } from '../utils/types';
 import { useCollection } from './useCollection';
 import useFirebaseUpload from './useFirebaseUpload';
 import { getRandomBarCode } from '../utils/getRandomBarCode';
@@ -15,7 +15,7 @@ export function useProductConverter() {
     const { userInfo } = useUserInfo();
     const [siteSectionsFromFirebase, setSiteSectionsFromFirebase] = useState<(SectionType & FireBaseDocument)[]>([{ sectionName: '', id: '', exist: false }]);
 
-    const { uploadImages, deleteImage } = useFirebaseUpload();
+    const { uploadImages, deleteImage, uploadVideo, deleteVideo } = useFirebaseUpload();
     const {
         addDocument: createNewSiteSectionDocument,
         updateDocumentField: updateSiteSectionDocumentField,
@@ -93,6 +93,7 @@ export function useProductConverter() {
             images: imagesData,
             categories: [...categories, ...editableProduct.categoriesFromFirebase],
             collections: [...collections, ...collectionsFromFirebase],
+            videoUrl: editableProduct.video?.localUrl || null,
 
             estoqueTotal: totalStock,
             // images= images.map((image) => image.file),
@@ -164,6 +165,7 @@ export function useProductConverter() {
             images: imagesData,
             categories: Array.from(new Set([...categories, ...categoriesFromFirebase])),
             collections: Array.from(new Set([...editableProduct.collections, ...editableProduct.collectionsFromFirebase])),
+            videoUrl: editableProduct.video?.localUrl || null,
             estoqueTotal: editableProduct.estoque ? editableProduct.estoque : 0,
             productVariations: [
                 {   productId,
@@ -218,6 +220,7 @@ export function useProductConverter() {
             dimensions: hasCustomProperties ? undefined: { ...theOnlyVariation.dimensions, peso: theOnlyVariation.peso },
             estoque: finalProduct.estoqueTotal,
             images: finalProduct.images, //////////////////
+            video: finalProduct.videoUrl ? { file: undefined, localUrl: finalProduct.videoUrl } : null,
             productVariations: hasCustomProperties ? finalProduct.productVariations.map((pv) => {
                 const foundedImage = finalProduct.images.find((image) => image.localUrl === pv.image);
 
@@ -417,6 +420,30 @@ export function useProductConverter() {
         return true;
     };
 
+    const handleProductVideo = async(
+        newVideo: VideoProductDataType | null,
+        oldVideoUrl: string | null | undefined,
+        productSlug: string,
+        productBarcode: string,
+    ): Promise<string | null> => {
+        try {
+            // Deletar vídeo antigo se foi removido ou substituído
+            if (oldVideoUrl && (!newVideo?.localUrl || newVideo.localUrl !== oldVideoUrl)) {
+                await deleteVideo(oldVideoUrl);
+            }
+
+            // Fazer upload do novo vídeo se existir
+            if (newVideo?.file) {
+                return await uploadVideo(newVideo.file, productSlug, productBarcode);
+            }
+
+            return newVideo?.localUrl || null;
+        } catch (error) {
+            console.error('Erro ao processar vídeo do produto:', error);
+            throw error;
+        }
+    };
+
     return {
         useProductDataHandlers: {
             hasProductVariations,
@@ -427,7 +454,7 @@ export function useProductConverter() {
             createOrUpdateCategories,
             createOrUpdateProductVariations,
             verifyFieldsOnFinishProductCreation,
+            handleProductVideo, // Novo método adicionado
         },
-
     };
 }

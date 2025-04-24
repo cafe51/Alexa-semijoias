@@ -14,6 +14,45 @@ const MAX_FILE_SIZE = 900 * 1024; // 300KB em bytes
 
 const useFirebaseUpload = () => {
     const [progress, setProgress] = useState<number[]>([]);
+    const [videoProgress, setVideoProgress] = useState<number>(0);
+
+    const uploadVideo = async(videoFile: File, slug: string, barcode: string): Promise<string> => {
+        const fileName = `video_${slug}_${barcode}`;
+        const storageRef = ref(storage, `videos/productVideos/${fileName}`);
+        const uploadTask = uploadBytesResumable(storageRef, videoFile);
+
+        return new Promise((resolve, reject) => {
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setVideoProgress(progress);
+                },
+                (error) => {
+                    console.error('Erro no upload do vídeo:', error);
+                    reject(error);
+                },
+                async() => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    resolve(downloadURL);
+                },
+            );
+        });
+    };
+
+    const deleteVideo = async(videoUrl: string) => {
+        try {
+            const url = new URL(videoUrl);
+            const pathWithToken = url.pathname.split('/o/')[1];
+            if (!pathWithToken) throw new Error('URL inválida');
+            const path = decodeURIComponent(pathWithToken.split('?')[0]);
+            const videoRef = ref(storage, path);
+            await deleteObject(videoRef);
+        } catch (error) {
+            console.error('Erro ao deletar vídeo:', error);
+            throw error;
+        }
+    };
 
     const uploadImages = async(
         images: { file: File; localUrl: string; index: number }[],
@@ -81,7 +120,15 @@ const useFirebaseUpload = () => {
         }
     };
 
-    return { uploadImages, deleteImage, progress };
+    return {
+        uploadImages,
+        deleteImage,
+        uploadVideo,
+        deleteVideo,
+        progress,
+        // Expor o estado de progresso do vídeo
+        videoProgress: videoProgress, 
+    };
 };
 
 export default useFirebaseUpload;

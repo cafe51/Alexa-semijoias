@@ -114,7 +114,7 @@ export default function PhotosSection({ state, handleSetImages }: PhotosSectionP
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                                     </svg>
                                 </div>
-                                <input type="file" multiple className="hidden" onChange={ handleImageChange } />
+                                <input type="file" accept="image/*" multiple className="hidden" onChange={ handleImageChange } />
                             </label>
                         </div>
                     ) }

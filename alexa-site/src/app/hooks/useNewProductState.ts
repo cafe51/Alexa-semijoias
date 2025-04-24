@@ -1,6 +1,6 @@
 // app/hooks/useNewProductState.ts
 import { useReducer, useCallback } from 'react';
-import { ImageProductDataType, MoreOptionsType, SectionType, StateNewProductType, UseNewProductState, VariationProductType } from '../utils/types';
+import { ImageProductDataType, MoreOptionsType, SectionType, StateNewProductType, UseNewProductState, VariationProductType, VideoProductDataType } from '../utils/types';
 import { Timestamp } from 'firebase/firestore';
 
 type ActionType =
@@ -32,7 +32,8 @@ type ActionType =
     | { type: 'SET_REMOVE_COLLECTION', payload: string }
     | { type: 'SET_REMOVE_ALL_COLLECTIONS' }
 
-    | { type: 'SET_IMAGES', payload: ImageProductDataType[]}
+    | { type: 'SET_IMAGES', payload: ImageProductDataType[] }
+    | { type: 'SET_VIDEO', payload: VideoProductDataType | null }
     | { type: 'SET_MORE_OPTIONS', payload: MoreOptionsType[]}
     | { type: 'SET_CREATION_DATE', payload: Timestamp}
     | { type: 'SET_UPDATING_DATE', payload: Timestamp}
@@ -61,6 +62,7 @@ export const initialEmptyState: StateNewProductType= {
     barcode: undefined,
     dimensions: undefined,
     images: [],
+    video: null,
     moreOptions: [
         { isChecked: true, label: 'Exibir na minha loja', property: 'showProduct' },
         { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
@@ -154,6 +156,8 @@ function reducer(state: StateNewProductType, action: ActionType): StateNewProduc
         return { ...state, creationDate: action.payload };
     case 'SET_UPDATING_DATE':
         return { ...state, updatingDate: action.payload };
+    case 'SET_VIDEO':
+        return { ...state, video: action.payload };
     default:
         return state;
     }
@@ -284,6 +288,9 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
     }, []);
 
     const handlers: UseNewProductState = {
+        handleSetVideo: (video: VideoProductDataType | null) => {
+            dispatch({ type: 'SET_VIDEO', payload: video });
+        },
         handleNameChange,
         handleDescriptionChange,
         handleValueChange,

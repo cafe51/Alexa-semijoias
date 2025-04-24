@@ -117,7 +117,7 @@ export default function ProductsDashboard() {
         getDocumentById: getProductById,
         updateDocumentField,
     } = useCollection<ProductBundleType>('products');
-    const { deleteImage } = useFirebaseUpload();
+    const { deleteImage, deleteVideo } = useFirebaseUpload();
     const { deleteDocument: deleteProductVariation, getAllDocuments: getAllProductVariations } = useCollection<ProductVariationsType>('productVariations');
     const { getAllDocuments: getAllSections } = useCollection<SectionType>('siteSections');
 
@@ -156,11 +156,12 @@ export default function ProductsDashboard() {
             if (!product.exist) {
                 throw new Error('Produto não encontrado');
             }
-            const deleteImagePromises = product.images.map(image => deleteImage(image.localUrl));
-            await Promise.all(deleteImagePromises);
             const productVariationsFromCollection = await getAllProductVariations([{ field: 'productId', operator: '==', value: id }]);
             await Promise.all(productVariationsFromCollection.map((pv) => deleteProductVariation(pv.id)));
             await deleteProductBundle(id);
+            const deleteImagePromises = product.images.map(image => deleteImage(image.localUrl));
+            await Promise.all(deleteImagePromises);
+            product.videoUrl && await deleteVideo(product.videoUrl);
             refresh();
             setNotification({ message: 'Produto excluído com sucesso', type: 'success' });
         } catch (error) {

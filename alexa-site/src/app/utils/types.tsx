@@ -175,14 +175,17 @@ export type ProductBundleType = {
     value: { price: number, promotionalPrice: number, cost: number }
     variations?: string[],
     images: ImageProductDataType[], // array com todas as imagens de todas as variações
-
+    
+    videoUrl: string | null,
     keyWords?: string[],
-
-    videoUrl?: string | null,
-
 }
 
 export type MoreOptionsType = { isChecked: boolean, label: string, property: string }
+
+export type VideoProductDataType = {
+    file?: File;
+    localUrl: string;
+};
 
 export type StateNewProductType = {
     id?: string;
@@ -192,6 +195,7 @@ export type StateNewProductType = {
     categoriesFromFirebase: string[],
     collections: string[],
     collectionsFromFirebase: string[],
+    video?: VideoProductDataType | null,
     value: {
         price: number,
         promotionalPrice: number,
@@ -464,6 +468,7 @@ export type UseProductDataHandlers = {
     hasNoProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
     hasProductVariations: (editableProduct: StateNewProductType, images: ImageProductDataType[], productId: string) => ProductBundleType;
     uploadAndGetAllImagesUrl: (images: ImageProductDataType[], oldImages?: ImageProductDataType[]) => Promise<ImageProductDataType[]>;
+    handleProductVideo: (newVideo: VideoProductDataType | null, oldVideoUrl: string | null | undefined, productSlug: string, productBarcode: string) => Promise<string | null>
     createOrUpdateCategories: (categories: string[]) => Promise<void>;
     createAndUpdateSiteSections: (sectionsSiteState: never[] | (SectionType & {
         exist?: boolean;
@@ -474,6 +479,7 @@ export type UseProductDataHandlers = {
 }
 
 export type UseNewProductState = {
+    handleSetVideo: (video: VideoProductDataType | null) => void;
     handleNameChange: (name: string) => void;
     handleDescriptionChange: (description: string) => void;
     handleValueChange: (value: { price: number, promotionalPrice: number, cost: number, }) => void;
