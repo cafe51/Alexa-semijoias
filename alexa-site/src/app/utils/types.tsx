@@ -178,6 +178,8 @@ export type ProductBundleType = {
 
     keyWords?: string[],
 
+    videoUrl?: string | null,
+
 }
 
 export type MoreOptionsType = { isChecked: boolean, label: string, property: string }
