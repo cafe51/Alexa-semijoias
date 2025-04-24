@@ -176,7 +176,7 @@ export type ProductBundleType = {
     variations?: string[],
     images: ImageProductDataType[], // array com todas as imagens de todas as variações
     
-    videoUrl: string | null,
+    videoUrl?: string | null,
     keyWords?: string[],
 }
 
