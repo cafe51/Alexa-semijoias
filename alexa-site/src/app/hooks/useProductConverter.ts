@@ -40,6 +40,11 @@ export function useProductConverter() {
         deleteDocument: deleteProductVariationDocument,
     } = useCollection<ProductVariationsType>('productVariations');
 
+    const {
+        getAllDocuments: getAllProductsFromFirebase,
+    } = useCollection<ProductBundleType>('products');
+
+
     useEffect(() => {
         const fetchFromFirebase = async() => {
             const siteSectionsRes = await getSiteSectionsFromFirebase();
@@ -365,6 +370,18 @@ export function useProductConverter() {
             setFinishFormError('O nome do produto não pode estar vazio');
             return false;
         }
+
+        const findProductWithSameName = await getAllProductsFromFirebase(
+            [{ field: 'slug', operator: '==', value: createSlugName(state.name) }],
+            1,
+        );
+
+        if(findProductWithSameName && findProductWithSameName.length > 0) {
+            console.log('findProductWithSameName', findProductWithSameName);
+            setFinishFormError('Já existe um produto cadastrado com este nome');
+            return false;
+        }
+
         if(state.description.length === 0) {
             setFinishFormError('A descrição do produto não pode estar vazia');
             return false;
