@@ -177,6 +177,7 @@ export default function ShippingCalculator({
                         <Button
                             variant="link"
                             className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] text-sm md:text-base lg:text-lg"
+                            onClick={ () => setError(null) }
                         >
                         Calcular frete
                         </Button>
@@ -273,14 +274,17 @@ export default function ShippingCalculator({
                         </>
                     ) }
                     <DialogFooter>
-                        <Button
-                            onClick={ handleConfirm }
-                            disabled={ !tempSelectedShipping }
-                            aria-disabled={ !tempSelectedShipping }
-                            className="text-sm md:text-base lg:text-lg"
-                        >
-            Confirmar
-                        </Button>
+                        {
+                            showOptions && 
+                            <Button
+                                onClick={ handleConfirm }
+                                disabled={ !tempSelectedShipping }
+                                aria-disabled={ !tempSelectedShipping }
+                                className="text-sm md:text-base lg:text-lg"
+                            >
+                            Confirmar
+                            </Button>
+                        }
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
