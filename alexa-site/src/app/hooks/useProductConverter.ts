@@ -371,15 +371,17 @@ export function useProductConverter() {
             return false;
         }
 
-        const findProductWithSameName = await getAllProductsFromFirebase(
-            [{ field: 'slug', operator: '==', value: createSlugName(state.name) }],
-            1,
-        );
+        if(oldState.name !== state.name) {
+            const findProductWithSameName = await getAllProductsFromFirebase(
+                [{ field: 'slug', operator: '==', value: createSlugName(state.name) }],
+                1,
+            );
 
-        if(findProductWithSameName && findProductWithSameName.length > 0) {
-            console.log('findProductWithSameName', findProductWithSameName);
-            setFinishFormError('Já existe um produto cadastrado com este nome');
-            return false;
+            if(findProductWithSameName && findProductWithSameName.length > 0) {
+                console.log('findProductWithSameName', findProductWithSameName);
+                setFinishFormError('Já existe um produto cadastrado com este nome');
+                return false;
+            }
         }
 
         if(state.description.length === 0) {
