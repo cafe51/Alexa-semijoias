@@ -7,6 +7,7 @@ import { FireBaseDocument, ProductBundleType } from '@/app/utils/types';
 import Autoplay from 'embla-carousel-autoplay';
 import { NextButton, PrevButton } from '../../EmblaCarousel/EmblaCarouselArrowButtons';
 import MothersDayBanner from './MothersDayBanner';
+import Link from 'next/link';
 // import MothersDayBanner from './MothersDayBanner';
 
 interface HeroSectionProps {
@@ -58,7 +59,9 @@ export default function HeroCarousel({ lastAddProduct }: HeroSectionProps) {
                     style={ { touchAction: 'pan-y pinch-zoom', backfaceVisibility: 'hidden' } }
                 >
                     <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
-                        <MothersDayBanner />
+                        <Link href="/colecoes/dia-das-maes">
+                            <MothersDayBanner />
+                        </Link>
                     </div>
                     <div className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
                         <FirstPurchaseBanner />
