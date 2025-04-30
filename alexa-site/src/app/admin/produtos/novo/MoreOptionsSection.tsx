@@ -22,6 +22,7 @@ export default function MoreOptionsSection({ state, handlers }: MoreOptionsSecti
                                             newOptions[index].isChecked = event.target.checked;
                                             handlers.handleSetMoreOptions(newOptions);
                                         } }
+                                        disabled={ option.property === 'freeShipping' }
                                     />
                                     <label htmlFor={ option.label + index } className="w-full ms-2 text-sm font-medium text-gray-900 rounded h-full p-2 ">
                                         { option.label }

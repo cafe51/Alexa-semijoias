@@ -213,8 +213,8 @@ export function useProductConverter() {
             description: finalProduct.description.trim(),
             moreOptions: [
                 { isChecked: finalProduct.showProduct, label: 'Exibir na minha loja', property: 'showProduct' },
-                { isChecked: false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
-                { isChecked: false, label: 'Marcar como lancamento', property: 'lancamento' },
+                { isChecked: finalProduct.freeShipping ?? false, label: 'Esse produto possui frete grátis', property: 'freeShipping' },
+                { isChecked: finalProduct.lancamento, label: 'Marcar como lancamento', property: 'lancamento' },
 
             ],
             categoriesFromFirebase: finalProduct.categories,
