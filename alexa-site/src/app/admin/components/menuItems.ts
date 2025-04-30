@@ -60,11 +60,18 @@ export const menuItems = [
         enabled: true,
     },
     { 
+        icon: Settings, 
+        label: 'metadeanuncio', 
+        href: '/admin/metadeanuncio',
+        enabled: true,
+    },
+    { 
         icon: Store, 
         label: 'Ir para Loja', 
         href: '/',
         enabled: true,
     },
+    
   
 
 ];
