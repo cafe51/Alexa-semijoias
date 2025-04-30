@@ -29,7 +29,7 @@ export default function CategoriesSection({ state, handlers }: CategoriesSection
     return (
         <section className="p-4 border rounded-md bg-white">
             { (showVariationEditionModal) && (
-                <ModalMaker title='Crie novas categorias' closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) } >
+                <ModalMaker title='Crie novas categorias' closeModelClick={ () => setShowVariationEditionModal(!showVariationEditionModal) } narrowViewport >
                     <CreateCategoriesForm
                         categories={ [...state.categories, ...state.categoriesFromFirebase]  }
                         options={ options }
