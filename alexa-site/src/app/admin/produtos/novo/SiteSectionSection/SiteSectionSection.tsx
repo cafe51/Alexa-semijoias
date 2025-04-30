@@ -52,6 +52,7 @@ export default function SiteSectionSection({ state, handlers }: SiteSectionSecti
                 <ModalMaker
                     title='Selecione a seção'
                     closeModelClick={ () => setShowSectionEditionModal(!showSectionEditionModal) }
+                    narrowViewport
                 >
                     <ChooseSection
                         state={ state }
