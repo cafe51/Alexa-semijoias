@@ -1,10 +1,20 @@
 // app/checkout/DeliveryPriceSection/FreeShippingSection.tsx
 
+import { ShippingOptionType } from '@/app/utils/types';
 import Link from 'next/link';
 
-export default function FreeShippingSection({ precoFaltanteEmPorcentagem, precoFaltanteParaFreteGratis }: { precoFaltanteEmPorcentagem: string, precoFaltanteParaFreteGratis: number }) {
+export default function FreeShippingSection(
+    { precoFaltanteEmPorcentagem, precoFaltanteParaFreteGratis, shippingOptions }:
+    {
+        precoFaltanteEmPorcentagem: string,
+        precoFaltanteParaFreteGratis: number,
+        shippingOptions: ShippingOptionType[];
+    },
+) {
+    const temUmaOpcaoDeFreteGratis = !!shippingOptions.find((option) => option.price === 0);
     return (
-        precoFaltanteParaFreteGratis > 0 ?
+        (precoFaltanteParaFreteGratis > 0 && (temUmaOpcaoDeFreteGratis === false))
+            ?
             (
                 <div className="p-4 border-dashed border-2 border-[#D4AF37]/50 bg-[#D4AF37]/2 rounded-md mb-4">
                     <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">

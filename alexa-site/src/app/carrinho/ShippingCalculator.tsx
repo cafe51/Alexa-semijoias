@@ -214,12 +214,20 @@ export default function ShippingCalculator({
                     { (!error && showOptions) && (
                         <>
                             {
-                                !showFreeShippingSection && <FreeShippingWarning precoDoProduto={ cartPrice } precoParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis + cartPrice } />
+                                !showFreeShippingSection
+                                && <FreeShippingWarning
+                                    precoDoProduto={ cartPrice }
+                                    precoParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis + cartPrice }
+                                    shippingOptions={ shippingOptions }
+                                />
                             }
-                            { shippingOptions.length > 0 && showFreeShippingSection && (
+                            { shippingOptions.length > 0
+                            && showFreeShippingSection && (
                                 <FreeShippingSection
                                     precoFaltanteEmPorcentagem={ freeShippingData.precoFaltanteEmPorcentagem }
                                     precoFaltanteParaFreteGratis={ freeShippingData.precoFaltanteParaFreteGratis }
+                                    shippingOptions={ shippingOptions }
+
                                 />
                             ) }
                             <RadioGroup

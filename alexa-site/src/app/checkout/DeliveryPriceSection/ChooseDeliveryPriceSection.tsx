@@ -91,6 +91,12 @@ export default function ChooseDeliveryPriceSection({
                 <FreeShippingSection 
                     precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } 
                     precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } 
+                    shippingOptions={ deliveryOptions.map((doptions) => ({
+                        id: doptions.name,
+                        name: doptions.name,
+                        price: doptions.price,
+                        days: doptions.deliveryTime,
+                    })) }
                 />
 
                 <RadioGroup

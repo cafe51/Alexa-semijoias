@@ -1,13 +1,17 @@
 import Link from 'next/link';
 import { formatPrice } from '../utils/formatPrice';
+import { ShippingOptionType } from '../utils/types';
 
 interface FreeShippingWarning {
     precoDoProduto: number;
     precoParaFreteGratis: number;
+    shippingOptions: ShippingOptionType[];
 }
-export default function FreeShippingWarning({ precoDoProduto, precoParaFreteGratis }: FreeShippingWarning) {
+export default function FreeShippingWarning({ precoDoProduto, precoParaFreteGratis, shippingOptions }: FreeShippingWarning) {
+    const temUmaOpcaoDeFreteGratis = !!shippingOptions.find((option) => option.price === 0);
     return (
-        precoParaFreteGratis > precoDoProduto ?
+        (precoParaFreteGratis > precoDoProduto) && (temUmaOpcaoDeFreteGratis === false)
+            ?
             (
                 <div className="p-4 border-dashed border-2 border-[#D4AF37]/50 bg-[#D4AF37]/2 rounded-md mb-4">
                     <p className="text-[#D4AF37] text-base mb-2">
