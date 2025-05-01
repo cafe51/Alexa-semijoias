@@ -146,42 +146,45 @@ export default function ShippingCalculator({
         <section className='py-4 gap-4 border-solid border-2 border-x-0 bg-white rounded-lg text-center w-full flex justify-center mt-2'>
             <Dialog open={ isOpen } onOpenChange={ setIsOpen }>
                 <DialogTrigger asChild>
-                    { selectedShipping !== null ? (
-                        <Button variant="link" className="p-0 h-auto">
-                            { isFreeShipping ? (
-                                <div className="flex flex-col items-end">
-                                    <div className="flex items-center">
-                                        <span className="line-through text-sm text-gray-400">
-                                            { formatPrice(freeShippingData.cheapestOption!.price) }
-                                        </span>
-                                        { !showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> FRETE GRÁTIS</span> }
-                                        { !!showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> GRÁTIS</span> }
-                                    </div>
+                    { selectedShipping !== null
+                        ? (
+                            <Button variant="link" className="p-0 h-auto">
+                                {
+                                    isFreeShipping
+                                        ? (
+                                            <div className="flex flex-col items-end">
+                                                <div className="flex items-center">
+                                                    <span className="line-through text-sm text-gray-400">
+                                                        { formatPrice(freeShippingData.cheapestOption!.price) }
+                                                    </span>
+                                                    { !showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> FRETE GRÁTIS</span> }
+                                                    { !!showFreeShippingSection && <span className="text-[#D4AF37] text-base font-bold ml-2"> GRÁTIS</span> }
+                                                </div>
 
-                                </div>
-                            ) : 
-                                showFreeShippingSection
-                                    ? (
-                                        <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
-                                            { formatPrice(selectedShipping) }
-                                        </span>
-                                    )
-                                    : (
-                                        <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
-                                            { 'FRETE: ' + formatPrice(selectedShipping) }
-                                        </span>
-                                    )
-                            }
-                        </Button>
-                    ) : (
-                        <Button
-                            variant="link"
-                            className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] text-sm md:text-base lg:text-lg"
-                            onClick={ () => setError(null) }
-                        >
+                                            </div>
+                                        ) : 
+                                        showFreeShippingSection
+                                            ? (
+                                                <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
+                                                    { formatPrice(selectedShipping) }
+                                                </span>
+                                            )
+                                            : (
+                                                <span className="text-[#C48B9F] hover:text-[#D4AF37] underline text-sm md:text-base lg:text-lg">
+                                                    { 'FRETE: ' + formatPrice(selectedShipping) }
+                                                </span>
+                                            )
+                                }
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="link"
+                                className="p-0 h-auto text-[#C48B9F] hover:text-[#D4AF37] text-sm md:text-base lg:text-lg"
+                                onClick={ () => setError(null) }
+                            >
                         Calcular frete
-                        </Button>
-                    ) }
+                            </Button>
+                        ) }
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] md:max-w-[500px] lg:max-w-[600px]">
                     <DialogHeader>
@@ -190,7 +193,7 @@ export default function ShippingCalculator({
                     <form onSubmit={ handleCalculate } className="space-y-4 md:space-y-6">
                         <div className="flex items-center space-x-2 md:space-x-4">
                             <Label htmlFor="cep" className="text-sm md:text-base lg:text-lg">
-              CEP:
+                                CEP:
                             </Label>
                             <InputField
                                 id="cep"

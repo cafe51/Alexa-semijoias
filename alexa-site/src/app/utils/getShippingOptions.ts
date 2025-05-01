@@ -35,7 +35,7 @@ export default function getShippingOptions(cidade: string, uf: string): { id: st
                 days: 2,
             },
             pac: {
-                price: 0,
+                price: 5,
                 days: 2,
             },
         };
