@@ -11,7 +11,24 @@ export default function getShippingOptions(cidade: string, uf: string): { id: st
     const isCapital = capitais[uf].toLowerCase() === cidade.toLowerCase();
     let frete = isCapital ? estado.capital : estado.interior;
 
-    if(cidade === 'Fernandópolis' && uf === 'SP') {
+    if(
+        cidade === 'Fernandópolis' && uf === 'SP'
+        || cidade === 'Votuporanga' && uf === 'SP'
+        || cidade === 'Meridiano' && uf === 'SP'
+        || cidade === 'Valentim Gentil' && uf === 'SP'
+        || cidade === 'São Vicente' && uf === 'SP'
+        || cidade === 'Pedranópolis' && uf === 'SP'
+        || cidade === 'São João das Duas Pontes' && uf === 'SP'
+        || cidade === 'Mira Estrela' && uf === 'SP'
+        || cidade === 'Guarani D\'Oeste' && uf === 'SP'
+        || cidade === 'Ouroeste' && uf === 'SP'
+        || cidade === 'Estrela D\'Oeste' && uf === 'SP'
+        || cidade === 'Jales' && uf === 'SP'
+        || cidade === 'Vitória Brasil' && uf === 'SP'
+        || cidade === 'Macedônia' && uf === 'SP'
+
+
+    ) {
         frete = {
             sedex: {
                 price: 30,
