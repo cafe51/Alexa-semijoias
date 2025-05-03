@@ -42,7 +42,7 @@ export const faqProductPage: { question: string; answer: string }[] = [
     {
         question: 'O que significa garantia de banho?',
         answer:
-      'A garantia de banho refere-se à cobertura contra eventuais defeitos que possam surgir no banho de ouro ou ouro 18k aplicado às semijoias. Problemas como manchas brancas, pintas pretas, bolhas, descascados ou uma tonalidade avermelhada (indicativo de oxidação) são contemplados nessa garantia. Essa proteção é válida para cada brinco, colar, pulseira, anel, tornozeleira, choker, argola, bracelete ou conjunto de semijoia, garantindo que seu acessório feminino mantenha a qualidade e o brilho que fazem dele o presente ideal.',
+      'A garantia de banho refere-se à cobertura contra eventuais defeitos que possam surgir no banho de ouro aplicado às semijoias. Problemas como manchas brancas, pintas pretas, bolhas, descascados ou uma tonalidade avermelhada (indicativo de oxidação) são contemplados nessa garantia. Essa proteção é válida para cada brinco, colar, pulseira, anel, tornozeleira, choker, argola, bracelete ou conjunto de semijoia, garantindo que seu acessório feminino mantenha a qualidade e o brilho que fazem dele o presente ideal.',
     },
     {
         question: 'A Alexa Semijoias tem loja física?',
