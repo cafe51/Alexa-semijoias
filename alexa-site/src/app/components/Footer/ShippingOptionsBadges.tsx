@@ -1,17 +1,22 @@
 import Image from 'next/image';
+import correiosIcon from '../../../../public/assets/correiosIcon/correios.svg';
+import pacIcon from '../../../../public/assets/correiosIcon/pacIcon.png';
+import sedexIcon from '../../../../public/assets/correiosIcon/sedexicon.png';
+
+
 
 const badges = [
     {
-        imgSrc: 'https://www.correios.com.br/estrutura-da-pagina/precos-e-prazos/++theme++tema-do-portal-correios/static/imagens/correios.svg',
+        imgSrc: correiosIcon,
         alt: 'correios icon',
     },
 
     {
-        imgSrc: 'https://www.correios.com.br/estrutura-da-pagina/precos-e-prazos/imagens/pac.png/@@images/41baaf23-58ba-47bb-ad19-39c36ad33e0f.png',
+        imgSrc: pacIcon,
         alt: 'pac icon',
     },
     {
-        imgSrc: 'https://www.correios.com.br/estrutura-da-pagina/precos-e-prazos/imagens/sedex.png/@@images/affe60e4-2c22-4551-afb5-81bbb67438e8.png',
+        imgSrc: sedexIcon,
         alt: 'sedex icon',
     },
 
