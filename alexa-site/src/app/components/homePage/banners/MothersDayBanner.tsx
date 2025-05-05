@@ -145,7 +145,7 @@ export default function MothersDayBanner() {
                     </p>
                     { /* Botão de ação permanece inalterado */ }
                     <Link href="/colecoes/dia-das-maes" passHref legacyBehavior>
-                        <a className={ `
+                        <p className={ `
                             ${buttonBg} ${buttonHoverBg} text-white
                             font-semibold rounded-full shadow-md
                             text-lg
@@ -175,7 +175,7 @@ export default function MothersDayBanner() {
                             inline-block z-30
                         ` }>
                             CONFIRA AQUI
-                        </a>
+                        </p>
                     </Link>
                 </div>
 
