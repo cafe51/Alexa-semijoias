@@ -1,6 +1,22 @@
 import { Button } from '@/components/ui/button';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
+const NavFooterButton = ({ router, closeMenu, text, path }: { router: AppRouterInstance , closeMenu:() => void, text: string; path: string; }) => {
+    const classBorders = text === 'Cadastrar-se' ? 'border-l-0 rounded-r-none border-r-2' : 'border-r-0 rounded-l-none border-l-2';
+    return  (
+        <Button
+            variant="outline"
+            className={ `text-xs min-[440px]:text-base sm:text-lg border-y-0 border-[#FDF0F5] hover:bg-white ${ classBorders }` }
+            onClick={ () => {
+                router.push(path);
+                closeMenu();
+            } }
+        >
+            { text }
+        </Button>
+    );
+};
+
 export default function NavFooterUnlogged({ router, closeMenu }: {router: AppRouterInstance, closeMenu: () => void }) {
     return (
         <div
@@ -11,19 +27,9 @@ export default function NavFooterUnlogged({ router, closeMenu }: {router: AppRou
 
             } }
         >
-            <div className="flex justify-between items-center">
-                <Button variant="outline" className="border-l-0 border-y-0 rounded-r-none border-r-2 border-[#FDF0F5] hover:bg-white" onClick={ () => {
-                    router.push('/cadastro');
-                    closeMenu();
-                } }>
-    Cadastrar-se
-                </Button>
-                <Button variant="outline" className="border-r-0 border-y-0 rounded-l-none border-l-2 border-[#FDF0F5] hover:bg-white" onClick={ () => {
-                    router.push('/login');
-                    closeMenu();
-                } }>
-    Iniciar Sessão
-                </Button>
+            <div className="flex justify-evenly items-center">
+                <NavFooterButton router={ router } closeMenu={ closeMenu } text='Cadastrar-se' path='/cadastro'/>
+                <NavFooterButton router={ router } closeMenu={ closeMenu } text='Iniciar Sessão' path='/login'/>
             </div>
         </div>
     );
