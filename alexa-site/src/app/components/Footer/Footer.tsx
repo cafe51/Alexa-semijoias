@@ -1,12 +1,15 @@
 'use client';
-import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Mail, Phone } from 'lucide-react';
 import toTitleCase from '../../utils/toTitleCase';
 import { createSlugName } from '../../utils/createSlugName';
 import { FireBaseDocument, FooterSectionType, SectionType } from '../../utils/types';
 import { FooterSection } from './FooterSection';
-import SocialIcon from './SocialIcon';
 import FooterLogo from './FooterLogo';
+import SecurityBadges from './SecurityBadges';
+import PaymentOptionsBadges from './PaymentOptionsBadges';
+import ShippingOptionsBadges from './ShippingOptionsBadges';
+import SocialMediaBadges from './SocialMediaBadges';
 
 interface FooterProps {
   sections: (SectionType & FireBaseDocument)[];
@@ -77,36 +80,31 @@ export default function Footer({ sections }: FooterProps) {
                     </div>
                 </div>
 
-                <div className="border-t border-[#F8C3D3] mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center space-y-6 sm:space-y-0">
+                <div className="border-t border-[#F8C3D3] text-center mt-8 pt-8 flex flex-col lg:flex-row justify-between items-center space-y-6 sm:space-y-0">
                     <div className="mb-4 sm:mb-0">
                         <FooterLogo isMobile={ isMobile } />
                     </div>
-                    <div className="flex space-x-6 mb-4 sm:mb-0">
-                        <SocialIcon
-                            Icon={ Facebook }
-                            link="https://facebook.com/alexasemijoias"
-                            linkName="Link para o Facebook da ALEXA SEMIJOIAS"
-                        />
-                        <SocialIcon
-                            Icon={ Instagram }
-                            link="https://instagram.com/alexa.semijoias"
-                            linkName="Link para o Instagram da ALEXA SEMIJOIAS"
-                        />
-                    </div>
-                    <div className="text-[#333333] text-xs sm:text-sm lg:text-base">
-                        <p className="mb-2 flex items-center justify-center sm:justify-start">
+                    <SocialMediaBadges />
+                    <div className="text-[#333333] text-xs sm:text-sm lg:text-base flex flex-col items-center">
+                        <p className="mb-2 flex items-center justify-center sm:justify-start text-center">
                             <Mail className="mr-2" size={ 18 } />
-              alexasemijoias@alexasemijoias.com.br
+                            alexasemijoias@alexasemijoias.com.br
                         </p>
-                        <p className="flex items-center justify-center sm:justify-start">
+
+                        <p className="flex items-center justify-center sm:justify-start ">
                             <Phone className="mr-2" size={ 18 } />
-              (17) 98165-0632
+                            (17) 98165-0632
                         </p>
                     </div>
                 </div>
+                <div className='flex text-center flex-col justify-center items-center lg:flex-row lg:justify-around lg:items-around lg:text-start mt-8'>
+                    <PaymentOptionsBadges />
+                    <ShippingOptionsBadges />
+                    <SecurityBadges />
+                </div>
 
                 <div className="mt-8 text-center text-[#333333] text-xs sm:text-sm lg:text-base">
-                    <p>&copy; 2024 ALEXA SEMIJOIAS. Todos os direitos reservados.</p>
+                    <p>&copy; 2018 ALEXA SEMIJOIAS. Todos os direitos reservados.</p>
                 </div>
             </div>
         </footer>

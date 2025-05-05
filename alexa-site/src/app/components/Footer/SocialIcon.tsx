@@ -1,8 +1,9 @@
 import { LucideProps } from 'lucide-react';
 import Link from 'next/link';
+import { IconType } from 'react-icons';
 
 interface SocialIconProps {
-    Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>;
+    Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>> | IconType;
     link: string;
     linkName: string;
 }
