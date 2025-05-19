@@ -8,16 +8,6 @@ import Autoplay from 'embla-carousel-autoplay';
 import { NextButton, PrevButton } from '../../EmblaCarousel/EmblaCarouselArrowButtons';
 import Banner from './Banner';
 
-// const bannersMock = [
-//     {
-//         bannerName: 'Banner do Dia das Mães',
-//         bannerImageMobile: 'https://lojavivara.vtexassets.com/assets/vtex.file-manager-graphql/images/6716819b-59a3-4cdf-866b-69652d51aff4___75e7ecbd6feb45ea9d6ed51808a65cc4.png',
-//         bannerImageDesktop: 'https://lojavivara.vtexassets.com/assets/vtex.file-manager-graphql/images/2c634d56-e8f2-4a17-b117-31ae02db40c9___d742c12155483336707ddeda3b477115.png',
-//         bannerTablet: 'https://lojavivara.vtexassets.com/assets/vtex.file-manager-graphql/images/786357eb-e801-49a3-847e-bcf6fc875c9c___4d4e4bc18a567f020eb2e9fdc3e315de.jpg',
-//         pagePath: 'colecoes/dia-das-maes',
-//     },
-// ];
-
 interface HeroSectionProps {
   lastAddProduct: ProductBundleType & FireBaseDocument | undefined;
   banners: (BannersType & FireBaseDocument)[] | undefined;
@@ -75,6 +65,9 @@ export default function HeroCarousel({ lastAddProduct, banners }: HeroSectionPro
                     </div>
                     {
                         banners && banners.length > 0 && banners.map((banner, index) => {
+                            if (!banner.showBanner) return null;
+                            if (!banner.bannerImageMobile) return null;
+                            if (!banner.bannerImageDesktop) return null;
                             return (
                                 <div key={ index } className="flex-[0_0_var(--slide-size)] pl-[var(--slide-spacing)]">
                                     <Banner
