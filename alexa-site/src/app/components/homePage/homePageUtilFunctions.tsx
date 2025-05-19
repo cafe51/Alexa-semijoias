@@ -1,11 +1,26 @@
 // src/app/components/homePage/homePageUtilFunctions.tsx
-import { FireBaseDocument, ProductBundleType, SectionType } from '@/app/utils/types';
+import { BannersType, FireBaseDocument, ProductBundleType, SectionType } from '@/app/utils/types';
 
 import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { projectFirestoreDataBase } from '@/app/firebase/config';
 import { fetchRandomProductForSection, ProductsResponse } from '@/app/services/products';
 import { serializeData } from '@/app/utils/serializeData';
 import { SITE_URL } from '@/app/utils/constants';
+
+// Função para buscar os banners
+async function getBanners() {
+    try {
+        const bannersRef = collection(projectFirestoreDataBase, 'banners');
+        const bannersSnapshot = await getDocs(bannersRef);
+        return bannersSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...serializeData(doc.data()),
+        })) as (BannersType & FireBaseDocument)[];
+    } catch (error) {
+        console.error('Erro ao buscar banners:', error);
+        return [];
+    }
+}
 
 // Função para buscar as seções (única chamada)
 async function getSections() {
@@ -123,6 +138,7 @@ function filtrarResultadosValidos<T>(array: (T | null | false | undefined)[]): T
 }
 
 export {
+    getBanners,
     getSections,
     getFeaturedProducts,
     getRandomProductsForSections,

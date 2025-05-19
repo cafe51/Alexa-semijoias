@@ -2,6 +2,35 @@
 import { Timestamp, WhereFilterOp } from 'firebase/firestore';
 import { SavedSubSectionType } from '../hooks/useSectionManagement';
 
+export type BannerImageType = 'bannerImageDesktop' | 'bannerImageMobile' | 'bannerTablet';
+
+export type ImageUploadType = {
+  file: File | null;
+  preview: string;
+  isNew: boolean;
+  path?: string;
+};
+
+export type BannerFormData = {
+  bannerName: string;
+  showBanner: boolean;
+  pagePath: string;
+  bannerImageDesktop: ImageUploadType;
+  bannerImageMobile: ImageUploadType;
+  bannerTablet: ImageUploadType;
+};
+
+export type BannersType = {
+  bannerName: string;
+  showBanner: boolean;
+  bannerImageMobile: string;
+  bannerImageDesktop: string;
+  bannerTablet?: string;
+  pagePath?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 export type CollectionType = {
     name: string;
     slugName: string;

@@ -1,4 +1,4 @@
-// app/components/ToggleSwitch.tsx
+// app/admin/components/ToggleSwitch.tsx
 'use client';
 import React from 'react';
 

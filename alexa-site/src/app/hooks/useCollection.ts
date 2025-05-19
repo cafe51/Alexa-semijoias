@@ -21,7 +21,9 @@ export const useCollection = <T>(collectionName: string) => {
             console.log('projectFirestoreDataBase', projectFirestoreDataBase);
             console.log('collectionName', collectionName);
             console.log('dataObj', dataObj);
-            await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
+            const newDoc = await addDoc(collection(projectFirestoreDataBase, collectionName), dataObj);
+            console.log('newDoc', newDoc);
+            return newDoc; 
         }
     }, [collectionName]);
   
@@ -53,7 +55,7 @@ export const useCollection = <T>(collectionName: string) => {
         }
     }, [collectionName]);
 
-    const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object | null) => {
+    const updateDocumentField = useCallback(async(id: string, field: string, value: string | number | string[] | number[] | object | null | boolean) => {
         try {
             const docRef = doc(projectFirestoreDataBase, collectionName, id);
             console.log('chamou update', id, field, value, docRef);

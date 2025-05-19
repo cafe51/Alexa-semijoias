@@ -1,3 +1,4 @@
+// src/app/firebase/storageUtils.ts
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from './config';
 

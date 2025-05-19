@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { CouponType, FireBaseDocument } from '@/app/utils/types';
 import { formatPrice } from '@/app/utils/formatPrice';
-import ToggleSwitch from './ToggleSwitch';
+import ToggleSwitch from '../components/ToggleSwitch';
 
 interface MobileCouponDetailsProps {
   coupon: CouponType & FireBaseDocument;

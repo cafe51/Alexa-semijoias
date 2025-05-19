@@ -61,6 +61,12 @@ export const menuItems = [
     },
     { 
         icon: Settings, 
+        label: 'Banners', 
+        href: '/admin/banners',
+        enabled: true,
+    },
+    { 
+        icon: Settings, 
         label: 'metadeanuncio', 
         href: '/admin/metadeanuncio',
         enabled: true,

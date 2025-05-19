@@ -5,7 +5,7 @@ import { CouponType, FireBaseDocument } from '@/app/utils/types';
 import { useCollection } from '@/app/hooks/useCollection';
 import CouponForm from './CouponForm';
 import SlideInModal from '@/app/components/ModalMakers/SlideInModal';
-import ToggleSwitch from './ToggleSwitch';
+import ToggleSwitch from '../components/ToggleSwitch';
 import DesktopCouponTable from './DesktopCouponTable';
 import MobileCouponList from './MobileCouponList';
 import MobileCouponDetails from './MobileCouponDetails';

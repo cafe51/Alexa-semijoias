@@ -13,6 +13,7 @@ import {
     getTwoRandomSections,
     getRandomProductsForDualTitlesSection,
     filtrarResultadosValidos,
+    getBanners,
 } from './homePageUtilFunctions';
   
 import { fetchDiscoverProductsForSection } from '@/app/services/discoverProducts';
@@ -22,6 +23,8 @@ import HeroCarousel from './banners/HeroCarousel';
 export const revalidate = 60;
   
 export default async function HomeContent() {
+    const banners = await getBanners();
+
     // Busca último produto adicionado
     const lastAddProduct = await getLastProductAdded();
 
@@ -112,7 +115,7 @@ export default async function HomeContent() {
   
     return (
         <div className="bg-[#FAF9F6] text-[#333333] min-h-screen w-full">
-            <HeroCarousel lastAddProduct={ lastAddProduct } />
+            <HeroCarousel lastAddProduct={ lastAddProduct } banners={ banners } />
             { discoverProducts && discoverProducts.length > 0 && (
                 <DiscoverOurProducts products={ discoverProducts } sections={ discoverSections } />
             ) }
