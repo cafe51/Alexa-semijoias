@@ -44,7 +44,11 @@ export default function CouponSection({
 
     const handleApply = async() => {
         if (!couponCodeInput || !carrinho) return;
-        const removePromotionalPriceCondition = couponCodeInput.trim() === COUPONREVENDEDORAFIRSTCODE || couponCodeInput.trim() === COUPONREVENDEDORAVIP;
+        const removePromotionalPriceCondition = (
+            couponCodeInput.trim() === COUPONREVENDEDORAFIRSTCODE
+            || couponCodeInput.trim() === COUPONREVENDEDORAVIP
+            || couponCodeInput.trim() === 'MARLI15'
+        );
         const cartToCouponGenerate = removePromotionalPriceCondition ? carrinho.map((item) => ({
             ...item,
             value: {
