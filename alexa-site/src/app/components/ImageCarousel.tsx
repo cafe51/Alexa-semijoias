@@ -206,7 +206,7 @@ export default function ImageCarousel({ productData, options }: ImageCarouselPro
                             )) }
                         </div>
                         { /* Dot Navigation sobreposta à imagem */ }
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50">
+                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
                             { scrollSnaps.map((_, index) => (
                                 <button
                                     key={ index }
@@ -218,10 +218,10 @@ export default function ImageCarousel({ productData, options }: ImageCarouselPro
                             )) }
                         </div>
                         { /* Botões de navegação sobrepostos */ }
-                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50">
+                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
                             <PrevButton onClick={ scrollPrev } />
                         </div>
-                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-50">
+                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
                             <NextButton onClick={ scrollNext } />
                         </div>
                     </div>
