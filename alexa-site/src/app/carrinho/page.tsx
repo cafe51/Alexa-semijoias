@@ -152,7 +152,7 @@ export default function Carrinho() {
                 <CartHeader cartItems={ carrinho } router={ router }/>
 
                 <div className="flex flex-col lg:flex-row gap-8">
-                    <CartItemList cartItems={ carrinho } />
+                    <CartItemList cartItems={ carrinhoState ?? [] } />
                     <div className='flex flex-col gap-4'>
                         <CouponSection 
                             carrinho={ carrinhoState }
