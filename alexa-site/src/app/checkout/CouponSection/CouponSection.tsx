@@ -49,6 +49,7 @@ export default function CouponSection({
             || couponCodeInput.trim() === COUPONREVENDEDORAVIP
             || couponCodeInput.trim() === 'MARLI15'
         );
+
         const cartToCouponGenerate = removePromotionalPriceCondition ? carrinho.map((item) => ({
             ...item,
             value: {

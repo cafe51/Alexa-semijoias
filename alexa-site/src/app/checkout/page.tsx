@@ -59,7 +59,11 @@ export default function Checkout() {
     }, [carrinho]);
 
     useEffect(() => {
-        const removePromotionalPriceCondition = couponCode.trim() === COUPONREVENDEDORAFIRSTCODE || couponCode.trim() === COUPONREVENDEDORAVIP;
+        const removePromotionalPriceCondition = (
+            couponCode.trim() === COUPONREVENDEDORAFIRSTCODE
+            ||couponCode.trim() === COUPONREVENDEDORAVIP
+            || couponCode.trim() === 'MARLI15'
+        );
         if(removePromotionalPriceCondition) {
             if(!carrinho) return;
             console.log('map cart revendedora coupon');
