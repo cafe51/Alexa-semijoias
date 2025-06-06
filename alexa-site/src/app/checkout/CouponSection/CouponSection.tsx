@@ -48,6 +48,9 @@ export default function CouponSection({
             couponCodeInput.trim() === COUPONREVENDEDORAFIRSTCODE
             || couponCodeInput.trim() === COUPONREVENDEDORAVIP
             || couponCodeInput.trim() === 'MARLI15'
+            || couponCodeInput.trim() === 'ALE15'
+            || couponCodeInput.trim() === 'DUDA15'
+            || couponCodeInput.trim() === 'DAIANE15'
         );
 
         const cartToCouponGenerate = removePromotionalPriceCondition ? carrinho.map((item) => ({

@@ -56,6 +56,9 @@ export default function Carrinho() {
             couponCode.trim() === COUPONREVENDEDORAFIRSTCODE
             || couponCode.trim() === COUPONREVENDEDORAVIP
             || couponCode.trim() === 'MARLI15'
+            || couponCode.trim() === 'ALE15'
+            || couponCode.trim() === 'DUDA15'
+            || couponCode.trim() === 'DAIANE15'
         );
         if(removePromotionalPriceCondition) {
             if(!carrinho) return;
