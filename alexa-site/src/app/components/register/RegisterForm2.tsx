@@ -97,7 +97,7 @@ export default function RegisterForm2({ setSignedEmail, setIncompleteSignIn, set
         }
         
         if (!formData.password) {
-            newErrors.password = 'Senha é obrigatória';
+            newErrors.password = 'Crie uma senha';
         } else if (formData.password.length < 6) {
             newErrors.password = 'A senha deve ter pelo menos 6 caracteres';
         }
