@@ -59,6 +59,9 @@ export default function Carrinho() {
             || couponCode.trim() === 'ALE15'
             || couponCode.trim() === 'DUDA15'
             || couponCode.trim() === 'DAIANE15'
+            || couponCode.trim() === 'LI15'
+
+            
         );
         if(removePromotionalPriceCondition) {
             if(!carrinho) return;

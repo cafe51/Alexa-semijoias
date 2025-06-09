@@ -51,6 +51,8 @@ export default function CouponSection({
             || couponCodeInput.trim() === 'ALE15'
             || couponCodeInput.trim() === 'DUDA15'
             || couponCodeInput.trim() === 'DAIANE15'
+            || couponCodeInput.trim() === 'LI15'
+
         );
 
         const cartToCouponGenerate = removePromotionalPriceCondition ? carrinho.map((item) => ({
