@@ -10,10 +10,11 @@ interface PaymentSummaryProps {
   frete: number | undefined;
   paymentOption: string;
   installments: number | undefined | null;
+  coupon: string | null | undefined
 }
 
 
-const PaymentSummary: React.FC<PaymentSummaryProps> = ({ subtotalPrice, frete, paymentOption, installments }) => {
+const PaymentSummary: React.FC<PaymentSummaryProps> = ({ subtotalPrice, frete, paymentOption, installments, coupon }) => {
     return (
         <Card className="border-[#F8C3D3] shadow-md rounded">
             <CardHeader className="bg-[#F8C3D3] text-[#333333]">
@@ -46,6 +47,10 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({ subtotalPrice, frete, p
                 </div>
                 <div className="text-sm text-gray-600 mt-2">
                     <p>Método de pagamento: { paymentOption }</p>
+                    {
+                        coupon && <p>Cupom: <span className='font-bold'>{ coupon }</span></p>
+
+                    }
                     {
                         (paymentOption.toLowerCase() !== 'pix')
                         &&

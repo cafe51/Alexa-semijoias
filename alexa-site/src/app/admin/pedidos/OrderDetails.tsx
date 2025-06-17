@@ -147,6 +147,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                         subtotalPrice={ pedido.valor.soma }
                         installments={ pedido.installments }
                         paymentOption={ pedido.paymentOption }
+                        coupon={ pedido.couponId }
                     />
                     <OrderItems cartSnapShot={ pedido.cartSnapShot } />
                     <DeliveryAddress address={ pedido.endereco } />
@@ -190,6 +191,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                                 subtotalPrice={ pedido.valor.soma }
                                 installments={ pedido.installments }
                                 paymentOption={ pedido.paymentOption }
+                                coupon={ pedido.couponId }
                             />
                             {
                                 pedidoState.pixResponse && showPixPayment &&
@@ -257,6 +259,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                             subtotalPrice={ pedido.valor.soma }
                             installments={ pedido.installments }
                             paymentOption={ pedido.paymentOption }
+                            coupon={ pedido.couponId }
                         />
                         {
                             pedidoState.pixResponse && showPixPayment &&
