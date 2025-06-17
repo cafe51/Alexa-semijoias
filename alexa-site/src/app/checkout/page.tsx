@@ -67,6 +67,8 @@ export default function Checkout() {
             || couponCode.trim() === 'DUDA15'
             || couponCode.trim() === 'DAIANE15'
             || couponCode.trim() === 'LI15'
+            || couponCode.trim() === 'SUETE15'
+
 
         );
         if(removePromotionalPriceCondition) {

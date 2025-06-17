@@ -52,6 +52,8 @@ export default function CouponSection({
             || couponCodeInput.trim() === 'DUDA15'
             || couponCodeInput.trim() === 'DAIANE15'
             || couponCodeInput.trim() === 'LI15'
+            || couponCodeInput.trim() === 'SUETE15'
+
 
         );
 
