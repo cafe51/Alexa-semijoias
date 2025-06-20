@@ -61,6 +61,8 @@ export default function Carrinho() {
             || couponCode.trim() === 'DAIANE15'
             || couponCode.trim() === 'LI15'
             || couponCode.trim() === 'SUETE15'
+            || couponCode.trim() === 'FRAN15'
+
 
 
             
