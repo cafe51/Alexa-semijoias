@@ -63,6 +63,8 @@ export default function Carrinho() {
             || couponCode.trim() === 'SUETE15'
             || couponCode.trim() === 'FRAN15'
             || couponCode.trim() === 'MAE15'
+            || couponCode.trim() === 'SIMONE15'
+
 
 
 

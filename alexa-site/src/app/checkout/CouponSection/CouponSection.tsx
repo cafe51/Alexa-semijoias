@@ -55,6 +55,7 @@ export default function CouponSection({
             || couponCodeInput.trim() === 'SUETE15'
             || couponCodeInput.trim() === 'FRAN15'
             || couponCodeInput.trim() === 'MAE15'
+            || couponCodeInput.trim() === 'SIMONE15'
 
 
 

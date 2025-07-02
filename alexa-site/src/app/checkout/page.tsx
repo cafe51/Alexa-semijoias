@@ -70,6 +70,8 @@ export default function Checkout() {
             || couponCode.trim() === 'SUETE15'
             || couponCode.trim() === 'FRAN15'
             || couponCode.trim() === 'MAE15'
+            || couponCode.trim() === 'SIMONE15'
+
 
 
 
