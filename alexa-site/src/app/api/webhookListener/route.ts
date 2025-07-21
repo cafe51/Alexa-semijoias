@@ -72,11 +72,12 @@ export async function POST(req: NextRequest) {
                         await sendgrid.send(cancelMessageEmail);
                     }
                 }
-
-                await orderRef.update({
-                    status: newStatus,
-                    updatedAt: new Date(),
-                });
+                if(orderData.status !== 'entregue') {
+                    await orderRef.update({
+                        status: newStatus,
+                        updatedAt: new Date(),
+                    });
+                }
 
                 console.log(`Updated order ${orderId} status to ${newStatus}`);
             }
