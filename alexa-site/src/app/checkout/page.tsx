@@ -226,7 +226,7 @@ export default function Checkout() {
                         couponDiscount={ couponDiscount }
                         
                     />
-                    { /* <PaymentSectionWithMercadoPago
+                    <PaymentSectionWithMercadoPago
                         state={ state }
                         cartPrice={ cartPrice } // valor do carrinho com desconto
                         userInfo={ userInfo }
@@ -239,7 +239,7 @@ export default function Checkout() {
                         setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                         couponDiscount={ couponDiscount }
                         couponId={ couponCode }
-                    /> */ }
+                    />
                 </div>
             ) : screenSize === 'medium' ? (
                 // Layout Medium
@@ -293,7 +293,7 @@ export default function Checkout() {
 
 
                             />
-                            { /* <PaymentSectionWithMercadoPago
+                            <PaymentSectionWithMercadoPago
                                 state={ state }
                                 cartPrice={ cartPrice }
                                 userInfo={ userInfo }
@@ -306,7 +306,7 @@ export default function Checkout() {
                                 setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
                                 couponDiscount={ couponDiscount }
                                 couponId={ couponCode }
-                            /> */ }
+                            />
                         </div>
                     </div>
                 </div>
@@ -360,7 +360,7 @@ export default function Checkout() {
 
 
                         />
-                        { /* <PaymentSectionWithMercadoPago
+                        <PaymentSectionWithMercadoPago
                             state={ state }
                             cartPrice={ cartPrice }
                             userInfo={ userInfo }
@@ -374,10 +374,8 @@ export default function Checkout() {
                             couponDiscount={ couponDiscount }
                             couponId={ couponCode }
 
-                        /> */ }
+                        />
                     </div>
-
-                    
     
                     { /* Coluna 3: Resumo do Pedido */ }
                     <div>
@@ -408,20 +406,6 @@ export default function Checkout() {
                     </div>
                 </div>
             ) }
-            <PaymentSectionWithMercadoPago
-                state={ state }
-                cartPrice={ cartPrice }
-                userInfo={ userInfo }
-                preferenceId={ preferenceId }
-                showPaymentSection={ showPaymentSection }
-                setShowPaymentSection={ setShowPaymentSection }
-                showPaymentFailSection={ showPaymentFailSection }
-                setShowPaymentFailSection={ setShowPaymentFailSection }
-                setIsProcessingPayment={ setIsProcessingPayment }
-                setIsPaymentFinished={ (isPaymentFinished: boolean) => setIsPaymentFinished(isPaymentFinished) }
-                couponDiscount={ couponDiscount }
-                couponId={ couponCode }
-            />
         </main>
     );
 }
