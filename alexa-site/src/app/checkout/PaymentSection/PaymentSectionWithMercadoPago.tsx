@@ -1,9 +1,9 @@
 import { FireBaseDocument, UseCheckoutStateType, UserType } from '@/app/utils/types';
-import PaymentSectionPending from './PaymentSectionPending';
+// import PaymentSectionPending from './PaymentSectionPending';
 import PaymentBrick from './PaymentBrick';
-import PaymentFailSection from './PaymentFailSection';
+// import PaymentFailSection from './PaymentFailSection';
 import { useState } from 'react';
-import LoadingIndicator from '@/app/components/LoadingIndicator';
+// import LoadingIndicator from '@/app/components/LoadingIndicator';
 
 interface PaymentSectionWithMercadoPagoProps {
     state: UseCheckoutStateType;
@@ -43,10 +43,10 @@ export default function PaymentSectionWithMercadoPago({
     return (
         <>
             {
-                loadingPayment && <LoadingIndicator />
+                // loadingPayment && <LoadingIndicator />
             }
             {
-                (!loadingPayment && state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) && <PaymentSectionPending />
+                // (!loadingPayment && state.editingAddressMode || !(state.selectedDeliveryOption && state.deliveryOption)) && <PaymentSectionPending />
             }
             {
                 !loadingPayment && !state.editingAddressMode && userInfo && showPaymentSection && state.deliveryOption && state.deliveryOption.price !== null && state.deliveryOption.price !== undefined && preferenceId && !showPaymentFailSection &&
@@ -64,12 +64,12 @@ export default function PaymentSectionWithMercadoPago({
             />
             }
             {
-                !loadingPayment && showPaymentFailSection && !showPaymentSection &&
-            <PaymentFailSection
-                setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
-                setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
-                showPaymentFailSection= { showPaymentFailSection }
-            />
+            //     !loadingPayment && showPaymentFailSection && !showPaymentSection &&
+            // <PaymentFailSection
+            //     setShowPaymentSection={ (showPaymentSection: boolean) => setShowPaymentSection(showPaymentSection) }
+            //     setShowPaymentFailSection={ (showPaymentFailSection: boolean | string) => setShowPaymentFailSection(showPaymentFailSection) }
+            //     showPaymentFailSection= { showPaymentFailSection }
+            // />
             }
         </>
     );
