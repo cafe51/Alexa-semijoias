@@ -26,16 +26,29 @@ export const useWindowSize = (): WindowSize => {
                 screenSize = 'desktop';
             }
 
-            setWindowSize({
-                width: width,
-                screenSize: screenSize,
+            // Só atualiza se o screenSize realmente mudou
+            setWindowSize(prev => {
+                if (prev.screenSize !== screenSize) {
+                    return { width, screenSize };
+                }
+                return prev;
             });
         }
 
-        window.addEventListener('resize', handleResize);
-        handleResize();
+        // Debounce para evitar múltiplas chamadas
+        let timeoutId: NodeJS.Timeout;
+        function debouncedHandleResize() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(handleResize, 150);
+        }
 
-        return () => window.removeEventListener('resize', handleResize);
+        window.addEventListener('resize', debouncedHandleResize);
+        handleResize(); // Chamada inicial
+
+        return () => {
+            window.removeEventListener('resize', debouncedHandleResize);
+            clearTimeout(timeoutId);
+        };
     }, []);
 
     return windowSize;
