@@ -1,11 +1,12 @@
 // src/app/api/send_email_confirmation/route.ts
 
+
 import { NextRequest, NextResponse } from 'next/server';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
-import sendgrid from '@sendgrid/mail';
+import { Resend } from 'resend';
 import { generateEmailMessage } from '@/app/utils/emailHandler/sendEmailFunctions';
 
-sendgrid.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY as string);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
 export async function POST(request: NextRequest) {
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
         }
 
         const orderId = orderData.paymentId.toString();
-        
+
 
         // console.log('*******************');
         // console.log('*******************');
@@ -36,19 +37,19 @@ export async function POST(request: NextRequest) {
         // console.log('*******************');
         // console.log('*******************');
         // console.log('*******************');
-    
+
 
         // Envia o e-mail de confirmação
         const message = generateEmailMessage('orderConfirmation', userData, orderId, orderData);
 
-        if(!message) {
+        if (!message) {
             return NextResponse.json(
                 { error: 'Falha ao gerar mensagem de e-mail de confirmação' },
                 { status: 500 },
             );
         }
-        
-        await sendgrid.send(message);
+
+        await resend.emails.send(message);
 
         const messageSaleForAdmin = {
             to: 'alexasemijoias@alexasemijoias.com',
@@ -58,10 +59,10 @@ export async function POST(request: NextRequest) {
         };
 
 
-        await sendgrid.send(messageSaleForAdmin);
+        await resend.emails.send(messageSaleForAdmin);
 
 
-        return NextResponse.json({  message: 'E-mail de confirmação enviado' }, { status: 200 });
+        return NextResponse.json({ message: 'E-mail de confirmação enviado' }, { status: 200 });
     } catch (error) {
         console.error('Erro ao processar confirmação do pedido:', error);
         return NextResponse.json(

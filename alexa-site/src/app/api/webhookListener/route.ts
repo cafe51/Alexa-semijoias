@@ -1,9 +1,10 @@
+
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { adminDb } from '@/app/firebase/admin-config';
 import { FireBaseDocument, OrderType, StatusType, UserType } from '@/app/utils/types';
 import { consoleLogPaymentResponseData, consoleLogWebHookResponse } from '@/app/utils/consoleLogPaymentResponseData';
-import sendgrid from '@sendgrid/mail';
+import { Resend } from 'resend';
 import { generateEmailMessage } from '@/app/utils/emailHandler/sendEmailFunctions';
 import { updateCuponsDocStock, updateProductStock } from './firestoreUpdateFuncionts';
 import { consoleLogEmailEnviado, consoleLogPreparandoEnvio } from './consolelogs';
@@ -11,7 +12,7 @@ import { consoleLogEmailEnviado, consoleLogPreparandoEnvio } from './consolelogs
 const client = new MercadoPagoConfig({ accessToken: process.env.NEXT_PUBLIC_MPAGOKEY! });
 const mpPayment = new Payment(client);
 
-sendgrid.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY as string);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
     try {
@@ -42,24 +43,24 @@ export async function POST(req: NextRequest) {
 
                 let newStatus: StatusType;
                 switch (paymentInfo.status) {
-                case 'approved':
-                    newStatus = 'preparando para o envio';
-                    consoleLogPreparandoEnvio(orderData);
+                    case 'approved':
+                        newStatus = 'preparando para o envio';
+                        consoleLogPreparandoEnvio(orderData);
 
-                    if (approvedMessageEmail && orderData.status !== 'entregue' && orderData.status !== 'cancelado') {
-                        consoleLogEmailEnviado();
-                        await sendgrid.send(approvedMessageEmail);
-                    }
-                    break;
-                case 'cancelled':
-                case 'rejected':
-                    newStatus = 'cancelado';
-                    break;
-                default:
-                    newStatus = 'aguardando pagamento';
+                        if (approvedMessageEmail && orderData.status !== 'entregue' && orderData.status !== 'cancelado') {
+                            consoleLogEmailEnviado();
+                            await resend.emails.send(approvedMessageEmail);
+                        }
+                        break;
+                    case 'cancelled':
+                    case 'rejected':
+                        newStatus = 'cancelado';
+                        break;
+                    default:
+                        newStatus = 'aguardando pagamento';
                 }
 
-                if(newStatus === 'cancelado') {
+                if (newStatus === 'cancelado') {
                     // Devolvendo os itens para o estoque
                     for (const item of orderData.cartSnapShot) {
                         await updateProductStock(item.productId, item.skuId, item.quantidade, '+');
@@ -69,10 +70,10 @@ export async function POST(req: NextRequest) {
                     }
 
                     if (cancelMessageEmail) {
-                        await sendgrid.send(cancelMessageEmail);
+                        await resend.emails.send(cancelMessageEmail);
                     }
                 }
-                if(orderData.status !== 'entregue') {
+                if (orderData.status !== 'entregue') {
                     await orderRef.update({
                         status: newStatus,
                         updatedAt: new Date(),

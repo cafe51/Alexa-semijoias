@@ -1,11 +1,12 @@
 // src/app/api/send_email_order_sent/route.ts
 
+
 import { NextRequest, NextResponse } from 'next/server';
 import { FireBaseDocument, OrderType, UserType } from '@/app/utils/types';
-import sendgrid from '@sendgrid/mail';
+import { Resend } from 'resend';
 import { generateEmailMessage } from '@/app/utils/emailHandler/sendEmailFunctions';
 
-sendgrid.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY as string);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
     try {
@@ -30,16 +31,16 @@ export async function POST(request: NextRequest) {
         // Envia o e-mail de envio de pedido
         const message = generateEmailMessage('shippingConfirmation', userData, orderId, orderData);
 
-        if(!message) {
+        if (!message) {
             return NextResponse.json(
                 { error: 'Falha ao gerar mensagem de e-mail de envio de pedido' },
                 { status: 500 },
             );
         }
-        
-        await sendgrid.send(message);
 
-        return NextResponse.json({  message: 'E-mail de envio de pedido enviado' }, { status: 200 });
+        await resend.emails.send(message);
+
+        return NextResponse.json({ message: 'E-mail de envio de pedido enviado' }, { status: 200 });
     } catch (error) {
         console.error('Erro ao processar envio de pedido enviado:', error);
         return NextResponse.json(
