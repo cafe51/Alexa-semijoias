@@ -58,7 +58,7 @@ export function ProductList(products: CartHistoryType[]): string {
 
 export function Header(): string {
     const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/alexa-semijoias.appspot.com/o/logo%2FverticalLogo.png?alt=media&token=dab5e38f-cb5f-41fa-9667-d205a2fc6a0f';
-    
+
     return `
     <table width="100%" cellpadding="35" cellspacing="0" border="0" style="background-color: white; border-radius: 12px 12px 0 0;">
         <tr>
@@ -99,7 +99,7 @@ function formatPriceSummary(value: ValueType, totalItensQuantity: number): strin
             <td>
                 <table width="100%" cellpadding="8" cellspacing="0" border="0">
                     <tr>
-                        <td style="font-size: 14px; color: #666;">Subtotal (${ totalItensQuantity + (totalItensQuantity > 1 ? ' itens' : ' item') }):</td>
+                        <td style="font-size: 14px; color: #666;">Subtotal (${totalItensQuantity + (totalItensQuantity > 1 ? ' itens' : ' item')}):</td>
                         <td align="right" style="font-size: 14px; color: #666;">${formatPrice(value.soma)}</td>
                     </tr>
                     <tr>
@@ -253,7 +253,7 @@ export function formatOrderTimeline(status: StatusType): string {
 
 export function formatNextSteps(status: StatusType): string {
     if (status === 'cancelado') return '';
-    
+
     if (status === 'aguardando pagamento') {
         return `
         <table width="100%" cellpadding="25" cellspacing="0" border="0" style="background-color: #F8F9FA; border-radius: 8px; margin: 25px 0;">
@@ -302,27 +302,26 @@ export function formatNextSteps(status: StatusType): string {
 
 export function Footer(): string {
     return `
-    <table width="100%" cellpadding="25" cellspacing="0" border="0" style="background-color: #f5f5f5;">
+    <table width="100%" cellpadding="25" cellspacing="0" border="0" style="background-color: #f5f5f5; border-top: 1px solid #e5e5e5;">
         <tr>
             <td align="center">
-                <table cellpadding="0" cellspacing="0" border="0">
+                <table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%;">
                     <tr>
-                        <td align="center" style="padding-bottom: 15px;">
-                            <a href="https://www.instagram.com/alexa.semijoias/" style="color: #666; text-decoration: none; margin: 0 10px; font-size: 16px;">Instagram</a>
-                            <span style="color: #666; font-size: 16px;">|</span>
-                            <a href="https://www.facebook.com/alexasemijoias/" style="color: #666; text-decoration: none; margin: 0 10px; font-size: 16px;">Facebook</a>
-                            <span style="color: #666; font-size: 16px;">|</span>
-                            <a href="https://api.whatsapp.com/message/Y2ON3VGEHF4JP1?autoload=1&app_absent=0" style="color: #666; text-decoration: none; margin: 0 10px; font-size: 16px;">WhatsApp</a>
+                        <td align="center" style="padding-bottom: 20px;">
+                            <a href="https://www.instagram.com/alexa.semijoias/" style="color: #666; text-decoration: none; margin: 0 15px; font-size: 14px; font-weight: 600;">Instagram</a>
+                            <a href="https://www.facebook.com/alexasemijoias/" style="color: #666; text-decoration: none; margin: 0 15px; font-size: 14px; font-weight: 600;">Facebook</a>
+                            <a href="https://api.whatsapp.com/message/Y2ON3VGEHF4JP1?autoload=1&app_absent=0" style="color: #666; text-decoration: none; margin: 0 15px; font-size: 14px; font-weight: 600;">WhatsApp</a>
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" style="padding: 8px 0;">
-                            <p style="margin: 0; color: #666; font-size: 16px;">&copy; ${new Date().getFullYear()} Alexa Semijoias. Todos os direitos reservados.</p>
+                        <td align="center" style="padding-bottom: 10px; color: #999; font-size: 12px; line-height: 1.5;">
+                            <p style="margin: 0;">Voc&ecirc; est&aacute; recebendo este e-mail porque realizou uma compra ou se cadastrou em nosso site.</p>
+                            <p style="margin: 5px 0 0 0;">Alexa Semijoias &bullet; Enviamos com amor para todo o Brasil.</p>
                         </td>
                     </tr>
                     <tr>
-                        <td align="center">
-                            <small style="color: #999; font-size: 14px;">Este &eacute; um e-mail autom&aacute;tico, por favor n&atilde;o responda.</small>
+                        <td align="center" style="padding-top: 15px; border-top: 1px solid #e5e5e5; color: #999; font-size: 12px;">
+                            <p style="margin: 0;">&copy; ${new Date().getFullYear()} Alexa Semijoias. Todos os direitos reservados.</p>
                         </td>
                     </tr>
                 </table>

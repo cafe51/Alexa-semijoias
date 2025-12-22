@@ -27,7 +27,7 @@ const AdminDashboard = () => {
     if (error) {
         return (
             <div className="text-red-500 text-center">
-                { error }
+                {error}
             </div>
         );
     }
@@ -35,30 +35,30 @@ const AdminDashboard = () => {
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-[#333333]">Painel de Controle</h2>
-            
-            { /* Resumo Geral */ }
+
+            { /* Resumo Geral */}
             <div className="grid gap-4 md:grid-cols-3">
                 <StatCard
                     title="Produtos Ativos"
-                    value={ products.active.toString() }
-                    secondaryValue={ `${products.total} produtos no total` }
-                    onClick={ () => router.push('/admin/produtos') }
+                    value={products.active.toString()}
+                    secondaryValue={`${products.total} produtos no total`}
+                    onClick={() => router.push('/admin/produtos')}
                 />
                 <StatCard
                     title="Clientes"
-                    value={ customers.total.toString() }
-                    secondaryValue={ `${customers.last30days} novos nos últimos 30 dias` }
-                    onClick={ () => router.push('/admin/clientes') }
+                    value={customers.total.toString()}
+                    secondaryValue={`${customers.last30days} novos nos últimos 30 dias`}
+                    onClick={() => router.push('/admin/clientes')}
                 />
                 <StatCard
                     title="Total Histórico"
-                    value={ formatPrice(sales.allTime.total) }
-                    secondaryValue={ `${sales.allTime.count} pedidos no total` }
-                    onClick={ () => router.push('/admin/pedidos') }
+                    value={formatPrice(sales.allTime.total)}
+                    secondaryValue={`${sales.allTime.count} pedidos no total`}
+                    onClick={() => router.push('/admin/pedidos')}
                 />
             </div>
 
-            { /* Tabs com períodos */ }
+            { /* Tabs com períodos */}
             <Tabs defaultValue="24h" className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="24h">Últimas 24h</TabsTrigger>
@@ -66,24 +66,24 @@ const AdminDashboard = () => {
                     <TabsTrigger value="30d">30 Dias</TabsTrigger>
                 </TabsList>
                 <TabsContent value="24h" className="space-y-4">
-                    <PeriodStats salesData={ sales.last24h } title="24 horas" router={ router } />
+                    <PeriodStats salesData={sales.last24h} title="24 horas" router={router} />
                 </TabsContent>
                 <TabsContent value="7d" className="space-y-4">
-                    <PeriodStats salesData={ sales.last7days } title="7 dias" router={ router } />
+                    <PeriodStats salesData={sales.last7days} title="7 dias" router={router} />
                 </TabsContent>
                 <TabsContent value="30d" className="space-y-4">
-                    <PeriodStats salesData={ sales.last30days } title="30 dias" router={ router } />
+                    <PeriodStats salesData={sales.last30days} title="30 dias" router={router} />
                 </TabsContent>
             </Tabs>
 
             {
                 process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true'
-            &&
-            <div className='flex flex-col gap-4 border border-gray-300 p-4 rounded-lg'>
-                <h1>Área do desenvolvedor</h1>
-                <ChangeDataBaseButton />
-                <SendEmailsTest />
-            </div>
+                &&
+                <div className='flex flex-col gap-4 border border-gray-300 p-4 rounded-lg'>
+                    <h1>Área do desenvolvedor</h1>
+                    <ChangeDataBaseButton />
+                    <SendEmailsTest />
+                </div>
             }
         </div>
     );
