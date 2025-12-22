@@ -40,7 +40,7 @@ export default function SendEmailsTest() {
         );
     };
 
-    const handleSendEmails = async() => {
+    const handleSendEmails = async () => {
         if (selectedEmails.length === 0) {
             setFeedback({
                 success: [],
@@ -71,20 +71,20 @@ export default function SendEmailsTest() {
 
                 let response = { status: 404 };
                 switch (emailType) {
-                case 'cancelamento':
-                    response = await sendEmailOrderCanceled(orders[0], userDate);
-                    break;
-                case 'shippingConfirmation':
-                    response = await sendEmailOrderSent(orders[0], userDate);
-                    break;
-                case 'paymentConfirmation':
-                    response = await sendEmailApprovedPayment(orders[0], userDate);
-                    break;
-                case 'orderConfirmation':
-                    response = await sendEmailConfirmation(orders[0], userDate);
-                    break;
-                default:
-                    break;
+                    case 'cancelamento':
+                        response = await sendEmailOrderCanceled(orders[0], userDate);
+                        break;
+                    case 'shippingConfirmation':
+                        response = await sendEmailOrderSent(orders[0], userDate);
+                        break;
+                    case 'paymentConfirmation':
+                        response = await sendEmailApprovedPayment(orders[0], userDate);
+                        break;
+                    case 'orderConfirmation':
+                        response = await sendEmailConfirmation(orders[0], userDate);
+                        break;
+                    default:
+                        break;
                 }
 
                 if (response.status === 200) {
@@ -112,22 +112,21 @@ export default function SendEmailsTest() {
     return (
         <div className="mt-6 max-w-lg">
             <button
-                onClick={ () => setShowModalConfirmation(true) }
-                disabled={ isSending }
-                className={ `bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-                    isSending ? 'opacity-50 cursor-not-allowed' : ''
-                }` }
+                onClick={() => setShowModalConfirmation(true)}
+                disabled={isSending}
+                className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${isSending ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
             >
-                { isSending ? 'Enviando...' : 'Enviar e-mails' }
+                {isSending ? 'Enviando...' : 'Enviar e-mails'}
             </button>
 
-            { showModalConfirmation && (
+            {showModalConfirmation && (
                 <ModalMaker
                     title="Enviar E-mails"
-                    closeModelClick={ () => setShowModalConfirmation(false) }
+                    closeModelClick={() => setShowModalConfirmation(false)}
                 >
                     <div className="flex flex-col gap-6">
-                        { /* Seleção de tipo de e-mail */ }
+                        { /* Seleção de tipo de e-mail */}
                         <div>
                             <label
                                 htmlFor="emailType"
@@ -137,74 +136,74 @@ export default function SendEmailsTest() {
                             </label>
                             <select
                                 id="emailType"
-                                value={ emailType }
-                                onChange={ (e) => setEmailType(e.target.value) }
+                                value={emailType}
+                                onChange={(e) => setEmailType(e.target.value)}
                                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                             >
-                                { emailOptions.map((option) => (
-                                    <option key={ option.value } value={ option.value }>
-                                        { option.label }
+                                {emailOptions.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
                                     </option>
-                                )) }
+                                ))}
                             </select>
                         </div>
 
-                        { /* Seleção de e-mails */ }
+                        { /* Seleção de e-mails */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Selecione os E-mails
                             </label>
                             <div className="grid grid-cols-1 gap-2">
-                                { emailList.map((email) => (
-                                    <label key={ email } className="flex items-center gap-2">
+                                {emailList.map((email) => (
+                                    <label key={email} className="flex items-center gap-2">
                                         <input
                                             type="checkbox"
-                                            value={ email }
-                                            checked={ selectedEmails.includes(email) }
-                                            onChange={ () => toggleEmailSelection(email) }
+                                            value={email}
+                                            checked={selectedEmails.includes(email)}
+                                            onChange={() => toggleEmailSelection(email)}
                                             className="form-checkbox h-4 w-4 text-blue-600"
                                         />
-                                        <span>{ email }</span>
+                                        <span>{email}</span>
                                     </label>
-                                )) }
+                                ))}
                             </div>
                         </div>
 
-                        { /* Feedback após envio */ }
-                        { feedback.success.length > 0 && (
+                        { /* Feedback após envio */}
+                        {feedback.success.length > 0 && (
                             <div className="mt-4 bg-green-100 text-green-800 p-4 rounded-md">
                                 <h3 className="font-bold">E-mails enviados com sucesso:</h3>
                                 <ul className="list-disc pl-5">
-                                    { feedback.success.map((email) => (
-                                        <li key={ email }>{ email }</li>
-                                    )) }
+                                    {feedback.success.map((email) => (
+                                        <li key={email}>{email}</li>
+                                    ))}
                                 </ul>
                             </div>
-                        ) }
+                        )}
 
-                        { feedback.failure.length > 0 && (
+                        {feedback.failure.length > 0 && (
                             <div className="mt-4 bg-red-100 text-red-800 p-4 rounded-md">
                                 <h3 className="font-bold">Erro ao enviar e-mails:</h3>
                                 <ul className="list-disc pl-5">
-                                    { feedback.failure.map((email) => (
-                                        <li key={ email }>{ email }</li>
-                                    )) }
+                                    {feedback.failure.map((email) => (
+                                        <li key={email}>{email}</li>
+                                    ))}
                                 </ul>
                             </div>
-                        ) }
+                        )}
 
-                        { /* Botões de ação */ }
+                        { /* Botões de ação */}
                         <div className="flex justify-between gap-2">
-                            <Button onClick={ handleSendEmails } disabled={ isSending }>
-                                { isSending ? 'Enviando...' : 'Enviar' }
+                            <Button onClick={handleSendEmails} disabled={isSending}>
+                                {isSending ? 'Enviando...' : 'Enviar'}
                             </Button>
-                            <Button onClick={ () => setShowModalConfirmation(false) }>
+                            <Button onClick={() => setShowModalConfirmation(false)}>
                                 Cancelar
                             </Button>
                         </div>
                     </div>
                 </ModalMaker>
-            ) }
+            )}
         </div>
     );
 }

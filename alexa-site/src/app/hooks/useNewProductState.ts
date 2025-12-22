@@ -17,30 +17,30 @@ type ActionType =
     | { type: 'SET_VARIATIONS', payload: string[] | never[] }
     | { type: 'SET_SKU', payload: string }
     | { type: 'SET_BARCODE', payload: string }
-    | { type: 'SET_DIMENSIONS', payload: { largura: number, altura: number, comprimento: number, peso: number }  }
+    | { type: 'SET_DIMENSIONS', payload: { largura: number, altura: number, comprimento: number, peso: number } }
     | { type: 'SET_SECTIONS_SITE', payload: SectionType[] | never[] }
     | { type: 'SET_SECTIONS', payload: string[] }
     | { type: 'SET_SUB_SECTIONS', payload: string[] | undefined }
 
     | { type: 'SET_ADD_CATEGORIES', payload: string }
-    | { type: 'SET_FB_CATEGORIES', payload: string[]}
+    | { type: 'SET_FB_CATEGORIES', payload: string[] }
     | { type: 'SET_REMOVE_CATEGORY', payload: string }
     | { type: 'SET_REMOVE_ALL_CATEGORIES' }
 
     | { type: 'SET_ADD_COLLECTIONS', payload: string }
-    | { type: 'SET_FB_COLLECTIONS', payload: string[]}
+    | { type: 'SET_FB_COLLECTIONS', payload: string[] }
     | { type: 'SET_REMOVE_COLLECTION', payload: string }
     | { type: 'SET_REMOVE_ALL_COLLECTIONS' }
 
     | { type: 'SET_IMAGES', payload: ImageProductDataType[] }
     | { type: 'SET_VIDEO', payload: VideoProductDataType | null }
-    | { type: 'SET_MORE_OPTIONS', payload: MoreOptionsType[]}
-    | { type: 'SET_CREATION_DATE', payload: Timestamp}
-    | { type: 'SET_UPDATING_DATE', payload: Timestamp}
+    | { type: 'SET_MORE_OPTIONS', payload: MoreOptionsType[] }
+    | { type: 'SET_CREATION_DATE', payload: Timestamp }
+    | { type: 'SET_UPDATING_DATE', payload: Timestamp }
 
 
 
-export const initialEmptyState: StateNewProductType= {
+export const initialEmptyState: StateNewProductType = {
     name: '',
     categories: [],
     categoriesFromFirebase: [],
@@ -72,104 +72,104 @@ export const initialEmptyState: StateNewProductType= {
     updatingDate: Timestamp.now(),
 };
 
-function reducer(state: StateNewProductType, action: ActionType): StateNewProductType{
+function reducer(state: StateNewProductType, action: ActionType): StateNewProductType {
     switch (action.type) {
-    case 'SET_NAME':
-        return { ...state, name: action.payload };
-    case 'SET_DESCRIPTION':
-        return { ...state, description: action.payload };
-    case 'SET_VALUE':
-        return { ...state, value: action.payload };
-    case 'SET_VARIATIONS':
-        return { ...state, variations: action.payload };
-    case 'ADD_PRODUCT_VARIATION':
-        return { ...state, productVariations: [action.payload, ...state.productVariations ] };
-    case 'CLEAR_PRODUCT_VARIATIONS':
-        return { ...state, productVariations: [] };
-    case 'REMOVE_PRODUCT_VARIATION':
-        return { ...state, productVariations: state.productVariations.filter((pv) => pv !== action.payload) };
-    case 'UPDATE_PRODUCT_VARIATION':
-        return {
-            ...state,
-            productVariations: state.productVariations.map((pv) =>
-                pv === action.payload.oldVariation ? action.payload.newVariation : pv,
-            ),
-        };
-    case 'ADD_NEW_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
-        return {
-            ...state,
-            productVariations: state.productVariations.map((pv) =>({
-                ...pv,
-                customProperties: {
-                    ...pv.customProperties,
-                    [action.payload]: '',
-                },
-            })),
-        };
-    case 'REMOVE_A_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
-        return {
-            ...state,
-            productVariations: state.productVariations.map((pv) =>{
-                const newProductVariation = { ...pv };
-                delete newProductVariation.customProperties[action.payload];
-                return newProductVariation;
-            }),
-        };
-    case 'SET_STOCK_QUANTITY':
-        return { ...state, estoque: action.payload };
-    case 'SET_SKU':
-        return { ...state, sku: action.payload };
-    case 'SET_BARCODE':
-        return { ...state, barcode: action.payload };
-    case 'SET_DIMENSIONS':
-        return { ...state, dimensions: action.payload };
-    case 'SET_SECTIONS_SITE':
-        return { ...state, sectionsSite: action.payload };
-    case 'SET_SECTIONS':
-        return { ...state, sections: action.payload };
-    case 'SET_SUB_SECTIONS':
-        return { ...state, subsections: action.payload };
+        case 'SET_NAME':
+            return { ...state, name: action.payload };
+        case 'SET_DESCRIPTION':
+            return { ...state, description: action.payload };
+        case 'SET_VALUE':
+            return { ...state, value: action.payload };
+        case 'SET_VARIATIONS':
+            return { ...state, variations: action.payload };
+        case 'ADD_PRODUCT_VARIATION':
+            return { ...state, productVariations: [action.payload, ...state.productVariations] };
+        case 'CLEAR_PRODUCT_VARIATIONS':
+            return { ...state, productVariations: [] };
+        case 'REMOVE_PRODUCT_VARIATION':
+            return { ...state, productVariations: state.productVariations.filter((pv) => pv !== action.payload) };
+        case 'UPDATE_PRODUCT_VARIATION':
+            return {
+                ...state,
+                productVariations: state.productVariations.map((pv) =>
+                    pv === action.payload.oldVariation ? action.payload.newVariation : pv,
+                ),
+            };
+        case 'ADD_NEW_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
+            return {
+                ...state,
+                productVariations: state.productVariations.map((pv) => ({
+                    ...pv,
+                    customProperties: {
+                        ...pv.customProperties,
+                        [action.payload]: '',
+                    },
+                })),
+            };
+        case 'REMOVE_A_VARIATION_IN_ALL_PRODUCTS_VARIATIONS':
+            return {
+                ...state,
+                productVariations: state.productVariations.map((pv) => {
+                    const newProductVariation = { ...pv };
+                    delete newProductVariation.customProperties[action.payload];
+                    return newProductVariation;
+                }),
+            };
+        case 'SET_STOCK_QUANTITY':
+            return { ...state, estoque: action.payload };
+        case 'SET_SKU':
+            return { ...state, sku: action.payload };
+        case 'SET_BARCODE':
+            return { ...state, barcode: action.payload };
+        case 'SET_DIMENSIONS':
+            return { ...state, dimensions: action.payload };
+        case 'SET_SECTIONS_SITE':
+            return { ...state, sectionsSite: action.payload };
+        case 'SET_SECTIONS':
+            return { ...state, sections: action.payload };
+        case 'SET_SUB_SECTIONS':
+            return { ...state, subsections: action.payload };
 
-    case 'SET_ADD_CATEGORIES':
-        return { ...state, categories: [action.payload, ...state.categories ] };
-    case 'SET_FB_CATEGORIES':
-        return { ...state, categoriesFromFirebase: action.payload };
-    case 'SET_REMOVE_CATEGORY':
-        return { ...state, categories: state.categories.filter((c) => c !== action.payload) };
-    case 'SET_REMOVE_ALL_CATEGORIES':
-        return { ...state, categories: [] };
+        case 'SET_ADD_CATEGORIES':
+            return { ...state, categories: [action.payload, ...state.categories] };
+        case 'SET_FB_CATEGORIES':
+            return { ...state, categoriesFromFirebase: action.payload };
+        case 'SET_REMOVE_CATEGORY':
+            return { ...state, categories: state.categories.filter((c) => c !== action.payload) };
+        case 'SET_REMOVE_ALL_CATEGORIES':
+            return { ...state, categories: [] };
 
-    case 'SET_ADD_COLLECTIONS':
-        return { ...state, collections: [action.payload, ...state.collections ] };
-    case 'SET_FB_COLLECTIONS':
-        return { ...state, collectionsFromFirebase: action.payload };
-    case 'SET_REMOVE_COLLECTION':
-        return { ...state, collections: state.collections.filter((c) => c !== action.payload) };
-    case 'SET_REMOVE_ALL_COLLECTIONS':
-        return { ...state, collections: [] };
+        case 'SET_ADD_COLLECTIONS':
+            return { ...state, collections: [action.payload, ...state.collections] };
+        case 'SET_FB_COLLECTIONS':
+            return { ...state, collectionsFromFirebase: action.payload };
+        case 'SET_REMOVE_COLLECTION':
+            return { ...state, collections: state.collections.filter((c) => c !== action.payload) };
+        case 'SET_REMOVE_ALL_COLLECTIONS':
+            return { ...state, collections: [] };
 
-    case 'SET_IMAGES':
-        return { ...state, images: action.payload };
-    case 'SET_MORE_OPTIONS':
-        return { ...state, moreOptions: action.payload };
-    case 'SET_CREATION_DATE':
-        return { ...state, creationDate: action.payload };
-    case 'SET_UPDATING_DATE':
-        return { ...state, updatingDate: action.payload };
-    case 'SET_VIDEO':
-        return { ...state, video: action.payload };
-    default:
-        return state;
+        case 'SET_IMAGES':
+            return { ...state, images: action.payload };
+        case 'SET_MORE_OPTIONS':
+            return { ...state, moreOptions: action.payload };
+        case 'SET_CREATION_DATE':
+            return { ...state, creationDate: action.payload };
+        case 'SET_UPDATING_DATE':
+            return { ...state, updatingDate: action.payload };
+        case 'SET_VIDEO':
+            return { ...state, video: action.payload };
+        default:
+            return state;
     }
 }
 
-export function useNewProductState(initialState: StateNewProductType=initialEmptyState) {
+export function useNewProductState(initialState: StateNewProductType = initialEmptyState) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleNameChange = useCallback((name: string) => {
         dispatch({ type: 'SET_NAME', payload: name });
     }, []);
-    
+
     const handleDescriptionChange = useCallback((description: string) => {
         dispatch({ type: 'SET_DESCRIPTION', payload: description });
     }, []);
@@ -181,7 +181,7 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
     const handleStockQuantityChange = useCallback((estoque: number | undefined) => {
         dispatch({ type: 'SET_STOCK_QUANTITY', payload: estoque });
     }, []);
-    
+
     const handleAddProductVariation = useCallback((productVariation: VariationProductType) => {
         dispatch({ type: 'ADD_PRODUCT_VARIATION', payload: productVariation });
     }, []);
@@ -193,11 +193,11 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
     const handleRemoveProductVariation = useCallback((productVariation: VariationProductType) => {
         dispatch({ type: 'REMOVE_PRODUCT_VARIATION', payload: productVariation });
     }, []);
-    
+
     const handleUpdateProductVariation = useCallback((oldVariation: VariationProductType, newVariation: VariationProductType) => {
         dispatch({ type: 'UPDATE_PRODUCT_VARIATION', payload: { oldVariation, newVariation } });
     }, []);
-    
+
     const handleVariationsChange = useCallback((variations: string[] | never[]) => {
         dispatch({ type: 'SET_VARIATIONS', payload: variations });
     }, []);
@@ -321,7 +321,7 @@ export function useNewProductState(initialState: StateNewProductType=initialEmpt
         handleSetCollectionsFromFb,
         handleRemoveCollection,
         handleRemoveAllCollections,
-        
+
     };
 
     return {

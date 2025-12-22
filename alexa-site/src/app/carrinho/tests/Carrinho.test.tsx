@@ -90,14 +90,14 @@ describe('Carrinho Component', () => {
     beforeEach(() => {
         (useSnapshot as jest.Mock).mockImplementation((collectionName) => {
             switch (collectionName) {
-            case 'usuarios':
-                return { documents: mockUserInfo };
-            case 'carrinhos':
-                return { documents: mockCartInfos };
-            case 'produtos':
-                return { documents: mockCartItems };
-            default:
-                return { documents: [] };
+                case 'usuarios':
+                    return { documents: mockUserInfo };
+                case 'carrinhos':
+                    return { documents: mockCartInfos };
+                case 'produtos':
+                    return { documents: mockCartItems };
+                default:
+                    return { documents: [] };
             }
         });
 
@@ -108,14 +108,14 @@ describe('Carrinho Component', () => {
         (useAuthContext as jest.Mock).mockReturnValue({ user: mockUser, authIsReady: true });
     });
 
-    it('renderiza "Loading..." quando mappedProducts é null', async() => {
+    it('renderiza "Loading..." quando mappedProducts é null', async () => {
         (useCart as jest.Mock).mockReturnValue({ mappedProducts: null });
 
-        await act(async() => {
+        await act(async () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Carrinho/>
+                        <Carrinho />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -124,12 +124,12 @@ describe('Carrinho Component', () => {
         expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
 
-    it('renderiza apenas produtos com quantidade > 0', async() => {
-        await act(async() => {
+    it('renderiza apenas produtos com quantidade > 0', async () => {
+        await act(async () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Carrinho/>
+                        <Carrinho />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -140,12 +140,12 @@ describe('Carrinho Component', () => {
         expect(screen.queryByText('Produto 3')).not.toBeInTheDocument(); // Produto 3 não deve ser renderizado
     });
 
-    it('exibe o subtotal correto', async() => {
-        await act(async() => {
+    it('exibe o subtotal correto', async () => {
+        await act(async () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Carrinho/>
+                        <Carrinho />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );
@@ -154,12 +154,12 @@ describe('Carrinho Component', () => {
         expect(screen.getByText('R$ 130,00')).toBeInTheDocument(); // Subtotal = (2 * 10) + (1 * 20)
     });
 
-    it('exibe o resumo da compra', async() => {
-        await act(async() => {
+    it('exibe o resumo da compra', async () => {
+        await act(async () => {
             render(
                 <AuthContextProvider>
                     <UserInfoProvider>
-                        <Carrinho/>
+                        <Carrinho />
                     </UserInfoProvider>
                 </AuthContextProvider>,
             );

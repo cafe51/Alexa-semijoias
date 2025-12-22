@@ -19,12 +19,12 @@ export function formatInputMode(value: string, unitType: 'currency' | 'dimension
     // Permite que o valor seja "0" durante a digitação
     if (numericValue === '') {
         switch (unitType) {
-        case 'currency':
-            return 'R$ 0,00';
-        case 'dimension':
-            return 'cm 0,00';
-        case 'weight':
-            return 'g 0,00';
+            case 'currency':
+                return 'R$ 0,00';
+            case 'dimension':
+                return 'cm 0,00';
+            case 'weight':
+                return 'g 0,00';
         }
     }
 
@@ -41,11 +41,11 @@ export function formatInputMode(value: string, unitType: 'currency' | 'dimension
 
     // Adiciona o símbolo apropriado com base no tipo
     switch (unitType) {
-    case 'currency':
-        return `R$ ${formattedValue}`;
-    case 'dimension':
-        return `cm ${formattedValue}`;
-    case 'weight':
-        return `g ${formattedValue}`;
+        case 'currency':
+            return `R$ ${formattedValue}`;
+        case 'dimension':
+            return `cm ${formattedValue}`;
+        case 'weight':
+            return `g ${formattedValue}`;
     }
 }

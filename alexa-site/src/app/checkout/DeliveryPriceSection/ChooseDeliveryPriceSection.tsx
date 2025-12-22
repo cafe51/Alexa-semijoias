@@ -32,29 +32,29 @@ export default function ChooseDeliveryPriceSection({
     couponDiscount,
 
 }: ChooseDeliveryPriceSectionProps) {
-    
+
     // Encontra a opção de frete mais barata
-    const cheapestOption = deliveryOptions.reduce((prev, current) => 
+    const cheapestOption = deliveryOptions.reduce((prev, current) =>
         prev.price < current.price ? prev : current,
     );
 
     let valorMinimoParaFreteGratis: number;
 
     switch (true) {
-    case cheapestOption.price === 0:
-        valorMinimoParaFreteGratis = 0;
-        break;
-    case cheapestOption.price <= 40:
-        valorMinimoParaFreteGratis = 200;
-        break;
-    case cheapestOption.price > 40 && cheapestOption.price <= 70:
-        valorMinimoParaFreteGratis = 300;
-        break;
-    case cheapestOption.price > 70:
-        valorMinimoParaFreteGratis = 350;
-        break;
-    default:
-        throw new Error('Preço inválido');
+        case cheapestOption.price === 0:
+            valorMinimoParaFreteGratis = 0;
+            break;
+        case cheapestOption.price <= 40:
+            valorMinimoParaFreteGratis = 200;
+            break;
+        case cheapestOption.price > 40 && cheapestOption.price <= 70:
+            valorMinimoParaFreteGratis = 300;
+            break;
+        case cheapestOption.price > 70:
+            valorMinimoParaFreteGratis = 350;
+            break;
+        default:
+            throw new Error('Preço inválido');
     }
 
     const freeShippingCoupon: boolean = !!couponDiscount && couponDiscount === 'freteGratis';
@@ -63,7 +63,7 @@ export default function ChooseDeliveryPriceSection({
     const precoFaltanteParaFreteGratis = freeShippingCoupon ? 0 : valorMinimoParaFreteGratis - cartPrice + discountValue;
     const precoFaltanteEmPorcentagem = (cartPrice / valorMinimoParaFreteGratis) * 100 + '%';
 
-    const handleOptionChange = async(value: string) => {
+    const handleOptionChange = async (value: string) => {
         // Se for a opção mais barata e o carrinho atingiu o valor mínimo para frete grátis
         const selectedOption = deliveryOptions.find(option => option.name === value);
         if (selectedOption && selectedOption.name === cheapestOption.name && precoFaltanteParaFreteGratis <= 0) {
@@ -86,57 +86,57 @@ export default function ChooseDeliveryPriceSection({
                     </span>
                 </CardTitle>
             </CardHeader>
-          
+
             <CardContent className="pt-6 px-4 sm:px-6">
-                <FreeShippingSection 
-                    precoFaltanteEmPorcentagem={ precoFaltanteEmPorcentagem } 
-                    precoFaltanteParaFreteGratis={ precoFaltanteParaFreteGratis } 
-                    shippingOptions={ deliveryOptions.map((doptions) => ({
+                <FreeShippingSection
+                    precoFaltanteEmPorcentagem={precoFaltanteEmPorcentagem}
+                    precoFaltanteParaFreteGratis={precoFaltanteParaFreteGratis}
+                    shippingOptions={deliveryOptions.map((doptions) => ({
                         id: doptions.name,
                         name: doptions.name,
                         price: doptions.price,
                         days: doptions.deliveryTime,
-                    })) }
+                    }))}
                 />
 
                 <RadioGroup
-                    value={ selectedDeliveryOption ? selectedDeliveryOption : undefined }
-                    onValueChange={ handleOptionChange }
+                    value={selectedDeliveryOption ? selectedDeliveryOption : undefined}
+                    onValueChange={handleOptionChange}
                     className="space-y-4"
                 >
-                    { deliveryOptions.map((option) => (
+                    {deliveryOptions.map((option) => (
                         <div
-                            key={ option.name }
-                            className={ cn(
+                            key={option.name}
+                            className={cn(
                                 'flex items-start space-x-4 p-4 rounded-lg transition-all duration-200',
                                 'hover:bg-[#F8C3D3]/10',
                                 'border border-gray-100',
                                 selectedDeliveryOption === option.name && 'border-[#F8C3D3] bg-pink-50/30',
-                            ) }
+                            )}
                         >
                             <RadioGroupItem
-                                value={ option.name }
-                                id={ option.name }
+                                value={option.name}
+                                id={option.name}
                                 className="mt-1"
                             />
                             <Label
-                                htmlFor={ option.name }
+                                htmlFor={option.name}
                                 className="flex-1 flex items-start justify-between cursor-pointer"
                             >
                                 <div className="space-y-1">
                                     <p className="font-medium text-gray-900 md:text-xl">
-                                        { option.name }
+                                        {option.name}
                                     </p>
                                     <p className="text-gray-500 md:text-lg">
-                                        Até { option.deliveryTime }
-                                        { option.deliveryTime === 1 ? ' dia útil' : ' dias úteis' }
+                                        Até {option.deliveryTime}
+                                        {option.deliveryTime === 1 ? ' dia útil' : ' dias úteis'}
                                     </p>
                                 </div>
                                 <div className="font-medium text-gray-900 ml-4 md:text-xl">
-                                    { precoFaltanteParaFreteGratis <= 0 && option.name === cheapestOption.name ? (
+                                    {precoFaltanteParaFreteGratis <= 0 && option.name === cheapestOption.name ? (
                                         <div className="flex flex-col items-end">
                                             <span className="line-through text-sm text-gray-400">
-                                                { formatPrice(option.price) }
+                                                {formatPrice(option.price)}
                                             </span>
                                             <span className="text-[#D4AF37] text-base font-bold">
                                                 GRÁTIS
@@ -144,11 +144,11 @@ export default function ChooseDeliveryPriceSection({
                                         </div>
                                     ) : (
                                         formatPrice(option.price)
-                                    ) }
+                                    )}
                                 </div>
                             </Label>
                         </div>
-                    )) }
+                    ))}
                 </RadioGroup>
             </CardContent>
         </Card>

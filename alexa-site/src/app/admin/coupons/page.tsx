@@ -12,21 +12,21 @@ import MobileCouponDetails from './MobileCouponDetails';
 import { Timestamp } from 'firebase/firestore';
 
 type SortOption =
-  | 'codigoAsc'
-  | 'codigoDesc'
-  | 'dataExpiracaoAsc'
-  | 'dataExpiracaoDesc'
-  | 'descontoAsc'
-  | 'descontoDesc'
-  | 'quantidade'
-  | 'newest'
-  | 'oldest';
+    | 'codigoAsc'
+    | 'codigoDesc'
+    | 'dataExpiracaoAsc'
+    | 'dataExpiracaoDesc'
+    | 'descontoAsc'
+    | 'descontoDesc'
+    | 'quantidade'
+    | 'newest'
+    | 'oldest';
 
 type TipoFilter = 'todos' | 'percentual' | 'fixo' | 'freteGratis';
 
 const CouponAdminPage = () => {
     const { getAllDocuments, deleteDocument, addDocument, updateDocumentField, getDocumentById } =
-    useCollection<CouponType>('cupons');
+        useCollection<CouponType>('cupons');
 
     const [coupons, setCoupons] = useState<(CouponType & FireBaseDocument)[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -52,7 +52,7 @@ const CouponAdminPage = () => {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const fetchCoupons = async() => {
+    const fetchCoupons = async () => {
         setLoading(true);
         try {
             const docs = await getAllDocuments();
@@ -68,7 +68,7 @@ const CouponAdminPage = () => {
         fetchCoupons();
     }, []);
 
-    const handleDelete = async(coupon: CouponType & FireBaseDocument) => {
+    const handleDelete = async (coupon: CouponType & FireBaseDocument) => {
         if (confirm('Tem certeza que deseja excluir esse cupom?')) {
             await deleteDocument(coupon.id);
             fetchCoupons();
@@ -106,46 +106,46 @@ const CouponAdminPage = () => {
     const sortCoupons = (list: (CouponType & FireBaseDocument)[]) => {
         const sorted = [...list];
         switch (sortOption) {
-        case 'newest':
-            sorted.sort((a, b) => b.atualizadoEm.seconds - a.atualizadoEm.seconds);
-            break;
-        case 'oldest':
-            sorted.sort((a, b) => a.atualizadoEm.seconds - b.atualizadoEm.seconds);
-            break;
-        case 'codigoAsc':
-            sorted.sort((a, b) => a.codigo.localeCompare(b.codigo));
-            break;
-        case 'codigoDesc':
-            sorted.sort((a, b) => b.codigo.localeCompare(a.codigo));
-            break;
-        case 'dataExpiracaoAsc':
-            sorted.sort((a, b) => a.dataExpiracao.seconds - b.dataExpiracao.seconds);
-            break;
-        case 'dataExpiracaoDesc':
-            sorted.sort((a, b) => b.dataExpiracao.seconds - a.dataExpiracao.seconds);
-            break;
-        case 'descontoAsc':
-            sorted.sort((a, b) => getDiscountValue(a) - getDiscountValue(b));
-            break;
-        case 'descontoDesc':
-            sorted.sort((a, b) => getDiscountValue(b) - getDiscountValue(a));
-            break;
-        case 'quantidade':
-            sorted.sort((a, b) => {
-                const aQty = a.limiteUsoGlobal ?? 0;
-                const bQty = b.limiteUsoGlobal ?? 0;
-                return bQty - aQty;
-            });
-            break;
-        default:
-            break;
+            case 'newest':
+                sorted.sort((a, b) => b.atualizadoEm.seconds - a.atualizadoEm.seconds);
+                break;
+            case 'oldest':
+                sorted.sort((a, b) => a.atualizadoEm.seconds - b.atualizadoEm.seconds);
+                break;
+            case 'codigoAsc':
+                sorted.sort((a, b) => a.codigo.localeCompare(b.codigo));
+                break;
+            case 'codigoDesc':
+                sorted.sort((a, b) => b.codigo.localeCompare(a.codigo));
+                break;
+            case 'dataExpiracaoAsc':
+                sorted.sort((a, b) => a.dataExpiracao.seconds - b.dataExpiracao.seconds);
+                break;
+            case 'dataExpiracaoDesc':
+                sorted.sort((a, b) => b.dataExpiracao.seconds - a.dataExpiracao.seconds);
+                break;
+            case 'descontoAsc':
+                sorted.sort((a, b) => getDiscountValue(a) - getDiscountValue(b));
+                break;
+            case 'descontoDesc':
+                sorted.sort((a, b) => getDiscountValue(b) - getDiscountValue(a));
+                break;
+            case 'quantidade':
+                sorted.sort((a, b) => {
+                    const aQty = a.limiteUsoGlobal ?? 0;
+                    const bQty = b.limiteUsoGlobal ?? 0;
+                    return bQty - aQty;
+                });
+                break;
+            default:
+                break;
         }
         return sorted;
     };
 
     const sortedCoupons = sortCoupons(filteredCoupons);
 
-    const updateCouponStatus = async(
+    const updateCouponStatus = async (
         coupon: CouponType & FireBaseDocument,
         newStatus: 'ativo' | 'desativado',
     ) => {
@@ -162,7 +162,7 @@ const CouponAdminPage = () => {
         }
     };
 
-    const handleFormSubmit = async(data: CouponType) => {
+    const handleFormSubmit = async (data: CouponType) => {
         if (!editingCoupon) {
             try {
                 const existing = await getDocumentById(data.id);
@@ -220,13 +220,13 @@ const CouponAdminPage = () => {
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Gerenciamento de Cupons</h1>
 
-            { /* Filtros e ordenação */ }
+            { /* Filtros e ordenação */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-10">
                 <div className="flex flex-wrap items-center gap-2">
                     <label className="font-semibold">Ordenar por:</label>
                     <select
-                        value={ sortOption }
-                        onChange={ (e) => setSortOption(e.target.value as SortOption) }
+                        value={sortOption}
+                        onChange={(e) => setSortOption(e.target.value as SortOption)}
                         className="border rounded p-1"
                     >
                         <option value="newest">Recente</option>
@@ -243,8 +243,8 @@ const CouponAdminPage = () => {
                 <div className="flex flex-wrap items-center gap-2">
                     <label className="font-semibold">Filtrar por Tipo:</label>
                     <select
-                        value={ couponTipoFilter }
-                        onChange={ (e) => setCouponTipoFilter(e.target.value as TipoFilter) }
+                        value={couponTipoFilter}
+                        onChange={(e) => setCouponTipoFilter(e.target.value as TipoFilter)}
                         className="border rounded p-1"
                     >
                         <option value="todos">Mostrar Todos</option>
@@ -255,95 +255,95 @@ const CouponAdminPage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                     <label className="font-semibold">Mostrar Inativos</label>
-                    <ToggleSwitch checked={ showInactive } onChange={ setShowInactive } />
+                    <ToggleSwitch checked={showInactive} onChange={setShowInactive} />
                 </div>
                 <button
-                    onClick={ handleNew }
+                    onClick={handleNew}
                     className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
                 >
                     Criar Novo Cupom
                 </button>
             </div>
 
-            { /* Desktop: Tabela */ }
+            { /* Desktop: Tabela */}
             <div className="hidden md:block overflow-x-auto">
-                { loading ? (
+                {loading ? (
                     <div className="flex justify-center items-center p-4">
                         <span>Carregando...</span>
                     </div>
                 ) : (
                     <DesktopCouponTable
-                        coupons={ sortedCoupons }
-                        onEdit={ handleEdit }
-                        onDelete={ handleDelete }
+                        coupons={sortedCoupons}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
                     />
-                ) }
+                )}
             </div>
 
-            { /* Mobile: Lista de cupons */ }
+            { /* Mobile: Lista de cupons */}
             <div className="block md:hidden">
-                { loading ? (
+                {loading ? (
                     <div className="flex justify-center items-center p-4">
                         <span>Carregando...</span>
                     </div>
                 ) : (
                     <MobileCouponList
-                        coupons={ sortedCoupons }
-                        onEdit={ handleEdit }
-                        onDelete={ handleDelete }
-                        onViewDetails={ (coupon) => {
+                        coupons={sortedCoupons}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onViewDetails={(coupon) => {
                             setSelectedCoupon(coupon);
                             setDetailsModalOpen(true);
-                        } }
+                        }}
                     />
-                ) }
+                )}
             </div>
 
-            { /* Modal para edição/criação */ }
-            { (!isMobile && formOpen) && (
+            { /* Modal para edição/criação */}
+            {(!isMobile && formOpen) && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-md w-full max-w-3xl">
                         <CouponForm
-                            initialData={ editingCoupon }
-                            onSubmit={ handleFormSubmit }
-                            onCancel={ handleFormCancel }
+                            initialData={editingCoupon}
+                            onSubmit={handleFormSubmit}
+                            onCancel={handleFormCancel}
                         />
                     </div>
                 </div>
-            ) }
-            { isMobile && mobileEditModalOpen && (
+            )}
+            {isMobile && mobileEditModalOpen && (
                 <SlideInModal
-                    isOpen={ mobileEditModalOpen }
-                    closeModelClick={ handleFormCancel }
-                    title={ editingCoupon ? 'Editar Cupom' : 'Criar Novo Cupom' }
+                    isOpen={mobileEditModalOpen}
+                    closeModelClick={handleFormCancel}
+                    title={editingCoupon ? 'Editar Cupom' : 'Criar Novo Cupom'}
                     slideDirection="right"
                     fullWidth
                 >
                     <CouponForm
-                        initialData={ editingCoupon }
-                        onSubmit={ handleFormSubmit }
-                        onCancel={ handleFormCancel }
+                        initialData={editingCoupon}
+                        onSubmit={handleFormSubmit}
+                        onCancel={handleFormCancel}
                     />
                 </SlideInModal>
-            ) }
+            )}
 
-            { /* Modal para detalhes no mobile */ }
+            { /* Modal para detalhes no mobile */}
             <SlideInModal
-                isOpen={ detailsModalOpen }
-                closeModelClick={ () => {
+                isOpen={detailsModalOpen}
+                closeModelClick={() => {
                     setDetailsModalOpen(false);
                     setSelectedCoupon(null);
-                } }
+                }}
                 title="Detalhes do Cupom"
                 slideDirection="left"
                 fullWidth
             >
-                { selectedCoupon && (
+                {selectedCoupon && (
                     <MobileCouponDetails
-                        coupon={ selectedCoupon }
-                        onStatusToggle={ (newStatus) => updateCouponStatus(selectedCoupon, newStatus) }
+                        coupon={selectedCoupon}
+                        onStatusToggle={(newStatus) => updateCouponStatus(selectedCoupon, newStatus)}
                     />
-                ) }
+                )}
             </SlideInModal>
         </div>
     );

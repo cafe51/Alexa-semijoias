@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 type PropertyType = { propertyName: string, propertyValue: string, propertyKey: string };
 
-type UnitType ='currency' | 'dimension' | 'weight';
+type UnitType = 'currency' | 'dimension' | 'weight';
 
 
 interface InputSectionProps {
@@ -15,8 +15,8 @@ interface InputSectionProps {
     labels?: { [key: string]: string };
 }
 
-function converteValoresParaString(objeto: {[key: string]: number | string}) {
-    const novoObjeto: {[key: string]: string} = {};
+function converteValoresParaString(objeto: { [key: string]: number | string }) {
+    const novoObjeto: { [key: string]: string } = {};
     for (const chave in objeto) {
         novoObjeto[chave] = String(objeto[chave]);
     }
@@ -24,31 +24,31 @@ function converteValoresParaString(objeto: {[key: string]: number | string}) {
     return novoObjeto;
 }
 
-function convertToProperties(objeto: {[key: string]: string}): PropertyType[] {
+function convertToProperties(objeto: { [key: string]: string }): PropertyType[] {
     const keys = Object.keys(objeto);
     return keys.map((key) => {
         return { propertyName: key, propertyValue: objeto[key], propertyKey: key };
     });
 }
 
-export default function InputSection({ handleChange, stateToBeChange, integer=false, labels }: InputSectionProps) {
+export default function InputSection({ handleChange, stateToBeChange, integer = false, labels }: InputSectionProps) {
     const [inputValues, setInputValues] = useState(converteValoresParaString(stateToBeChange));
 
 
     const handleInputChange = (rawValue: string, propertyKey: string) => {
         let unitType: UnitType = 'currency';
         switch (propertyKey) {
-        case 'peso':
-            unitType = 'weight';
-            break;
-        case 'altura':
-        case 'largura':
-        case 'comprimento':
-            unitType = 'dimension';
-            break;
-        default:
-            unitType = 'currency';
-            break;
+            case 'peso':
+                unitType = 'weight';
+                break;
+            case 'altura':
+            case 'largura':
+            case 'comprimento':
+                unitType = 'dimension';
+                break;
+            default:
+                unitType = 'currency';
+                break;
         }
 
         const formattedValue = integer ? rawValue : formatInputMode(rawValue, unitType);
@@ -67,31 +67,31 @@ export default function InputSection({ handleChange, stateToBeChange, integer=fa
 
     };
 
-    return(
+    return (
         <>
             {
                 convertToProperties(inputValues).map(({ propertyName, propertyValue, propertyKey }) => {
                     let unitType: UnitType = 'currency';
                     switch (propertyKey) {
-                    case 'peso':
-                        unitType = 'weight';
-                        break;
-                    case 'altura':
-                    case 'largura':
-                    case 'comprimento':
-                        unitType = 'dimension';
-                        break;
-                    default:
-                        unitType = 'currency';
-                        break;
+                        case 'peso':
+                            unitType = 'weight';
+                            break;
+                        case 'altura':
+                        case 'largura':
+                        case 'comprimento':
+                            unitType = 'dimension';
+                            break;
+                        default:
+                            unitType = 'currency';
+                            break;
                     }
                     return (
                         <InputField
-                            key={ propertyKey }
-                            propertyKey={ propertyKey } 
-                            propertyName={ labels?.[propertyKey] || propertyName }
-                            propertyValue={ integer ? propertyValue : ((formatInputMode(propertyValue, unitType))) }
-                            onChange={ (e) => handleInputChange(e.target.value, propertyKey) }
+                            key={propertyKey}
+                            propertyKey={propertyKey}
+                            propertyName={labels?.[propertyKey] || propertyName}
+                            propertyValue={integer ? propertyValue : ((formatInputMode(propertyValue, unitType)))}
+                            onChange={(e) => handleInputChange(e.target.value, propertyKey)}
                         />
                     );
                 })

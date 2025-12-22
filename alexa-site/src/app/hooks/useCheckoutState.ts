@@ -5,7 +5,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import getShippingOptions from '../utils/getShippingOptions';
 
 // Define action types
-type ActionType = 
+type ActionType =
     | { type: 'SET_SHOW_FULL_ORDER_SUMMARY', payload: boolean }
     | { type: 'SET_SHOW_LOGIN_SECTION', payload: boolean }
     | { type: 'SET_EDITING_ADDRESS_MODE', payload: boolean }
@@ -45,22 +45,22 @@ const initialState: UseCheckoutStateType = {
 // Reducer function
 function reducer(state: UseCheckoutStateType, action: ActionType): UseCheckoutStateType {
     switch (action.type) {
-    case 'SET_SHOW_LOGIN_SECTION':
-        return { ...state, showLoginSection: action.payload };
-    case 'SET_EDITING_ADDRESS_MODE':
-        return { ...state, editingAddressMode: action.payload };
-    case 'SET_SHOW_FULL_ORDER_SUMMARY':
-        return { ...state, showFullOrderSummary: action.payload };
-    case 'SET_SELECTED_DELIVERY_OPTION':
-        return { ...state, selectedDeliveryOption: action.payload };
-    case 'SET_SELECTED_PAYMENT_OPTION':
-        return { ...state, selectedPaymentOption: action.payload };
-    case 'SET_DELIVERY_OPTION':
-        return { ...state, deliveryOption: action.payload };
-    case 'SET_ADDRESS':
-        return { ...state, address: action.payload };
-    default:
-        return state;
+        case 'SET_SHOW_LOGIN_SECTION':
+            return { ...state, showLoginSection: action.payload };
+        case 'SET_EDITING_ADDRESS_MODE':
+            return { ...state, editingAddressMode: action.payload };
+        case 'SET_SHOW_FULL_ORDER_SUMMARY':
+            return { ...state, showFullOrderSummary: action.payload };
+        case 'SET_SELECTED_DELIVERY_OPTION':
+            return { ...state, selectedDeliveryOption: action.payload };
+        case 'SET_SELECTED_PAYMENT_OPTION':
+            return { ...state, selectedPaymentOption: action.payload };
+        case 'SET_DELIVERY_OPTION':
+            return { ...state, deliveryOption: action.payload };
+        case 'SET_ADDRESS':
+            return { ...state, address: action.payload };
+        default:
+            return state;
     }
 }
 
@@ -68,16 +68,16 @@ function reducer(state: UseCheckoutStateType, action: ActionType): UseCheckoutSt
 export function useCheckoutState() {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [deliveryOptions, setDeliveryOptions] = useState<DeliveryOptionType[]>([]);
-    
+
     const { userInfo } = useUserInfo();
 
     function fetchDeliveryOptions() {
-        if(!state.address || !state.address.logradouro) return;
-        if(state.address.logradouro.length === 0) return;
+        if (!state.address || !state.address.logradouro) return;
+        if (state.address.logradouro.length === 0) return;
         const response = getShippingOptions(state.address.localidade, state.address.uf);
         setDeliveryOptions(response.map((option) => ({ deliveryTime: option.days, name: option.name, price: option.price })));
     }
-  
+
     useEffect(() => {
         fetchDeliveryOptions();
     }, [state.address]);
@@ -97,7 +97,7 @@ export function useCheckoutState() {
     const handleShowLoginSection = useCallback((option: boolean) => {
         dispatch({ type: 'SET_SHOW_LOGIN_SECTION', payload: option });
     }, []);
-    
+
     const handleAddressChange = useCallback((newAddress: AddressType) => {
         dispatch({ type: 'SET_ADDRESS', payload: newAddress });
     }, []);
