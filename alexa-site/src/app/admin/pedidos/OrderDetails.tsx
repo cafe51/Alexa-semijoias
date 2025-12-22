@@ -16,7 +16,7 @@ import { useWindowSize } from '@/app/hooks/useWindowSize';
 import LoadingIndicator from '@/app/components/LoadingIndicator';
 import PixPayment from './pixPaymentSection/PixPayment';
 import GenerateRomaneioButton from '@/app/components/GenerateRomaneioButton';
-import { detalhesDaEmpresa, detalhesRemetente } from '@/app/utils/detalhesDaEmpresa';
+import { detalhesDaEmpresa } from '@/app/utils/detalhesDaEmpresa';
 import GenerateShippingLabelButton from '@/app/components/GenerateShippingLabelButton';
 
 interface OrderDetailsProps {
@@ -117,7 +117,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                     { admin && (
                         <GenerateShippingLabelButton
                             user={ user }
-                            dadosDaEmpresa={ detalhesRemetente }
+                            dadosDaEmpresa={ detalhesDaEmpresa }
                         />
                     ) }
                     <OrderStatus order={ pedidoState } />
@@ -183,7 +183,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                             { admin && (
                                 <GenerateShippingLabelButton
                                     user={ user }
-                                    dadosDaEmpresa={ detalhesRemetente }
+                                    dadosDaEmpresa={ detalhesDaEmpresa }
                                 />
                             ) }
                             <PaymentSummary
@@ -234,7 +234,7 @@ export default function OrderDetails({ pedido, user, setLoadingState, loadingSta
                         { admin && (
                             <GenerateShippingLabelButton
                                 user={ user }
-                                dadosDaEmpresa={ detalhesRemetente }
+                                dadosDaEmpresa={ detalhesDaEmpresa }
                             />
                         ) }
                         <OrderStatus order={ pedidoState } />

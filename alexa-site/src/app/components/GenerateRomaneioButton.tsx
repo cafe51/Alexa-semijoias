@@ -100,7 +100,7 @@ const GenerateRomaneioButton: React.FC<GenerateRomaneioButtonProps> = ({ order, 
             // --- Conteúdo do PDF ---
 
             // 1. Cabeçalho da Empresa
-            drawText(dadosDaEmpresa.nome, margin, cursorY, timesRomanFontBold, 16);
+            drawText(dadosDaEmpresa.razaoSocial, margin, cursorY, timesRomanFontBold, 16);
             cursorY -= 20;
             drawText(`CNPJ: ${dadosDaEmpresa.cnpj}`, margin, cursorY);
             cursorY -= 15;
