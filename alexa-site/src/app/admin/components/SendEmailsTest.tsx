@@ -3,7 +3,7 @@ import { useCollection } from '@/app/hooks/useCollection';
 import { sendEmailConfirmation, sendEmailApprovedPayment, sendEmailOrderSent, sendEmailOrderCanceled } from '@/app/utils/apiCall';
 import { OrderType, UserType } from '@/app/utils/types';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const emailList = [
     'test-zbh7qw524@srv1.mail-tester.com',
@@ -74,17 +74,18 @@ export default function SendEmailsTest() {
                     case 'cancelamento':
                         response = await sendEmailOrderCanceled(orders[0], userDate);
                         break;
-                    case 'shippingConfirmation':
+                    case 'shippingConfirmation': {
                         const orderWithTracking = {
                             ...orders[0],
                             tracknumber: 'AA123456789BR', // Generic tracking number for testing
                             deliveryOption: {
                                 ...orders[0].deliveryOption,
                                 name: 'PAC', // Ensuring it triggers the link logic
-                            }
+                            },
                         };
                         response = await sendEmailOrderSent(orderWithTracking, userDate);
                         break;
+                    }
                     case 'paymentConfirmation':
                         response = await sendEmailApprovedPayment(orders[0], userDate);
                         break;
