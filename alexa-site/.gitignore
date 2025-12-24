@@ -38,9 +38,7 @@ next-env.d.ts
 
 # Firebase
 /.firebase/
-.firebaserc
-database.rules.json
-firebase.json
+
 firestore-debug.log
 firestore.indexes.json
 firestore.rules
@@ -50,4 +48,6 @@ ui-debug.log
 /functions/**
 !/functions/src/
 !/functions/package.json
+!/functions/package-lock.json
 !/functions/tsconfig.json
+!/functions/src/**
