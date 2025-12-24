@@ -155,7 +155,21 @@ export function emailShippingConfirmationHtmlGenerator(
                                     <td style="padding-bottom: 25px;">
                                         <p style="margin: 0; font-size: 16px;">Ol&aacute;, ${user.nome}!</p>
                                         <p style="margin: 15px 0 0 0; font-size: 16px;">Seu pedido já está a caminho! Em breve você poderá desfrutar das suas novas semijoias.</p>
-                                        <p style="margin: 15px 0 0 0; font-size: 16px;">Você pode acompanhar o status da entrega através do link abaixo.</p>
+                                        
+                                        ${order.tracknumber ? `
+                                            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px dashed #c48b9f;">
+                                                <p style="margin: 0; font-size: 14px; color: #666; font-weight: 600;">Código de Rastreio:</p>
+                                                <p style="margin: 5px 0 0 0; font-size: 18px; color: #333; font-weight: 700; letter-spacing: 1px;">${order.tracknumber}</p>
+                                                
+                                                ${(order.deliveryOption?.name?.toLowerCase().includes('pac') || order.deliveryOption?.name?.toLowerCase().includes('sedex')) ? `
+                                                    <div style="margin-top: 15px;">
+                                                        <a href="https://linketrack.com/track?codigo=${order.tracknumber}" target="_blank" style="display: inline-block; background-color: #333; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 14px; font-weight: 500;">Rastrear Pedido</a>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        ` : ''}
+
+                                        <p style="margin: 15px 0 0 0; font-size: 16px;">Acompanhe o status da entrega.</p>
                                     </td>
                                 </tr>
                                 <tr>

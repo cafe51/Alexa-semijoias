@@ -75,7 +75,15 @@ export default function SendEmailsTest() {
                         response = await sendEmailOrderCanceled(orders[0], userDate);
                         break;
                     case 'shippingConfirmation':
-                        response = await sendEmailOrderSent(orders[0], userDate);
+                        const orderWithTracking = {
+                            ...orders[0],
+                            tracknumber: 'AA123456789BR', // Generic tracking number for testing
+                            deliveryOption: {
+                                ...orders[0].deliveryOption,
+                                name: 'PAC', // Ensuring it triggers the link logic
+                            }
+                        };
+                        response = await sendEmailOrderSent(orderWithTracking, userDate);
                         break;
                     case 'paymentConfirmation':
                         response = await sendEmailApprovedPayment(orders[0], userDate);

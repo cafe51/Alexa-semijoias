@@ -42,6 +42,8 @@ export default function ChangeStatus({ pedido, changeStatus, initialStatus }: Ch
     const [currentStatus, setCurrentStatus] = useState<StatusType>(initialStatus);
     const [nextStatus, setNextStatus] = useState<StatusType | null>(getNextStatus(initialStatus));
     const [showButton, setShowButton] = useState(true);
+    const [trackingNumber, setTrackingNumber] = useState('');
+    const [isLocalDelivery, setIsLocalDelivery] = useState(false);
     const { updateDocumentField } = useCollection<OrderType>('pedidos');
     const { getDocumentById: getUserById } = useCollection<UserType>('usuarios');
 
@@ -51,7 +53,7 @@ export default function ChangeStatus({ pedido, changeStatus, initialStatus }: Ch
     }, [currentStatus]);
 
     useEffect(() => {
-        if (currentStatus === 'cancelado' || currentStatus === 'entregue' || initialStatus === 'cancelado' || initialStatus === 'entregue'){
+        if (currentStatus === 'cancelado' || currentStatus === 'entregue' || initialStatus === 'cancelado' || initialStatus === 'entregue') {
             setShowButton(false);
         }
 
@@ -61,7 +63,7 @@ export default function ChangeStatus({ pedido, changeStatus, initialStatus }: Ch
         setChangeStatusModal(true);
     };
 
-    const handleStatusUpdate = async() => {
+    const handleStatusUpdate = async () => {
         const user = await getUserById(pedido.userId);
 
         if (!user) {
@@ -70,17 +72,29 @@ export default function ChangeStatus({ pedido, changeStatus, initialStatus }: Ch
         }
 
         if (nextStatus) {
-            if(nextStatus === 'preparando para o envio') {
+            let updatedOrder = { ...pedido };
+
+            if (nextStatus === 'preparando para o envio') {
                 console.log('CHEGOU AQUI E O EMAIL FOI ENVIADO paymentApproved foi enviado');
                 console.log('nextStatus é: ', nextStatus);
                 await sendEmailApprovedPayment(pedido, user);
             }
-            if(nextStatus === 'pedido enviado') {
+            if (nextStatus === 'pedido enviado') {
+                if (!trackingNumber && !isLocalDelivery) {
+                    alert('Por favor, informe o número de rastreio ou selecione entrega local.');
+                    return;
+                }
+
+                if (trackingNumber) {
+                    await updateDocumentField(pedido.id, 'tracknumber', trackingNumber);
+                    updatedOrder = { ...pedido, tracknumber: trackingNumber };
+                }
+
                 console.log('CHEGOU AQUI E O EMAIL FOI ENVIADO paymentSent foi enviado');
                 console.log('nextStatus é: ', nextStatus);
-                await sendEmailOrderSent(pedido, user);
+                await sendEmailOrderSent(updatedOrder, user);
             }
-            
+
             updateDocumentField(pedido.id, 'status', nextStatus);
             changeStatus(nextStatus);
             setCurrentStatus(nextStatus);
@@ -92,14 +106,54 @@ export default function ChangeStatus({ pedido, changeStatus, initialStatus }: Ch
         if (!nextStatus) return null;
 
         return (
-            <ModalMaker title='Atualizar status' closeModelClick={ () => setChangeStatusModal(false) }>
+            <ModalMaker title='Atualizar status' closeModelClick={() => setChangeStatusModal(false)}>
                 <div className="flex flex-col gap-4">
-                    <p>Tem certeza que deseja atualizar o status do pedido para: <span className='font-bold'>{ nextStatus }</span>?</p>
+                    <p>Tem certeza que deseja atualizar o status do pedido para: <span className='font-bold'>{nextStatus}</span>?</p>
+
+                    {nextStatus === 'pedido enviado' && (
+                        <div className="flex flex-col gap-3 p-4 bg-gray-50 rounded-md border border-gray-200">
+                            <label className="flex flex-col gap-1">
+                                <span className="text-sm font-medium text-gray-700">Número de Rastreio</span>
+                                <input
+                                    type="text"
+                                    value={trackingNumber}
+                                    onChange={(e) => setTrackingNumber(e.target.value)}
+                                    placeholder="Ex: AA123456789BR"
+                                    disabled={isLocalDelivery}
+                                    className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+                                />
+                            </label>
+
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={isLocalDelivery}
+                                    onChange={(e) => {
+                                        setIsLocalDelivery(e.target.checked);
+                                        if (e.target.checked) setTrackingNumber('');
+                                    }}
+                                    className="form-checkbox h-4 w-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
+                                />
+                                <span className="text-sm text-gray-700">Entrega Local (Moto/Retirada)</span>
+                            </label>
+
+                            {isLocalDelivery && (
+                                <p className="text-xs text-green-600 font-medium ml-6">
+                                    Não será enviado código de rastreio para o cliente.
+                                </p>
+                            )}
+                        </div>
+                    )}
+
                     <div className="flex justify-end gap-2">
-                        <LargeButton color='green' onClick={ handleStatusUpdate }>
+                        <LargeButton
+                            color='green'
+                            onClick={handleStatusUpdate}
+                            disabled={nextStatus === 'pedido enviado' && !trackingNumber && !isLocalDelivery}
+                        >
                             Sim
                         </LargeButton>
-                        <LargeButton color='green' onClick={ () => setChangeStatusModal(false) }>
+                        <LargeButton color='green' onClick={() => setChangeStatusModal(false)}>
                             Voltar
                         </LargeButton>
                     </div>
@@ -113,8 +167,8 @@ export default function ChangeStatus({ pedido, changeStatus, initialStatus }: Ch
 
         return (
             <div className="text-xs font-bold p-4">
-                <LargeButton color='green' onClick={ handleOpenModal }>
-                    { getButtonText(currentStatus) }
+                <LargeButton color='green' onClick={handleOpenModal}>
+                    {getButtonText(currentStatus)}
                 </LargeButton>
             </div>
         );

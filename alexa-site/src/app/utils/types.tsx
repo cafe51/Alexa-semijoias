@@ -5,30 +5,30 @@ import { SavedSubSectionType } from '../hooks/useSectionManagement';
 export type BannerImageType = 'bannerImageDesktop' | 'bannerImageMobile' | 'bannerTablet';
 
 export type ImageUploadType = {
-  file: File | null;
-  preview: string;
-  isNew: boolean;
-  path?: string;
+    file: File | null;
+    preview: string;
+    isNew: boolean;
+    path?: string;
 };
 
 export type BannerFormData = {
-  bannerName: string;
-  showBanner: boolean;
-  pagePath: string;
-  bannerImageDesktop: ImageUploadType;
-  bannerImageMobile: ImageUploadType;
-  bannerTablet: ImageUploadType;
+    bannerName: string;
+    showBanner: boolean;
+    pagePath: string;
+    bannerImageDesktop: ImageUploadType;
+    bannerImageMobile: ImageUploadType;
+    bannerTablet: ImageUploadType;
 };
 
 export type BannersType = {
-  bannerName: string;
-  showBanner: boolean;
-  bannerImageMobile: string;
-  bannerImageDesktop: string;
-  bannerTablet?: string;
-  pagePath?: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+    bannerName: string;
+    showBanner: boolean;
+    bannerImageMobile: string;
+    bannerImageDesktop: string;
+    bannerTablet?: string;
+    pagePath?: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
 }
 
 export type CollectionType = {
@@ -67,17 +67,17 @@ export type CouponType = {
     descricao: string; // Texto explicativo do cupom para exibição ao usuário
     tipo: 'percentual' | 'fixo' | 'freteGratis'; // Tipo de cupom
     valor: number; // Valor do desconto (% se for percentual, R$ se for fixo)
-    
+
     dataInicio: Timestamp; // Data de início da validade
     dataExpiracao: Timestamp; // Data de expiração
-    
+
     limiteUsoGlobal: number | null; // Número máximo de usos total (null = ilimitado)
     limiteUsoPorUsuario: number | null; // Número máximo de usos por cliente (null = ilimitado)
 
     condicoes: CouponConditionType; // Objeto que armazena todas as condições do cupom
 
     cumulativo: boolean; // Permite uso com outros cupons?
-    
+
     status: 'ativo' | 'desativado'; // Estado atual do cupom
 
     criadoEm: Timestamp; // Data de criação
@@ -125,7 +125,7 @@ export type PaymentType = {
 export type CheckboxData = {
     label: string;
     isChecked: boolean;
-  }
+}
 
 export type CategoryType = {
     categoryName: string;
@@ -167,7 +167,7 @@ export type ProductVariation = {
 
     categories: string[], // valor sempre igual para todas as variações
     collections: string[], // valor sempre igual para todas as variações
-    barcode: string, 
+    barcode: string,
     customProperties?: { [key: string]: string }, // valor como: { 'cor': 'azul', 'tamanho': 'M' } as propriedades são customizadas no momento de criação do produto.
     dimensions: { largura: number, altura: number, comprimento: number }
     estoque: number,
@@ -204,7 +204,7 @@ export type ProductBundleType = {
     value: { price: number, promotionalPrice: number, cost: number }
     variations?: string[],
     images: ImageProductDataType[], // array com todas as imagens de todas as variações
-    
+
     videoUrl?: string | null,
     keyWords?: string[],
 }
@@ -232,7 +232,7 @@ export type StateNewProductType = {
     }
     sections: string[],
     subsections?: string[] | undefined, // do tipo 'sectionName:subsectionName'[]
-    sectionsSite: ((SectionType & { exist?: boolean, id?: string })[] | never[]) 
+    sectionsSite: ((SectionType & { exist?: boolean, id?: string })[] | never[])
     variations: string[],
     productVariations: VariationProductType[] | never[];
     estoque?: number | undefined,
@@ -295,10 +295,10 @@ export type FilterOptionForUseSnapshot = {
     value: string | number | string[] | number[] | boolean
 };
 
-export type FilterOption = { 
-    field: string; 
-    operator?: WhereFilterOp; 
-    value?: string | number | string[] | number[] | boolean | Timestamp; 
+export type FilterOption = {
+    field: string;
+    operator?: WhereFilterOp;
+    value?: string | number | string[] | number[] | boolean | Timestamp;
     order?: 'asc' | 'desc'; // Adiciona a opção de ordenação
 };
 
@@ -306,7 +306,7 @@ export type ProductCartType = {
     //o que vem de ProductVariation exceto desconto, lancamento e descrição
     // id: string,
     // exist: boolean,
-    
+
     name: string,
     image: string,
 
@@ -349,7 +349,7 @@ export type CartHistoryType = {
     barcode: string,
 
     value: { price: number, promotionalPrice: number, cost: number }
-    
+
     customProperties?: { [key: string]: string },
     productId: string,
     quantidade: number,
@@ -410,6 +410,7 @@ export type OrderType = {
     couponId?: string | null,
     userId: string,
     endereco: AddressType
+    tracknumber?: string | null,
 
     totalQuantity: number,
     paymentOption: string,
