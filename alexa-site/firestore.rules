@@ -1,8 +1,96 @@
-rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Função auxiliar para verificar se o usuário é um administrador
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Função auxiliar para verificar se o usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Função auxiliar para verificar se o usuário está acessando seus próprios dados
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Regras para a coleção 'usuarios'
+    match /usuarios/{userId} {
+      allow read: if true;
+      allow update, delete: if isAdmin() || isOwner(userId);
+      allow create: if true; // Permite criação para cadastro
+    }
+
+    // Regras para a coleção 'products'
+    match /products/{productId} {
+    //   allow read: if true;
+    //   allow create, delete: if isAdmin();
+    //   allow update: if isAuthenticated() && 
+    //                 request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estoque']);
+    // }
+
+      allow read, update: if true;
+      allow write: if isAdmin();
+    }
+    // Regras para a coleção 'carrinhos'
+    match /carrinhos/{cartId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+
+    }
+
+    // Regras para a coleção 'endereços'
+    match /enderecos/{addressId} {
+      allow read, write: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+    }
+
+    // Regras para a coleção 'pedidos'
+    match /pedidos/{orderId} {
+      allow read, update: if true;
+      allow create: if isAuthenticated();
+      // allow update: if isAdmin() || (isOwner(resource.data.userId) && 
+      //               request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']));
+      allow delete: if isAdmin();
+    }
+
+    // Regras para as coleções 'categories' e 'siteSections'
+    match /categories/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /siteSections/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+      match /siteSectionsWithSlugName/{document=**} {
+      allow read: if true;
+      allow write: if true;
+      // allow write: if isAdmin();
+    }
+
+    match /productVariations/{document=**} {
+      allow read: if true;
+      allow update: if isAuthenticated();
+      allow create, delete: if isAdmin();
+    }
+    
+    match /cupons/{cupomId} {
+      allow read; // Todos podem ler os cupons ativos
+      allow write: if isAdmin(); // Apenas admins podem modificar
+    }
+
+    match /usoCupons/{usoId} {
+      allow create: if isAuthenticated(); // Apenas usuários logados podem registrar uso
+      allow read: if isOwner() || isAdmin(); // Cada usuário só vê seus próprios usos
+    }
+
+    // Regra padrão para negar acesso a todas as outras coleções
     match /{document=**} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if false;
     }
   }
 }
