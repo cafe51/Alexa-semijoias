@@ -60,6 +60,9 @@ export async function POST(req: NextRequest) {
                         newStatus = 'aguardando pagamento';
                 }
 
+                // Avoid reverting status if the order is already sent or delivered
+                const isRegression = newStatus === 'preparando para o envio' && (orderData.status === 'pedido enviado' || orderData.status === 'entregue');
+
                 if (newStatus === 'cancelado') {
                     // Devolvendo os itens para o estoque
                     for (const item of orderData.cartSnapShot) {
@@ -73,14 +76,17 @@ export async function POST(req: NextRequest) {
                         await resend.emails.send(cancelMessageEmail);
                     }
                 }
-                if (orderData.status !== 'entregue') {
+
+                if (!isRegression && orderData.status !== 'entregue') {
                     await orderRef.update({
                         status: newStatus,
                         updatedAt: new Date(),
                     });
+                    console.log(`Updated order ${orderId} status to ${newStatus}`);
+                } else {
+                    console.log(`Skipped status update for order ${orderId}: current status is ${orderData.status}, incoming status is ${newStatus}`);
                 }
 
-                console.log(`Updated order ${orderId} status to ${newStatus}`);
             }
         }
 
