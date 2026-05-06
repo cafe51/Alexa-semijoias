@@ -33,7 +33,7 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ order }) => {
 
             <CardContent className="pt-4">
                 {
-                    <DeliveryTimeSection deliveryDays={order.deliveryOption.deliveryTime} orderCreationDate={order.createdAt.toDate()} />
+                    order.status === 'pedido enviado' && <DeliveryTimeSection deliveryDays={order.deliveryOption.deliveryTime} orderCreationDate={order.createdAt.toDate()} />
                 }
                 {
                     order.status === 'pedido enviado' && order.tracknumber &&
